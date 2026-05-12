@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moon Phase Simulator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+  :root{
+    --accent:#7eb8f7;--panel-bg:rgba(8,16,40,0.93);--panel-border:rgba(126,184,247,0.28);
+    --text:#c8deff;--text-dim:#5a7aaa;--moon-lit:#e8e8e0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#050a14;color:var(--text);font-family:'Space Mono',monospace;min-height:100vh;overflow-x:hidden;}
+  h1{font-family:'Orbitron',sans-serif;text-align:center;padding:14px 0 3px;font-size:1.15rem;letter-spacing:4px;color:var(--accent);text-shadow:0 0 20px rgba(126,184,247,0.5);}
+  .subtitle{text-align:center;font-size:.6rem;color:var(--text-dim);letter-spacing:2px;margin-bottom:9px;}
+  .app{display:grid;grid-template-columns:1fr 310px;grid-template-rows:auto auto;gap:9px;padding:0 12px 12px;max-width:1060px;margin:0 auto;}
+  .panel-header{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:5px 12px;background:rgba(0,0,20,.55);backdrop-filter:blur(4px);font-family:'Orbitron',sans-serif;font-size:.52rem;letter-spacing:2px;color:var(--accent);z-index:2;pointer-events:none;}
+  .panel-badge{background:rgba(126,184,247,.12);border:1px solid rgba(126,184,247,.25);border-radius:4px;padding:2px 6px;font-size:.46rem;}
+  .sky-panel{grid-column:1;grid-row:1;border-radius:11px;overflow:hidden;border:1px solid var(--panel-border);position:relative;height:245px;box-shadow:0 0 28px rgba(10,20,60,.8);}
+  #skyCanvas{width:100%;height:100%;display:block;}
+  .sky-compass{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-between;padding:3px 14px;background:rgba(0,0,0,.38);font-size:.6rem;color:var(--accent);letter-spacing:2px;pointer-events:none;}
+  .orbit-panel{grid-column:1;grid-row:2;border-radius:11px;overflow:hidden;border:1px solid var(--panel-border);background:#000208;height:305px;box-shadow:0 0 28px rgba(10,20,60,.8);position:relative;}
+  #orbitCanvas{width:100%;height:100%;display:block;}
+  .orbit-footer{position:absolute;bottom:6px;left:0;right:0;display:flex;justify-content:space-between;padding:0 10px;pointer-events:none;}
+  .orbit-note{font-size:.48rem;color:var(--text-dim);font-style:italic;}
+  .info-panel{grid-column:2;grid-row:1/3;display:flex;flex-direction:column;gap:9px;}
+  .card{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:11px;padding:12px;box-shadow:0 0 18px rgba(5,10,30,.7);}
+  .card-title{font-family:'Orbitron',sans-serif;font-size:.55rem;letter-spacing:3px;color:var(--accent);margin-bottom:8px;text-transform:uppercase;}
+  .moon-display{display:flex;flex-direction:column;align-items:center;gap:7px;}
+  #moonFaceCanvas{border-radius:50%;box-shadow:0 0 26px rgba(126,184,247,.14);}
+  .phase-name{font-family:'Orbitron',sans-serif;font-size:.7rem;color:var(--moon-lit);text-align:center;}
+  .phase-thai{font-size:.58rem;color:var(--text-dim);text-align:center;margin-top:-4px;}
+  .illum-bar-wrap{width:100%;}
+  .illum-label{display:flex;justify-content:space-between;font-size:.56rem;color:var(--text-dim);margin-bottom:3px;}
+  .illum-bar{height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;}
+  .illum-fill{height:100%;background:linear-gradient(90deg,#4a78ff,#e8e8e0);border-radius:2px;transition:width .35s ease;}
+  .stat-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(126,184,247,.07);font-size:.58rem;}
+  .stat-row:last-child{border-bottom:none;}
+  .stat-key{color:var(--text-dim);}
+  .stat-val{color:var(--text);font-weight:700;text-align:right;}
+  .controls{display:flex;flex-direction:column;gap:7px;}
+  .ctrl-group{background:rgba(126,184,247,.04);border:1px solid rgba(126,184,247,.1);border-radius:7px;padding:7px 9px;}
+  .ctrl-label{font-size:.54rem;color:var(--accent);letter-spacing:1px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;}
+  .ctrl-value{font-weight:700;color:var(--text);font-size:.6rem;}
+  .ctrl-sub{font-size:.48rem;color:var(--text-dim);margin-top:1px;margin-bottom:4px;}
+  input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:rgba(126,184,247,.18);border-radius:2px;outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 8px rgba(126,184,247,.6);}
+  .btn-row{display:flex;gap:5px;}
+  button{font-family:'Space Mono',monospace;font-size:.54rem;letter-spacing:1px;padding:5px 8px;border:1px solid var(--panel-border);background:rgba(126,184,247,.07);color:var(--accent);border-radius:6px;cursor:pointer;transition:all .2s;flex:1;}
+  button:hover{background:rgba(126,184,247,.18);box-shadow:0 0 9px rgba(126,184,247,.28);}
+  button.active{background:rgba(126,184,247,.22);border-color:var(--accent);box-shadow:0 0 11px rgba(126,184,247,.38);}
+  .phase-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;}
+  .phase-btn{flex:none;font-size:.46rem;padding:4px 2px;text-align:center;}
+  select{font-family:'Space Mono',monospace;font-size:.54rem;background:rgba(5,12,32,.95);color:var(--accent);border:1px solid var(--panel-border);border-radius:6px;padding:4px 6px;cursor:pointer;width:100%;}
+  .hem-note{font-size:.46rem;color:#f5a020;background:rgba(245,160,32,.1);border:1px solid rgba(245,160,32,.2);border-radius:4px;padding:2px 6px;text-align:center;margin-top:2px;}
+</style>
+</head>
+<body>
+<h1>🌙 MOON PHASE SIMULATOR</h1>
+<p class="subtitle">ระบบจำลองเฟสของดวงจันทร์ · วงโคจรทวนเข็มนาฬิกา ↺ · มุมมองจากขั้วโลกเหนือ</p>
+<div class="app">
+  <div class="sky-panel">
+    <canvas id="skyCanvas"></canvas>
+    <div class="panel-header">
+      <span>① SKY VIEW · มุมมองท้องฟ้าจากผู้สังเกต</span>
+      <span class="panel-badge" id="skyTimeLabel">18:00</span>
+    </div>
+    <div class="sky-compass">
+      <span>⬆ EAST · ตะวันออก</span>
+      <span>SOUTH · ทิศใต้</span>
+      <span>ตะวันตก · WEST ⬆</span>
+    </div>
+  </div>
+  <div class="orbit-panel">
+    <canvas id="orbitCanvas"></canvas>
+    <div class="panel-header">
+      <span>② SPACE VIEW · มุมมองจากขั้วโลกเหนือ (Top-Down)</span>
+      <span class="panel-badge">↺ CCW</span>
+    </div>
+    <div class="orbit-footer">
+      <span class="orbit-note">not to scale · ไม่ใช่สัดส่วนจริง</span>
+      <span class="orbit-note" id="moonPhaseOrbit">—</span>
+    </div>
+  </div>
+  <div class="info-panel">
+    <div class="card">
+      <div class="card-title">③ 🌕 MOON PHASE · เฟสดวงจันทร์</div>
+      <div class="moon-display">
+        <canvas id="moonFaceCanvas" width="126" height="126"></canvas>
+        <div class="phase-name" id="phaseName">—</div>
+        <div class="phase-thai" id="phaseThai">—</div>
+        <div class="illum-bar-wrap">
+          <div class="illum-label"><span>ความสว่าง (Illumination)</span><span id="illumPct">0%</span></div>
+          <div class="illum-bar"><div class="illum-fill" id="illumFill" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 ข้อมูล · Data</div>
+      <div class="stat-row">
+        <span class="stat-key">🌑 วันขึ้น/แรม (Lunar Day)</span>
+        <span class="stat-val" id="lunarDayThai">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-key">📅 วันในรอบ (Cycle)</span>
+        <span class="stat-val" id="moonAge">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-key">🌅 ขึ้น / ตก (Rise/Set)</span>
+        <span class="stat-val" id="riseSet">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-key">👁 มองเห็น (Visibility)</span>
+        <span class="stat-val" id="visibility">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-key">🌍 ผู้สังเกต (Observer)</span>
+        <span class="stat-val" id="obsInfo">—</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">⚙️ ปรับค่า · Controls</div>
+      <div class="controls">
+        <div class="ctrl-group">
+          <div class="ctrl-label">
+            <span>🌙 วันทางจันทรคติ</span>
+            <span class="ctrl-value" id="dayVal">วันขึ้น 6 ค่ำ</span>
+          </div>
+          <div class="ctrl-sub">ลากเพื่อเปลี่ยนเฟส · 0 = เดือนดับ, 14-15 = เดือนเต็ม</div>
+          <input type="range" id="daySlider" min="0" max="2950" value="550" step="1">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label">
+            <span>🕐 เวลา (ระบบ 24 ชั่วโมง)</span>
+            <span class="ctrl-value" id="timeVal">18:00 น.</span>
+          </div>
+          <div class="ctrl-sub">กำหนดตำแหน่งดวงจันทร์/อาทิตย์บนท้องฟ้า</div>
+          <input type="range" id="timeSlider" min="0" max="2399" value="1800" step="1">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label"><span>🌍 ตำแหน่งผู้สังเกต</span></div>
+          <select id="locationSelect">
+            <option value="13.5">🇹🇭 ประเทศไทย (13°N)</option>
+            <option value="51.5">🇬🇧 London (51.5°N)</option>
+            <option value="35.7">🇯🇵 Tokyo (35.7°N)</option>
+            <option value="40.7">🇺🇸 New York (40.7°N)</option>
+            <option value="-33.9">🇦🇺 Sydney (33.9°S)</option>
+            <option value="-23.5">🇧🇷 São Paulo (23.5°S)</option>
+            <option value="0">🌐 เส้นศูนย์สูตร (0°)</option>
+          </select>
+          <div class="hem-note" id="hemNote">ซีกโลกเหนือ: เสี้ยวเพิ่ม = สว่างขวา</div>
+        </div>
+        <div class="btn-row">
+          <button id="btnPlay" class="active">⏸ หยุด</button>
+          <button id="btnReset">↺ ตั้งต้น</button>
+          <button id="btnToday">📅 วันนี้</button>
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label"><span>⚡ เลือกเฟสด่วน</span></div>
+          <div class="phase-grid">
+            <button class="phase-btn" onclick="setDay(0)">🌑 ดับ</button>
+            <button class="phase-btn" onclick="setDay(369)">🌒 ขึ้น3</button>
+            <button class="phase-btn" onclick="setDay(738)">🌓 ขึ้น8</button>
+            <button class="phase-btn" onclick="setDay(1107)">🌔 ขึ้น11</button>
+            <button class="phase-btn" onclick="setDay(1475)">🌕 เต็ม</button>
+            <button class="phase-btn" onclick="setDay(1844)">🌖 แรม4</button>
+            <button class="phase-btn" onclick="setDay(2213)">🌗 แรม8</button>
+            <button class="phase-btn" onclick="setDay(2582)">🌘 แรม11</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════════════
+const LUNAR = 29.53;       // days per cycle
+let lunarDay  = 5.5;       // 0 – 29.53
+let timeHour  = 18.0;      // 0 – 23.99  (24-hr)
+let obsLat    = 13.5;      // +N / –S degrees
+let playing   = true;
+let lastTs    = null;
+const SPEED   = 0.20;      // lunar-days per real second
+
+// ════════════════════════════════════════════════════════════
+//  CANVAS & IMAGE LOADING
+// ════════════════════════════════════════════════════════════
+const skyC   = document.getElementById('skyCanvas');
+const skyCtx = skyC.getContext('2d');
+const orbC   = document.getElementById('orbitCanvas');
+const orbCtx = orbC.getContext('2d');
+const moonC  = document.getElementById('moonFaceCanvas');
+const moonCtx= moonC.getContext('2d');
+
+// --- เพิ่มโค้ดโหลดรูปภาพตรงนี้ ---
+const customOwlImg = new Image();
+customOwlImg.src = "./owlvybot.png";  // อ้างอิงไฟล์ภาพจากโฟลเดอร์เดียวกัน (Root)
+// ------------------------------
+
+function resize(){
+  skyC.width  = skyC.parentElement.clientWidth;
+  skyC.height = skyC.parentElement.clientHeight;
+  orbC.width  = orbC.parentElement.clientWidth;
+  orbC.height = orbC.parentElement.clientHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// ════════════════════════════════════════════════════════════
+//  CALCULATIONS
+// ════════════════════════════════════════════════════════════
+const frac  = () => lunarDay / LUNAR;
+const illum = () => (1 - Math.cos(frac()*Math.PI*2)) / 2;
+
+function lunarDayThai() {
+  const d = Math.round(lunarDay);
+  if (d === 0 || d >= 29) return 'เดือนดับ (New Moon)';
+  if (d <= 15) return `ขึ้น ${d} ค่ำ`;
+  const wan = d - 15;
+  return `แรม ${wan} ค่ำ`;
+}
+
+function phaseName() {
+  const d = lunarDay;
+  if (d < 1.0 || d >= 28.5) return 'New Moon';
+  if (d < 6.5)  return 'Waxing Crescent';
+  if (d < 8.5)  return 'First Quarter';
+  if (d < 13.5) return 'Waxing Gibbous';
+  if (d < 15.5) return 'Full Moon';
+  if (d < 21.0) return 'Waning Gibbous';
+  if (d < 23.0) return 'Third Quarter';
+  return 'Waning Crescent';
+}
+
+function phaseNameThai() {
+  const d = lunarDay;
+  if (d < 1.0 || d >= 28.5) return 'เดือนดับ';
+  if (d < 6.5)  return 'เสี้ยวเพิ่ม (Waxing Crescent)';
+  if (d < 8.5)  return 'ครึ่งดวงแรก (1st Quarter)';
+  if (d < 13.5) return 'โหว่นูนเพิ่ม (Waxing Gibbous)';
+  if (d < 15.5) return 'เดือนเต็ม (Full Moon)';
+  if (d < 21.0) return 'โหว่นูนลด (Waning Gibbous)';
+  if (d < 23.0) return 'ครึ่งดวงหลัง (3rd Quarter)';
+  return 'เสี้ยวลด (Waning Crescent)';
+}
+
+function fmt24(h) {
+  const hh = Math.floor(h) % 24;
+  const mm = Math.round((h % 1) * 60) % 60;
+  return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+}
+
+function moonRiseHour() { return (6 + (lunarDay/LUNAR)*24) % 24; }
+function moonElapsed()   { return (timeHour - moonRiseHour() + 24) % 24; }
+function isMoonVisible() { return moonElapsed() <= 12; }
+
+// ════════════════════════════════════════════════════════════
+//  OWLVY — ปิด Script ในส่วนการสร้างรูปเดิม
+// ════════════════════════════════════════════════════════════
+/*
+function drawOwlvy(ctx, cx, cy, sz, alpha) {
+  // โค้ดเดิมถูก Comment ปิดการทำงานไว้ตรงนี้ เพื่อไม่ให้กินทรัพยากรเครื่อง
+}
+function drawStar5(ctx, cx, cy, r, color) {
+  // โค้ดเดิมถูก Comment ปิดการทำงานไว้
+}
+*/
+
+// ════════════════════════════════════════════════════════════
+//  MOON DISC — correct terminator rendering
+// ════════════════════════════════════════════════════════════
+function drawMoonDisc(ctx, cx, cy, r, northHemi) {
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.clip();
+
+  const dg=ctx.createRadialGradient(cx-r*.28,cy-r*.28,0,cx,cy,r);
+  dg.addColorStop(0,'#26263a'); dg.addColorStop(1,'#09091a');
+  ctx.fillStyle=dg; ctx.fillRect(cx-r,cy-r,r*2,r*2);
+
+  ctx.globalAlpha=0.13;
+  [[-.27,-.15,.17],[.13,.24,.11],[-.07,.29,.09],[.26,-.26,.08]].forEach(([dx,dy,cr])=>{
+    const cg=ctx.createRadialGradient(cx+dx*r,cy+dy*r,0,cx+dx*r,cy+dy*r,cr*r);
+    cg.addColorStop(0,'#666'); cg.addColorStop(1,'transparent');
+    ctx.fillStyle=cg; ctx.beginPath(); ctx.arc(cx+dx*r,cy+dy*r,cr*r,0,Math.PI*2); ctx.fill();
+  });
+  ctx.globalAlpha=1;
+
+  const f  = frac();
+  const il = illum();
+
+  if (il < 0.002) { ctx.restore(); return; }
+
+  if (il > 0.998) {
+    ctx.save(); ctx.translate(cx,cy);
+    const fg=ctx.createRadialGradient(-r*.18,-r*.18,0, 0,0,r);
+    fg.addColorStop(0,'#ede8cc'); fg.addColorStop(.65,'#d2ca98'); fg.addColorStop(1,'#aea880');
+    ctx.fillStyle=fg; ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha=.2; ctx.fillStyle='#887755';
+    [[.1,-.2,.25],[-.1,.2,.17],[.25,.15,.12],[ .0,.0,.08]].forEach(([dx,dy,cr])=>{
+      ctx.beginPath(); ctx.arc(dx*r,dy*r,cr*r,0,Math.PI*2); ctx.fill();
+    });
+    ctx.globalAlpha=1;
+    ctx.restore(); ctx.restore(); return;
+  }
+
+  const waxing = f < 0.5;
+  const elong  = f * Math.PI * 2;
+  const tScale = Math.cos(elong);
+  const litRight = northHemi ? waxing : !waxing;
+  const litClr = '#ddd8bb';
+
+  ctx.save(); ctx.translate(cx,cy);
+
+  ctx.beginPath(); ctx.moveTo(0,0);
+  if (litRight) { ctx.arc(0,0,r,-Math.PI/2, Math.PI/2,false); }
+  else { ctx.arc(0,0,r, Math.PI/2,-Math.PI/2,false); }
+  ctx.closePath();
+  ctx.fillStyle=litClr; ctx.fill();
+
+  const ex = Math.abs(tScale)*r;
+  if (ex > 0.5) {
+    if (tScale > 0) {
+      ctx.globalCompositeOperation='destination-out';
+      ctx.beginPath(); ctx.moveTo(0,0);
+      if (litRight) ctx.arc(0,0,r,-Math.PI/2, Math.PI/2,false);
+      else ctx.arc(0,0,r, Math.PI/2,-Math.PI/2,false);
+      ctx.closePath(); ctx.fill();
+      
+      ctx.globalCompositeOperation='source-over';
+      ctx.save();
+      ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.clip();
+      ctx.fillStyle=litClr; ctx.beginPath(); ctx.moveTo(0,0);
+      if (litRight){ ctx.arc(0,0,r,-Math.PI/2, Math.PI/2,false); } 
+      else { ctx.arc(0,0,r, Math.PI/2,-Math.PI/2,false); }
+      ctx.closePath(); ctx.fill();
+      
+      ctx.globalCompositeOperation='destination-out';
+      ctx.beginPath();
+      if (litRight) ctx.ellipse(0,0,ex,r,0,-Math.PI/2,Math.PI/2,false);
+      else ctx.ellipse(0,0,ex,r,0, Math.PI/2,-Math.PI/2,false);
+      ctx.closePath(); ctx.fill();
+      ctx.globalCompositeOperation='source-over';
+      ctx.restore();
+      
+      ctx.globalCompositeOperation='destination-out';
+      ctx.beginPath();
+      if (litRight) ctx.ellipse(0,0,ex,r,0,-Math.PI/2,Math.PI/2,false);
+      else ctx.ellipse(0,0,ex,r,0, Math.PI/2,-Math.PI/2,false);
+      ctx.closePath(); ctx.fill();
+      ctx.globalCompositeOperation='source-over';
+    } else {
+      ctx.fillStyle=litClr;
+      ctx.beginPath();
+      if (litRight) ctx.ellipse(0,0,ex,r,0, Math.PI/2,-Math.PI/2,false);
+      else ctx.ellipse(0,0,ex,r,0,-Math.PI/2, Math.PI/2,false);
+      ctx.closePath(); ctx.fill();
+    }
+  }
+
+  ctx.globalAlpha=0.15; ctx.fillStyle='#998060';
+  const lx=litRight?r*.09:-r*.09;
+  [[lx,-r*.2,r*.22],[lx+r*.04,r*.14,r*.13]].forEach(([x,y,cr])=>{
+    ctx.beginPath(); ctx.arc(x,y,cr,0,Math.PI*2); ctx.fill();
+  });
+  ctx.globalAlpha=1;
+
+  ctx.restore(); ctx.restore();
+
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.strokeStyle='rgba(126,184,247,.15)'; ctx.lineWidth=1; ctx.stroke();
+}
+
+function drawStars(ctx,w,maxY,alpha){
+  if(alpha<=0)return;
+  ctx.save(); ctx.fillStyle='#fff';
+  for(let i=0;i<95;i++){
+    const x=(Math.sin(i*137.508)*.5+.5)*w;
+    const y=(Math.sin(i*97.31)*.5+.5)*maxY;
+    const sz=Math.sin(i*53)*.38+.48;
+    ctx.globalAlpha=alpha*(Math.sin(i*17.3)*.3+.45);
+    ctx.beginPath(); ctx.arc(x,y,sz,0,Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+}
+
+// ════════════════════════════════════════════════════════════
+//  PANEL 1 — SKY VIEW
+// ════════════════════════════════════════════════════════════
+function drawSky(){
+  const w=skyC.width, h=skyC.height;
+  skyCtx.clearRect(0,0,w,h);
+  const gy=h*.82;
+
+  const sunElev=Math.sin((timeHour/24-.25)*Math.PI*2);
+  const dayF=Math.max(0,sunElev);
+
+  const sg=skyCtx.createLinearGradient(0,0,0,gy);
+  if(dayF>.28){
+    sg.addColorStop(0,`rgb(${Math.round(10+dayF*52)},${Math.round(38+dayF*82)},${Math.round(98+dayF*118)})`);
+    sg.addColorStop(1,`rgb(${Math.round(55+dayF*128)},${Math.round(115+dayF*98)},${Math.round(188+dayF*42)})`);
+  } else if(dayF>0){
+    const d=dayF*3.5;
+    sg.addColorStop(0,'#080d1a');
+    sg.addColorStop(.55,`rgba(${Math.round(70+d*90)},${Math.round(35+d*62)},${Math.round(15+d*32)},1)`);
+    sg.addColorStop(1,`rgba(${Math.round(205+d*50)},${Math.round(115+d*62)},${Math.round(38+d*22)},1)`);
+  } else {
+    sg.addColorStop(0,'#050a14'); sg.addColorStop(1,'#0d1b3e');
+  }
+  skyCtx.fillStyle=sg; skyCtx.fillRect(0,0,w,gy);
+
+  drawStars(skyCtx,w,gy,Math.max(0,1-dayF*2.8));
+
+  const sunX=((timeHour-6)/12)*w;
+  const sunY=gy*.86-dayF*gy*.72;
+  if(dayF>0&&timeHour>=5.5&&timeHour<=18.5){
+    const sg2=skyCtx.createRadialGradient(sunX,sunY,0,sunX,sunY,90);
+    sg2.addColorStop(0,`rgba(255,220,50,${dayF*.42})`); sg2.addColorStop(1,'transparent');
+    skyCtx.fillStyle=sg2; skyCtx.fillRect(0,0,w,h);
+    skyCtx.beginPath(); skyCtx.arc(sunX,sunY,20,0,Math.PI*2);
+    skyCtx.fillStyle='#ffe040'; skyCtx.fill();
+    skyCtx.beginPath(); skyCtx.arc(sunX,sunY,14,0,Math.PI*2);
+    skyCtx.fillStyle='#fff8a0'; skyCtx.fill();
+  }
+
+  const mElH = moonElapsed();
+  const moonVis = isMoonVisible();
+  if(moonVis){
+    const mX = (mElH/12)*w;
+    const mElev = Math.sin((mElH/12)*Math.PI);
+    const mY = gy*.86-mElev*gy*.72;
+    if(mElev>-.04){
+      const il=illum();
+      if(il>.04){
+        const mg=skyCtx.createRadialGradient(mX,mY,0,mX,mY,46);
+        mg.addColorStop(0,`rgba(200,210,255,${il*.2})`); mg.addColorStop(1,'transparent');
+        skyCtx.fillStyle=mg; skyCtx.fillRect(0,0,w,h);
+      }
+      drawMoonDisc(skyCtx,mX,mY,14,obsLat>=0);
+    }
+  }
+
+  const gg=skyCtx.createLinearGradient(0,gy,0,h);
+  gg.addColorStop(0,'#2d4a1e'); gg.addColorStop(1,'#162310');
+  skyCtx.fillStyle=gg; skyCtx.fillRect(0,gy,w,h-gy);
+
+  [.05,.13,.26,.40,.54,.68,.78,.90].forEach(xf=>{
+    const x=xf*w, th=24+Math.sin(xf*37)*7;
+    skyCtx.fillStyle='#192e0d';
+    skyCtx.beginPath(); skyCtx.arc(x,gy-th*.75,th*.3,0,Math.PI*2); skyCtx.fill();
+    skyCtx.fillStyle='#162808'; skyCtx.fillRect(x-2,gy-12,4,12);
+  });
+  [[.2],[.62]].forEach(([xf])=>{
+    const x=xf*w;
+    skyCtx.fillStyle='#3a2820'; skyCtx.fillRect(x-13,gy-17,26,17);
+    skyCtx.fillStyle='#6a2828';
+    skyCtx.beginPath(); skyCtx.moveTo(x-15,gy-17); skyCtx.lineTo(x,gy-31); skyCtx.lineTo(x+15,gy-17); skyCtx.fill();
+    skyCtx.fillStyle='#b88840'; skyCtx.fillRect(x-4,gy-10,8,10);
+  });
+
+  const owlSz = 38;
+  const owlX  = w * 0.5;
+  const owlY  = gy - owlSz * 0.7;
+  
+  if(moonVis && illum()>.08){
+    skyCtx.save();
+    skyCtx.fillStyle='rgba(230,240,255,.9)';
+    roundRect(skyCtx, owlX+owlSz*.6, owlY-owlSz*.9, 68, 22, 5);
+    skyCtx.fill();
+    skyCtx.strokeStyle='rgba(126,184,247,.5)'; skyCtx.lineWidth=1;
+    roundRect(skyCtx, owlX+owlSz*.6, owlY-owlSz*.9, 68, 22, 5);
+    skyCtx.stroke();
+    skyCtx.fillStyle='#223'; skyCtx.font='bold 8.5px monospace';
+    skyCtx.textAlign='left';
+    skyCtx.fillText(`มองเห็น! ${phaseName()}`, owlX+owlSz*.6+5, owlY-owlSz*.9+14);
+    skyCtx.restore();
+  }
+
+  // --- ปิดโค้ดวาดนกฮูกเดิม แล้ววาดรูปภาพนกฮูกจากไฟล์แทน ---
+  // drawOwlvy(skyCtx, owlX, owlY, owlSz, 1);
+  const imgW = 60; // ปรับขนาดความกว้าง
+  const imgH = 60; // ปรับขนาดความสูง
+  // วาดรูปให้กึ่งกลาง (owlX - ครึ่งนึงของกว้าง) และเท้าแตะพื้นพอดี
+  skyCtx.drawImage(customOwlImg, owlX - (imgW/2), owlY - imgH + 15, imgW, imgH);
+  // ----------------------------------------------------
+
+  document.getElementById('skyTimeLabel').textContent = fmt24(timeHour)+' น.';
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath(); ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r); ctx.lineTo(x+w,y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h); ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r); ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath();
+}
+
+// ════════════════════════════════════════════════════════════
+//  PANEL 2 — SPACE VIEW
+// ════════════════════════════════════════════════════════════
+function drawOrbit(){
+  const w=orbC.width, h=orbC.height;
+  orbCtx.clearRect(0,0,w,h);
+  orbCtx.fillStyle='#000308'; orbCtx.fillRect(0,0,w,h);
+
+  orbCtx.save(); orbCtx.fillStyle='#fff';
+  for(let i=0;i<72;i++){
+    const x=(Math.sin(i*137.5)*.5+.5)*w;
+    const y=(Math.sin(i*97.3)*.5+.5)*h;
+    orbCtx.globalAlpha=Math.sin(i*53)*.2+.28;
+    orbCtx.beginPath(); orbCtx.arc(x,y,.72,0,Math.PI*2); orbCtx.fill();
+  }
+  orbCtx.restore();
+
+  const cx=w*.5, cy=h*.5;
+  const orbitR=Math.min(w,h)*.36;
+  const earthR=Math.min(w,h)*.058;
+  const sunX=-earthR*.5;
+
+  const sunGr=orbCtx.createRadialGradient(sunX,cy,0,sunX,cy,w*.35);
+  sunGr.addColorStop(0,'#fff8b0'); sunGr.addColorStop(.18,'#ffd700');
+  sunGr.addColorStop(.5,'rgba(255,130,0,.28)'); sunGr.addColorStop(1,'transparent');
+  orbCtx.fillStyle=sunGr; orbCtx.fillRect(0,0,w,h);
+  
+  orbCtx.save();
+  orbCtx.font=`bold ${Math.round(w*.022)}px Orbitron,sans-serif`;
+  orbCtx.fillStyle='rgba(255,220,50,.7)'; orbCtx.textAlign='center';
+  orbCtx.fillText('☀', 18, cy-10);
+  orbCtx.font=`${Math.round(w*.016)}px Orbitron,sans-serif`;
+  orbCtx.fillText('SUN',18,cy+6);
+  orbCtx.restore();
+
+  orbCtx.save();
+  const shG=orbCtx.createLinearGradient(cx,cy,w+40,cy);
+  shG.addColorStop(0,'transparent'); shG.addColorStop(.09,'rgba(0,0,0,.28)'); shG.addColorStop(1,'transparent');
+  orbCtx.fillStyle=shG; orbCtx.beginPath();
+  orbCtx.moveTo(cx,cy-earthR*.07); orbCtx.lineTo(w+40,cy-orbitR*.28);
+  orbCtx.lineTo(w+40,cy+orbitR*.28); orbCtx.lineTo(cx,cy+earthR*.07);
+  orbCtx.fill(); orbCtx.restore();
+
+  orbCtx.setLineDash([4,7]);
+  orbCtx.strokeStyle='rgba(126,184,247,.18)'; orbCtx.lineWidth=1;
+  orbCtx.beginPath(); orbCtx.arc(cx,cy,orbitR,0,Math.PI*2); orbCtx.stroke();
+  orbCtx.setLineDash([]);
+
+  for(let i=0;i<4;i++){
+    const a = i*Math.PI/2 + Math.PI/4;
+    const px=cx+Math.cos(a)*orbitR, py=cy+Math.sin(a)*orbitR;
+    const td=a-Math.PI/2;
+    orbCtx.save(); orbCtx.strokeStyle='rgba(126,184,247,.5)'; orbCtx.lineWidth=1.3;
+    orbCtx.beginPath();
+    orbCtx.moveTo(px-Math.cos(td)*6,py-Math.sin(td)*6);
+    orbCtx.lineTo(px+Math.cos(td)*12,py+Math.sin(td)*12);
+    orbCtx.stroke();
+    const hx=px+Math.cos(td)*12, hy=py+Math.sin(td)*12;
+    [.55,-.55].forEach(da=>{
+      orbCtx.beginPath(); orbCtx.moveTo(hx,hy);
+      orbCtx.lineTo(hx+Math.cos(td+Math.PI+da)*5.5,hy+Math.sin(td+Math.PI+da)*5.5);
+      orbCtx.stroke();
+    });
+    orbCtx.restore();
+  }
+
+  orbCtx.save();
+  orbCtx.beginPath(); orbCtx.arc(cx,cy,earthR,0,Math.PI*2);
+  const eG=orbCtx.createRadialGradient(cx-earthR*.28,cy-earthR*.28,0,cx,cy,earthR);
+  eG.addColorStop(0,'#5cb2ea'); eG.addColorStop(.5,'#1a6eb5'); eG.addColorStop(1,'#0a2860');
+  orbCtx.fillStyle=eG; orbCtx.fill();
+
+  orbCtx.beginPath(); orbCtx.arc(cx,cy,earthR,0,Math.PI*2); orbCtx.clip();
+  orbCtx.fillStyle='rgba(40,132,62,.72)';
+  orbCtx.beginPath(); orbCtx.ellipse(cx-earthR*.14,cy-earthR*.1,earthR*.34,earthR*.5,.28,0,Math.PI*2); orbCtx.fill();
+  orbCtx.beginPath(); orbCtx.ellipse(cx+earthR*.2,cy+earthR*.18,earthR*.24,earthR*.28,-.2,0,Math.PI*2); orbCtx.fill();
+
+  const etG=orbCtx.createLinearGradient(cx-earthR,cy,cx+earthR,cy);
+  etG.addColorStop(0,'transparent'); etG.addColorStop(.44,'transparent');
+  etG.addColorStop(.54,'rgba(0,0,8,.62)'); etG.addColorStop(1,'rgba(0,0,8,.9)');
+  orbCtx.fillStyle=etG; orbCtx.fillRect(cx-earthR,cy-earthR,earthR*2,earthR*2);
+  orbCtx.restore();
+
+  const atG=orbCtx.createRadialGradient(cx,cy,earthR*.86,cx,cy,earthR*1.34);
+  atG.addColorStop(0,'rgba(50,120,220,.3)'); atG.addColorStop(1,'transparent');
+  orbCtx.fillStyle=atG; orbCtx.beginPath(); orbCtx.arc(cx,cy,earthR*1.34,0,Math.PI*2); orbCtx.fill();
+
+  orbCtx.save(); orbCtx.textAlign='center';
+  orbCtx.font=`${Math.round(w*.016)}px Orbitron,sans-serif`;
+  orbCtx.fillStyle='rgba(126,184,247,.55)';
+  orbCtx.fillText('EARTH', cx, cy+earthR*1.55);
+  orbCtx.restore();
+
+  const obsAngle = -(timeHour / 24) * Math.PI * 2;
+  const obsR  = earthR * 0.90;
+  const obsX  = cx + Math.cos(obsAngle) * obsR;
+  const obsY  = cy + Math.sin(obsAngle) * obsR;
+  const isDay = Math.cos(obsAngle) < 0;
+
+  const ps = earthR * 1.1;
+
+  orbCtx.save();
+  const persGlow = orbCtx.createRadialGradient(obsX, obsY, 0, obsX, obsY, ps * 1.7);
+  persGlow.addColorStop(0, isDay ? 'rgba(255,220,100,.2)' : 'rgba(100,140,255,.16)');
+  persGlow.addColorStop(1, 'transparent');
+  orbCtx.fillStyle = persGlow;
+  orbCtx.beginPath(); orbCtx.arc(obsX, obsY, ps * 1.7, 0, Math.PI * 2); orbCtx.fill();
+  orbCtx.restore();
+
+  const rot = obsAngle + Math.PI / 2;
+  const bodyClr  = isDay ? '#ffe880' : '#90b8ff';
+  const bodyLine = isDay ? '#b07000' : '#2850b0';
+  const lw = Math.max(1.2, ps * 0.13);
+
+  orbCtx.save();
+  orbCtx.translate(obsX, obsY);
+  orbCtx.rotate(rot);
+
+  orbCtx.strokeStyle = bodyLine; orbCtx.lineWidth = lw; orbCtx.lineCap = 'round';
+  orbCtx.beginPath(); orbCtx.moveTo(0, ps*0.12); orbCtx.lineTo(0, -ps*0.3); orbCtx.stroke();
+  orbCtx.beginPath(); orbCtx.moveTo(0, ps*0.05); orbCtx.lineTo(-ps*0.5, ps*0.1); orbCtx.stroke();
+  orbCtx.beginPath(); orbCtx.moveTo(0, ps*0.05); orbCtx.lineTo( ps*0.5, ps*0.1); orbCtx.stroke();
+  orbCtx.beginPath(); orbCtx.moveTo(0,-ps*.3); orbCtx.lineTo(-ps*.16,-ps*.6); orbCtx.stroke();
+  orbCtx.beginPath(); orbCtx.moveTo(0,-ps*.3); orbCtx.lineTo( ps*.16,-ps*.6); orbCtx.stroke();
+
+  orbCtx.fillStyle  = bodyClr;
+  orbCtx.strokeStyle= bodyLine; orbCtx.lineWidth = lw * 0.8;
+  orbCtx.beginPath(); orbCtx.arc(0, ps*0.26, ps*0.17, 0, Math.PI*2);
+  orbCtx.fill(); orbCtx.stroke();
+
+  orbCtx.fillStyle = bodyLine;
+  orbCtx.beginPath(); orbCtx.arc(-ps*.06, ps*.27, ps*.04, 0, Math.PI*2); orbCtx.fill();
+  orbCtx.beginPath(); orbCtx.arc( ps*.06, ps*.27, ps*.04, 0, Math.PI*2); orbCtx.fill();
+
+  orbCtx.fillStyle = bodyClr; orbCtx.strokeStyle = bodyLine; orbCtx.lineWidth = lw * 0.6;
+  orbCtx.beginPath(); orbCtx.arc(-ps*.5, ps*.1, ps*.07, 0, Math.PI*2); orbCtx.fill(); orbCtx.stroke();
+  orbCtx.beginPath(); orbCtx.arc( ps*.5, ps*.1, ps*.07, 0, Math.PI*2); orbCtx.fill(); orbCtx.stroke();
+  orbCtx.restore();
+
+  const lblDist = ps * 1.5;
+  const lblX = cx + Math.cos(obsAngle) * (obsR + lblDist * 0.72);
+  const lblY = cy + Math.sin(obsAngle) * (obsR + lblDist * 0.72);
+  orbCtx.save();
+  orbCtx.fillStyle = 'rgba(8,16,40,.75)';
+  roundRect(orbCtx, lblX-28, lblY-9, 56, 15, 4); orbCtx.fill();
+  orbCtx.font = `bold ${Math.round(w * 0.017)}px Orbitron,monospace`;
+  orbCtx.fillStyle = isDay ? '#ffe060' : '#80b0ff';
+  orbCtx.textAlign = 'center';
+  orbCtx.fillText(fmt24(timeHour) + ' น.', lblX, lblY + 3);
+  orbCtx.restore();
+
+  const cosR = Math.cos(rot), sinR = Math.sin(rot);
+  function localToWorld(lx, ly) {
+    return { x: obsX + lx*cosR - ly*sinR, y: obsY + lx*sinR + ly*cosR };
+  }
+  const eastTip = localToWorld(-ps*0.5, ps*0.1);
+  const westTip = localToWorld( ps*0.5, ps*0.1);
+  const armDirEast = { x: -cosR, y: -sinR };
+  const armDirWest = { x:  cosR, y:  sinR };
+  const extraDist = ps * 0.55;
+
+  const eastLblX = eastTip.x + armDirEast.x * extraDist;
+  const eastLblY = eastTip.y + armDirEast.y * extraDist;
+  const westLblX = westTip.x + armDirWest.x * extraDist;
+  const westLblY = westTip.y + armDirWest.y * extraDist;
+
+  function drawDirLabel(tx, ty, label, isEast) {
+    const bw = label.length * 5.8 + 10;
+    orbCtx.save();
+    orbCtx.fillStyle = 'rgba(8,16,42,.82)';
+    orbCtx.strokeStyle = isEast ? 'rgba(80,200,255,.65)' : 'rgba(255,150,50,.65)';
+    orbCtx.lineWidth = 1;
+    roundRect(orbCtx, tx - bw/2, ty - 9, bw, 15, 4);
+    orbCtx.fill(); orbCtx.stroke();
+    orbCtx.font = `bold ${Math.round(w * 0.0148)}px Space Mono,monospace`;
+    orbCtx.fillStyle = isEast ? '#70d8ff' : '#ffaa50';
+    orbCtx.textAlign = 'center';
+    orbCtx.fillText(label, tx, ty + 3);
+    orbCtx.restore();
+  }
+
+  drawDirLabel(eastLblX, eastLblY, 'ตะวันออก E', true);
+  drawDirLabel(westLblX, westLblY, 'W ตะวันตก', false);
+
+  const f=frac();
+  const moonAngle = Math.PI - f*Math.PI*2;
+  const moonX=cx+Math.cos(moonAngle)*orbitR;
+  const moonY=cy+Math.sin(moonAngle)*orbitR;
+  const moonR=earthR*.46;
+
+  const il=illum();
+  if(il>.04){
+    const mg=orbCtx.createRadialGradient(moonX,moonY,0,moonX,moonY,moonR*3.4);
+    mg.addColorStop(0,`rgba(200,210,255,${il*.24})`); mg.addColorStop(1,'transparent');
+    orbCtx.fillStyle=mg; orbCtx.beginPath(); orbCtx.arc(moonX,moonY,moonR*3.4,0,Math.PI*2); orbCtx.fill();
+  }
+
+  orbCtx.save();
+  orbCtx.beginPath(); orbCtx.arc(moonX,moonY,moonR,0,Math.PI*2); orbCtx.clip();
+  orbCtx.fillStyle='#0a0a18'; orbCtx.fillRect(moonX-moonR,moonY-moonR,moonR*2,moonR*2);
+
+  const toSun=Math.atan2(cy-moonY, 0-moonX);
+  const s1=Math.min(1,Math.max(0,1-il*1.3));
+  const s2=Math.min(1,Math.max(s1+0.001,s1+0.07));
+  const mg2=orbCtx.createLinearGradient(
+    moonX+Math.cos(toSun+Math.PI)*moonR, moonY+Math.sin(toSun+Math.PI)*moonR,
+    moonX+Math.cos(toSun)*moonR,         moonY+Math.sin(toSun)*moonR
+  );
+  mg2.addColorStop(0,'#0a0a18');
+  if(s1>0.005) mg2.addColorStop(s1,'#0a0a18');
+  mg2.addColorStop(s2,'#cec890');
+  mg2.addColorStop(1,'#cec890');
+  orbCtx.fillStyle=mg2; orbCtx.fillRect(moonX-moonR,moonY-moonR,moonR*2,moonR*2);
+  orbCtx.restore();
+
+  orbCtx.beginPath(); orbCtx.arc(moonX,moonY,moonR,0,Math.PI*2);
+  orbCtx.strokeStyle='rgba(200,200,255,.22)'; orbCtx.lineWidth=.8; orbCtx.stroke();
+
+  const ccwT=moonAngle-Math.PI/2;
+  const dx=Math.cos(ccwT),dy=Math.sin(ccwT);
+  const aLen=moonR*2.5;
+  orbCtx.save(); orbCtx.strokeStyle='rgba(200,220,255,.55)'; orbCtx.lineWidth=1;
+  orbCtx.beginPath();
+  orbCtx.moveTo(moonX-dx*aLen,moonY-dy*aLen);
+  orbCtx.lineTo(moonX+dx*aLen,moonY+dy*aLen);
+  orbCtx.stroke();
+  const ahx=moonX+dx*aLen,ahy=moonY+dy*aLen;
+  [.55,-.55].forEach(da=>{
+    orbCtx.beginPath(); orbCtx.moveTo(ahx,ahy);
+    orbCtx.lineTo(ahx+Math.cos(ccwT+Math.PI+da)*5.5,ahy+Math.sin(ccwT+Math.PI+da)*5.5);
+    orbCtx.stroke();
+  });
+  orbCtx.restore();
+
+  orbCtx.save(); orbCtx.textAlign='center';
+  orbCtx.font=`${Math.round(w*.016)}px Space Mono,monospace`;
+  orbCtx.fillStyle='rgba(200,220,255,.5)';
+  const mlY=moonY>cy?moonY-moonR*1.85:moonY+moonR*1.85;
+  orbCtx.fillText(phaseName(),moonX,mlY);
+  orbCtx.restore();
+
+  document.getElementById('moonPhaseOrbit').textContent = lunarDayThai();
+}
+
+function updateInfo(){
+  const il=illum(), pct=(il*100).toFixed(1);
+  document.getElementById('phaseName').textContent  = phaseName();
+  document.getElementById('phaseThai').textContent  = phaseNameThai();
+  document.getElementById('illumPct').textContent   = pct+'%';
+  document.getElementById('illumFill').style.width  = pct+'%';
+
+  document.getElementById('lunarDayThai').textContent = lunarDayThai();
+  const days=Math.floor(lunarDay), hrs=Math.round((lunarDay-days)*24);
+  document.getElementById('moonAge').textContent = `วันที่ ${days+1} / 29.5 (${hrs}h)`;
+  const rH=moonRiseHour(), sH=(rH+12)%24;
+  document.getElementById('riseSet').textContent = `${fmt24(rH)} / ${fmt24(sH)} น.`;
+
+  const vis=isMoonVisible();
+  document.getElementById('visibility').textContent = vis?'✓ มองเห็น (Visible)':'✗ ใต้ขอบฟ้า (Below Horizon)';
+  document.getElementById('visibility').style.color = vis?'#7ef5b0':'#f57e7e';
+
+  const hem=obsLat>=0?'N':'S';
+  document.getElementById('obsInfo').textContent = `${Math.abs(obsLat).toFixed(1)}°${hem}`;
+  document.getElementById('hemNote').textContent =
+    obsLat>=0
+      ? 'ซีกเหนือ: เสี้ยวเพิ่ม = สว่างขวา, ลด = สว่างซ้าย'
+      : 'ซีกใต้: เสี้ยวเพิ่ม = สว่างซ้าย, ลด = สว่างขวา';
+  document.getElementById('hemNote').style.color = obsLat>=0 ? '#f5a020' : '#a0d0ff';
+
+  document.getElementById('dayVal').textContent  = lunarDayThai();
+  document.getElementById('timeVal').textContent = fmt24(timeHour)+' น.';
+}
+
+function drawMoonFace(){
+  const w=moonC.width, h=moonC.height;
+  moonCtx.clearRect(0,0,w,h);
+  drawMoonDisc(moonCtx,w/2,h/2,Math.min(w,h)/2-4,obsLat>=0);
+}
+
+function loop(ts){
+  if(lastTs&&playing){
+    const dt=(ts-lastTs)/1000;
+    lunarDay=(lunarDay+dt*SPEED)%LUNAR;
+    timeHour=(timeHour+dt*.36)%24;
+    document.getElementById('daySlider').value =Math.round(lunarDay*100);
+    document.getElementById('timeSlider').value=Math.round(timeHour*100);
+  }
+  lastTs=ts;
+  drawMoonFace();
+  drawSky();
+  drawOrbit();
+  updateInfo();
+  requestAnimationFrame(loop);
+}
+
+document.getElementById('daySlider').addEventListener('input',e=>{lunarDay=e.target.value/100;});
+document.getElementById('timeSlider').addEventListener('input',e=>{timeHour=e.target.value/100;});
+document.getElementById('locationSelect').addEventListener('change',e=>{obsLat=parseFloat(e.target.value);});
+
+const btnPlay=document.getElementById('btnPlay');
+btnPlay.addEventListener('click',()=>{
+  playing=!playing;
+  btnPlay.textContent=playing?'⏸ หยุด':'▶ เล่น';
+  btnPlay.classList.toggle('active',playing);
+  lastTs=null;
+});
+document.getElementById('btnReset').addEventListener('click',()=>{
+  lunarDay=0; timeHour=6;
+  document.getElementById('daySlider').value=0;
+  document.getElementById('timeSlider').value=600;
+});
+document.getElementById('btnToday').addEventListener('click',()=>{
+  const ref=new Date('2025-01-29T12:36:00Z');
+  const now=new Date('2026-04-28T12:00:00Z');
+  lunarDay=((now-ref)/864e5)%LUNAR;
+  timeHour=12;
+  document.getElementById('daySlider').value=Math.round(lunarDay*100);
+  document.getElementById('timeSlider').value=1200;
+});
+function setDay(v){lunarDay=v/100;document.getElementById('daySlider').value=v;}
+
+lunarDay=5.5; timeHour=18;
+document.getElementById('daySlider').value =550;
+document.getElementById('timeSlider').value=1800;
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
