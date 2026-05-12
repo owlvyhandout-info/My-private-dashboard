@@ -1,0 +1,523 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦉 คู่มือ Firebase Setup</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 {
+    text-align: center;
+    color: #fbbf24;
+    font-size: 2em;
+    padding: 20px;
+    background: #1e293b;
+    border-radius: 12px;
+    margin-bottom: 30px;
+  }
+  h2 {
+    color: #38bdf8;
+    border-left: 4px solid #38bdf8;
+    padding-left: 12px;
+    margin-top: 40px;
+  }
+  h3 { color: #a78bfa; }
+  .step {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #334155;
+  }
+  .step-number {
+    background: #3b82f6;
+    color: white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  .step-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #fbbf24;
+  }
+  code {
+    background: #0f172a;
+    color: #4ade80;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.95em;
+  }
+  pre {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    color: #4ade80;
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+  .warning {
+    background: #422006;
+    border: 1px solid #f97316;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    color: #fed7aa;
+  }
+  .warning::before { content: "⚠️ ระวัง: "; font-weight: bold; color: #f97316; }
+  .success {
+    background: #052e16;
+    border: 1px solid #4ade80;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    color: #bbf7d0;
+  }
+  .success::before { content: "✅ "; }
+  .error {
+    background: #450a0a;
+    border: 1px solid #f87171;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    color: #fecaca;
+  }
+  .error::before { content: "❌ "; }
+  .info {
+    background: #0c1a2e;
+    border: 1px solid #38bdf8;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    color: #bae6fd;
+  }
+  .info::before { content: "💡 "; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+  }
+  th {
+    background: #1e3a5f;
+    color: #38bdf8;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #334155;
+  }
+  tr:hover { background: #1e293b; }
+  .checklist {
+    list-style: none;
+    padding: 0;
+  }
+  .checklist li {
+    padding: 8px 12px;
+    margin: 6px 0;
+    background: #1e293b;
+    border-radius: 6px;
+    border-left: 3px solid #334155;
+  }
+  .checklist li::before { content: "☐ "; color: #94a3b8; }
+  .var-table td:first-child { color: #fbbf24; font-family: monospace; }
+  .var-table td:nth-child(2) { color: #f87171; }
+  .var-table td:nth-child(3) { color: #4ade80; }
+  .divider {
+    border: none;
+    border-top: 1px solid #334155;
+    margin: 30px 0;
+  }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-left: 8px;
+  }
+  .tag-critical { background: #7f1d1d; color: #fca5a5; }
+  .tag-important { background: #78350f; color: #fcd34d; }
+  .tag-normal { background: #1e3a5f; color: #93c5fd; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>🦉 คู่มือ Firebase + GitHub Pages Setup<br>
+  <small style="font-size:0.6em; color:#94a3b8;">ทำซ้ำได้ทุกครั้ง | อ่านแล้วปฏิบัติได้เลย</small></h1>
+
+  <!-- OVERVIEW -->
+  <h2>📋 ภาพรวมทั้งหมด</h2>
+  <div class="step">
+    <table>
+      <tr>
+        <th>ลำดับ</th>
+        <th>งาน</th>
+        <th>ทำที่ไหน</th>
+        <th>ระดับความสำคัญ</th>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>ใส่ Firebase Config จริงใน index.html</td>
+        <td>GitHub</td>
+        <td><span class="tag tag-critical">สำคัญมาก</span></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>ตั้งค่า Firestore Rules</td>
+        <td>Firebase Console</td>
+        <td><span class="tag tag-critical">สำคัญมาก</span></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>สร้าง Document เก็บ API Key</td>
+        <td>Firebase Console</td>
+        <td><span class="tag tag-critical">สำคัญมาก</span></td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>เปิด Google Authentication</td>
+        <td>Firebase Console</td>
+        <td><span class="tag tag-important">สำคัญ</span></td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>เพิ่ม Authorized Domain</td>
+        <td>Firebase Console</td>
+        <td><span class="tag tag-important">สำคัญ</span></td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>Hard Refresh ทดสอบ</td>
+        <td>Browser</td>
+        <td><span class="tag tag-normal">ทดสอบ</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- STEP 1 -->
+  <h2>🔧 ขั้นตอนที่ 1: ใส่ Firebase Config</h2>
+  <div class="step">
+    <div><span class="step-number">1</span><span class="step-title">เปิด Firebase Console</span></div>
+    <pre>https://console.firebase.google.com
+→ เลือก Project ของคุณ
+→ ⚙️ Project Settings
+→ เลื่อนลงหา "Your apps"
+→ เลือก Tab "Config"</pre>
+
+    <div><span class="step-number">2</span><span class="step-title">Copy firebaseConfig</span></div>
+    <pre>const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "your-app.firebaseapp.com",
+  projectId: "your-app",
+  storageBucket: "your-app.firebasestorage.app",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abc..."
+};</pre>
+
+    <div><span class="step-number">3</span><span class="step-title">แก้ใน GitHub → index.html</span></div>
+    <pre>กด Ctrl+F พิมพ์: YOUR_API_KEY
+แทนที่ทุกค่าด้วยค่าจริงจาก Firebase Console
+Commit changes</pre>
+
+    <div class="warning">ค่าทุกตัวต้องตรงกับใน Firebase Console เป๊ะ ห้ามเว้นวรรคหรือตัดออก</div>
+    <div class="warning">ตัวเล็กตัวใหญ่ต้องเหมือนกันทุกตัวอักษร</div>
+    <div class="success">เช็คได้ที่ projectId ต้องตรงกับชื่อ Project ใน Firebase</div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- STEP 2 -->
+  <h2>🔒 ขั้นตอนที่ 2: ตั้งค่า Firestore Rules</h2>
+  <div class="step">
+    <div><span class="step-number">1</span><span class="step-title">เปิด Firestore Rules</span></div>
+    <pre>Firebase Console
+→ Firestore Database
+→ Tab "Rules"</pre>
+
+    <div><span class="step-number">2</span><span class="step-title">วางโค้ดนี้แทนที่ของเดิม</span></div>
+    <pre>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /config/{doc} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+  }
+}</pre>
+
+    <div><span class="step-number">3</span><span class="step-title">กด Publish</span></div>
+
+    <div class="warning">ถ้า Rules เป็น allow read, write: if false → เว็บอ่านข้อมูลไม่ได้เลย</div>
+    <div class="warning">ถ้า Rules เป็น allow read, write: if true → ทุกคนอ่านเขียนได้ ไม่ปลอดภัย</div>
+    <div class="success">Rules ที่ใช้จะให้อ่านได้เฉพาะคนที่ Login แล้วเท่านั้น</div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- STEP 3 -->
+  <h2>🔑 ขั้นตอนที่ 3: สร้าง Document เก็บ API Key</h2>
+  <div class="step">
+    <div><span class="step-number">1</span><span class="step-title">เปิด Firestore Data</span></div>
+    <pre>Firebase Console
+→ Firestore Database
+→ Tab "Data"
+→ กด "+ Start collection"</pre>
+
+    <div><span class="step-number">2</span><span class="step-title">สร้าง Collection และ Document</span></div>
+    <table>
+      <tr>
+        <th>ช่อง</th>
+        <th>ค่าที่ใส่</th>
+        <th>หมายเหตุ</th>
+      </tr>
+      <tr>
+        <td>Collection ID</td>
+        <td><code>config</code></td>
+        <td>ต้องตรงกับในโค้ด</td>
+      </tr>
+      <tr>
+        <td>Document ID</td>
+        <td><code>openrouter</code></td>
+        <td>ต้องตรงกับในโค้ด</td>
+      </tr>
+      <tr>
+        <td>Field</td>
+        <td><code>apiKey</code></td>
+        <td>ต้องตรงกับในโค้ด</td>
+      </tr>
+      <tr>
+        <td>Type</td>
+        <td><code>string</code></td>
+        <td>เลือก string เสมอ</td>
+      </tr>
+      <tr>
+        <td>Value</td>
+        <td><code>sk-or-xxxxxxxxx</code></td>
+        <td>API Key จริงจาก OpenRouter</td>
+      </tr>
+    </table>
+
+    <div><span class="step-number">3</span><span class="step-title">กด Save</span></div>
+
+    <div class="warning">ชื่อ Collection, Document, Field ต้องตรงกับในโค้ด index.html เป๊ะ!</div>
+    <div class="warning">ตัวเล็กตัวใหญ่ต้องเหมือนกัน: apiKey ≠ ApiKey ≠ APIKEY</div>
+    <div class="info">เช็คในโค้ดด้วย Ctrl+F พิมพ์: doc(db, แล้วดูชื่อ Collection และ Document</div>
+    <div class="info">เช็คในโค้ดด้วย Ctrl+F พิมพ์: snap.data(). แล้วดูชื่อ Field</div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- STEP 4 -->
+  <h2>🔐 ขั้นตอนที่ 4: เปิด Google Authentication</h2>
+  <div class="step">
+    <div><span class="step-number">1</span><span class="step-title">เปิด Authentication</span></div>
+    <pre>Firebase Console
+→ Authentication
+→ Tab "Sign-in method"
+→ คลิก "Google"
+→ Toggle เปิด Enable
+→ ใส่ Support Email
+→ กด Save</pre>
+
+    <div class="warning">ถ้าไม่เปิด Google → ปุ่ม Login ด้วย Google จะใช้งานไม่ได้</div>
+    <div class="success">เช็คว่า Status เป็น "Enabled" สีเขียว</div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- STEP 5 -->
+  <h2>🌐 ขั้นตอนที่ 5: เพิ่ม Authorized Domain</h2>
+  <div class="step">
+    <div><span class="step-number">1</span><span class="step-title">เพิ่ม Domain</span></div>
+    <pre>Firebase Console
+→ Authentication
+→ Tab "Settings"
+→ "Authorized domains"
+→ กด "Add domain"
+→ ใส่: your-username.github.io
+→ กด Add</pre>
+
+    <div class="warning">ถ้าไม่เพิ่ม Domain → Login จะ Error "unauthorized domain"</div>
+    <div class="success">Domain ที่ต้องมี: localhost และ your-username.github.io</div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- VARIABLES -->
+  <h2>⚙️ ตัวแปรสำคัญที่ต้องระวัง</h2>
+  <div class="step">
+    <table class="var-table">
+      <tr>
+        <th>ตัวแปร/ค่า</th>
+        <th>ถ้าผิด</th>
+        <th>เช็คที่ไหน</th>
+      </tr>
+      <tr>
+        <td>apiKey ใน firebaseConfig</td>
+        <td>Firebase ไม่ทำงานเลย</td>
+        <td>Firebase Console → Project Settings</td>
+      </tr>
+      <tr>
+        <td>projectId ใน firebaseConfig</td>
+        <td>เชื่อมต่อ Project ผิด</td>
+        <td>ต้องตรงกับชื่อ Project</td>
+      </tr>
+      <tr>
+        <td>Collection ID ใน Firestore</td>
+        <td>หาข้อมูลไม่เจอ</td>
+        <td>โค้ด: doc(db, 'config', ...)</td>
+      </tr>
+      <tr>
+        <td>Document ID ใน Firestore</td>
+        <td>หาข้อมูลไม่เจอ</td>
+        <td>โค้ด: doc(db, ..., 'openrouter')</td>
+      </tr>
+      <tr>
+        <td>Field Name ใน Firestore</td>
+        <td>ได้ค่า undefined</td>
+        <td>โค้ด: snap.data().apiKey</td>
+      </tr>
+      <tr>
+        <td>OpenRouter API Key</td>
+        <td>เรียก AI ไม่ได้</td>
+        <td>openrouter.ai → Keys</td>
+      </tr>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ERROR GUIDE -->
+  <h2>🚨 Error ที่พบบ่อย และวิธีแก้</h2>
+  <div class="step">
+    <table>
+      <tr>
+        <th>Error</th>
+        <th>สาเหตุ</th>
+        <th>วิธีแก้</th>
+      </tr>
+      <tr>
+        <td><code>Missing or insufficient permissions</code></td>
+        <td>Firestore Rules ปิดอยู่</td>
+        <td>แก้ Rules → Publish</td>
+      </tr>
+      <tr>
+        <td><code>ไม่พบ API Key ใน Firestore</code></td>
+        <td>ชื่อ Collection/Document/Field ไม่ตรง</td>
+        <td>เช็คชื่อให้ตรงกับในโค้ด</td>
+      </tr>
+      <tr>
+        <td><code>unauthorized domain</code></td>
+        <td>ยังไม่เพิ่ม Domain</td>
+        <td>Authentication → Settings → Add domain</td>
+      </tr>
+      <tr>
+        <td><code>Firebase: No Firebase App</code></td>
+        <td>Config ผิดหรือยังเป็น Placeholder</td>
+        <td>ใส่ค่าจริงจาก Firebase Console</td>
+      </tr>
+      <tr>
+        <td><code>favicon.ico 404</code></td>
+        <td>ไม่มีไอคอนเว็บ</td>
+        <td>ไม่ต้องสนใจ ไม่กระทบการทำงาน</td>
+      </tr>
+      <tr>
+        <td><code>SyntaxError</code></td>
+        <td>โค้ดผิด syntax</td>
+        <td>เช็ค parentheses () ให้ครบ</td>
+      </tr>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- CHECKLIST -->
+  <h2>✅ Checklist ก่อนทดสอบ</h2>
+  <div class="step">
+    <ul class="checklist">
+      <li>Firebase Config ใส่ค่าจริงทุกตัว ไม่มี YOUR_API_KEY เหลืออยู่</li>
+      <li>Firestore Rules Publish แล้ว</li>
+      <li>Firestore มี Collection: config</li>
+      <li>Firestore มี Document ชื่อตรงกับในโค้ด</li>
+      <li>Firestore Field ชื่อตรงกับในโค้ด (ตัวเล็กใหญ่ถูกต้อง)</li>
+      <li>OpenRouter API Key ใส่ครบถ้วน</li>
+      <li>Google Authentication เปิดแล้ว</li>
+      <li>Authorized Domain เพิ่มแล้ว</li>
+      <li>Commit & Push ขึ้น GitHub แล้ว</li>
+      <li>Hard Refresh ด้วย Ctrl+Shift+R</li>
+    </ul>
+  </div>
+
+  <hr class="divider">
+
+  <!-- DEBUG -->
+  <h2>🔍 วิธี Debug เมื่อมีปัญหา</h2>
+  <div class="step">
+    <div><span class="step-number">1</span><span class="step-title">เปิด Browser Console</span></div>
+    <pre>กด F12
+→ คลิก Tab "Console"
+→ กด Ctrl+Shift+R (Hard Refresh)
+→ มองหา Error สีแดง 🔴</pre>
+
+    <div><span class="step-number">2</span><span class="step-title">เช็คชื่อตัวแปรในโค้ด</span></div>
+    <pre>เปิด index.html
+Ctrl+F พิมพ์: doc(db,
+→ ดูชื่อ Collection และ Document
+
+Ctrl+F พิมพ์: snap.data()
+→ ดูชื่อ Field
+
+นำไปเทียบกับใน Firestore ให้ตรงกัน</pre>
+
+    <div class="info">Error ใน Console บอกปัญหาได้ตรงที่สุด ควรเช็คทุกครั้ง</div>
+  </div>
+
+  <div style="text-align:center; padding: 30px; color: #94a3b8;">
+    🦉 คู่มือนี้จัดทำโดย OwlVy Assistant | ใช้งานได้ทุกครั้ง
+  </div>
+
+</div>
+</body>
+</html>
+
+							<script>
+                            	
+							</script>
+                        </body>
+                        </html>
+                    

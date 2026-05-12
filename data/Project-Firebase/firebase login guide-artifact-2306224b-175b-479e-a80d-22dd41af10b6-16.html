@@ -1,0 +1,736 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦉 Firebase Login Guide</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 24px;
+    line-height: 1.7;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    background: linear-gradient(135deg, #1e3a5f, #1e293b);
+    border: 1px solid #38bdf8;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 32px;
+  }
+  .header h1 { font-size: 2em; color: #fbbf24; margin-bottom: 8px; }
+  .header p { color: #94a3b8; }
+
+  /* SECTION */
+  h2 {
+    color: #38bdf8;
+    font-size: 1.3em;
+    border-left: 4px solid #38bdf8;
+    padding-left: 12px;
+    margin: 36px 0 16px;
+  }
+  h3 { color: #a78bfa; margin: 16px 0 8px; }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: #38bdf8; }
+  .card-title {
+    color: #fbbf24;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #334155;
+  }
+
+  /* BOX */
+  .box {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 12px 0;
+  }
+
+  /* STEP */
+  .step-list { list-style: none; padding: 0; }
+  .step-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #1e293b;
+    font-size: 0.95em;
+  }
+  .step-list li:last-child { border-bottom: none; }
+  .step-num {
+    background: #3b82f6;
+    color: white;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8em;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* FLOW */
+  .flow { margin: 12px 0; }
+  .flow-item {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-family: monospace;
+    font-size: 0.88em;
+    margin: 4px 0;
+  }
+  .flow-item.blue { border-color: #38bdf8; color: #38bdf8; }
+  .flow-item.green { border-color: #4ade80; color: #4ade80; }
+  .flow-item.yellow { border-color: #fbbf24; color: #fbbf24; }
+  .flow-arrow { text-align: center; color: #475569; padding: 2px 0; }
+
+  /* ALERTS */
+  .alert {
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 10px 0;
+    font-size: 0.9em;
+  }
+  .alert-info { background: #0c1a2e; border: 1px solid #38bdf8; color: #bae6fd; }
+  .alert-info::before { content: "💡 "; }
+  .alert-success { background: #052e16; border: 1px solid #4ade80; color: #bbf7d0; }
+  .alert-success::before { content: "✅ "; }
+  .alert-warning { background: #422006; border: 1px solid #f97316; color: #fed7aa; }
+  .alert-warning::before { content: "⚠️ "; }
+
+  /* CODE */
+  pre {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    color: #4ade80;
+    font-family: monospace;
+    font-size: 0.85em;
+    margin: 10px 0;
+  }
+  .comment { color: #475569; }
+  .keyword { color: #38bdf8; }
+  .string { color: #fbbf24; }
+  .function { color: #a78bfa; }
+  code {
+    background: #0f172a;
+    color: #fbbf24;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.9em;
+  }
+  th {
+    background: #1e3a5f;
+    color: #38bdf8;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #1e293b;
+    background: #1e293b;
+  }
+  tr:hover td { background: #263348; }
+
+  /* TAG */
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: bold;
+    margin: 2px;
+  }
+  .tag-easy { background: #052e16; color: #4ade80; border: 1px solid #4ade80; }
+  .tag-medium { background: #422006; color: #fbbf24; border: 1px solid #fbbf24; }
+  .tag-hard { background: #450a0a; color: #f87171; border: 1px solid #f87171; }
+  .tag-free { background: #1e3a5f; color: #38bdf8; border: 1px solid #38bdf8; }
+
+  /* CASE BOX */
+  .case-box {
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0;
+  }
+  .case-old {
+    background: #0d2137;
+    border: 2px solid #38bdf8;
+  }
+  .case-new {
+    background: #0d2d1a;
+    border: 2px solid #4ade80;
+  }
+  .case-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+  .case-old .case-title { color: #38bdf8; }
+  .case-new .case-title { color: #4ade80; }
+
+  /* TABS */
+  .tab-container { margin: 16px 0; }
+  .tab-buttons { display: flex; gap: 8px; margin-bottom: -1px; }
+  .tab-btn {
+    padding: 8px 16px;
+    border: 1px solid #334155;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    background: #0f172a;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    background: #1e293b;
+    color: #fbbf24;
+    border-color: #38bdf8;
+  }
+  .tab-content {
+    display: none;
+    background: #1e293b;
+    border: 1px solid #38bdf8;
+    border-radius: 0 8px 8px 8px;
+    padding: 20px;
+  }
+  .tab-content.active { display: block; }
+
+  /* FIRESTORE VIEWER */
+  .fs-viewer {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 16px;
+    font-family: monospace;
+    font-size: 0.88em;
+  }
+  .fs-collection { color: #38bdf8; cursor: pointer; }
+  .fs-document { color: #fbbf24; margin-left: 20px; cursor: pointer; }
+  .fs-field { color: #4ade80; margin-left: 40px; }
+  .fs-value { color: #94a3b8; }
+  .fs-arrow { color: #475569; }
+
+  /* DIVIDER */
+  hr { border: none; border-top: 1px solid #1e293b; margin: 32px 0; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 24px;
+    color: #475569;
+    font-size: 0.88em;
+    margin-top: 40px;
+    border-top: 1px solid #1e293b;
+  }
+
+  /* COPY BTN */
+  .code-block { position: relative; }
+  .copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #334155;
+    color: #94a3b8;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 0.75em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { background: #38bdf8; color: #0f172a; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>🦉 Firebase Login Guide</h1>
+    <p>เพิ่ม Login Google ในโปรแกรมใหม่ + ดูข้อมูลผู้ใช้งาน</p>
+    <p style="color:#475569; font-size:0.85em; margin-top:8px;">
+      Project: owlvyhousedeep-bot | 2025
+    </p>
+  </div>
+
+  <!-- SECTION 1: สองกรณี -->
+  <h2>📋 สองกรณีที่พบบ่อย</h2>
+
+  <div class="card-grid">
+    <div class="case-box case-old">
+      <div class="case-title">🔵 กรณีที่ 1: Project เดิม</div>
+      <ul class="step-list">
+        <li><div class="step-num">✅</div><div>Firebase Project มีอยู่แล้ว</div></li>
+        <li><div class="step-num">✅</div><div>Google Auth เปิดแล้ว</div></li>
+        <li><div class="step-num">1</div><div>Copy โค้ด Firebase จากไฟล์เดิม</div></li>
+        <li><div class="step-num">2</div><div>วางใน index.html ใหม่</div></li>
+        <li><div class="step-num">3</div><div>เพิ่ม Domain ใหม่ (ถ้าต่าง URL)</div></li>
+      </ul>
+      <div class="alert alert-success" style="margin-top:12px;">แทบไม่ต้องตั้งค่าอะไรเพิ่ม!</div>
+    </div>
+
+    <div class="case-box case-new">
+      <div class="case-title">🟢 กรณีที่ 2: Project ใหม่</div>
+      <ul class="step-list">
+        <li><div class="step-num">1</div><div>สร้าง Firebase Project ใหม่</div></li>
+        <li><div class="step-num">2</div><div>เปิด Google Authentication</div></li>
+        <li><div class="step-num">3</div><div>เพิ่ม Authorized Domain</div></li>
+        <li><div class="step-num">4</div><div>Copy Config ใหม่</div></li>
+        <li><div class="step-num">5</div><div>วางโค้ด Login ในไฟล์ใหม่</div></li>
+      </ul>
+      <div class="alert alert-warning" style="margin-top:12px;">ต้องตั้งค่าใหม่ทั้งหมด</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- SECTION 2: ตัวอย่าง -->
+  <h2>🎯 ตัวอย่างให้เห็นภาพ</h2>
+
+  <div class="box">
+    <h3>สมมติมี 3 โปรแกรม ใช้ Project เดิม</h3>
+    <div class="flow">
+      <div class="flow-item blue">Firebase Project: owlvyhousedeep-bot</div>
+      <div class="flow-arrow">↓ ใช้ร่วมกัน</div>
+      <div class="flow-item green">โปรแกรม A → chatbot.html ✅ ทำแล้ว</div>
+      <div class="flow-item yellow">โปรแกรม B → note.html → Copy โค้ดมาใช้</div>
+      <div class="flow-item yellow">โปรแกรม C → report.html → Copy โค้ดมาใช้</div>
+    </div>
+    <div class="alert alert-info">Login Google เดียวกันหมด | ข้อมูลแชร์กันได้ | ไม่ต้องตั้งค่าเพิ่ม</div>
+  </div>
+
+  <hr>
+
+  <!-- SECTION 3: ขั้นตอนละเอียด -->
+  <h2>📝 ขั้นตอนละเอียด: เพิ่ม Domain ใหม่</h2>
+
+  <div class="box">
+    <h3>เมื่อโปรแกรมใหม่อยู่คนละ URL</h3>
+    <ul class="step-list">
+      <li><div class="step-num">1</div><div>เปิด <code>console.firebase.google.com</code></div></li>
+      <li><div class="step-num">2</div><div>เลือก Project: <code>owlvyhousedeep-bot</code></div></li>
+      <li><div class="step-num">3</div><div>คลิก <code>Authentication</code> เมนูซ้าย</div></li>
+      <li><div class="step-num">4</div><div>คลิก Tab <code>Settings</code></div></li>
+      <li><div class="step-num">5</div><div>คลิก <code>Authorized domains</code></div></li>
+      <li><div class="step-num">6</div><div>กด <code>Add domain</code></div></li>
+      <li><div class="step-num">7</div><div>พิมพ์ Domain ใหม่ เช่น <code>new-app.github.io</code></div></li>
+      <li><div class="step-num">8</div><div>กด <code>Add</code> → เสร็จแล้ว!</div></li>
+    </ul>
+  </div>
+
+  <hr>
+
+  <!-- SECTION 4: Template โค้ด -->
+  <h2>💻 Template โค้ด Firebase Login</h2>
+  <div class="alert alert-info">Copy โค้ดนี้ไปวางในโปรแกรมใหม่ทุกอัน แก้แค่ firebaseConfig เท่านั้น</div>
+
+  <div class="tab-container">
+    <div class="tab-buttons">
+      <button class="tab-btn active" onclick="showTab('tab1', this)">🔧 HTML Structure</button>
+      <button class="tab-btn" onclick="showTab('tab2', this)">⚡ Firebase Script</button>
+      <button class="tab-btn" onclick="showTab('tab3', this)">🎨 Login UI</button>
+    </div>
+
+    <div id="tab1" class="tab-content active">
+      <h3>โครงสร้าง HTML พื้นฐาน</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode('code1')">Copy</button>
+        <pre id="code1"><span class="comment">&lt;!-- หน้า Login --&gt;</span>
+&lt;<span class="keyword">div</span> id=<span class="string">"login-page"</span>&gt;
+  &lt;<span class="keyword">h2</span>&gt;เข้าสู่ระบบ&lt;/<span class="keyword">h2</span>&gt;
+  &lt;<span class="keyword">button</span> onclick=<span class="string">"signInWithGoogle()"</span>&gt;
+    Login ด้วย Google
+  &lt;/<span class="keyword">button</span>&gt;
+&lt;/<span class="keyword">div</span>&gt;
+
+<span class="comment">&lt;!-- หน้าหลัก (ซ่อนไว้ก่อน) --&gt;</span>
+&lt;<span class="keyword">div</span> id=<span class="string">"app"</span> style=<span class="string">"display:none"</span>&gt;
+  &lt;<span class="keyword">p</span>&gt;ยินดีต้อนรับ! &lt;<span class="keyword">span</span> id=<span class="string">"user-name"</span>&gt;&lt;/<span class="keyword">span</span>&gt;&lt;/<span class="keyword">p</span>&gt;
+  &lt;<span class="keyword">button</span> onclick=<span class="string">"signOut()"</span>&gt;ออกจากระบบ&lt;/<span class="keyword">button</span>&gt;
+  
+  <span class="comment">&lt;!-- เนื้อหาโปรแกรม --&gt;</span>
+  
+&lt;/<span class="keyword">div</span>&gt;</pre>
+      </div>
+    </div>
+
+    <div id="tab2" class="tab-content">
+      <h3>Firebase Script ที่ต้องใส่</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode('code2')">Copy</button>
+        <pre id="code2">&lt;<span class="keyword">script</span> type=<span class="string">"module"</span>&gt;
+<span class="comment">// ── IMPORTS ──────────────────────────</span>
+<span class="keyword">import</span> { initializeApp } 
+  <span class="keyword">from</span> <span class="string">"https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js"</span>;
+<span class="keyword">import</span> { getAuth, GoogleAuthProvider, 
+         signInWithPopup, onAuthStateChanged,
+         signOut <span class="keyword">as</span> fbSignOut } 
+  <span class="keyword">from</span> <span class="string">"https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js"</span>;
+<span class="keyword">import</span> { getFirestore } 
+  <span class="keyword">from</span> <span class="string">"https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js"</span>;
+
+<span class="comment">// ── CONFIG (แก้ตรงนี้เท่านั้น!) ──────</span>
+<span class="keyword">const</span> firebaseConfig = {
+  apiKey: <span class="string">"YOUR_API_KEY"</span>,
+  authDomain: <span class="string">"YOUR_PROJECT.firebaseapp.com"</span>,
+  projectId: <span class="string">"YOUR_PROJECT"</span>,
+  storageBucket: <span class="string">"YOUR_PROJECT.firebasestorage.app"</span>,
+  messagingSenderId: <span class="string">"YOUR_SENDER_ID"</span>,
+  appId: <span class="string">"YOUR_APP_ID"</span>
+};
+
+<span class="comment">// ── INIT ──────────────────────────────</span>
+<span class="keyword">const</span> app = initializeApp(firebaseConfig);
+<span class="keyword">const</span> auth = getAuth(app);
+<span class="keyword">const</span> db = getFirestore(app);
+<span class="keyword">const</span> provider = <span class="keyword">new</span> <span class="function">GoogleAuthProvider</span>();
+
+<span class="comment">// ── AUTH STATE ────────────────────────</span>
+<span class="function">onAuthStateChanged</span>(auth, (user) => {
+  <span class="keyword">if</span> (user) {
+    <span class="comment">// Login แล้ว → แสดงแอป</span>
+    document.<span class="function">getElementById</span>(<span class="string">'login-page'</span>).style.display = <span class="string">'none'</span>;
+    document.<span class="function">getElementById</span>(<span class="string">'app'</span>).style.display = <span class="string">'block'</span>;
+    document.<span class="function">getElementById</span>(<span class="string">'user-name'</span>).textContent = 
+      user.displayName || user.email;
+  } <span class="keyword">else</span> {
+    <span class="comment">// ยังไม่ Login → แสดงหน้า Login</span>
+    document.<span class="function">getElementById</span>(<span class="string">'login-page'</span>).style.display = <span class="string">'flex'</span>;
+    document.<span class="function">getElementById</span>(<span class="string">'app'</span>).style.display = <span class="string">'none'</span>;
+  }
+});
+
+<span class="comment">// ── FUNCTIONS ─────────────────────────</span>
+window.signInWithGoogle = <span class="keyword">async</span> () => {
+  <span class="keyword">try</span> {
+    <span class="keyword">await</span> <span class="function">signInWithPopup</span>(auth, provider);
+  } <span class="keyword">catch</span>(e) {
+    <span class="function">alert</span>(<span class="string">'Login ไม่สำเร็จ: '</span> + e.message);
+  }
+};
+
+window.signOut = <span class="keyword">async</span> () => {
+  <span class="keyword">if</span> (<span class="function">confirm</span>(<span class="string">'ต้องการออกจากระบบ?'</span>)) {
+    <span class="keyword">await</span> <span class="function">fbSignOut</span>(auth);
+  }
+};
+&lt;/<span class="keyword">script</span>&gt;</pre>
+      </div>
+    </div>
+
+    <div id="tab3" class="tab-content">
+      <h3>หน้า Login สวยงาม</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode('code3')">Copy</button>
+        <pre id="code3"><span class="comment">/* CSS สำหรับหน้า Login */</span>
+#login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #0f172a;
+}
+
+.login-box {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  width: 320px;
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1em;
+  cursor: pointer;
+  width: 100%;
+  justify-content: center;
+}
+
+.google-btn:hover {
+  background: #f0f0f0;
+  transform: translateY(-1px);
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- SECTION 5: ดูข้อมูลผู้ใช้งาน -->
+  <h2>👥 ดูข้อมูลว่ามีใครเข้าใช้บ้าง</h2>
+
+  <div class="tab-container">
+    <div class="tab-buttons">
+      <button class="tab-btn active" onclick="showTab('view1', this)">🖥️ Console</button>
+      <button class="tab-btn" onclick="showTab('view2', this)">💻 โค้ดดึงข้อมูล</button>
+      <button class="tab-btn" onclick="showTab('view3', this)">📊 บันทึก Log</button>
+    </div>
+
+    <div id="view1" class="tab-content active">
+      <h3>ดูผ่าน Firebase Console</h3>
+      <ul class="step-list">
+        <li><div class="step-num">1</div><div>เปิด <code>console.firebase.google.com</code></div></li>
+        <li><div class="step-num">2</div><div>เลือก Project ของคุณ</div></li>
+        <li><div class="step-num">3</div><div>คลิก <code>Authentication</code> เมนูซ้าย</div></li>
+        <li><div class="step-num">4</div><div>คลิก Tab <code>Users</code></div></li>
+        <li><div class="step-num">5</div><div>เห็นรายชื่อทุกคนที่เคย Login</div></li>
+      </ul>
+      <div class="box" style="margin-top:16px;">
+        <h3>ข้อมูลที่เห็น</h3>
+        <table>
+          <tr><th>คอลัมน์</th><th>ความหมาย</th></tr>
+          <tr><td>Identifier</td><td>Email ของ User</td></tr>
+          <tr><td>Providers</td><td>วิธี Login (Google/Email)</td></tr>
+          <tr><td>Created</td><td>วันที่สมัครครั้งแรก</td></tr>
+          <tr><td>Signed In</td><td>วันที่ Login ล่าสุด</td></tr>
+          <tr><td>User UID</td><td>รหัสประจำตัว User</td></tr>
+        </table>
+      </div>
+      <div class="alert alert-info">Export รายชื่อได้ กด ⋮ → Download accounts</div>
+    </div>
+
+    <div id="view2" class="tab-content">
+      <h3>ดึงข้อมูล User ปัจจุบันในโค้ด</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode('code4')">Copy</button>
+        <pre id="code4"><span class="comment">// ดูข้อมูล User ที่ Login อยู่</span>
+<span class="function">onAuthStateChanged</span>(auth, (user) => {
+  <span class="keyword">if</span> (user) {
+    console.<span class="function">log</span>(<span class="string">'UID:'</span>, user.uid);
+    console.<span class="function">log</span>(<span class="string">'ชื่อ:'</span>, user.displayName);
+    console.<span class="function">log</span>(<span class="string">'Email:'</span>, user.email);
+    console.<span class="function">log</span>(<span class="string">'รูปโปรไฟล์:'</span>, user.photoURL);
+    console.<span class="function">log</span>(<span class="string">'Login ครั้งแรก:'</span>, user.metadata.creationTime);
+    console.<span class="function">log</span>(<span class="string">'Login ล่าสุด:'</span>, user.metadata.lastSignInTime);
+  }
+});</pre>
+      </div>
+    </div>
+
+    <div id="view3" class="tab-content">
+      <h3>บันทึก Log การ Login ลง Firestore</h3>
+      <div class="alert alert-info">ทำแบบนี้เพื่อดูประวัติการ Login ย้อนหลังได้</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode('code5')">Copy</button>
+        <pre id="code5"><span class="keyword">import</span> { getFirestore, doc, setDoc, 
+         serverTimestamp } 
+  <span class="keyword">from</span> <span class="string">"firebase/firestore"</span>;
+
+<span class="comment">// บันทึกทุกครั้งที่ Login</span>
+<span class="function">onAuthStateChanged</span>(auth, <span class="keyword">async</span> (user) => {
+  <span class="keyword">if</span> (user) {
+    <span class="comment">// บันทึกลง Firestore</span>
+    <span class="keyword">await</span> <span class="function">setDoc</span>(
+      <span class="function">doc</span>(db, <span class="string">'users'</span>, user.uid), {
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL,
+        lastLogin: <span class="function">serverTimestamp</span>(),
+        loginCount: increment(1)
+      }, { merge: <span class="keyword">true</span> }
+    );
+  }
+});</pre>
+      </div>
+
+      <h3 style="margin-top:16px;">โครงสร้างข้อมูลที่ได้</h3>
+      <div class="fs-viewer">
+        <div class="fs-collection">📁 users/</div>
+        <div class="fs-document">📄 {user_uid}/</div>
+        <div class="fs-field">├── name: <span class="fs-value">"ชื่อ User"</span></div>
+        <div class="fs-field">├── email: <span class="fs-value">"email@gmail.com"</span></div>
+        <div class="fs-field">├── lastLogin: <span class="fs-value">"2025-01-01 22:55"</span></div>
+        <div class="fs-field">└── loginCount: <span class="fs-value">5</span></div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- SECTION 6: เปรียบเทียบ -->
+  <h2>📊 สรุปเปรียบเทียบ</h2>
+
+  <div class="box">
+    <table>
+      <tr>
+        <th>งาน</th>
+        <th>Project เดิม</th>
+        <th>Project ใหม่</th>
+        <th>ความยาก</th>
+      </tr>
+      <tr>
+        <td>สร้าง Firebase Project</td>
+        <td>✅ ไม่ต้อง</td>
+        <td>❗ ต้องทำ</td>
+        <td><span class="tag tag-easy">ง่าย</span></td>
+      </tr>
+      <tr>
+        <td>เปิด Google Auth</td>
+        <td>✅ ไม่ต้อง</td>
+        <td>❗ ต้องทำ</td>
+        <td><span class="tag tag-easy">ง่าย</span></td>
+      </tr>
+      <tr>
+        <td>เพิ่ม Domain</td>
+        <td>⚠️ ถ้าต่าง URL</td>
+        <td>❗ ต้องทำ</td>
+        <td><span class="tag tag-easy">ง่าย</span></td>
+      </tr>
+      <tr>
+        <td>Copy Config</td>
+        <td>✅ ใช้เดิม</td>
+        <td>❗ Config ใหม่</td>
+        <td><span class="tag tag-easy">ง่าย</span></td>
+      </tr>
+      <tr>
+        <td>วางโค้ด Login</td>
+        <td>✅ Copy เดิม</td>
+        <td>✅ Copy เดิม</td>
+        <td><span class="tag tag-easy">ง่าย</span></td>
+      </tr>
+      <tr>
+        <td>Firestore Rules</td>
+        <td>✅ ใช้เดิม</td>
+        <td>❗ ตั้งใหม่</td>
+        <td><span class="tag tag-medium">ปานกลาง</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- SECTION 7: จุดระวัง -->
+  <h2>⚠️ จุดระวังสำคัญ</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">🔤 ตัวเล็ก-ใหญ่ สำคัญมาก</div>
+      <pre style="margin-top:8px; font-size:0.82em;">apiKey    ✅ ถูก
+ApiKey    ❌ ผิด
+APIKEY    ❌ ผิด
+
+ต้องตรงกับในโค้ดเป๊ะ!</pre>
+    </div>
+    <div class="card">
+      <div class="card-title">🌐 Domain ต้องเพิ่มทุกครั้ง</div>
+      <pre style="margin-top:8px; font-size:0.82em;">โปรแกรมใหม่ URL ใหม่
+→ ต้องเพิ่ม Domain ใหม่
+→ Authentication → Settings
+→ Authorized Domains</pre>
+    </div>
+    <div class="card">
+      <div class="card-title">🔑 Config ห้ามสับสน</div>
+      <pre style="margin-top:8px; font-size:0.82em;">Project A → Config A
+Project B → Config B
+
+ใช้ปนกันไม่ได้!
+เช็ค projectId ให้ตรง</pre>
+    </div>
+    <div class="card">
+      <div class="card-title">🔒 Firestore Rules</div>
+      <pre style="margin-top:8px; font-size:0.82em;">Project ใหม่ Rules เป็น
+allow read, write: if false
+→ ต้องแก้ก่อนใช้งาน!</pre>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    🦉 Firebase Login Guide | owlvyhousedeep-bot | 2025<br>
+    <span style="font-size:0.85em;">Copy โค้ด Template แล้วแก้แค่ firebaseConfig เท่านั้น</span>
+  </div>
+
+</div>
+
+<script>
+  function showTab(id, btn) {
+    // หา parent tab-container
+    const container = btn.closest('.tab-container');
+    container.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function copyCode(id) {
+    const text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      event.target.textContent = 'Copied!';
+      setTimeout(() => event.target.textContent = 'Copy', 2000);
+    });
+  }
+</script>
+</body>
+</html>
+
+							<script>
+                            	
+							</script>
+                        </body>
+                        </html>
+                    

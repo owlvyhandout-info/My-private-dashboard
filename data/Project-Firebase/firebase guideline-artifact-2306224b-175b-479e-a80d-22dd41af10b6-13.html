@@ -1,0 +1,678 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦉 Firebase Guideline</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 24px;
+    line-height: 1.7;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    background: linear-gradient(135deg, #1e3a5f, #1e293b);
+    border: 1px solid #38bdf8;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 32px;
+  }
+  .header h1 { font-size: 2.2em; color: #fbbf24; margin-bottom: 8px; }
+  .header p { color: #94a3b8; font-size: 1em; }
+
+  /* SECTION */
+  h2 {
+    color: #38bdf8;
+    font-size: 1.3em;
+    border-left: 4px solid #38bdf8;
+    padding-left: 12px;
+    margin: 36px 0 16px;
+  }
+  h3 { color: #a78bfa; margin: 16px 0 8px; font-size: 1em; }
+
+  /* CARDS GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: #38bdf8; }
+  .card-icon { font-size: 2em; margin-bottom: 10px; }
+  .card-title { color: #fbbf24; font-weight: bold; margin-bottom: 6px; }
+  .card-desc { color: #94a3b8; font-size: 0.9em; }
+  .card-tags { margin-top: 10px; }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: bold;
+    margin: 2px;
+  }
+  .tag-free { background: #052e16; color: #4ade80; border: 1px solid #4ade80; }
+  .tag-paid { background: #2d1b00; color: #fbbf24; border: 1px solid #fbbf24; }
+  .tag-advanced { background: #1e1b4b; color: #a78bfa; border: 1px solid #a78bfa; }
+
+  /* BOX */
+  .box {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 12px 0;
+  }
+
+  /* FLOW */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 12px 0;
+  }
+  .flow-item {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: #e2e8f0;
+    font-family: monospace;
+    font-size: 0.9em;
+    position: relative;
+  }
+  .flow-item.highlight { border-color: #38bdf8; color: #38bdf8; }
+  .flow-arrow {
+    text-align: center;
+    color: #475569;
+    font-size: 1.2em;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.9em;
+  }
+  th {
+    background: #1e3a5f;
+    color: #38bdf8;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #1e293b;
+    background: #1e293b;
+  }
+  tr:hover td { background: #263348; }
+
+  /* ALERT */
+  .alert {
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 10px 0;
+    font-size: 0.92em;
+  }
+  .alert-info { background: #0c1a2e; border: 1px solid #38bdf8; color: #bae6fd; }
+  .alert-info::before { content: "💡 "; }
+  .alert-success { background: #052e16; border: 1px solid #4ade80; color: #bbf7d0; }
+  .alert-success::before { content: "✅ "; }
+  .alert-warning { background: #422006; border: 1px solid #f97316; color: #fed7aa; }
+  .alert-warning::before { content: "⚠️ "; }
+
+  /* CODE */
+  pre {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    color: #4ade80;
+    font-family: monospace;
+    font-size: 0.88em;
+    margin: 10px 0;
+  }
+  code {
+    background: #0f172a;
+    color: #fbbf24;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+  }
+
+  /* IDEA CARDS */
+  .idea-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .idea-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .idea-card .idea-title {
+    color: #fbbf24;
+    font-weight: bold;
+    font-size: 1em;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #334155;
+  }
+  .idea-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 6px 0;
+    font-size: 0.88em;
+  }
+  .idea-step .num {
+    background: #3b82f6;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75em;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* QUOTA */
+  .quota-bar {
+    background: #0f172a;
+    border-radius: 8px;
+    height: 8px;
+    margin: 4px 0 12px;
+    overflow: hidden;
+  }
+  .quota-fill {
+    height: 100%;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #4ade80, #38bdf8);
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 32px;
+    color: #475569;
+    font-size: 0.9em;
+    margin-top: 40px;
+    border-top: 1px solid #1e293b;
+  }
+
+  /* DIVIDER */
+  hr { border: none; border-top: 1px solid #1e293b; margin: 32px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>🦉 Firebase Guideline</h1>
+    <p>ทำอะไรกับ Firebase ได้บ้าง | ใช้กับ Automation | ไอเดียใช้งานจริง</p>
+    <p style="margin-top:8px; color:#475569; font-size:0.85em;">
+      Project: owlvyhousedeep-bot | อัปเดต: 2025
+    </p>
+  </div>
+
+  <!-- SECTION 1: Firebase มีอะไร -->
+  <h2>📦 Firebase มีอะไรบ้าง</h2>
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-icon">🔐</div>
+      <div class="card-title">Authentication</div>
+      <div class="card-desc">ระบบ Login ด้วย Google, Email, Facebook ฯลฯ จัดการ User ได้ทันที</div>
+      <div class="card-tags">
+        <span class="tag tag-free">Free</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🗄️</div>
+      <div class="card-title">Firestore Database</div>
+      <div class="card-desc">Database แบบ NoSQL เก็บข้อมูลเป็น Collection → Document → Field อ่านเขียน Realtime ได้</div>
+      <div class="card-tags">
+        <span class="tag tag-free">Free 1GB</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🗂️</div>
+      <div class="card-title">Storage</div>
+      <div class="card-desc">เก็บไฟล์ รูปภาพ วิดีโอ เอกสาร PDF อัปโหลด/ดาวน์โหลดได้จากเว็บ</div>
+      <div class="card-tags">
+        <span class="tag tag-free">Free 5GB</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🌐</div>
+      <div class="card-title">Hosting</div>
+      <div class="card-desc">Host เว็บได้เลย มี SSL ฟรี CDN ทั่วโลก Deploy ง่ายด้วย CLI</div>
+      <div class="card-tags">
+        <span class="tag tag-free">Free 10GB/เดือน</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">Cloud Functions</div>
+      <div class="card-desc">รัน JavaScript/Python บน Server ได้ Trigger เมื่อข้อมูลเปลี่ยน หรือรับ HTTP Request</div>
+      <div class="card-tags">
+        <span class="tag tag-free">Free 2M calls</span>
+        <span class="tag tag-advanced">Advanced</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <div class="card-title">Analytics</div>
+      <div class="card-desc">วิเคราะห์การใช้งานเว็บ/แอป ดู User Behavior Event Tracking ฟรีไม่จำกัด</div>
+      <div class="card-tags">
+        <span class="tag tag-free">Free ไม่จำกัด</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🔔</div>
+      <div class="card-title">Cloud Messaging (FCM)</div>
+      <div class="card-desc">ส่ง Push Notification ไปยัง Mobile/Web ได้ฟรีไม่จำกัด</div>
+      <div class="card-tags">
+        <span class="tag tag-free">Free ไม่จำกัด</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">🔗</div>
+      <div class="card-title">Realtime Database</div>
+      <div class="card-desc">Database แบบ JSON Sync ข้อมูลแบบ Realtime ทุก Client พร้อมกัน เหมาะกับ Chat / Live Dashboard</div>
+      <div class="card-tags">
+        <span class="tag tag-free">Free 1GB</span>
+      </div>
+    </div>
+
+  </div>
+
+  <hr>
+
+  <!-- SECTION 2: Automation -->
+  <h2>🤖 ใช้กับ Automation ได้อย่างไร</h2>
+
+  <div class="alert alert-info">Firebase เป็น Database กลางที่ทุก Automation เข้าถึงได้ ไม่ว่าจะเป็น n8n, Python Script, Bot Line หรือเว็บ Dashboard</div>
+
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-title">📥 เก็บข้อมูลจาก Automation</div>
+      <div class="card-desc" style="margin-top:8px;">
+        n8n / Bot รันแล้วบันทึก Log, ผลลัพธ์, Error ลง Firestore อ่านได้จาก Dashboard ทันที
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚙️ เก็บ Config กลาง</div>
+      <div class="card-desc" style="margin-top:8px;">
+        เก็บ API Key, Prompt, Setting ใน Firestore แก้ครั้งเดียว ทุก Bot ได้ค่าใหม่ทันที ไม่ต้องแก้โค้ด
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💬 เก็บประวัติ Chat</div>
+      <div class="card-desc" style="margin-top:8px;">
+        ทุกข้อความที่ User คุยกับ Bot บันทึกลง Firestore วิเคราะห์ได้ว่าถามอะไรบ้าง
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔄 แชร์ข้อมูลระหว่าง Workflow</div>
+      <div class="card-desc" style="margin-top:8px;">
+        n8n Workflow A เขียนข้อมูล → Workflow B อ่านต่อ โดยใช้ Firestore เป็นตัวกลาง
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⏱️ Queue งาน</div>
+      <div class="card-desc" style="margin-top:8px;">
+        เพิ่มงานเข้า Firestore → n8n Poll มาทำ → อัปเดตสถานะกลับ จัดคิวงานได้โดยไม่ต้องมี Queue Server
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📡 Webhook ผ่าน Functions</div>
+      <div class="card-desc" style="margin-top:8px;">
+        Cloud Functions รับ Webhook จากภายนอก แล้วเขียนลง Firestore ให้ n8n ไปดึงต่อ
+      </div>
+    </div>
+
+  </div>
+
+  <hr>
+
+  <!-- SECTION 3: n8n + Firebase -->
+  <h2>🔗 n8n + Firebase + Cloudflare ทำงานร่วมกัน</h2>
+
+  <div class="box">
+    <h3>โครงสร้างระบบทั้งหมด</h3>
+    <div class="flow">
+      <div class="flow-item">🌐 Internet / Line / Webhook ภายนอก</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-item highlight">☁️ Cloudflare Tunnel → เปิดทาง n8n ให้รับ Request ได้</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-item">⚡ n8n (Local/Server) → ประมวลผล Workflow</div>
+      <div class="flow-arrow">↓ ↕</div>
+      <div class="flow-item highlight">🔥 Firebase Firestore → เก็บข้อมูล / Config / Log</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-item">🌐 เว็บ Dashboard → ดึงข้อมูลจาก Firestore แสดงผล</div>
+    </div>
+    <div class="alert alert-info" style="margin-top:12px;">Cloudflare ยังต้องใช้กับ n8n เพราะคนละระบบ Firebase อยู่บน Cloud แต่ n8n อยู่ใน Local</div>
+  </div>
+
+  <div class="box" style="margin-top:16px;">
+    <h3>วิธีให้ n8n เชื่อม Firebase</h3>
+    <table>
+      <tr>
+        <th>วิธี</th>
+        <th>Node ที่ใช้</th>
+        <th>ความยาก</th>
+      </tr>
+      <tr>
+        <td>ใช้ Firebase Node ใน n8n</td>
+        <td><code>Firebase Firestore</code></td>
+        <td>⭐ ง่าย</td>
+      </tr>
+      <tr>
+        <td>เรียก REST API ของ Firestore</td>
+        <td><code>HTTP Request Node</code></td>
+        <td>⭐⭐ ปานกลาง</td>
+      </tr>
+      <tr>
+        <td>ใช้ Google Service Account</td>
+        <td><code>Google Credential</code></td>
+        <td>⭐⭐ ปานกลาง</td>
+      </tr>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- SECTION 4: ไอเดียจริง -->
+  <h2>💡 ไอเดียใช้งานจริง</h2>
+
+  <div class="idea-grid">
+
+    <div class="idea-card">
+      <div class="idea-title">🤖 Line Bot + AI + Firebase</div>
+      <div class="idea-step"><div class="num">1</div><div>User ส่งข้อความมาทาง Line</div></div>
+      <div class="idea-step"><div class="num">2</div><div>n8n รับ Webhook</div></div>
+      <div class="idea-step"><div class="num">3</div><div>ดึง Prompt/Config จาก Firestore</div></div>
+      <div class="idea-step"><div class="num">4</div><div>ส่งไป OpenRouter AI</div></div>
+      <div class="idea-step"><div class="num">5</div><div>บันทึก Chat Log ลง Firestore</div></div>
+      <div class="idea-step"><div class="num">6</div><div>ตอบกลับ Line</div></div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">📊 Dashboard ติดตาม Automation</div>
+      <div class="idea-step"><div class="num">1</div><div>n8n รัน Workflow ทุกวัน</div></div>
+      <div class="idea-step"><div class="num">2</div><div>บันทึก Log ลง Firestore</div></div>
+      <div class="idea-step"><div class="num">3</div><div>เว็บ Dashboard ดึงข้อมูล</div></div>
+      <div class="idea-step"><div class="num">4</div><div>แสดงสถิติ สำเร็จ/Error</div></div>
+      <div class="idea-step"><div class="num">5</div><div>แจ้งเตือนถ้า Error เกิน N ครั้ง</div></div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">⚙️ Config Manager</div>
+      <div class="idea-step"><div class="num">1</div><div>เก็บ API Key ทั้งหมดใน Firestore</div></div>
+      <div class="idea-step"><div class="num">2</div><div>n8n ดึง Key ก่อนทำงาน</div></div>
+      <div class="idea-step"><div class="num">3</div><div>อยากเปลี่ยน Key → แก้ใน Firestore</div></div>
+      <div class="idea-step"><div class="num">4</div><div>ทุก Workflow ได้ค่าใหม่ทันที</div></div>
+      <div class="idea-step"><div class="num">5</div><div>ไม่ต้องแก้โค้ดทุกที่</div></div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">📁 Document Processing</div>
+      <div class="idea-step"><div class="num">1</div><div>อัปโหลดไฟล์ไป Firebase Storage</div></div>
+      <div class="idea-step"><div class="num">2</div><div>บันทึก Metadata ลง Firestore</div></div>
+      <div class="idea-step"><div class="num">3</div><div>n8n ตรวจเจอไฟล์ใหม่</div></div>
+      <div class="idea-step"><div class="num">4</div><div>ประมวลผลด้วย AI</div></div>
+      <div class="idea-step"><div class="num">5</div><div>บันทึกผลลัพธ์กลับ Firestore</div></div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">🔔 Notification System</div>
+      <div class="idea-step"><div class="num">1</div><div>เขียนข้อมูลลง Firestore</div></div>
+      <div class="idea-step"><div class="num">2</div><div>Cloud Functions Trigger อัตโนมัติ</div></div>
+      <div class="idea-step"><div class="num">3</div><div>ส่ง Push Notification ผ่าน FCM</div></div>
+      <div class="idea-step"><div class="num">4</div><div>หรือส่ง Line Notify</div></div>
+      <div class="idea-step"><div class="num">5</div><div>User ได้รับแจ้งเตือนทันที</div></div>
+    </div>
+
+    <div class="idea-card">
+      <div class="idea-title">📅 Scheduler + Report</div>
+      <div class="idea-step"><div class="num">1</div><div>n8n รัน Schedule ทุกวัน</div></div>
+      <div class="idea-step"><div class="num">2</div><div>ดึงข้อมูลจาก Firestore</div></div>
+      <div class="idea-step"><div class="num">3</div><div>สร้าง Report อัตโนมัติ</div></div>
+      <div class="idea-step"><div class="num">4</div><div>ส่ง Email / Line</div></div>
+      <div class="idea-step"><div class="num">5</div><div>บันทึก Report ลง Storage</div></div>
+    </div>
+
+  </div>
+
+  <hr>
+
+  <!-- SECTION 5: Firestore Structure -->
+  <h2>🗄️ โครงสร้าง Firestore แนะนำ</h2>
+
+  <div class="box">
+    <pre>Firestore Database
+│
+├── config/                    ← ตั้งค่าระบบ
+│   ├── keys                   ← API Keys ทั้งหมด
+│   │   ├── openrouter_api_key
+│   │   ├── line_channel_token
+│   │   └── ...
+│   └── settings               ← ค่า Config อื่นๆ
+│       ├── bot_name
+│       └── max_tokens
+│
+├── chat_logs/                 ← ประวัติ Chat
+│   └── {user_id}/
+│       ├── message
+│       ├── response
+│       └── timestamp
+│
+├── automation_logs/           ← Log การทำงาน
+│   └── {log_id}/
+│       ├── workflow_name
+│       ├── status
+│       ├── error_message
+│       └── timestamp
+│
+└── users/                     ← ข้อมูล User
+    └── {user_id}/
+        ├── display_name
+        ├── email
+        └── last_login</pre>
+  </div>
+
+  <hr>
+
+  <!-- SECTION 6: ดูข้อมูล -->
+  <h2>👀 วิธีดูข้อมูลใน Firestore</h2>
+
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-title">🖥️ วิธีที่ 1: Firebase Console</div>
+      <div class="card-desc" style="margin-top:10px;">
+        <div class="flow">
+          <div class="flow-item">console.firebase.google.com</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-item">Firestore Database → Data</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-item">คลิก Collection ที่ต้องการ</div>
+        </div>
+      </div>
+      <div class="alert alert-success" style="margin-top:10px; font-size:0.85em;">ง่ายที่สุด เห็นข้อมูลทันที</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📤 วิธีที่ 2: Export JSON</div>
+      <div class="card-desc" style="margin-top:10px;">
+        <div class="flow">
+          <div class="flow-item">Firestore → Data</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-item">กด ⋮ → Export</div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-item">ได้ไฟล์ JSON ไปวิเคราะห์</div>
+        </div>
+      </div>
+      <div class="alert alert-success" style="margin-top:10px; font-size:0.85em;">เหมาะกับนำไปวิเคราะห์ใน Excel</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💻 วิธีที่ 3: Query ในโค้ด</div>
+      <pre style="margin-top:10px; font-size:0.8em;">// ดึงทั้ง Collection
+const snap = await getDocs(
+  collection(db, 'chat_logs')
+);
+snap.forEach(doc => {
+  console.log(doc.data());
+});</pre>
+      <div class="alert alert-success" style="font-size:0.85em;">เหมาะกับทำ Dashboard</div>
+    </div>
+
+  </div>
+
+  <hr>
+
+  <!-- SECTION 7: Free Quota -->
+  <h2>📊 Free Quota ที่ได้รับ</h2>
+
+  <div class="box">
+    <table>
+      <tr>
+        <th>Feature</th>
+        <th>Free Limit</th>
+        <th>เพียงพอไหม?</th>
+      </tr>
+      <tr>
+        <td>Firestore Reads</td>
+        <td>50,000 ครั้ง/วัน</td>
+        <td>✅ เพียงพอสำหรับโปรเจคเล็ก</td>
+      </tr>
+      <tr>
+        <td>Firestore Writes</td>
+        <td>20,000 ครั้ง/วัน</td>
+        <td>✅ เพียงพอสำหรับโปรเจคเล็ก</td>
+      </tr>
+      <tr>
+        <td>Firestore Storage</td>
+        <td>1 GB</td>
+        <td>✅ เพียงพอมาก</td>
+      </tr>
+      <tr>
+        <td>Authentication</td>
+        <td>ไม่จำกัด</td>
+        <td>✅ ฟรีตลอด</td>
+      </tr>
+      <tr>
+        <td>Storage</td>
+        <td>5 GB</td>
+        <td>✅ เพียงพอสำหรับไฟล์ทั่วไป</td>
+      </tr>
+      <tr>
+        <td>Hosting</td>
+        <td>10 GB/เดือน</td>
+        <td>✅ เพียงพอ</td>
+      </tr>
+      <tr>
+        <td>Cloud Functions</td>
+        <td>2M calls/เดือน</td>
+        <td>✅ เพียงพอมาก</td>
+      </tr>
+    </table>
+    <div class="alert alert-warning">ถ้าใช้เกิน Quota → Firebase จะหยุดให้บริการ ไม่คิดเงินเพิ่มโดยอัตโนมัติ (ต้อง Upgrade เอง)</div>
+  </div>
+
+  <hr>
+
+  <!-- SECTION 8: Next Steps -->
+  <h2>🎯 Next Steps แนะนำ</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">1️⃣</div>
+      <div class="card-title">เชื่อม n8n กับ Firebase</div>
+      <div class="card-desc">ให้ n8n บันทึก Log การทำงานลง Firestore อัตโนมัติ</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">2️⃣</div>
+      <div class="card-title">ทำ Dashboard แสดงผล</div>
+      <div class="card-desc">เว็บดึงข้อมูลจาก Firestore แสดง Log และสถิติการทำงาน</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">3️⃣</div>
+      <div class="card-title">เก็บประวัติ Chat Bot</div>
+      <div class="card-desc">ทุกบทสนทนากับ Bot บันทึกลง Firestore วิเคราะห์ได้ภายหลัง</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">4️⃣</div>
+      <div class="card-title">Config Manager</div>
+      <div class="card-desc">ย้าย Config ทั้งหมดมาเก็บ Firestore แก้ครั้งเดียวใช้ได้ทุกที่</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    🦉 Firebase Guideline | owlvyhousedeep-bot | 2025<br>
+    <span style="font-size:0.85em;">ทำงานร่วมกับ n8n + Cloudflare + OpenRouter</span>
+  </div>
+
+</div>
+</body>
+</html>
+
+							<script>
+                            	
+							</script>
+                        </body>
+                        </html>
+                    
