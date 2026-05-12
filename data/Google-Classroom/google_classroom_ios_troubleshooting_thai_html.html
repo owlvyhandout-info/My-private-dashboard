@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google Classroom บน iPhone/iPad - คู่มือแก้ปัญหา</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+      color: #1f2937;
+      line-height: 1.7;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f4cbd, #2563eb);
+      color: white;
+      padding: 40px 30px;
+      border-radius: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    .hero h1 {
+      font-size: 2.3rem;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+    }
+
+    .warning {
+      background: #fff4e5;
+      border-left: 6px solid #f59e0b;
+      padding: 18px;
+      border-radius: 14px;
+      margin-top: 20px;
+      color: #7c4a03;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      color: #1d4ed8;
+      margin-bottom: 14px;
+      font-size: 1.4rem;
+    }
+
+    .card ul {
+      padding-left: 20px;
+    }
+
+    .card li {
+      margin-bottom: 10px;
+    }
+
+    .faq {
+      margin-top: 30px;
+    }
+
+    .faq h2 {
+      margin-bottom: 16px;
+      color: #0f172a;
+      font-size: 1.8rem;
+    }
+
+    details {
+      background: white;
+      border-radius: 16px;
+      margin-bottom: 14px;
+      padding: 18px 20px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      transition: all 0.2s ease;
+    }
+
+    details[open] {
+      border: 2px solid #3b82f6;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #111827;
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::before {
+      content: "➕ ";
+      color: #2563eb;
+    }
+
+    details[open] summary::before {
+      content: "➖ ";
+    }
+
+    .answer {
+      margin-top: 14px;
+      color: #374151;
+    }
+
+    .steps {
+      counter-reset: step;
+      margin-top: 16px;
+    }
+
+    .step {
+      background: #eff6ff;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      position: relative;
+      padding-left: 60px;
+    }
+
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #2563eb;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .tip {
+      background: #ecfdf5;
+      border-left: 6px solid #10b981;
+      padding: 18px;
+      border-radius: 14px;
+      margin-top: 24px;
+      color: #065f46;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+
+      .hero {
+        padding: 28px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <section class="hero">
+      <div class="badge">Google Classroom Troubleshooting</div>
+      <h1>กดลิงก์เชิญ Google Classroom บน iPhone/iPad แล้วระบบให้ใส่รหัสห้องเรียน?</h1>
+      <p>
+        แม้จะ Login Gmail ของนักเรียนไว้แล้ว ก็ยังอาจเข้า Google Classroom ไม่ได้
+        เพราะ iPhone/iPad อาจเปิดลิงก์ด้วย Safari หรือใช้บัญชี Google คนละตัว
+      </p>
+
+      <div class="warning">
+        <strong>สิ่งที่ผู้ใช้สับสนบ่อย:</strong><br>
+        Login Gmail แล้ว ≠ Google Classroom ใช้บัญชีเดียวกันเสมอ
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>🔍 สาเหตุหลักของปัญหา</h2>
+        <ul>
+          <li>ลิงก์จาก Gmail/LINE/Facebook ถูกเปิดผ่าน Safari อัตโนมัติ</li>
+          <li>Safari ใช้บัญชี Google คนละตัวกับบัญชีนักเรียน</li>
+          <li>Google Classroom App ยังไม่ได้ Login บัญชีนักเรียน</li>
+          <li>เครื่องมีหลายบัญชี เช่น ผู้ปกครอง + นักเรียน</li>
+          <li>Google เลือกบัญชีล่าสุดอัตโนมัติ</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>⚠️ อาการที่พบบ่อย</h2>
+        <ul>
+          <li>ระบบถามหารหัสห้องเรียน ทั้งที่ Login แล้ว</li>
+          <li>กดลิงก์แล้วไม่เข้าห้องเรียน</li>
+          <li>เปิดได้แต่เป็นบัญชีผู้ปกครอง</li>
+          <li>ขึ้นว่าไม่มีสิทธิ์เข้าถึง</li>
+          <li>เปิด Classroom แล้วไม่เจอห้องเรียน</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>💡 สิ่งสำคัญที่ควรรู้</h2>
+        <ul>
+          <li>Gmail App, Safari, Chrome และ Classroom App อาจใช้คนละบัญชี</li>
+          <li>บัญชีโรงเรียนต้องตรงกับที่ครูเชิญ</li>
+          <li>iPhone/iPad มักเปิดลิงก์ผ่าน Safari โดยอัตโนมัติ</li>
+          <li>Google Classroom ไม่ได้ Login ตาม Gmail เสมอไป</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <h2>✅ แนวทางแก้ปัญหาที่ใช้งานได้จริง</h2>
+
+      <div class="steps">
+        <div class="step">
+          เปิด Google Classroom App ก่อนเสมอ
+        </div>
+
+        <div class="step">
+          ตรวจสอบรูปโปรไฟล์มุมขวาบน ว่าเป็นบัญชีนักเรียนที่ถูกต้อง
+        </div>
+
+        <div class="step">
+          หากเป็นบัญชีผิด ให้กด “สลับบัญชี” หรือ “Add another account”
+        </div>
+
+        <div class="step">
+          กลับไปกดลิงก์เชิญใหม่อีกครั้ง
+        </div>
+
+        <div class="step">
+          หากยังไม่ได้ ให้ลองเปิดผ่าน Google Chrome หรือ Classroom App โดยตรง
+        </div>
+      </div>
+
+      <div class="tip">
+        <strong>คำแนะนำ:</strong><br>
+        ควรให้นักเรียนใช้บัญชีโรงเรียนเพียงบัญชีเดียวในช่วงเข้าเรียนออนไลน์ เพื่อลดปัญหาสลับบัญชีอัตโนมัติ
+      </div>
+    </section>
+
+    <section class="faq">
+      <h2>📚 คำถามที่พบบ่อย (FAQ)</h2>
+
+      <details>
+        <summary>ทำไม Login Gmail แล้ว แต่ยังเข้า Classroom ไม่ได้?</summary>
+        <div class="answer">
+          เพราะ Gmail App กับ Google Classroom App อาจใช้คนละบัญชี หรือ Safari เปิดลิงก์ด้วยบัญชีอื่น
+        </div>
+      </details>
+
+      <details>
+        <summary>ทำไมระบบยังถามหารหัสห้องเรียน?</summary>
+        <div class="answer">
+          ส่วนใหญ่มักเกิดจากบัญชีที่ใช้เปิดลิงก์ ไม่ใช่บัญชีที่ครูเชิญเข้าห้องเรียน
+        </div>
+      </details>
+
+      <details>
+        <summary>Safari มีผลต่อ Google Classroom หรือไม่?</summary>
+        <div class="answer">
+          มี เพราะ iPhone/iPad มักเปิดลิงก์ผ่าน Safari อัตโนมัติ และ Safari อาจ Login คนละบัญชีกับ Classroom
+        </div>
+      </details>
+
+      <details>
+        <summary>ถ้ามีหลายบัญชี Google ในเครื่อง จะเกิดอะไรขึ้น?</summary>
+        <div class="answer">
+          Google อาจเลือกบัญชีล่าสุดอัตโนมัติ ทำให้เปิดลิงก์ด้วยบัญชีผิด เช่น บัญชีผู้ปกครองแทนบัญชีนักเรียน
+        </div>
+      </details>
+
+      <details>
+        <summary>ควรทำอย่างไรให้ปัญหานี้เกิดน้อยลง?</summary>
+        <div class="answer">
+          ใช้บัญชีโรงเรียนเพียงบัญชีเดียว เปิด Classroom App ก่อนเข้าลิงก์ และตรวจสอบรูปโปรไฟล์ทุกครั้ง
+        </div>
+      </details>
+    </section>
+
+    <section class="card" style="margin-top: 30px;">
+      <h2>🚫 สิ่งที่ไม่ควรทำ</h2>
+      <ul>
+        <li>ไม่ควรกดลิงก์โดยไม่ตรวจสอบบัญชี Google ก่อน</li>
+        <li>ไม่ควรใช้บัญชีผู้ปกครองเข้า Google Classroom แทนนักเรียน</li>
+        <li>ไม่ควร Login หลายบัญชีพร้อมกันมากเกินไป</li>
+        <li>ไม่ควรคิดว่า Gmail Login แล้ว ทุกแอปจะใช้บัญชีเดียวกัน</li>
+      </ul>
+    </section>
+
+    <div class="footer">
+      เอกสารสรุปแนวทางแก้ปัญหา Google Classroom บน iPhone/iPad สำหรับนักเรียน ผู้ปกครอง และครูผู้สอน
+    </div>
+
+  </div>
+</body>
+</html>
