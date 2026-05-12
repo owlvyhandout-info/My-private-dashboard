@@ -1,0 +1,1100 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Private Dashboard</title>
+<style>
+:root {
+  --bg-primary:    #0d1117;
+  --bg-secondary:  #161b22;
+  --bg-tertiary:   #21262d;
+  --bg-hover:      #30363d;
+  --border:        #30363d;
+  --border-active: #58a6ff;
+  --text-1:        #e6edf3;
+  --text-2:        #8b949e;
+  --text-3:        #6e7681;
+  --blue:          #58a6ff;
+  --blue-dim:      #1f6feb;
+  --green:         #3fb950;
+  --red:           #f85149;
+  --yellow:        #d29922;
+  --purple:        #a371f7;
+  --shadow:        0 8px 32px rgba(0,0,0,0.5);
+  --radius:        10px;
+  --radius-sm:     6px;
+  --tr:            all 0.2s ease;
+}
+[data-theme="light"] {
+  --bg-primary:    #f6f8fa;
+  --bg-secondary:  #ffffff;
+  --bg-tertiary:   #f0f3f6;
+  --bg-hover:      #e6ebf0;
+  --border:        #d0d7de;
+  --border-active: #0969da;
+  --text-1:        #1f2328;
+  --text-2:        #656d76;
+  --text-3:        #9198a1;
+  --blue:          #0969da;
+  --blue-dim:      #ddf4ff;
+  --green:         #1a7f37;
+  --red:           #cf222e;
+  --yellow:        #9a6700;
+  --purple:        #8250df;
+  --shadow:        0 4px 16px rgba(0,0,0,0.12);
+}
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans Thai',sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-1);
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+input, select { font-family: inherit; }
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--text-3); }
+.app { display:flex; height:100vh; overflow:hidden; }
+.sidebar {
+  width:256px; min-width:256px;
+  background:var(--bg-secondary);
+  border-right:1px solid var(--border);
+  display:flex; flex-direction:column;
+  height:100vh; overflow:hidden;
+  transition:var(--tr);
+}
+.sidebar-head {
+  padding:16px 12px 12px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.logo { display:flex; align-items:center; gap:8px; margin-bottom:2px; }
+.logo-icon { font-size:20px; }
+.logo-text { font-size:14px; font-weight:700; }
+.repo-info {
+  font-size:11px; color:var(--text-3);
+  padding-left:28px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.sidebar-section {
+  font-size:10px; font-weight:700; color:var(--text-3);
+  text-transform:uppercase; letter-spacing:0.8px;
+  padding:12px 14px 4px; flex-shrink:0;
+}
+.cat-list { flex:1; overflow-y:auto; padding:0 6px 8px; }
+.cat-item {
+  display:flex; align-items:center; gap:6px;
+  padding:7px 8px; border-radius:var(--radius-sm);
+  cursor:pointer; transition:var(--tr);
+  margin-bottom:1px; position:relative;
+}
+.cat-item:hover { background:var(--bg-hover); }
+.cat-item.active { background:rgba(88,166,255,0.15); color:var(--blue); }
+[data-theme="light"] .cat-item.active { background:var(--blue-dim); }
+.cat-icon { font-size:14px; flex-shrink:0; }
+.cat-name { font-size:13px; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cat-count {
+  font-size:10px; background:var(--bg-tertiary);
+  color:var(--text-3); border-radius:10px;
+  padding:1px 6px; flex-shrink:0;
+}
+.cat-item.active .cat-count { background:var(--blue); color:#fff; }
+.cat-btns { display:none; gap:2px; position:absolute; right:6px; }
+.cat-item:hover .cat-btns { display:flex; }
+.cat-item:hover .cat-count { display:none; }
+.cat-btn {
+  background:none; border:none; color:var(--text-3);
+  font-size:11px; padding:2px 4px;
+  border-radius:3px; transition:var(--tr);
+}
+.cat-btn:hover { background:var(--bg-tertiary); color:var(--text-1); }
+.cat-btn.del:hover { color:var(--red); }
+.add-cat-btn {
+  margin:4px 6px 0; padding:7px 10px;
+  background:none; border:1px dashed var(--border);
+  border-radius:var(--radius-sm); color:var(--text-3);
+  font-size:12px; display:flex; align-items:center;
+  gap:6px; width:calc(100% - 12px);
+  transition:var(--tr); flex-shrink:0;
+}
+.add-cat-btn:hover { border-color:var(--blue); color:var(--blue); }
+.sidebar-foot {
+  padding:10px; border-top:1px solid var(--border);
+  display:flex; gap:6px; flex-shrink:0;
+}
+.foot-btn {
+  flex:1; padding:7px 6px;
+  background:var(--bg-tertiary); border:1px solid var(--border);
+  border-radius:var(--radius-sm); color:var(--text-2);
+  font-size:11px; display:flex; align-items:center;
+  justify-content:center; gap:4px; transition:var(--tr);
+}
+.foot-btn:hover { background:var(--bg-hover); color:var(--text-1); border-color:var(--border-active); }
+.main { flex:1; display:flex; flex-direction:column; min-width:0; height:100vh; overflow:hidden; }
+.topbar {
+  background:var(--bg-secondary); border-bottom:1px solid var(--border);
+  padding:10px 16px; display:flex; align-items:center;
+  gap:10px; flex-shrink:0;
+}
+.topbar-title { font-size:15px; font-weight:700; display:flex; align-items:center; gap:6px; white-space:nowrap; }
+.search-wrap {
+  flex:1; max-width:280px; display:flex; align-items:center;
+  background:var(--bg-tertiary); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:6px 10px; gap:6px;
+}
+.search-wrap input { background:none; border:none; outline:none; color:var(--text-1); font-size:13px; width:100%; }
+.search-wrap input::placeholder { color:var(--text-3); }
+.search-ic { color:var(--text-3); font-size:13px; }
+.topbar-right { display:flex; align-items:center; gap:6px; margin-left:auto; }
+.tbtn {
+  padding:6px 10px; background:var(--bg-tertiary);
+  border:1px solid var(--border); border-radius:var(--radius-sm);
+  color:var(--text-2); font-size:12px; display:flex;
+  align-items:center; gap:4px; transition:var(--tr); white-space:nowrap;
+}
+.tbtn:hover { background:var(--bg-hover); color:var(--text-1); border-color:var(--border-active); }
+.tbtn.primary { background:var(--blue); border-color:var(--blue); color:#fff; }
+.tbtn.primary:hover { filter:brightness(1.12); }
+.content { flex:1; overflow-y:auto; padding:16px; }
+.status-row {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:14px; gap:10px; flex-wrap:wrap;
+}
+.status-info { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-3); }
+.dot { width:7px; height:7px; border-radius:50%; background:var(--text-3); flex-shrink:0; }
+.dot.on { background:var(--green); }
+.dot.loading { background:var(--yellow); animation:pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.view-toggle { display:flex; gap:4px; }
+.vbtn {
+  background:var(--bg-tertiary); border:1px solid var(--border);
+  border-radius:var(--radius-sm); color:var(--text-3);
+  font-size:14px; padding:4px 10px; transition:var(--tr);
+}
+.vbtn:hover { color:var(--text-1); }
+.vbtn.active { background:var(--blue); border-color:var(--blue); color:#fff; }
+.file-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px; }
+.file-card {
+  background:var(--bg-secondary); border:1px solid var(--border);
+  border-radius:var(--radius); padding:14px 12px 12px;
+  transition:var(--tr); position:relative; cursor:default;
+}
+.file-card:hover { border-color:var(--border-active); transform:translateY(-2px); box-shadow:var(--shadow); }
+.fc-icon { font-size:26px; margin-bottom:8px; display:block; }
+.fc-name { font-size:12px; font-weight:600; color:var(--text-1); margin-bottom:4px; word-break:break-word; line-height:1.4; }
+.fc-meta { font-size:10px; color:var(--text-3); display:flex; align-items:center; gap:4px; flex-wrap:wrap; }
+.badge { border-radius:4px; padding:1px 5px; font-size:10px; font-weight:600; }
+.badge-gh { background:rgba(88,166,255,0.15); color:var(--blue); }
+.badge-manual { background:rgba(163,113,247,0.15); color:var(--purple); }
+.fc-actions { position:absolute; top:8px; right:8px; display:none; gap:3px; }
+.file-card:hover .fc-actions { display:flex; }
+.fa-btn {
+  background:var(--bg-tertiary); border:1px solid var(--border);
+  border-radius:4px; color:var(--text-2);
+  font-size:11px; padding:3px 5px; transition:var(--tr);
+}
+.fa-btn:hover { color:var(--text-1); background:var(--bg-hover); }
+.fa-btn.open:hover { color:var(--green); }
+.fa-btn.dl:hover { color:var(--blue); }
+.fa-btn.mv:hover { color:var(--yellow); }
+.fa-btn.del:hover { color:var(--red); }
+.file-list { display:flex; flex-direction:column; gap:5px; }
+.file-row {
+  background:var(--bg-secondary); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:9px 12px;
+  display:flex; align-items:center; gap:10px;
+  transition:var(--tr); cursor:default;
+}
+.file-row:hover { border-color:var(--border-active); background:var(--bg-tertiary); }
+.fr-icon { font-size:16px; flex-shrink:0; }
+.fr-info { flex:1; min-width:0; }
+.fr-name { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.fr-meta { font-size:11px; color:var(--text-3); display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+.fr-actions { display:none; gap:3px; flex-shrink:0; }
+.file-row:hover .fr-actions { display:flex; }
+.empty { text-align:center; padding:80px 20px; color:var(--text-3); }
+.empty-ic { font-size:48px; margin-bottom:12px; }
+.empty-t { font-size:15px; font-weight:600; color:var(--text-2); margin-bottom:6px; }
+.empty-d { font-size:13px; line-height:1.7; }
+.overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.65);
+  backdrop-filter:blur(4px); z-index:1000;
+  display:flex; align-items:center; justify-content:center;
+  padding:16px; opacity:0; pointer-events:none; transition:opacity 0.2s;
+}
+.overlay.show { opacity:1; pointer-events:all; }
+.modal {
+  background:var(--bg-secondary); border:1px solid var(--border);
+  border-radius:var(--radius); padding:22px; width:100%;
+  max-width:460px; box-shadow:var(--shadow);
+  transform:translateY(10px); transition:transform 0.2s;
+  max-height:90vh; overflow-y:auto;
+}
+.overlay.show .modal { transform:translateY(0); }
+.modal-lg { max-width:560px; }
+.modal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.modal-title { font-size:15px; font-weight:700; display:flex; align-items:center; gap:7px; }
+.modal-x {
+  background:none; border:none; color:var(--text-3);
+  font-size:18px; line-height:1; padding:3px 6px;
+  border-radius:4px; transition:var(--tr);
+}
+.modal-x:hover { background:var(--bg-hover); color:var(--text-1); }
+.form-g { margin-bottom:14px; }
+.form-l {
+  display:block; font-size:11px; font-weight:700; color:var(--text-2);
+  text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px;
+}
+.form-i, .form-s {
+  width:100%; background:var(--bg-tertiary); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:8px 10px;
+  color:var(--text-1); font-size:13px; outline:none; transition:var(--tr);
+}
+.form-i:focus, .form-s:focus { border-color:var(--border-active); box-shadow:0 0 0 3px rgba(88,166,255,0.12); }
+.form-i::placeholder { color:var(--text-3); }
+.form-s option { background:var(--bg-secondary); }
+.form-hint { font-size:11px; color:var(--text-3); margin-top:4px; line-height:1.5; }
+.emoji-grid { display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
+.emoji-opt {
+  background:var(--bg-tertiary); border:1px solid var(--border);
+  border-radius:6px; padding:4px 8px; font-size:16px;
+  cursor:pointer; transition:var(--tr);
+}
+.emoji-opt:hover, .emoji-opt.sel { border-color:var(--border-active); background:rgba(88,166,255,0.12); }
+.modal-foot { display:flex; gap:8px; justify-content:flex-end; margin-top:18px; padding-top:14px; border-top:1px solid var(--border); }
+.btn { padding:7px 16px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:13px; font-weight:600; transition:var(--tr); }
+.btn-cancel { background:var(--bg-tertiary); color:var(--text-2); }
+.btn-cancel:hover { background:var(--bg-hover); color:var(--text-1); }
+.btn-ok { background:var(--blue); border-color:var(--blue); color:#fff; }
+.btn-ok:hover { filter:brightness(1.12); }
+.btn-danger { background:var(--red); border-color:var(--red); color:#fff; }
+.btn-danger:hover { filter:brightness(1.1); }
+.rules-box { background:var(--bg-tertiary); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 14px; margin-bottom:14px; }
+.rules-title { font-size:12px; font-weight:700; color:var(--yellow); margin-bottom:8px; display:flex; align-items:center; gap:5px; }
+.rules-cols { display:grid; grid-template-columns:1fr 1fr; gap:6px 12px; font-size:11px; line-height:1.8; }
+.rules-ok { color:var(--green); }
+.rules-no { color:var(--red); }
+.rules-ok li, .rules-no li { list-style:none; }
+.toast-wrap { position:fixed; bottom:16px; right:16px; z-index:9999; display:flex; flex-direction:column; gap:6px; }
+.toast {
+  background:var(--bg-secondary); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:9px 14px; font-size:13px;
+  display:flex; align-items:center; gap:8px;
+  box-shadow:var(--shadow); animation:toastIn 0.3s ease; max-width:280px;
+}
+.toast.ok  { border-left:3px solid var(--green); }
+.toast.err { border-left:3px solid var(--red); }
+.toast.inf { border-left:3px solid var(--blue); }
+@keyframes toastIn { from{transform:translateX(110%);opacity:0} to{transform:translateX(0);opacity:1} }
+.spin { display:inline-block; width:13px; height:13px; border:2px solid var(--border); border-top-color:var(--blue); border-radius:50%; animation:spinning 0.6s linear infinite; }
+@keyframes spinning { to{transform:rotate(360deg)} }
+.confirm-msg { font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:4px; }
+@media(max-width:700px){
+  .sidebar { position:fixed; left:-256px; z-index:200; transition:left 0.3s; }
+  .sidebar.open { left:0; }
+  .file-grid { grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); }
+  .rules-cols { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <div class="logo">
+        <span class="logo-icon">📁</span>
+        <span class="logo-text">My Dashboard</span>
+      </div>
+      <div class="repo-info" id="repoInfo">ยังไม่ได้เชื่อม GitHub</div>
+    </div>
+    <div class="sidebar-section">หมวดหมู่</div>
+    <div class="cat-list" id="catList"></div>
+    <button class="add-cat-btn" onclick="openAddCat()">＋ เพิ่มหมวดหมู่ใหม่</button>
+    <div class="sidebar-foot">
+      <button class="foot-btn" onclick="openSettings()">⚙️ GitHub</button>
+      <button class="foot-btn" onclick="exportJSON()">💾 JSON</button>
+      <button class="foot-btn" onclick="exportHTML()">📄 HTML</button>
+      <button class="foot-btn" onclick="toggleTheme()" id="themeBtn">🌙 ธีม</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title">
+        <span id="topbarIcon">📁</span>
+        <span id="topbarName">เลือกหมวดหมู่</span>
+      </div>
+      <div class="search-wrap">
+        <span class="search-ic">🔍</span>
+        <input type="text" id="searchInput" placeholder="ค้นหาไฟล์..." oninput="renderFiles()">
+      </div>
+      <div class="topbar-right">
+        <button class="tbtn" onclick="syncGitHub()" id="syncBtn">🔄 Sync GitHub</button>
+        <button class="tbtn primary" onclick="openAddLink()">＋ เพิ่มลิ้งก์</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="status-row">
+        <div class="status-info">
+          <span class="dot" id="statusDot"></span>
+          <span id="statusText">ยังไม่ได้เชื่อม GitHub</span>
+        </div>
+        <div class="view-toggle">
+          <button class="vbtn active" id="vGrid" onclick="setView('grid')">▦</button>
+          <button class="vbtn" id="vList" onclick="setView('list')">☰</button>
+        </div>
+      </div>
+      <div id="fileContainer"></div>
+    </div>
+  </main>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- Modal: Settings -->
+<div class="overlay" id="modalSettings">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">⚙️ ตั้งค่า GitHub Repository</div>
+      <button class="modal-x" onclick="closeModal('modalSettings')">✕</button>
+    </div>
+    <div class="form-g">
+      <label class="form-l">GitHub Username</label>
+      <input class="form-i" id="cfgUser" placeholder="เช่น owlvyhandout-info">
+    </div>
+    <div class="form-g">
+      <label class="form-l">ชื่อ Repository</label>
+      <input class="form-i" id="cfgRepo" placeholder="เช่น My-private-dashboard">
+      <div class="form-hint">📌 โปรแกรมจะดึงไฟล์จาก /data/ อัตโนมัติ</div>
+    </div>
+    <div class="form-g">
+      <label class="form-l">GitHub Token (ถ้า repo เป็น Private)</label>
+      <input class="form-i" id="cfgToken" type="password" placeholder="ghp_xxxx...">
+      <div class="form-hint">⚠️ Token เก็บใน localStorage เท่านั้น</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-cancel" onclick="closeModal('modalSettings')">ยกเลิก</button>
+      <button class="btn btn-ok" onclick="saveSettings()">💾 บันทึก & Sync</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add Category -->
+<div class="overlay" id="modalAddCat">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">➕ เพิ่มหมวดหมู่ใหม่</div>
+      <button class="modal-x" onclick="closeModal('modalAddCat')">✕</button>
+    </div>
+    <div class="form-g">
+      <label class="form-l">ชื่อหมวดหมู่</label>
+      <input class="form-i" id="newCatName" placeholder="เช่น Hardware-Spec">
+    </div>
+    <div class="form-g">
+      <label class="form-l">Emoji Icon</label>
+      <div class="emoji-grid" id="emojiPicker"></div>
+      <input class="form-i" id="newCatEmoji" placeholder="หรือพิมพ์ emoji เองที่นี่" style="margin-top:8px;">
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-cancel" onclick="closeModal('modalAddCat')">ยกเลิก</button>
+      <button class="btn btn-ok" onclick="saveNewCat()">➕ เพิ่ม</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Edit Category -->
+<div class="overlay" id="modalEditCat">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">✏️ แก้ไขหมวดหมู่</div>
+      <button class="modal-x" onclick="closeModal('modalEditCat')">✕</button>
+    </div>
+    <input type="hidden" id="editCatId">
+    <div class="form-g">
+      <label class="form-l">ชื่อหมวดหมู่</label>
+      <input class="form-i" id="editCatName">
+    </div>
+    <div class="form-g">
+      <label class="form-l">Emoji Icon</label>
+      <div class="emoji-grid" id="emojiPickerEdit"></div>
+      <input class="form-i" id="editCatEmoji" placeholder="หรือพิมพ์ emoji เอง" style="margin-top:8px;">
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-cancel" onclick="closeModal('modalEditCat')">ยกเลิก</button>
+      <button class="btn btn-ok" onclick="saveEditCat()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add Link -->
+<div class="overlay" id="modalAddLink">
+  <div class="modal modal-lg">
+    <div class="modal-head">
+      <div class="modal-title">➕ เพิ่มลิ้งก์ด้วยตัวเอง</div>
+      <button class="modal-x" onclick="closeModal('modalAddLink')">✕</button>
+    </div>
+    <div class="rules-box">
+      <div class="rules-title">⚠️ กฎตั้งชื่อไฟล์สำหรับ GitHub Pages</div>
+      <div class="rules-cols">
+        <ul class="rules-ok">
+          <li>✅ a-z (ตัวเล็กเท่านั้น)</li>
+          <li>✅ 0-9 ตัวเลข</li>
+          <li>✅ - ขีดกลาง</li>
+          <li>✅ _ ขีดล่าง</li>
+          <li>✅ .html ต่อท้ายครั้งเดียว</li>
+        </ul>
+        <ul class="rules-no">
+          <li>❌ A-Z ตัวใหญ่</li>
+          <li>❌ ช่องว่าง (space)</li>
+          <li>❌ ภาษาไทย</li>
+          <li>❌ + & # % @ ! ( ) , '</li>
+          <li>❌ .html ซ้ำ เช่น name_html.html</li>
+        </ul>
+      </div>
+    </div>
+    <div class="form-g">
+      <label class="form-l">ชื่อที่แสดง</label>
+      <input class="form-i" id="lnkTitle" placeholder="เช่น Biology Chapter 1">
+    </div>
+    <div class="form-g">
+      <label class="form-l">URL หรือ Path ไฟล์</label>
+      <input class="form-i" id="lnkUrl" placeholder="https://...">
+    </div>
+    <div class="form-g">
+      <label class="form-l">หมวดหมู่</label>
+      <select class="form-s" id="lnkCat"></select>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-cancel" onclick="closeModal('modalAddLink')">ยกเลิก</button>
+      <button class="btn btn-ok" onclick="saveNewLink()">➕ เพิ่ม</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Move -->
+<div class="overlay" id="modalMove">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">📂 ย้ายหมวดหมู่</div>
+      <button class="modal-x" onclick="closeModal('modalMove')">✕</button>
+    </div>
+    <input type="hidden" id="moveFileId">
+    <div class="form-g">
+      <label class="form-l">ย้ายไปหมวด</label>
+      <select class="form-s" id="moveCatSel"></select>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-cancel" onclick="closeModal('modalMove')">ยกเลิก</button>
+      <button class="btn btn-ok" onclick="confirmMove()">📂 ย้าย</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Confirm -->
+<div class="overlay" id="modalConfirm">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">🗑️ ยืนยันการลบ</div>
+      <button class="modal-x" onclick="closeModal('modalConfirm')">✕</button>
+    </div>
+    <p class="confirm-msg" id="confirmMsg">คุณแน่ใจหรือไม่?</p>
+    <div class="modal-foot">
+      <button class="btn btn-cancel" onclick="closeModal('modalConfirm')">ยกเลิก</button>
+      <button class="btn btn-danger" id="confirmOkBtn">🗑️ ลบ</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let STATE = {
+  config: { user:'', repo:'', token:'' },
+  categories: [],
+  files: [],
+  manualLinks: [],
+  activeCat: null,
+  view: 'grid',
+  theme: 'dark',
+  synced: false
+};
+
+const DEFAULT_CATS = [
+  { id:'google-classroom',            icon:'📚', name:'Google Classroom' },
+  { id:'content-astrology',           icon:'🔭', name:'Content-Astrology' },
+  { id:'content-biology',             icon:'🧬', name:'Content-Biology' },
+  { id:'content-chemistry',           icon:'⚗️', name:'Content-Chemistry' },
+  { id:'exam-pretest',                icon:'📝', name:'Exam-Pretest' },
+  { id:'project-owlvyhouse-quizbot',  icon:'🤖', name:'Project-Owlvyhouse-QuizBot' },
+  { id:'project-owlvyhouse-deepbot',  icon:'🧠', name:'Project-Owlvyhouse-DeepBot' },
+  { id:'project-owlvyhouse-homepage', icon:'🏠', name:'Project-Owlvyhouse-Homepage' },
+  { id:'hardware-spec',               icon:'🖥️', name:'Hardware-Spec' },
+  { id:'software-spec',               icon:'💾', name:'Software-Spec' },
+];
+
+const EMOJI_LIST = [
+  '📚','🔭','🧬','⚗️','📝','🤖','🧠','🏠','🖥️','💾',
+  '📁','📂','🗂️','📄','📊','📈','🔧','🛠️','⚙️','🔬',
+  '🎯','💡','🌐','🔗','📌','🗒️','📋','🏷️','🎓','✏️'
+];
+
+function init() {
+  loadStorage();
+  renderCategories();
+  updateRepoInfo();
+  updateStatus();
+  if (STATE.categories.length > 0) selectCat(STATE.categories[0].id);
+  document.documentElement.setAttribute('data-theme', STATE.theme);
+  updateThemeBtn();
+}
+
+function loadStorage() {
+  try {
+    const s = localStorage.getItem('dashboard_v2');
+    if (s) {
+      const d = JSON.parse(s);
+      STATE.config      = d.config      || { user:'', repo:'', token:'' };
+      STATE.categories  = d.categories  || [...DEFAULT_CATS];
+      STATE.files       = d.files       || [];
+      STATE.manualLinks = d.manualLinks || [];
+      STATE.view        = d.view        || 'grid';
+      STATE.theme       = d.theme       || 'dark';
+      STATE.synced      = d.synced      || false;
+    } else {
+      STATE.categories = [...DEFAULT_CATS];
+    }
+  } catch(e) {
+    STATE.categories = [...DEFAULT_CATS];
+  }
+}
+
+function saveStorage() {
+  localStorage.setItem('dashboard_v2', JSON.stringify({
+    config:      STATE.config,
+    categories:  STATE.categories,
+    files:       STATE.files,
+    manualLinks: STATE.manualLinks,
+    view:        STATE.view,
+    theme:       STATE.theme,
+    synced:      STATE.synced
+  }));
+}
+
+function renderCategories() {
+  const list = document.getElementById('catList');
+  list.innerHTML = '';
+  STATE.categories.forEach(cat => {
+    const count = getFilesForCat(cat.id).length;
+    const isActive = STATE.activeCat === cat.id;
+    const div = document.createElement('div');
+    div.className = 'cat-item' + (isActive ? ' active' : '');
+    div.innerHTML = `
+      <span class="cat-icon">${cat.icon}</span>
+      <span class="cat-name">${escHtml(cat.name)}</span>
+      <span class="cat-count">${count}</span>
+      <div class="cat-btns">
+        <button class="cat-btn" onclick="event.stopPropagation();openEditCat('${cat.id}')">✏️</button>
+        <button class="cat-btn del" onclick="event.stopPropagation();deleteCat('${cat.id}')">🗑️</button>
+      </div>`;
+    div.addEventListener('click', () => selectCat(cat.id));
+    list.appendChild(div);
+  });
+}
+
+function selectCat(id) {
+  STATE.activeCat = id;
+  const cat = STATE.categories.find(c => c.id === id);
+  if (cat) {
+    document.getElementById('topbarIcon').textContent = cat.icon;
+    document.getElementById('topbarName').textContent = cat.name;
+  }
+  renderCategories();
+  renderFiles();
+}
+
+function getFilesForCat(catId) {
+  const ghFiles = STATE.files.filter(f => {
+    const ov = STATE.manualLinks.find(m => m.id === f.id && m.catOverride);
+    return ov ? ov.catOverride === catId : f.catId === catId;
+  });
+  const manual = STATE.manualLinks.filter(m => !m.id && m.catId === catId);
+  return [...ghFiles, ...manual];
+}
+
+function renderFiles() {
+  const container = document.getElementById('fileContainer');
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  if (!STATE.activeCat) {
+    container.innerHTML = `<div class="empty"><div class="empty-ic">👈</div><div class="empty-t">เลือกหมวดหมู่</div><div class="empty-d">คลิกหมวดหมู่ทางซ้ายเพื่อดูไฟล์</div></div>`;
+    return;
+  }
+  let files = getFilesForCat(STATE.activeCat);
+  if (q) files = files.filter(f => (f.name || f.title || '').toLowerCase().includes(q));
+  if (files.length === 0) {
+    const cat = STATE.categories.find(c => c.id === STATE.activeCat);
+    container.innerHTML = `
+      <div class="empty">
+        <div class="empty-ic">${cat ? cat.icon : '📁'}</div>
+        <div class="empty-t">ยังไม่มีไฟล์ในหมวดนี้</div>
+        <div class="empty-d">${STATE.synced
+          ? 'สร้างโฟลเดอร์ /data/' + (cat ? cat.name : '') + '/ ใน GitHub แล้วกด Sync'
+          : 'กด Sync GitHub เพื่อโหลดไฟล์ หรือกด ＋ เพิ่มลิ้งก์'}</div>
+      </div>`;
+    return;
+  }
+  if (STATE.view === 'grid') {
+    container.innerHTML = '<div class="file-grid" id="fileGrid"></div>';
+    files.forEach(f => document.getElementById('fileGrid').appendChild(createFileCard(f)));
+  } else {
+    container.innerHTML = '<div class="file-list" id="fileList"></div>';
+    files.forEach(f => document.getElementById('fileList').appendChild(createFileRow(f)));
+  }
+}
+
+function getFileIcon(name) {
+  if (!name) return '📄';
+  const ext = name.split('.').pop().toLowerCase();
+  return { html:'🌐', pdf:'📕', md:'📝', txt:'📄', js:'📜', css:'🎨', json:'📋', png:'🖼️', jpg:'🖼️', gif:'🖼️' }[ext] || '📄';
+}
+
+function createFileCard(f) {
+  const div = document.createElement('div');
+  div.className = 'file-card';
+  const isManual = !f.id;
+  const name = f.name || f.title || 'ไม่มีชื่อ';
+  const fileId = escAttr(f.id || f.uid || '');
+  div.innerHTML = `
+    <span class="fc-icon">${getFileIcon(name)}</span>
+    <div class="fc-name">${escHtml(name)}</div>
+    <div class="fc-meta"><span class="badge ${isManual ? 'badge-manual' : 'badge-gh'}">${isManual ? 'Manual' : 'GitHub'}</span></div>
+    <div class="fc-actions">
+      <button class="fa-btn open" onclick="openFile('${escAttr(f.url||f.path||'')}')">🔗</button>
+      ${!isManual ? `<button class="fa-btn dl" onclick="downloadFile('${escAttr(f.downloadUrl||'')}','${escAttr(name)}')">⬇️</button>` : ''}
+      <button class="fa-btn mv" onclick="openMove('${fileId}','${isManual}')">📂</button>
+      <button class="fa-btn del" onclick="deleteFile('${fileId}','${isManual}','${escAttr(name)}')">🗑️</button>
+    </div>`;
+  return div;
+}
+
+function createFileRow(f) {
+  const div = document.createElement('div');
+  div.className = 'file-row';
+  const isManual = !f.id;
+  const name = f.name || f.title || 'ไม่มีชื่อ';
+  const fileId = escAttr(f.id || f.uid || '');
+  div.innerHTML = `
+    <span class="fr-icon">${getFileIcon(name)}</span>
+    <div class="fr-info">
+      <div class="fr-name">${escHtml(name)}</div>
+      <div class="fr-meta"><span class="badge ${isManual ? 'badge-manual' : 'badge-gh'}">${isManual ? 'Manual' : 'GitHub'}</span></div>
+    </div>
+    <div class="fr-actions">
+      <button class="fa-btn open" onclick="openFile('${escAttr(f.url||f.path||'')}')">🔗</button>
+      ${!isManual ? `<button class="fa-btn dl" onclick="downloadFile('${escAttr(f.downloadUrl||'')}','${escAttr(name)}')">⬇️</button>` : ''}
+      <button class="fa-btn mv" onclick="openMove('${fileId}','${isManual}')">📂</button>
+      <button class="fa-btn del" onclick="deleteFile('${fileId}','${isManual}','${escAttr(name)}')">🗑️</button>
+    </div>`;
+  return div;
+}
+
+function openFile(url) {
+  if (!url) { toast('ไม่มี URL', 'err'); return; }
+  window.open(url, '_blank');
+}
+
+function downloadFile(downloadUrl, name) {
+  if (!downloadUrl) { toast('ไม่มี URL สำหรับ download', 'err'); return; }
+  const a = document.createElement('a');
+  a.href = downloadUrl;
+  a.download = name;
+  a.target = '_blank';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  toast('⬇️ กำลัง Download: ' + name, 'ok');
+}
+
+function openMove(fileId, isManual) {
+  document.getElementById('moveFileId').value = fileId + '|' + isManual;
+  buildCatSelect('moveCatSel');
+  openModal('modalMove');
+}
+
+function confirmMove() {
+  const [fileId, isManual] = document.getElementById('moveFileId').value.split('|');
+  const newCat = document.getElementById('moveCatSel').value;
+  if (isManual === 'true') {
+    const link = STATE.manualLinks.find(m => m.uid === fileId);
+    if (link) link.catId = newCat;
+  } else {
+    const existing = STATE.manualLinks.find(m => m.id === fileId && m.catOverride !== undefined);
+    if (existing) existing.catOverride = newCat;
+    else STATE.manualLinks.push({ id: fileId, catOverride: newCat });
+  }
+  saveStorage();
+  closeModal('modalMove');
+  renderCategories();
+  renderFiles();
+  toast('📂 ย้ายหมวดเรียบร้อย', 'ok');
+}
+
+function deleteFile(fileId, isManual, name) {
+  showConfirm(
+    'ลบ <strong>' + escHtml(name) + '</strong> ออกจาก Dashboard?<br><small style="color:var(--text-3)">ไฟล์จริงใน GitHub จะไม่ถูกลบ</small>',
+    () => {
+      if (isManual === 'true') {
+        STATE.manualLinks = STATE.manualLinks.filter(m => m.uid !== fileId);
+      } else {
+        STATE.files = STATE.files.filter(f => f.id !== fileId);
+        STATE.manualLinks = STATE.manualLinks.filter(m => m.id !== fileId);
+      }
+      saveStorage(); renderCategories(); renderFiles();
+      toast('🗑️ ลบเรียบร้อย', 'ok');
+    }
+  );
+}
+
+async function syncGitHub() {
+  const { user, repo, token } = STATE.config;
+  if (!user || !repo) { toast('⚠️ กรุณาตั้งค่า GitHub ก่อน', 'err'); openSettings(); return; }
+  const btn = document.getElementById('syncBtn');
+  btn.innerHTML = '<span class="spin"></span> กำลัง Sync...';
+  btn.disabled = true;
+  const dot = document.getElementById('statusDot');
+  const txt = document.getElementById('statusText');
+  dot.className = 'dot loading';
+  txt.textContent = 'กำลังดึงข้อมูลจาก GitHub...';
+  try {
+    const headers = { 'Accept': 'application/vnd.github.v3+json' };
+    if (token) headers['Authorization'] = 'token ' + token;
+    const res = await fetch('https://api.github.com/repos/' + user + '/' + repo + '/git/trees/HEAD?recursive=1', { headers });
+    if (!res.ok) { const err = await res.json(); throw new Error(err.message || 'HTTP ' + res.status); }
+    const data = await res.json();
+    const dataFiles = (data.tree || []).filter(item =>
+      item.type === 'blob' && item.path.startsWith('data/') && item.path.split('/').length > 2
+    );
+    const newFiles = dataFiles.map(item => {
+      const parts = item.path.split('/');
+      const fileName = parts[parts.length - 1];
+      const folderName = parts[1];
+      if (fileName === '.gitkeep') return null;
+      let catId = matchFolderToCat(folderName);
+      if (!catId) {
+        catId = folderName.toLowerCase().replace(/\s+/g, '-');
+        if (!STATE.categories.find(c => c.id === catId)) {
+          STATE.categories.push({ id: catId, icon: '📁', name: folderName });
+        }
+      }
+      return {
+        id: item.sha,
+        name: fileName,
+        path: item.path,
+        catId: catId,
+        url: 'https://' + user + '.github.io/' + repo + '/' + item.path,
+        downloadUrl: 'https://raw.githubusercontent.com/' + user + '/' + repo + '/HEAD/' + item.path,
+        folder: folderName
+      };
+    }).filter(f => f !== null);
+    STATE.files = newFiles;
+    STATE.synced = true;
+    saveStorage();
+    dot.className = 'dot on';
+    txt.textContent = 'Sync สำเร็จ — ' + newFiles.length + ' ไฟล์';
+    toast('✅ Sync สำเร็จ ' + newFiles.length + ' ไฟล์', 'ok');
+    renderCategories();
+    renderFiles();
+  } catch(e) {
+    dot.className = 'dot';
+    txt.textContent = 'Sync ล้มเหลว: ' + e.message;
+    toast('❌ ' + e.message, 'err');
+  }
+  btn.innerHTML = '🔄 Sync GitHub';
+  btn.disabled = false;
+}
+
+function matchFolderToCat(folderName) {
+  const key = folderName.toLowerCase().replace(/[\s\-_]/g, '');
+  const cat = STATE.categories.find(c =>
+    c.name.toLowerCase().replace(/[\s\-_]/g, '') === key ||
+    c.id.replace(/[\s\-_]/g, '') === key
+  );
+  return cat ? cat.id : null;
+}
+
+function openSettings() {
+  document.getElementById('cfgUser').value  = STATE.config.user  || '';
+  document.getElementById('cfgRepo').value  = STATE.config.repo  || '';
+  document.getElementById('cfgToken').value = STATE.config.token || '';
+  openModal('modalSettings');
+}
+
+function saveSettings() {
+  const user  = document.getElementById('cfgUser').value.trim();
+  const repo  = document.getElementById('cfgRepo').value.trim();
+  const token = document.getElementById('cfgToken').value.trim();
+  if (!user || !repo) { toast('⚠️ กรุณากรอก Username และ Repo', 'err'); return; }
+  STATE.config = { user, repo, token };
+  saveStorage();
+  updateRepoInfo();
+  closeModal('modalSettings');
+  toast('✅ บันทึกแล้ว กำลัง Sync...', 'inf');
+  syncGitHub();
+}
+
+function updateRepoInfo() {
+  document.getElementById('repoInfo').textContent =
+    (STATE.config.user && STATE.config.repo)
+      ? STATE.config.user + '/' + STATE.config.repo
+      : 'ยังไม่ได้เชื่อม GitHub';
+}
+
+function updateStatus() {
+  const dot = document.getElementById('statusDot');
+  const txt = document.getElementById('statusText');
+  if (STATE.synced && STATE.config.user) {
+    dot.className = 'dot on';
+    txt.textContent = 'เชื่อมต่อ ' + STATE.config.user + '/' + STATE.config.repo + ' — ' + STATE.files.length + ' ไฟล์';
+  } else {
+    dot.className = 'dot';
+    txt.textContent = 'ยังไม่ได้เชื่อม GitHub';
+  }
+}
+
+function openAddCat() {
+  document.getElementById('newCatName').value = '';
+  document.getElementById('newCatEmoji').value = '';
+  buildEmojiPicker('emojiPicker', 'newCatEmoji');
+  openModal('modalAddCat');
+}
+
+function saveNewCat() {
+  const name  = document.getElementById('newCatName').value.trim();
+  const emoji = document.getElementById('newCatEmoji').value.trim() || '📁';
+  if (!name) { toast('⚠️ กรุณากรอกชื่อหมวด', 'err'); return; }
+  const id = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-_]/g, '');
+  if (STATE.categories.find(c => c.id === id)) { toast('⚠️ มีหมวดนี้อยู่แล้ว', 'err'); return; }
+  STATE.categories.push({ id, icon: emoji, name });
+  saveStorage(); renderCategories();
+  closeModal('modalAddCat');
+  toast('✅ เพิ่มหมวด "' + name + '" แล้ว', 'ok');
+}
+
+function openEditCat(catId) {
+  const cat = STATE.categories.find(c => c.id === catId);
+  if (!cat) return;
+  document.getElementById('editCatId').value    = catId;
+  document.getElementById('editCatName').value  = cat.name;
+  document.getElementById('editCatEmoji').value = cat.icon;
+  buildEmojiPicker('emojiPickerEdit', 'editCatEmoji', cat.icon);
+  openModal('modalEditCat');
+}
+
+function saveEditCat() {
+  const id    = document.getElementById('editCatId').value;
+  const name  = document.getElementById('editCatName').value.trim();
+  const emoji = document.getElementById('editCatEmoji').value.trim() || '📁';
+  if (!name) { toast('⚠️ กรุณากรอกชื่อ', 'err'); return; }
+  const cat = STATE.categories.find(c => c.id === id);
+  if (cat) { cat.name = name; cat.icon = emoji; }
+  saveStorage(); renderCategories();
+  if (STATE.activeCat === id) {
+    document.getElementById('topbarIcon').textContent = emoji;
+    document.getElementById('topbarName').textContent = name;
+  }
+  closeModal('modalEditCat');
+  toast('✅ แก้ไขหมวดแล้ว', 'ok');
+}
+
+function deleteCat(catId) {
+  const cat = STATE.categories.find(c => c.id === catId);
+  if (!cat) return;
+  const count = getFilesForCat(catId).length;
+  showConfirm(
+    'ลบหมวด <strong>' + escHtml(cat.name) + '</strong>?' +
+    (count > 0 ? '<br><small style="color:var(--red)">มีไฟล์ ' + count + ' ไฟล์ในหมวดนี้</small>' : ''),
+    () => {
+      STATE.categories = STATE.categories.filter(c => c.id !== catId);
+      STATE.files.forEach(f => { if (f.catId === catId) f.catId = null; });
+      STATE.manualLinks.forEach(m => {
+        if (m.catId === catId) m.catId = null;
+        if (m.catOverride === catId) m.catOverride = null;
+      });
+      if (STATE.activeCat === catId) STATE.activeCat = STATE.categories[0]?.id || null;
+      saveStorage(); renderCategories(); renderFiles();
+      toast('🗑️ ลบหมวดแล้ว', 'ok');
+    }
+  );
+}
+
+function openAddLink() {
+  document.getElementById('lnkTitle').value = '';
+  document.getElementById('lnkUrl').value   = '';
+  buildCatSelect('lnkCat');
+  openModal('modalAddLink');
+}
+
+function saveNewLink() {
+  const title = document.getElementById('lnkTitle').value.trim();
+  const url   = document.getElementById('lnkUrl').value.trim();
+  const catId = document.getElementById('lnkCat').value;
+  if (!title) { toast('⚠️ กรุณากรอกชื่อ', 'err'); return; }
+  if (!url)   { toast('⚠️ กรุณากรอก URL', 'err'); return; }
+  STATE.manualLinks.push({ uid: 'manual_' + Date.now(), title, url, catId, isManual: true });
+  saveStorage(); closeModal('modalAddLink');
+  renderCategories(); renderFiles();
+  toast('✅ เพิ่มลิ้งก์ "' + title + '" แล้ว', 'ok');
+}
+
+function exportJSON() {
+  const data = {
+    exportDate: new Date().toISOString(),
+    config: { user: STATE.config.user, repo: STATE.config.repo },
+    categories: STATE.categories,
+    manualLinks: STATE.manualLinks
+  };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type:'application/json' }));
+  a.download = 'dashboard-config.json';
+  a.click();
+  toast('💾 Export JSON สำเร็จ', 'ok');
+}
+
+function exportHTML() {
+  const data = {
+    config: { user: STATE.config.user, repo: STATE.config.repo },
+    categories: STATE.categories,
+    manualLinks: STATE.manualLinks,
+    files: STATE.files,
+    view: STATE.view,
+    theme: STATE.theme,
+    synced: STATE.synced
+  };
+  const dataStr = JSON.stringify(data);
+  // Get the current HTML source and inject STATE data into it
+  const html = document.documentElement.outerHTML;
+  // Replace the empty STATE init with pre-filled data
+  const injected = html.replace(
+    /let STATE = \{[\s\S]*?\};/,
+    'let STATE = ' + dataStr + ';'
+  );
+  const blob = new Blob([injected], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'dashboard-export.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('📄 Export HTML สำเร็จ', 'ok');
+}
+
+function setView(v) {
+  STATE.view = v;
+  saveStorage();
+  document.getElementById('vGrid').classList.toggle('active', v === 'grid');
+  document.getElementById('vList').classList.toggle('active', v === 'list');
+  renderFiles();
+}
+
+function toggleTheme() {
+  STATE.theme = STATE.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', STATE.theme);
+  updateThemeBtn(); saveStorage();
+}
+
+function updateThemeBtn() {
+  document.getElementById('themeBtn').textContent = STATE.theme === 'dark' ? '☀️ ธีม' : '🌙 ธีม';
+}
+
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+document.querySelectorAll('.overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('show'); });
+});
+
+let confirmCallback = null;
+function showConfirm(msg, cb) {
+  document.getElementById('confirmMsg').innerHTML = msg;
+  confirmCallback = cb;
+  openModal('modalConfirm');
+}
+document.getElementById('confirmOkBtn').addEventListener('click', () => {
+  if (confirmCallback) confirmCallback();
+  confirmCallback = null;
+  closeModal('modalConfirm');
+});
+
+function buildCatSelect(selId) {
+  const sel = document.getElementById(selId);
+  sel.innerHTML = '';
+  STATE.categories.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat.id;
+    opt.textContent = cat.icon + ' ' + cat.name;
+    sel.appendChild(opt);
+  });
+  if (STATE.activeCat) sel.value = STATE.activeCat;
+}
+
+function buildEmojiPicker(containerId, inputId, selected) {
+  const wrap = document.getElementById(containerId);
+  wrap.innerHTML = '';
+  EMOJI_LIST.forEach(em => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'emoji-opt' + (em === selected ? ' sel' : '');
+    btn.textContent = em;
+    btn.onclick = () => {
+      wrap.querySelectorAll('.emoji-opt').forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel');
+      document.getElementById(inputId).value = em;
+    };
+    wrap.appendChild(btn);
+  });
+}
+
+function toast(msg, type = 'inf') {
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  document.getElementById('toastWrap').appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.4s'; }, 2600);
+  setTimeout(() => el.remove(), 3000);
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escAttr(s) {
+  return String(s).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+}
+
+init();
+</script>
+</body>
+</html>
+
+							<script>
+                            	
+							</script>
+                        </body>
+                        </html>
+                    
