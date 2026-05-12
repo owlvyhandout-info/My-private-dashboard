@@ -1,0 +1,647 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.app{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;background:var(--color-background-primary)}
+.topbar{background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.ttl{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.tsub{font-size:11px;color:var(--color-text-tertiary);margin-top:2px}
+.main{display:grid;grid-template-columns:320px 1fr}
+.sidebar{border-right:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);height:760px;overflow-y:auto;display:flex;flex-direction:column}
+.output{height:760px;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--color-background-primary)}
+.sec{padding:11px 14px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.sec-title{font-size:10px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.sec-title .tag{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:3px;padding:1px 5px;font-size:9px;color:var(--color-text-tertiary)}
+.fl{display:flex;flex-direction:column;gap:4px;margin-bottom:7px}
+.fl:last-child{margin-bottom:0}
+.lbl{font-size:11px;color:var(--color-text-secondary)}
+.fl input,.fl select,.fl textarea{font-size:12px;padding:6px 8px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);width:100%;font-family:var(--font-sans)}
+.fl textarea{resize:vertical;line-height:1.5}
+.fl input:focus,.fl select:focus,.fl textarea:focus{outline:none;border-color:#7F77DD}
+
+.mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:8px}
+.mtab{padding:6px 4px;font-size:10px;font-weight:500;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);cursor:pointer;text-align:center;background:var(--color-background-primary);color:var(--color-text-secondary);transition:all .15s;line-height:1.3}
+.mtab:hover{border-color:#AFA9EC;color:#534AB7}
+.mtab.on{background:#EEEDFE;border-color:#7F77DD;color:#534AB7;font-weight:500}
+.mtab .mico{display:block;font-size:14px;margin-bottom:2px}
+
+.mode-panel{display:none}
+.mode-panel.show{display:block}
+
+.drop-zone{border:1px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);padding:14px 10px;text-align:center;cursor:pointer;background:var(--color-background-primary);transition:all .15s;color:var(--color-text-tertiary)}
+.drop-zone:hover,.drop-zone.drag{border-color:#7F77DD;background:#EEEDFE;color:#534AB7}
+.drop-zone .dz-ico{font-size:20px;margin-bottom:4px}
+.drop-zone .dz-txt{font-size:12px;font-weight:500}
+.drop-zone .dz-sub{font-size:10px;opacity:.7;margin-top:2px}
+
+.file-status{margin-top:6px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);overflow:hidden;display:none}
+.file-row{padding:7px 10px;display:flex;align-items:center;gap:8px;background:var(--color-background-primary)}
+.file-ico{width:24px;height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0}
+.file-info{flex:1;min-width:0}
+.file-name{font-size:12px;font-weight:500;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-meta{font-size:10px;color:var(--color-text-tertiary)}
+.file-del{font-size:16px;cursor:pointer;color:var(--color-text-tertiary);padding:0 4px;flex-shrink:0}
+.file-del:hover{color:#A32D2D}
+.file-preview{padding:8px 10px;border-top:0.5px solid var(--color-border-tertiary);max-height:80px;overflow-y:auto;font-size:11px;font-family:var(--font-mono);color:var(--color-text-secondary);line-height:1.5;background:var(--color-background-secondary)}
+
+.progress-bar{height:3px;background:var(--color-border-tertiary);border-radius:2px;overflow:hidden;margin-top:4px;display:none}
+.progress-fill{height:100%;background:#7F77DD;border-radius:2px;transition:width .3s}
+
+.outline-hint{font-size:11px;color:var(--color-text-tertiary);background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:7px 9px;border:0.5px solid var(--color-border-tertiary);margin-bottom:6px;line-height:1.5}
+
+.ai-auto-hint{background:#E1F5EE;border:0.5px solid #5DCAA5;border-radius:var(--border-radius-md);padding:8px 10px;margin-bottom:6px}
+.ai-auto-hint p{font-size:11px;color:#0F6E56;line-height:1.6}
+
+.chip-row{display:flex;flex-wrap:wrap;gap:4px}
+.chip{padding:4px 9px;font-size:11px;border-radius:20px;border:0.5px solid var(--color-border-tertiary);cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary);transition:all .15s}
+.chip:hover{border-color:#AFA9EC;color:#534AB7}
+.chip.on{background:#EEEDFE;border-color:#7F77DD;color:#534AB7;font-weight:500}
+
+.sty-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.sty{padding:5px 4px;font-size:11px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);cursor:pointer;text-align:center;background:var(--color-background-primary);color:var(--color-text-secondary);transition:all .15s;line-height:1.3}
+.sty:hover{border-color:#AFA9EC;color:#534AB7}
+.sty.on{background:#EEEDFE;border-color:#7F77DD;color:#534AB7;font-weight:500}
+
+.warn-box{background:#FCEBEB;border:0.5px solid #F09595;border-radius:var(--border-radius-md);padding:8px 10px}
+.warn-lbl{font-size:11px;font-weight:500;color:#A32D2D;margin-bottom:5px}
+
+.subj-card{border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);overflow:hidden;margin-top:5px}
+.subj-hd{padding:7px 10px;font-size:11px;font-weight:500;display:flex;align-items:center;gap:6px;cursor:pointer}
+.subj-body{padding:8px 10px;font-size:11px;line-height:1.6;color:var(--color-text-secondary);background:var(--color-background-primary);display:none}
+.subj-body.show{display:block}
+.stag{font-size:10px;padding:2px 6px;border-radius:10px;font-weight:500;white-space:nowrap}
+
+.ref-area{border:1px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);padding:9px;text-align:center;cursor:pointer;color:var(--color-text-tertiary);font-size:12px;background:var(--color-background-primary)}
+.ref-area:hover{border-color:#AFA9EC;color:#534AB7}
+.ref-preview{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.rimg{width:40px;height:40px;object-fit:cover;border-radius:4px;border:0.5px solid var(--color-border-tertiary)}
+
+.gbtn{padding:10px 14px;font-size:13px;font-weight:500;border-radius:var(--border-radius-md);border:none;cursor:pointer;background:#534AB7;color:#fff;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s;margin:10px 14px;width:calc(100% - 28px)}
+.gbtn:hover{background:#3C3489}
+
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:40px;color:var(--color-text-tertiary)}
+
+.card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.ch{padding:9px 12px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:flex-start;gap:8px}
+.ch-l{display:flex;flex-direction:column;gap:3px;flex:1}
+.ch-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.bdg{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px}
+.b0{background:#EEEDFE;color:#534AB7}.b1{background:#E1F5EE;color:#0F6E56}.b2{background:#FAEEDA;color:#854F0B}.b3{background:#E6F1FB;color:#185FA5}.b4{background:#FAECE7;color:#993C1D}.b5{background:#FBEAF0;color:#993556}.b6{background:#EAF3DE;color:#3B6D11}
+.layout-hint{font-size:10px;color:var(--color-text-tertiary)}
+.wchip{font-size:10px;padding:2px 7px;border-radius:10px;background:#FCEBEB;color:#A32D2D;border:0.5px solid #F09595}
+.mchip{font-size:10px;padding:2px 7px;border-radius:10px;background:#E1F5EE;color:#0F6E56;border:0.5px solid #5DCAA5}
+.cb{padding:11px 12px}
+.pt{font-size:11.5px;line-height:1.8;color:var(--color-text-secondary);font-family:var(--font-mono);white-space:pre-wrap;max-height:220px;overflow-y:auto}
+.cf{padding:7px 12px;border-top:0.5px solid var(--color-border-tertiary);display:flex;gap:5px;flex-wrap:wrap}
+.cbtn{padding:5px 10px;font-size:11px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary);transition:all .15s}
+.cbtn:hover{background:var(--color-background-secondary)}
+.cbtn.ok{border-color:#1D9E75;color:#0F6E56;background:#E1F5EE}
+.sbar{font-size:11px;color:var(--color-text-tertiary);display:flex;align-items:center;gap:5px}
+.dot{width:5px;height:5px;border-radius:50%;background:#1D9E75;flex-shrink:0}
+.pgbadge{background:#EEEDFE;color:#534AB7;font-size:11px;padding:3px 10px;border-radius:20px;border:0.5px solid #AFA9EC}
+.src-badge{font-size:10px;padding:2px 7px;border-radius:10px;background:#E6F1FB;color:#185FA5;border:0.5px solid #85B7EB}
+</style>
+
+<h2 class="sr-only">Visual Knowledge Engine v4 — รองรับการอ่านไฟล์ PDF/DOCX และ 4 โหมดเนื้อหา</h2>
+
+<div class="app">
+<div class="topbar">
+  <div>
+    <div class="ttl">Visual Knowledge Engine v4</div>
+    <div class="tsub">รองรับ PDF · DOCX · 4 โหมดเนื้อหา · ข้อควรระวังตามวิชา</div>
+  </div>
+  <div style="display:flex;gap:6px">
+    <button class="cbtn" id="expBtn" style="display:none" onclick="exportAll()">ดาวน์โหลด .txt</button>
+  </div>
+</div>
+
+<div class="main">
+<div class="sidebar">
+
+  <div class="sec">
+    <div class="sec-title">1 · หัวข้อและระดับ</div>
+    <div class="fl">
+      <div class="lbl">หัวข้อ *</div>
+      <input id="sub" placeholder="เช่น เซลล์พืช, คลื่นแม่เหล็กไฟฟ้า, ระบบสุริยะ"/>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <div class="fl">
+        <div class="lbl">ระดับผู้เรียน</div>
+        <select id="lvl">
+          <option value="ประถม-มัธยมต้น">ประถม/ม.ต้น</option>
+          <option value="มัธยมปลาย" selected>มัธยมปลาย</option>
+          <option value="มหาวิทยาลัย">มหาวิทยาลัย</option>
+          <option value="วิชาชีพ/วิจัย">วิชาชีพ</option>
+        </select>
+      </div>
+      <div class="fl">
+        <div class="lbl">ภาษา Labels</div>
+        <select id="lang">
+          <option value="ภาษาไทย">ภาษาไทย</option>
+          <option value="English">English</option>
+          <option value="ไทย + English">ไทย + EN</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">2 · โหมดเนื้อหา <span class="tag">เลือก 1 โหมด</span></div>
+    <div class="mode-tabs">
+      <div class="mtab on" data-m="type" onclick="pickMode(this)"><span class="mico">✏️</span>พิมพ์เอง</div>
+      <div class="mtab" data-m="file" onclick="pickMode(this)"><span class="mico">📄</span>อ่านจากไฟล์</div>
+      <div class="mtab" data-m="outline" onclick="pickMode(this)"><span class="mico">🗂️</span>โครงสร้างหลัก</div>
+      <div class="mtab" data-m="auto" onclick="pickMode(this)"><span class="mico">✨</span>AI สร้างให้อัตโนมัติ</div>
+    </div>
+
+    <div class="mode-panel show" id="panel-type">
+      <div class="fl">
+        <div class="lbl">เนื้อหา (วาง text ได้เลย)</div>
+        <textarea id="cnt-type" rows="5" placeholder="วางเนื้อหา, concept, หัวข้อย่อย...&#10;ยิ่งละเอียดยิ่งดี — ระบบจะวิเคราะห์และกำหนดจำนวนหน้าให้อัตโนมัติ"></textarea>
+      </div>
+    </div>
+
+    <div class="mode-panel" id="panel-file">
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileIn').click()" ondragover="dzDrag(event,true)" ondragleave="dzDrag(event,false)" ondrop="dzDrop(event)">
+        <div class="dz-ico">📂</div>
+        <div class="dz-txt">คลิกหรือลากไฟล์มาวาง</div>
+        <div class="dz-sub">รองรับ PDF · DOCX · TXT · MD (ขนาดสูงสุด 10MB)</div>
+      </div>
+      <input type="file" id="fileIn" accept=".pdf,.docx,.txt,.md" style="display:none" onchange="handleFile(this.files[0])"/>
+      <div class="progress-bar" id="progBar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+      <div class="file-status" id="fileStatus">
+        <div class="file-row">
+          <div class="file-ico" id="fileIco"></div>
+          <div class="file-info">
+            <div class="file-name" id="fileName"></div>
+            <div class="file-meta" id="fileMeta"></div>
+          </div>
+          <div class="file-del" onclick="clearFile()">×</div>
+        </div>
+        <div class="file-preview" id="filePreview"></div>
+      </div>
+      <div class="fl" style="margin-top:6px">
+        <div class="lbl">ระบุหัวข้อ/บทที่ต้องการ (ถ้ามี)</div>
+        <input id="fileFocus" placeholder="เช่น บทที่ 3, หัวข้อ Photosynthesis เท่านั้น"/>
+      </div>
+    </div>
+
+    <div class="mode-panel" id="panel-outline">
+      <div class="outline-hint">พิมพ์เฉพาะโครงสร้างหลัก — AI จะเติมรายละเอียดทางวิชาการให้<br>เช่น: หัวข้อ 1. นิวเคลียส 2. ไมโตคอนเดรีย 3. คลอโรพลาสต์</div>
+      <div class="fl">
+        <div class="lbl">โครงสร้างหลัก (bullet หรือ ลิสต์)</div>
+        <textarea id="cnt-outline" rows="5" placeholder="1. หัวข้อย่อยที่ 1&#10;2. หัวข้อย่อยที่ 2&#10;3. กระบวนการ...&#10;4. การเปรียบเทียบ..."></textarea>
+      </div>
+    </div>
+
+    <div class="mode-panel" id="panel-auto">
+      <div class="ai-auto-hint">
+        <p>AI จะสร้างเนื้อหาทั้งหมดจากหัวข้อที่ระบุ โดยใช้ความรู้ทางวิชาการตามระดับที่เลือก — ไม่ต้องใส่เนื้อหาเพิ่มเติม</p>
+      </div>
+      <div class="fl">
+        <div class="lbl">เน้นด้านไหนเป็นพิเศษ (ไม่บังคับ)</div>
+        <input id="autoFocus" placeholder="เช่น เน้นกระบวนการ, เน้นโครงสร้าง, เน้น timeline"/>
+      </div>
+      <div class="fl">
+        <div class="lbl">จำนวนหน้า</div>
+        <div style="display:flex;gap:5px">
+          <button class="cbtn" style="flex:1" data-p="auto" onclick="pickPageCount(this)" id="pc-auto">อัตโนมัติ</button>
+          <button class="cbtn" style="flex:1" data-p="3" onclick="pickPageCount(this)">3</button>
+          <button class="cbtn" style="flex:1" data-p="4" onclick="pickPageCount(this)">4</button>
+          <button class="cbtn" style="flex:1" data-p="5" onclick="pickPageCount(this)">5</button>
+          <button class="cbtn" style="flex:1" data-p="6" onclick="pickPageCount(this)">6</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">3 · หมวดวิชา <span class="tag">มีผลต่อข้อควรระวัง</span></div>
+    <div class="chip-row" id="subjChips">
+      <div class="chip on" data-s="general" onclick="pickSubj(this)">วิทยาศาสตร์ทั่วไป</div>
+      <div class="chip" data-s="physics" onclick="pickSubj(this)">ฟิสิกส์</div>
+      <div class="chip" data-s="bio" onclick="pickSubj(this)">ชีววิทยา/เคมี</div>
+      <div class="chip" data-s="earth" onclick="pickSubj(this)">โลก/ดาราศาสตร์</div>
+      <div class="chip" data-s="social" onclick="pickSubj(this)">สังคม/ประวัติศาสตร์</div>
+      <div class="chip" data-s="tech" onclick="pickSubj(this)">เทคโนโลยี/CS</div>
+    </div>
+    <div id="subjInfo" style="margin-top:7px"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">4 · สไตล์ภาพ</div>
+    <div class="sty-grid">
+      <div class="sty on" data-v="Modern Flat Infographic" onclick="pickSty(this)">Modern Flat</div>
+      <div class="sty" data-v="3D Stylized Miniature" onclick="pickSty(this)">3D Miniature</div>
+      <div class="sty" data-v="Isometric 3D" onclick="pickSty(this)">Isometric 3D</div>
+      <div class="sty" data-v="Medical Scientific Illustration" onclick="pickSty(this)">Medical/Scientific</div>
+      <div class="sty" data-v="Minimal Typography" onclick="pickSty(this)">Minimal Type</div>
+      <div class="sty" data-v="Vintage Editorial" onclick="pickSty(this)">Vintage Editorial</div>
+      <div class="sty" data-v="Hand-drawn Sketch" onclick="pickSty(this)">Hand-drawn</div>
+      <div class="sty" data-v="Cutaway Cross-section" onclick="pickSty(this)">Cutaway Section</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title">5 · ภาพอ้างอิง + ข้อควรระวัง</div>
+    <div class="ref-area" onclick="document.getElementById('refIn').click()">
+      คลิกแนบภาพ style อ้างอิง (PNG/JPG)
+    </div>
+    <input type="file" id="refIn" accept="image/*" multiple style="display:none" onchange="handleRef(this)"/>
+    <div class="ref-preview" id="refPreview"></div>
+    <div id="refDescWrap" style="display:none;margin-top:6px" class="fl">
+      <div class="lbl">อธิบายสิ่งที่ต้องการจากภาพอ้างอิง</div>
+      <textarea id="refNote" rows="2" placeholder="เช่น ต้องการ layout แบบ radial เหมือนภาพ..."></textarea>
+    </div>
+    <div style="margin-top:8px">
+      <div class="warn-lbl" style="font-size:11px;font-weight:500;color:#A32D2D;margin-bottom:4px">ข้อควรระวังเพิ่มเติม</div>
+      <textarea id="userWarn" rows="3" style="font-size:12px;padding:6px 8px;border-radius:var(--border-radius-md);border:0.5px solid #F09595;background:var(--color-background-primary);color:var(--color-text-primary);width:100%;font-family:var(--font-sans);resize:vertical" placeholder="เช่น ลูกศร side view ต้องแนวราบ&#10;ห้ามวาด chloroplast ในเซลล์สัตว์..."></textarea>
+    </div>
+  </div>
+
+  <button class="gbtn" onclick="generate()">
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v11M1 6.5h11" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+    สร้าง Prompts
+  </button>
+</div>
+
+<div class="output" id="out">
+  <div class="empty">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style="opacity:.25"><rect x="2" y="2" width="14" height="14" rx="3" fill="var(--color-text-primary)"/><rect x="20" y="2" width="14" height="14" rx="3" fill="var(--color-text-primary)" opacity=".5"/><rect x="2" y="20" width="14" height="14" rx="3" fill="var(--color-text-primary)" opacity=".5"/><rect x="20" y="20" width="14" height="14" rx="3" fill="var(--color-text-primary)" opacity=".2"/></svg>
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-secondary)">Visual Knowledge Engine v4</div>
+    <div style="font-size:12px;line-height:1.7;margin-top:3px">เลือกโหมดเนื้อหา กรอกข้อมูล แล้วกด "สร้าง Prompts"<br>รองรับ PDF/DOCX และ 4 โหมดเนื้อหา</div>
+  </div>
+</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+<script>
+let selSty='Modern Flat Infographic', selSubj='general', selMode='type', selPageCount='auto';
+let fileContent='', refImages=[], lastPages=[];
+
+const SUBJ_DATA={
+  general:{label:'วิทยาศาสตร์ทั่วไป',color:'#534AB7',bg:'#EEEDFE',bd:'#AFA9EC',caution:'ระบุมาตราส่วนเสมอ · ลูกศรต้องสัมพันธ์กับมุมมอง · label ชี้ถูกจุด',forbidden:'ห้ามผสม scale ต่างกันในภาพเดียว · ห้ามสับสนสีระหว่าง concept',problems:'Scale ผิด · Label ชี้ผิดจุด · ลูกศรทิศผิด · สีไม่ consistent'},
+  physics:{label:'ฟิสิกส์',color:'#185FA5',bg:'#E6F1FB',bd:'#85B7EB',caution:'เวกเตอร์ต้องถูกทิศ · Field line ออกจาก+ เข้าหา− · side view: ลูกศรแนวราบเท่านั้น',forbidden:'ห้าม field line ตัดกัน · ห้าม electron orbit วงกลม · ห้ามคลื่นผิดเฟส',problems:'ทิศลูกศรแรงผิด · Field line วาดผิด · คลื่นไม่ชัด · top-down กับ side-view ปน'},
+  bio:{label:'ชีววิทยา/เคมี',color:'#0F6E56',bg:'#E1F5EE',bd:'#5DCAA5',caution:'Organelle ต้องอยู่ถูกตำแหน่ง · DNA helix ถูกต้อง · Bond angle ถูกต้อง',forbidden:'ห้ามโครโมโซม X ใน interphase · ห้าม chloroplast ในเซลล์สัตว์ · ห้าม cell wall ในเซลล์สัตว์',problems:'Organelle ผิดประเภทเซลล์ · สัดส่วน organelle ไม่สมจริง · DNA helix ผิดทิศ'},
+  earth:{label:'โลก/ดาราศาสตร์',color:'#854F0B',bg:'#FAEEDA',bd:'#EF9F27',caution:'Layer โลกสัดส่วนถูกต้อง · ขนาดดาวต้องระบุ not to scale · cross-section: ลูกศร convection แนวดิ่ง',forbidden:'ห้ามวาดโลก-ดวงอาทิตย์ใกล้เคียงโดยไม่บอก scale · ห้าม asteroid belt แน่นเกิน',problems:'Scale ระยะห่างดาวผิด · Layer โลกสัดส่วนผิด · ลูกศร convection ผิดทิศ'},
+  social:{label:'สังคม/ประวัติศาสตร์',color:'#993556',bg:'#FBEAF0',bd:'#ED93B1',caution:'Timeline scale สม่ำเสมอ · แผนที่ถูกยุคสมัย · เส้นทางสมเหตุสมผล',forbidden:'ห้ามใช้แผนที่ปัจจุบันแทนประวัติศาสตร์ · ห้าม oversimplify เหตุ-ผล',problems:'Timeline ระยะไม่สม่ำเสมอ · แผนที่ยุคผิด · เหตุ-ผลเส้นเดียวเกินไป'},
+  tech:{label:'เทคโนโลยี/CS',color:'#3B6D11',bg:'#EAF3DE',bd:'#97C459',caution:'Flowchart ใช้สัญลักษณ์มาตรฐาน · data flow ทิศสม่ำเสมอ · แยก layer ชัดเจน',forbidden:'ห้ามสัญลักษณ์ flowchart ปน · ห้าม algorithm ที่ผิด · ห้าม oversimplify architecture',problems:'ทิศลูกศร data flow ย้อน · สัญลักษณ์ flowchart ผิด · Layer ปน'}
+};
+
+const STYLES={
+  'Modern Flat Infographic':{palette:'Bold flat colors: deep navy #1B2A4A, electric blue #0055FF, cyan #00D4FF, coral #FF6B4A. Geometric shapes, flat vector icons.',render:'Flat 2D vector. Sharp edges, solid fills, bold typography.'},
+  '3D Stylized Miniature':{palette:'Warm neutral base, pastel objects, gentle shadows. Miniature diorama, soft clay-like texture.',render:'3D render, tilt-shift miniature, warm studio lighting top-left, clay/plastic material.'},
+  'Isometric 3D':{palette:'Sky blue #B8E0F7, mint #B8F0D8, peach #F7D8B8. Isometric grid, no perspective.',render:'Isometric 3D, 30-degree angle, light from top-right, flat colors with top-face highlight.'},
+  'Medical Scientific Illustration':{palette:'Clinical white, deep teal #005F6B, medical blue #1565C0, grey panels #ECEFF1.',render:'Medical textbook style. Precise anatomy. Thin 1–2pt outlines. Leader lines to labels.'},
+  'Minimal Typography':{palette:'Pure white, deep indigo #312E81, 0.5px lines, generous whitespace.',render:'Swiss typographic style. Typography-first. Minimal geometric shapes.'},
+  'Vintage Editorial':{palette:'Aged cream #F5E6C8, burnt sienna #8B4513, forest green #2D5016.',render:'Vintage print. Serif typography. Crosshatch textures. Decorative borders.'},
+  'Hand-drawn Sketch':{palette:'Off-white paper, pencil grey #4A4A4A, blue marker #1A6FA8, highlight yellow #F0D060.',render:'Hand-drawn sketch. Imperfect lines, visible strokes, marker highlights.'},
+  'Cutaway Cross-section':{palette:'Neutral grey exterior, vibrant interior layers, 2pt boundary lines.',render:'Technical cutaway. Cross-section view. Hatching on cut surfaces. Engineering drawing.'}
+};
+
+const PAGE_TYPES=[
+  {type:'overview',label:'Overview',badge:'b0',
+   arrowRule:'ลูกศรชี้จาก label เข้าหาภาพกลาง (centripetal)',
+   layoutByStyle:{'3D Stylized Miniature':'Central 3D object on platform, floating label cards with connector lines.','Isometric 3D':'Isometric platform with main object center, info cards at isometric angles.','default':'Center-focus: large title top, definition box, 4 key fact icons in 2×2 grid.'},
+   content:(s,l)=>`DEFINITION: 1-sentence (${l} level)\nKEY FACTS: 4 most critical facts\nCENTRAL VISUAL: Main representative illustration`},
+  {type:'structure',label:'Structure',badge:'b1',
+   arrowRule:'Leader lines ไม่ตัดกัน · side view: labels แนวราบ · top-down: labels แนวรัศมี',
+   layoutByStyle:{'Medical Scientific Illustration':'Labeled anatomical diagram, leader lines, scale bar bottom-right.','Cutaway Cross-section':'Cutaway showing internals, labeled on exposed face.','Isometric 3D':'Exploded isometric view, components floating apart with connector dashes.','default':'Radial: central hub + 5–7 component nodes with icons and 1-line functions.'},
+   content:(s,l)=>`COMPONENTS: 5–7 structural parts\nEach: name, location, function\nVIEW ANGLE: state side view OR top-down consistently\nLEVEL: ${l}`},
+  {type:'process',label:'Process',badge:'b2',
+   arrowRule:'Horizontal flow: ลูกศรชี้ขวา · Vertical: ชี้ลง · ห้ามเปลี่ยนทิศกลางๆ',
+   layoutByStyle:{'3D Stylized Miniature':'3D step platforms connected by curved 3D arrows, left to right.','Isometric 3D':'Isometric staircase flow, each step raised, arrows at isometric angle.','default':'Left-to-right: 4–6 numbered boxes + arrows. Each: verb + description.'},
+   content:(s,l)=>`STEPS: 4–6 sequential steps\nEach: action verb + subject + outcome\nClear INPUT and OUTPUT labels\nLEVEL: ${l}`},
+  {type:'system',label:'System Map',badge:'b3',
+   arrowRule:'Cause→effect ทิศเดียว · ห้าม bidirectional ถ้าไม่ใช่ feedback loop จริงๆ',
+   layoutByStyle:{'default':'Network graph: nodes=elements, edges=labeled relationships. Color by type (inputs/processes/outputs).'},
+   content:(s,l)=>`RELATIONSHIPS: 6–8 element pairs with labeled connections\nGroup: inputs / processes / outputs / feedback\nLEVEL: ${l}`},
+  {type:'comparison',label:'Comparison',badge:'b4',
+   arrowRule:'ไม่มีลูกศรใน comparison · ใช้ check/cross/icon แทน',
+   layoutByStyle:{'default':'2-column split: 5–6 comparison rows with icons. Summary verdict at bottom.'},
+   content:(s,l)=>`COMPARE: 2 types/aspects/stages\nDIMENSIONS: 5–6 criteria with clear differences\nLEVEL: ${l}`},
+  {type:'timeline',label:'Timeline',badge:'b5',
+   arrowRule:'Timeline ชี้ขวาเท่านั้น (อดีต→ปัจจุบัน)',
+   layoutByStyle:{'default':'Horizontal strip: left=earliest, right=latest. Date above, dot on line, desc below.'},
+   content:(s,l)=>`TIMELINE: 5–7 chronological events\nEach: date, name, 1-line significance\nLEVEL: ${l}`},
+  {type:'magnified',label:'Zoom Detail',badge:'b6',
+   arrowRule:'Zoom arrow: จาก dashed selection box ในภาพหลัก → inset panel เท่านั้น',
+   layoutByStyle:{'Medical Scientific Illustration':'Main + magnified inset with scale bar.','default':'Overview + zoom inset panel with dashed border and scale indicator.'},
+   content:(s,l)=>`MAIN VIEW: overview context\nZOOM: specific sub-structure detail\nSCALE: approximate magnification\nLEVEL: ${l}`}
+];
+
+function pickMode(el){
+  document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on'); selMode=el.dataset.m;
+  document.querySelectorAll('.mode-panel').forEach(p=>p.classList.remove('show'));
+  document.getElementById('panel-'+selMode).classList.add('show');
+}
+function pickSty(el){document.querySelectorAll('.sty').forEach(b=>b.classList.remove('on'));el.classList.add('on');selSty=el.dataset.v}
+function pickSubj(el){document.querySelectorAll('#subjChips .chip').forEach(b=>b.classList.remove('on'));el.classList.add('on');selSubj=el.dataset.s;renderSubjInfo()}
+function pickPageCount(el){document.querySelectorAll('[data-p]').forEach(b=>b.classList.remove('ok'));el.classList.add('ok');selPageCount=el.dataset.p}
+
+function dzDrag(e,on){e.preventDefault();document.getElementById('dropZone').classList.toggle('drag',on)}
+function dzDrop(e){e.preventDefault();dzDrag(e,false);const f=e.dataTransfer.files[0];if(f)handleFile(f)}
+
+async function handleFile(file){
+  if(!file)return;
+  const maxMB=10;
+  if(file.size>maxMB*1024*1024){alert('ไฟล์ใหญ่เกิน 10MB กรุณาใช้โหมด "พิมพ์เอง" หรือ copy เนื้อหามาวางแทน');return}
+  const ext=file.name.split('.').pop().toLowerCase();
+  const allowed=['pdf','docx','txt','md'];
+  if(!allowed.includes(ext)){alert('รองรับเฉพาะ PDF, DOCX, TXT, MD');return}
+  showProg(10);
+  const colors={pdf:'#E24B4A',docx:'#185FA5',txt:'#0F6E56',md:'#854F0B'};
+  const labels={pdf:'PDF',docx:'DOC',txt:'TXT',md:'MD'};
+  document.getElementById('fileIco').style.cssText=`background:${colors[ext]||'#888'};color:white;font-size:9px;font-weight:700`;
+  document.getElementById('fileIco').textContent=labels[ext]||ext.toUpperCase();
+  document.getElementById('fileName').textContent=file.name;
+  document.getElementById('fileMeta').textContent=(file.size/1024).toFixed(1)+' KB';
+  document.getElementById('fileStatus').style.display='block';
+  showProg(30);
+  try{
+    let text='';
+    if(ext==='txt'||ext==='md'){
+      text=await file.text();
+    } else if(ext==='pdf'){
+      text=await readPDF(file);
+    } else if(ext==='docx'){
+      text=await readDOCX(file);
+    }
+    showProg(90);
+    fileContent=text.trim();
+    const preview=fileContent.slice(0,300)+(fileContent.length>300?'\n...['+Math.round(fileContent.length/1000)+'K chars total]':'');
+    document.getElementById('filePreview').textContent=preview;
+    showProg(100);
+    setTimeout(()=>hideProg(),600);
+  } catch(e){
+    hideProg();
+    document.getElementById('filePreview').textContent='ไม่สามารถอ่านไฟล์: '+e.message+'\nลองใช้โหมด "พิมพ์เอง" แทน';
+  }
+}
+
+async function readPDF(file){
+  return new Promise((res,rej)=>{
+    const reader=new FileReader();
+    reader.onload=async e=>{
+      try{
+        const bytes=new Uint8Array(e.target.result);
+        let text='';
+        const raw=new TextDecoder('utf-8',{fatal:false}).decode(bytes);
+        const streams=raw.match(/stream[\r\n]([\s\S]*?)[\r\n]endstream/g)||[];
+        for(const s of streams){
+          const content=s.replace(/^stream[\r\n]/,'').replace(/[\r\n]endstream$/,'');
+          const bt=content.match(/BT([\s\S]*?)ET/g)||[];
+          for(const b of bt){
+            const tj=b.match(/\((.*?)\)\s*Tj/g)||[];
+            tj.forEach(t=>{text+=t.replace(/\((.*?)\)\s*Tj/,'$1').replace(/\\n/g,'\n')+' '});
+          }
+        }
+        if(text.trim().length<50){
+          text='[PDF อ่านได้บางส่วน — แนะนำ copy text จาก PDF มาวางในโหมด "พิมพ์เอง" เพื่อความแม่นยำ]\n\n'+raw.replace(/[^\x20-\x7E\u0E00-\u0E7F\n]/g,' ').replace(/\s{3,}/g,' ').slice(0,3000);
+        }
+        res(text||'ไม่พบ text ใน PDF นี้ (อาจเป็น scanned image)');
+      }catch(err){rej(err)}
+    };
+    reader.onerror=()=>rej(new Error('อ่านไฟล์ล้มเหลว'));
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+async function readDOCX(file){
+  if(typeof mammoth==='undefined') return 'ยังโหลด mammoth.js ไม่เสร็จ — ลองใหม่';
+  const ab=await file.arrayBuffer();
+  const result=await mammoth.extractRawText({arrayBuffer:ab});
+  return result.value||'ไม่พบ text ใน DOCX';
+}
+
+function showProg(pct){
+  const bar=document.getElementById('progBar');
+  bar.style.display='block';
+  document.getElementById('progFill').style.width=pct+'%';
+}
+function hideProg(){document.getElementById('progBar').style.display='none'}
+function clearFile(){
+  fileContent='';
+  document.getElementById('fileStatus').style.display='none';
+  document.getElementById('filePreview').textContent='';
+  document.getElementById('fileIn').value='';
+  hideProg();
+}
+
+function handleRef(input){
+  const preview=document.getElementById('refPreview');
+  const dw=document.getElementById('refDescWrap');
+  [...input.files].forEach(f=>{
+    const url=URL.createObjectURL(f);
+    refImages.push({name:f.name,url});
+    const img=document.createElement('img');
+    img.className='rimg';img.src=url;img.title=f.name;
+    preview.appendChild(img);
+  });
+  if(refImages.length)dw.style.display='block';
+}
+
+function renderSubjInfo(){
+  const d=SUBJ_DATA[selSubj];
+  document.getElementById('subjInfo').innerHTML=`
+  <div class="subj-card">
+    <div class="subj-hd" style="background:${d.bg};color:${d.color};border-color:${d.bd}" onclick="toggleBody(this)">
+      <svg width="11" height="11" viewBox="0 0 11 11"><circle cx="5.5" cy="5.5" r="4.5" stroke="${d.color}" stroke-width="1.2"/><text x="5.5" y="8.5" text-anchor="middle" font-size="7" fill="${d.color}" font-family="sans-serif">!</text></svg>
+      ${d.label}
+      <span style="margin-left:auto;font-size:10px;opacity:.6">▼ ดูข้อควรระวัง</span>
+    </div>
+    <div class="subj-body" id="sb-body">
+      <div style="margin-bottom:5px"><span class="stag" style="background:${d.bg};color:${d.color}">ควรระวัง</span> <span>${d.caution}</span></div>
+      <div style="margin-bottom:5px"><span class="stag" style="background:#FCEBEB;color:#A32D2D">ห้าม</span> <span>${d.forbidden}</span></div>
+      <div><span class="stag" style="background:#FAEEDA;color:#854F0B">ปัญหาที่พบ</span> <span>${d.problems}</span></div>
+    </div>
+  </div>`;
+}
+function toggleBody(el){
+  const b=document.getElementById('sb-body');
+  b.classList.toggle('show');
+  const arrow=el.querySelector('span:last-child');
+  arrow.textContent=b.classList.contains('show')?'▲ ซ่อน':'▼ ดูข้อควรระวัง';
+}
+
+function getContent(){
+  if(selMode==='type') return {text:document.getElementById('cnt-type').value.trim(), source:'typed'};
+  if(selMode==='file'){
+    const focus=document.getElementById('fileFocus').value.trim();
+    if(!fileContent) return {text:'', source:'file-empty'};
+    const t=focus?`[ต้องการเนื้อหาเฉพาะ: ${focus}]\n\n${fileContent}`:fileContent;
+    return {text:t.slice(0,4000), source:'file'};
+  }
+  if(selMode==='outline') return {text:document.getElementById('cnt-outline').value.trim(), source:'outline'};
+  if(selMode==='auto'){
+    const focus=document.getElementById('autoFocus').value.trim();
+    return {text:focus?`[เน้นด้าน: ${focus}]`:'', source:'auto'};
+  }
+  return {text:'', source:'unknown'};
+}
+
+function estimatePages(text, sub, source, forced){
+  if(forced!=='auto') return parseInt(forced);
+  if(source==='auto') return 4;
+  if(!text||text.length<80) return 3;
+  const words=text.split(/\s+/).length;
+  const checks=[
+    /ส่วน|ประกอบ|component|part|organelle|structure|ชั้น|layer/i,
+    /ขั้นตอน|กระบวน|process|step|synthesis/i,
+    /ระบบ|ความสัมพันธ์|system|cycle|interact/i,
+    /เปรียบ|vs|differ|compare|ประเภท/i,
+    /ประวัติ|ค\.ศ\.|history|war|timeline|พ\.ศ\./i,
+    /ขยาย|zoom|รายละเอียด|magnif/i
+  ];
+  let p=1+checks.filter(r=>r.test(text+sub)).length;
+  if(words>300)p=Math.min(p+1,6);
+  return Math.max(3,Math.min(p,6));
+}
+
+function choosePages(n, text, sub){
+  const str=(text||'')+' '+sub;
+  const map=[
+    {type:'structure',re:/ส่วน|ประกอบ|component|part|organelle|structure|ชั้น|layer/i},
+    {type:'process',re:/ขั้นตอน|กระบวน|process|step|synthesis/i},
+    {type:'system',re:/ระบบ|ความสัมพันธ์|system|cycle|interact/i},
+    {type:'comparison',re:/เปรียบ|vs|differ|compare|ประเภท/i},
+    {type:'timeline',re:/ประวัติ|ค\.ศ\.|history|war|timeline|พ\.ศ\./i},
+    {type:'magnified',re:/ขยาย|zoom|รายละเอียด|magnif/i}
+  ];
+  const matched=map.filter(m=>m.re.test(str)).map(m=>m.type);
+  const fallback=['structure','process','system','comparison','timeline','magnified'];
+  const pool=[...matched,...fallback.filter(t=>!matched.includes(t))];
+  const chosen=['overview',...pool.slice(0,n-1)];
+  return chosen.map(t=>PAGE_TYPES.find(p=>p.type===t));
+}
+
+function getLayout(pd){const ls=pd.layoutByStyle;return ls[selSty]||ls['default']||Object.values(ls)[0]}
+
+function buildPrompt(pd, sub, contentText, lvl, lang, pageNum, total, subjKey, userWarn, contentMode, refNote){
+  const sd=SUBJ_DATA[subjKey];
+  const st=STYLES[selSty]||STYLES['Modern Flat Infographic'];
+  const layout=getLayout(pd);
+  const modeNote={
+    type:'เนื้อหาจากผู้ใช้โดยตรง',
+    file:'เนื้อหาจากไฟล์เอกสาร',
+    outline:'AI เติมรายละเอียดจากโครงสร้างที่ให้',
+    auto:'AI สร้างเนื้อหาอัตโนมัติตาม subject + academic level'
+  }[contentMode]||'';
+  const contentSection=contentMode==='auto'
+    ?`CONTENT GENERATION: Auto-generate academically accurate content for "${sub}" at ${lvl} level.\nFocus on: ${document.getElementById('autoFocus').value.trim()||'comprehensive coverage'}\nAll facts, terms, and structures must be scientifically accurate.`
+    :contentMode==='outline'
+    ?`OUTLINE PROVIDED (expand with academic detail):\n${contentText}\nExpand each point with accurate detail appropriate for ${lvl} level.`
+    :`CONTENT SOURCE (${modeNote}):\n${contentText?contentText.slice(0,500)+(contentText.length>500?'\n[...truncated]':''):'(use subject knowledge)'}`;
+  const refSection=refImages.length>0?`\nREFERENCE IMAGES: ${refImages.length} image(s) provided.\n${refNote?'Instructions: '+refNote:'Match style/layout from reference images.'}`:''
+  return `Create a high-quality ${selSty} infographic page.
+
+PAGE ${pageNum}/${total} — ${pd.label.toUpperCase()} | Subject: ${sub}
+Content mode: ${modeNote}
+
+═══ LAYOUT ═══
+${layout}
+
+ARROW & DIRECTION RULES:
+${pd.arrowRule}
+Arrows must match the view angle. Side-view: horizontal only. Top-down: radial/plan-view only. Never mix.
+
+═══ CONTENT ═══
+${contentSection}
+
+BASE CONTENT STRUCTURE:
+${pd.content(sub, lvl)}
+
+═══ ACADEMIC ACCURACY [${sd.label}] ═══
+Caution: ${sd.caution}
+Forbidden: ${sd.forbidden}
+Avoid these errors: ${sd.problems}
+${userWarn?'\nAdditional warnings:\n'+userWarn:''}
+
+═══ VISUAL STYLE ═══
+Style: ${selSty}
+Render: ${st.render}
+Palette: ${st.palette}
+Text: ${lang} labels only, max 5 words per label, no paragraphs.
+Level: ${lvl}
+${refSection}
+
+═══ SERIES CONSISTENCY ═══
+Page ${pageNum} of ${total} — series on "${sub}". All pages: same palette, fonts, icon weight, label style. Layout may differ per page.
+
+═══ SPECS ═══
+Portrait A4, 300dpi, 20mm margins. Header (12%): "${sub}" · ${pageNum}/${total}. Footer (5%): page number.
+
+OUTPUT: One complete print-ready infographic page.`;
+}
+
+async function generate(){
+  const sub=document.getElementById('sub').value.trim();
+  if(!sub){alert('กรุณาใส่หัวข้อก่อน');return}
+  if(selMode==='file'&&!fileContent){alert('กรุณาแนบไฟล์เอกสารก่อน หรือเปลี่ยนโหมดเนื้อหา');return}
+  const lvl=document.getElementById('lvl').value;
+  const lang=document.getElementById('lang').value;
+  const userWarn=document.getElementById('userWarn').value.trim();
+  const refNote=document.getElementById('refNote').value.trim();
+  const {text:cnt, source}=getContent();
+  const forcedPages=selMode==='auto'?selPageCount:'auto';
+  const n=estimatePages(cnt,sub,source,forcedPages);
+  const chosen=choosePages(n,cnt,sub);
+  lastPages=chosen.map((pd,i)=>({def:pd,prompt:buildPrompt(pd,sub,cnt,lvl,lang,i+1,chosen.length,selSubj,userWarn,source,refNote)}));
+  document.getElementById('expBtn').style.display='block';
+  const srcLabel={typed:'พิมพ์เอง',file:'จากไฟล์',outline:'จากโครงสร้าง',auto:'AI อัตโนมัติ'}[source]||source;
+  const out=document.getElementById('out');
+  out.innerHTML=`
+    <div class="sbar"><div class="dot"></div> สร้างสำเร็จ ${chosen.length} prompts · "${sub}"</div>
+    <div style="display:flex;align-items:center;gap:7px;padding:1px 0;flex-wrap:wrap">
+      <span class="pgbadge">${chosen.length} หน้า</span>
+      <span class="src-badge">โหมด: ${srcLabel}</span>
+      <span style="font-size:11px;color:var(--color-text-tertiary)">${selSty}</span>
+    </div>
+    ${lastPages.map((item,i)=>`
+    <div class="card">
+      <div class="ch">
+        <div class="ch-l">
+          <div class="ch-row">
+            <span style="font-size:10px;color:var(--color-text-tertiary)">หน้า ${i+1}</span>
+            <span class="bdg ${item.def.badge}">${item.def.label}</span>
+            ${userWarn?'<span class="wchip">มีข้อระวัง</span>':''}
+            ${source==='outline'?'<span class="mchip">AI เติมรายละเอียด</span>':''}
+            ${source==='auto'?'<span class="mchip">AI สร้างทั้งหมด</span>':''}
+          </div>
+          <div class="layout-hint">${getLayout(item.def).split('.')[0]}</div>
+        </div>
+      </div>
+      <div class="cb"><div class="pt" id="pt${i}">${item.prompt}</div></div>
+      <div class="cf">
+        <button class="cbtn" id="cp${i}" onclick="doCopy(${i})">คัดลอก Prompt</button>
+        <button class="cbtn" onclick="doImprove(${i},'${sub.replace(/'/g,"\\'")}')">ปรับปรุง ↗</button>
+        <button class="cbtn" onclick="doFix(${i},'${sub.replace(/'/g,"\\'")}','${item.def.label}')">แก้ปัญหา AI ภาพ ↗</button>
+      </div>
+    </div>`).join('')}`;
+}
+
+function doCopy(i){
+  navigator.clipboard.writeText(lastPages[i].prompt).then(()=>{
+    const b=document.getElementById('cp'+i);b.textContent='คัดลอกแล้ว!';b.classList.add('ok');
+    setTimeout(()=>{b.textContent='คัดลอก Prompt';b.classList.remove('ok')},2000);
+  });
+}
+function doImprove(i,sub){sendPrompt(`ช่วยปรับปรุง infographic prompt หน้า "${lastPages[i].def.label}" ของ "${sub}" ให้มีรายละเอียด visual มากขึ้น เน้น: composition, สี, layout, ข้อควรระวังเรื่องลูกศรและมุมมอง`)}
+function doFix(i,sub,lbl){sendPrompt(`AI สร้างภาพ infographic หน้า "${lbl}" ของ "${sub}" ออกมาไม่ถูกต้อง ช่วยแนะนำวิธีแก้ prompt เพื่อแก้ไข เช่น ลูกศรผิดทิศ, organelle ผิดตำแหน่ง, scale ไม่สมจริง`)}
+function exportAll(){
+  if(!lastPages.length)return;
+  const sub=document.getElementById('sub').value.trim();
+  const sd=SUBJ_DATA[selSubj];
+  const hd=`INFOGRAPHIC PROMPTS: ${sub}\nStyle: ${selSty} · Subject: ${sd.label}\nVisual Knowledge Engine v4\n${'═'.repeat(60)}\n\n`;
+  const wd=`ACADEMIC WARNINGS:\nCaution: ${sd.caution}\nForbidden: ${sd.forbidden}\nCommon problems: ${sd.problems}\n\n`;
+  const body=lastPages.map((p,i)=>`${'─'.repeat(60)}\nหน้า ${i+1}: ${p.def.label}\n${'─'.repeat(60)}\n\n${p.prompt}`).join('\n\n');
+  const blob=new Blob([hd+wd+body],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`${sub}-prompts-v4.txt`;a.click();URL.revokeObjectURL(url);
+}
+
+document.getElementById('pc-auto').classList.add('ok');
+renderSubjInfo();
+</script>
