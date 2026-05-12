@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือแก้ปัญหา Google Classroom</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .slide {
+            background-color: white;
+            width: 100%;
+            max-width: 800px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .header-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 4px solid #ffeeba;
+        }
+        .header-success {
+            background-color: #1e8e3e;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 30px;
+        }
+        h1, h2 {
+            margin-top: 0;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .subtitle {
+            font-size: 16px;
+            font-weight: 400;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+        .card {
+            background-color: #f8f9fa;
+            border-left: 5px solid #1e8e3e;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .card-warning {
+            border-left: 5px solid #ffc107;
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+        }
+        .card h3 span {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        .card p {
+            margin: 0 0 10px 0;
+            color: #555;
+            line-height: 1.6;
+        }
+        ul, ol {
+            margin: 0;
+            padding-left: 20px;
+            color: #555;
+            line-height: 1.6;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .page-indicator {
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+            padding: 10px;
+            background-color: #fafafa;
+            border-top: 1px solid #eee;
+        }
+        code {
+            background-color: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #d63384;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Slide 1 -->
+    <div class="slide">
+        <div class="header-warning">
+            <h1>🚨 แก้ปัญหา: กดลิงก์เชิญแล้ว แต่ระบบยังถามหารหัสชั้นเรียน!</h1>
+            <div class="subtitle">(ทำไมถึงเข้า Google Classroom ไม่ได้ ทั้งๆ ที่ครูส่งลิงก์มาให้?)</div>
+        </div>
+        <div class="content">
+            <h2>สาเหตุหลักที่พบบ่อย</h2>
+            
+            <div class="card card-warning">
+                <h3><span>👥</span> 1. ปัญหาบัญชีทับซ้อน (พบบ่อยที่สุด)</h3>
+                <p>บราวเซอร์หรือแอปของคุณล็อกอินบัญชีส่วนตัว (@gmail.com) ค้างไว้ เมื่อกดลิงก์ ระบบจึงดึงบัญชีนั้นไปใช้ ซึ่งไม่มีสิทธิ์เข้าห้อง</p>
+            </div>
+
+            <div class="card card-warning">
+                <h3><span>🔄</span> 2. การสลับหน้าต่างทำงานขัดข้อง</h3>
+                <p>กดลิงก์จาก Line/แอปเมล แล้วเด้งไปเปิดในบราวเซอร์ ซึ่งบัญชีที่ล็อกอินในบราวเซอร์ไม่ตรงกับในแอป Classroom</p>
+            </div>
+
+            <div class="card card-warning">
+                <h3><span>🔗</span> 3. ลิงก์หมดอายุหรือถูกรีเซ็ต</h3>
+                <p>คุณครูอาจกดรีเซ็ตรหัสชั้นเรียนไปแล้ว ทำให้ลิงก์เดิมที่เคยส่งมาให้ไม่สามารถใช้งานได้อีก</p>
+            </div>
+        </div>
+        <div class="page-indicator">หน้า 1 / 3</div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide">
+        <div class="header-success">
+            <h1>🛠️ วิธีแก้ไขแบบทำตามได้ทันที</h1>
+            <div class="subtitle">วิธีแนะนำที่แก้ไขปัญหาได้ผลดีที่สุด</div>
+        </div>
+        <div class="content">
+            
+            <div class="card">
+                <h3>วิธีที่ 1: การสลับบัญชีที่ "จุดแสดงผล" (ทำได้ทั้ง PC และมือถือ)</h3>
+                <p><strong>👉 ขั้นตอน:</strong></p>
+                <ol>
+                    <li>หน้าจอที่ถามหารหัส <strong>อย่าเพิ่งหารหัสมาใส่</strong></li>
+                    <li>มองไปที่ <strong>"รูปโปรไฟล์"</strong> (วงกลมมุมขวาบนสุด) แล้วคลิก</li>
+                    <li>ดูว่าใช้อีเมลโรงเรียนอยู่หรือไม่?</li>
+                    <li>ถ้าไม่ใช่ ให้คลิกเลือก <strong>"อีเมลโรงเรียน"</strong> ทันที ระบบจะพากลับเข้าห้องเรียนเอง</li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <h3>วิธีที่ 2: ใช้โหมดไม่ระบุตัวตน (ชัวร์ 100% สำหรับคอมพิวเตอร์)</h3>
+                <p><strong>👉 ขั้นตอน:</strong></p>
+                <ol>
+                    <li><strong>คลิกขวา</strong> ที่ลิงก์เชิญ > เลือก "คัดลอกลิงก์" (Copy Link)</li>
+                    <li>เปิด Chrome กด <code>Ctrl + Shift + N</code> (หรือ <code>Cmd + Shift + N</code> บน Mac)</li>
+                    <li>วางลิงก์ลงไป แล้วล็อกอินด้วย <strong>"อีเมลและรหัสผ่านโรงเรียน"</strong> เท่านั้น เข้าได้ชัวร์!</li>
+                </ol>
+            </div>
+            
+        </div>
+        <div class="page-indicator">หน้า 2 / 3</div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide">
+        <div class="header-success">
+            <h1>🛠️ วิธีแก้ไขเพิ่มเติม</h1>
+            <div class="subtitle">(สำหรับมือถือ และ กรณีลิงก์ดื้อ)</div>
+        </div>
+        <div class="content">
+            
+            <div class="card">
+                <h3>วิธีที่ 3: เพิ่มบัญชีให้พร้อมก่อน (สำหรับ iPhone/iPad)</h3>
+                <p><strong>👉 ขั้นตอน:</strong></p>
+                <ol>
+                    <li>เปิดแอป Google Classroom ขึ้นมาก่อน</li>
+                    <li>แตะรูปโปรไฟล์มุมขวาบน > เลือก <strong>"เพิ่มบัญชีอื่น" (Add another account)</strong></li>
+                    <li>ล็อกอินอีเมลโรงเรียนให้เรียบร้อย</li>
+                    <li>กลับไปที่อีเมลเชิญ แล้วกดลิงก์อีกครั้ง ระบบจะให้คุณเลือกบัญชีที่ถูกต้องได้แล้ว</li>
+                </ol>
+            </div>
+
+            <div class="card">
+                <h3>วิธีที่ 4: แกะรหัสออกมาจากลิงก์ (Manual Entry)</h3>
+                <p><strong>👉 ขั้นตอน:</strong></p>
+                <ol>
+                    <li>สังเกตที่ลิงก์ URL ที่ครูส่งมา (เช่น <code>...google.com/c/xxx?cjc=abc1234</code>)</li>
+                    <li>รหัสชั้นเรียนของคุณคือ <strong>ตัวอักษรหลังคำว่า cjc=</strong> (จากตัวอย่างคือ <code>abc1234</code>)</li>
+                    <li>นำรหัส 7 ตัวนี้ ไปกรอกในแอป Classroom ในช่อง "เข้าร่วมชั้นเรียน" (Join Class) ได้เลย!</li>
+                </ol>
+            </div>
+            
+        </div>
+        <div class="page-indicator">หน้า 3 / 3</div>
+    </div>
+
+</body>
+</html>
