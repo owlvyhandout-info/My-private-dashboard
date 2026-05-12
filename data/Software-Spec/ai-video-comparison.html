@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Video Generator Comparison 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: #2a2a3a;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --accent3: #43e97b;
+    --accent4: #f7971e;
+    --text: #e8e8f0;
+    --text-dim: #8888aa;
+    --yes: #43e97b;
+    --no: #ff6584;
+    --partial: #f7971e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sarabun', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(108,99,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(108,99,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 60px;
+    animation: fadeDown 0.8s ease;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(108,99,255,0.15);
+    border: 1px solid rgba(108,99,255,0.4);
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 16px;
+    font-weight: 300;
+  }
+
+  /* Tool Cards */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 16px;
+    margin-bottom: 50px;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 16px;
+  }
+
+  .tool-card:hover { transform: translateY(-4px); }
+  .tool-card:hover::before { opacity: 1; }
+
+  .tool-card.magiclight { --tc: #f7971e; }
+  .tool-card.leonardo { --tc: #6c63ff; }
+  .tool-card.runway { --tc: #ff6584; }
+  .tool-card.kling { --tc: #43e97b; }
+  .tool-card.veo { --tc: #4ecdc4; }
+  .tool-card.seedance { --tc: #ff9f43; }
+
+  .tool-card::before { background: linear-gradient(135deg, color-mix(in srgb, var(--tc) 10%, transparent), transparent); }
+  .tool-card:hover { border-color: var(--tc); box-shadow: 0 8px 32px color-mix(in srgb, var(--tc) 20%, transparent); }
+
+  .tool-emoji { font-size: 32px; margin-bottom: 10px; }
+  .tool-name { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .tool-tagline { font-size: 11px; color: var(--text-dim); line-height: 1.4; }
+  .tool-badge {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    background: color-mix(in srgb, var(--tc) 20%, transparent);
+    color: var(--tc);
+    border: 1px solid color-mix(in srgb, var(--tc) 40%, transparent);
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 50px;
+    animation: fadeUp 0.8s ease 0.4s both;
+  }
+
+  .section-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* Comparison Table */
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+  }
+
+  thead tr {
+    background: var(--surface2);
+  }
+
+  th {
+    padding: 16px 14px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  th:first-child { text-align: left; }
+
+  .th-tool {
+    font-size: 13px;
+    color: var(--text);
+    padding: 14px;
+  }
+
+  .th-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.2s;
+  }
+
+  tbody tr:hover { background: rgba(108,99,255,0.04); }
+  tbody tr:last-child { border-bottom: none; }
+
+  td {
+    padding: 13px 14px;
+    text-align: center;
+    font-size: 13px;
+    vertical-align: middle;
+  }
+
+  td:first-child {
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text);
+    white-space: nowrap;
+    padding-left: 20px;
+  }
+
+  .cat-row td {
+    background: rgba(108,99,255,0.06);
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    font-weight: 700;
+  }
+
+  /* Icons */
+  .yes { color: var(--yes); font-size: 16px; }
+  .no { color: var(--no); font-size: 16px; }
+  .partial { color: var(--partial); font-size: 13px; font-weight: 600; }
+  .star { color: #ffd700; font-size: 16px; }
+  .val { font-size: 12px; color: var(--text-dim); }
+  .val-good { font-size: 12px; color: var(--yes); font-weight: 600; }
+  .val-warn { font-size: 12px; color: var(--partial); font-weight: 600; }
+
+  /* Pricing Cards */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    animation: fadeUp 0.8s ease 0.6s both;
+  }
+
+  .price-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 20px;
+    transition: all 0.3s;
+  }
+
+  .price-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(108,99,255,0.15);
+  }
+
+  .price-tool-name {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 12px;
+  }
+
+  .price-row:last-child { border-bottom: none; }
+
+  .price-plan { color: var(--text-dim); }
+  .price-amount {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .price-free {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    color: var(--yes);
+  }
+
+  /* Use Case */
+  .usecase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    animation: fadeUp 0.8s ease 0.8s both;
+  }
+
+  .usecase-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: all 0.3s;
+  }
+
+  .usecase-card:hover {
+    border-color: var(--accent);
+    background: var(--surface2);
+  }
+
+  .usecase-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .usecase-label {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .usecase-title {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .usecase-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tool-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 0 20px;
+    color: var(--text-dim);
+    font-size: 12px;
+    animation: fadeUp 0.8s ease 1s both;
+  }
+
+  /* Animations */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Highlight row */
+  .highlight-cell {
+    background: rgba(108,99,255,0.08);
+    border-radius: 6px;
+    padding: 4px 8px;
+    display: inline-block;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <div class="badge">AI Video Tools · 2025–2026</div>
+    <h1>เปรียบเทียบ AI Video Generator</h1>
+    <p class="subtitle">MagicLight · Leonardo · Runway · Kling · Veo 3.1 · Seedance 2.0</p>
+  </header>
+
+  <!-- Tool Cards -->
+  <div class="section">
+    <div class="section-title">ภาพรวมแต่ละเครื่องมือ</div>
+    <div class="tools-grid">
+      <div class="tool-card magiclight">
+        <div class="tool-emoji">🪄</div>
+        <div class="tool-name">MagicLight</div>
+        <div class="tool-tagline">Long-form story<br>videos ยาวถึง 50 นาที</div>
+        <div class="tool-badge">Long Content</div>
+      </div>
+      <div class="tool-card leonardo">
+        <div class="tool-emoji">🎨</div>
+        <div class="tool-name">Leonardo.ai</div>
+        <div class="tool-tagline">ภาพ + วีดีโอ<br>ในที่เดียว</div>
+        <div class="tool-badge">All-in-One</div>
+      </div>
+      <div class="tool-card runway">
+        <div class="tool-emoji">✈️</div>
+        <div class="tool-name">Runway</div>
+        <div class="tool-tagline">Creative control<br>สำหรับมืออาชีพ</div>
+        <div class="tool-badge">Pro Creator</div>
+      </div>
+      <div class="tool-card kling">
+        <div class="tool-emoji">⚡</div>
+        <div class="tool-name">Kling</div>
+        <div class="tool-tagline">Character consistency<br>และ multi-shot</div>
+        <div class="tool-badge">Consistency</div>
+      </div>
+      <div class="tool-card veo">
+        <div class="tool-emoji">🎬</div>
+        <div class="tool-name">Veo 3.1</div>
+        <div class="tool-tagline">Cinematic quality<br>สูงสุด โดย Google</div>
+        <div class="tool-badge">Cinematic</div>
+      </div>
+      <div class="tool-card seedance">
+        <div class="tool-emoji">🎵</div>
+        <div class="tool-name">Seedance 2.0</div>
+        <div class="tool-tagline">Audio + Video<br>generate พร้อมกัน</div>
+        <div class="tool-badge">Audio-Native</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature Comparison Table -->
+  <div class="section">
+    <div class="section-title">เปรียบเทียบคุณสมบัติ</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left; padding-left:20px;">คุณสมบัติ</th>
+            <th class="th-tool"><span class="th-dot" style="background:#f7971e"></span>MagicLight</th>
+            <th class="th-tool"><span class="th-dot" style="background:#6c63ff"></span>Leonardo</th>
+            <th class="th-tool"><span class="th-dot" style="background:#ff6584"></span>Runway</th>
+            <th class="th-tool"><span class="th-dot" style="background:#43e97b"></span>Kling</th>
+            <th class="th-tool"><span class="th-dot" style="background:#4ecdc4"></span>Veo 3.1</th>
+            <th class="th-tool"><span class="th-dot" style="background:#ff9f43"></span>Seedance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Video -->
+          <tr class="cat-row"><td colspan="7">📹 Video Generation</td></tr>
+          <tr>
+            <td>Text-to-Video</td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Image-to-Video</td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>ความยาววีดีโอสูงสุด</td>
+            <td><span class="val-good highlight-cell">50 นาที ⭐</span></td>
+            <td><span class="val">15 วิ</span></td>
+            <td><span class="val">16 วิ</span></td>
+            <td><span class="val-good">3 นาที</span></td>
+            <td><span class="val">8 วิ</span></td>
+            <td><span class="val">15 วิ</span></td>
+          </tr>
+          <tr>
+            <td>Multi-Shot Storyboard</td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="star">★★</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>ความละเอียดสูงสุด</td>
+            <td><span class="val">1080p</span></td>
+            <td><span class="val">1080p</span></td>
+            <td><span class="val">1080p</span></td>
+            <td><span class="val-good">4K ⭐</span></td>
+            <td><span class="val-good">4K ⭐</span></td>
+            <td><span class="val-good">4K</span></td>
+          </tr>
+          <!-- Consistency -->
+          <tr class="cat-row"><td colspan="7">👤 Consistency & Control</td></tr>
+          <tr>
+            <td>Character Consistency</td>
+            <td><span class="yes">✓</span> ข้ามซีน</td>
+            <td><span class="partial">พื้นฐาน</span></td>
+            <td><span class="star">★★</span></td>
+            <td><span class="star">★★</span></td>
+            <td><span class="star">★★</span></td>
+            <td><span class="star">★★</span></td>
+          </tr>
+          <tr>
+            <td>Seed Control</td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Camera Control</td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="star">★★</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="star">★★</span></td>
+          </tr>
+          <tr>
+            <td>Style / Template</td>
+            <td><span class="val-good">เยอะมาก ⭐</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <!-- Audio -->
+          <tr class="cat-row"><td colspan="7">🎵 Audio</td></tr>
+          <tr>
+            <td>Native Audio Generation</td>
+            <td><span class="yes">✓</span> TTS</td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="star">★★</span></td>
+            <td><span class="star">★★</span> ⭐</td>
+          </tr>
+          <tr>
+            <td>รองรับภาษาไทย (เสียง)</td>
+            <td><span class="partial">บางส่วน</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+          </tr>
+          <tr>
+            <td>Lip Sync</td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="star">★★</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Auto Subtitle</td>
+            <td><span class="yes">✓</span> ⭐</td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+          </tr>
+          <!-- Image -->
+          <tr class="cat-row"><td colspan="7">🖼️ Image Features</td></tr>
+          <tr>
+            <td>Text-to-Image</td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="star">★★</span></td>
+            <td><span class="partial">จำกัด</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+          </tr>
+          <tr>
+            <td>Train Custom Model</td>
+            <td><span class="no">✗</span></td>
+            <td><span class="yes">✓</span> (paid)</td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+          </tr>
+          <tr>
+            <td>Image Upscaling</td>
+            <td><span class="no">✗</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+          </tr>
+          <!-- Access -->
+          <tr class="cat-row"><td colspan="7">🔓 การเข้าถึง</td></tr>
+          <tr>
+            <td>มี Free Plan</td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="partial">ผ่าน Flow</span></td>
+            <td><span class="no">✗</span></td>
+          </tr>
+          <tr>
+            <td>ไม่ต้องสมัคร</td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+            <td><span class="no">✗</span></td>
+          </tr>
+          <tr>
+            <td>Mobile App</td>
+            <td><span class="partial">Web</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="partial">Web</span></td>
+          </tr>
+          <tr>
+            <td>API Access</td>
+            <td><span class="no">✗</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+            <td><span class="yes">✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px; font-size:11px; color:var(--text-dim); padding-left:4px;">
+      ★★ = ดีที่สุดในหมวดนั้น &nbsp;|&nbsp; ✓ = รองรับ &nbsp;|&nbsp; ✗ = ไม่รองรับ &nbsp;|&nbsp; ⭐ = จุดเด่นพิเศษ
+    </div>
+  </div>
+
+  <!-- Pricing -->
+  <div class="section">
+    <div class="section-title">ราคา (USD/เดือน)</div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tool-name">🪄 MagicLight</div>
+        <div class="price-row"><span class="price-plan">ฟรี</span><span class="price-free">$0</span></div>
+        <div class="price-row"><span class="price-plan">Standard</span><span class="price-amount">$8</span></div>
+        <div class="price-row"><span class="price-plan">Plus</span><span class="price-amount">$16</span></div>
+        <div class="price-row"><span class="price-plan">Pro</span><span class="price-amount">$24–35</span></div>
+      </div>
+      <div class="price-card">
+        <div class="price-tool-name">🎨 Leonardo.ai</div>
+        <div class="price-row"><span class="price-plan">ฟรี (150 tokens/วัน)</span><span class="price-free">$0</span></div>
+        <div class="price-row"><span class="price-plan">Apprentice</span><span class="price-amount">$12</span></div>
+        <div class="price-row"><span class="price-plan">Artisan</span><span class="price-amount">$30</span></div>
+        <div class="price-row"><span class="price-plan">Maestro</span><span class="price-amount">$60</span></div>
+      </div>
+      <div class="price-card">
+        <div class="price-tool-name">✈️ Runway</div>
+        <div class="price-row"><span class="price-plan">ฟรี (จำกัด)</span><span class="price-free">$0</span></div>
+        <div class="price-row"><span class="price-plan">Standard</span><span class="price-amount">$15</span></div>
+        <div class="price-row"><span class="price-plan">Pro</span><span class="price-amount">$35</span></div>
+        <div class="price-row"><span class="price-plan">Unlimited</span><span class="price-amount">$95</span></div>
+      </div>
+      <div class="price-card">
+        <div class="price-tool-name">⚡ Kling</div>
+        <div class="price-row"><span class="price-plan">ฟรี (จำกัด)</span><span class="price-free">$0</span></div>
+        <div class="price-row"><span class="price-plan">Starter</span><span class="price-amount">$12</span></div>
+        <div class="price-row"><span class="price-plan">Pro</span><span class="price-amount">$28</span></div>
+        <div class="price-row"><span class="price-plan">ต่อ clip</span><span class="price-amount">~$0.10/วิ</span></div>
+      </div>
+      <div class="price-card">
+        <div class="price-tool-name">🎬 Veo 3.1</div>
+        <div class="price-row"><span class="price-plan">ผ่าน Google Flow</span><span class="price-free">$0*</span></div>
+        <div class="price-row"><span class="price-plan">AI Pro (Google)</span><span class="price-amount">$19.99</span></div>
+        <div class="price-row"><span class="price-plan">AI Ultra</span><span class="price-amount">$249</span></div>
+        <div class="price-row"><span class="price-plan">ต่อ clip (API)</span><span class="price-amount">~$0.15/วิ</span></div>
+      </div>
+      <div class="price-card">
+        <div class="price-tool-name">🎵 Seedance 2.0</div>
+        <div class="price-row"><span class="price-plan">ฟรี</span><span class="price-amount" style="color:var(--no)">ไม่มี</span></div>
+        <div class="price-row"><span class="price-plan">ต่อ clip</span><span class="price-amount">~$0.14/วิ</span></div>
+        <div class="price-row"><span class="price-plan">ผ่าน Raphael</span><span class="price-free">$0 (จำกัด)</span></div>
+        <div class="price-row"><span class="price-plan">ผ่าน API</span><span class="price-amount">ตามใช้งาน</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Use Cases -->
+  <div class="section">
+    <div class="section-title">เลือกตามงาน</div>
+    <div class="usecase-grid">
+      <div class="usecase-card">
+        <div class="usecase-icon">📺</div>
+        <div>
+          <div class="usecase-label">Best for</div>
+          <div class="usecase-title">YouTube Faceless / Long Content</div>
+          <div class="usecase-tools">
+            <span class="tool-tag" style="color:#f7971e;border-color:#f7971e;background:rgba(247,151,30,0.1)">MagicLight ⭐</span>
+          </div>
+        </div>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-icon">🎭</div>
+        <div>
+          <div class="usecase-label">Best for</div>
+          <div class="usecase-title">Character Consistency สูง</div>
+          <div class="usecase-tools">
+            <span class="tool-tag" style="color:#43e97b;border-color:#43e97b;background:rgba(67,233,123,0.1)">Kling ⭐</span>
+            <span class="tool-tag" style="color:#ff6584;border-color:#ff6584;background:rgba(255,101,132,0.1)">Runway</span>
+          </div>
+        </div>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-icon">🎬</div>
+        <div>
+          <div class="usecase-label">Best for</div>
+          <div class="usecase-title">Cinematic Quality สูงสุด</div>
+          <div class="usecase-tools">
+            <span class="tool-tag" style="color:#4ecdc4;border-color:#4ecdc4;background:rgba(78,205,196,0.1)">Veo 3.1 ⭐</span>
+            <span class="tool-tag" style="color:#ff6584;border-color:#ff6584;background:rgba(255,101,132,0.1)">Runway</span>
+          </div>
+        </div>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-icon">🎵</div>
+        <div>
+          <div class="usecase-label">Best for</div>
+          <div class="usecase-title">เสียง + ภาพ Sync สมบูรณ์</div>
+          <div class="usecase-tools">
+            <span class="tool-tag" style="color:#ff9f43;border-color:#ff9f43;background:rgba(255,159,67,0.1)">Seedance 2.0 ⭐</span>
+            <span class="tool-tag" style="color:#4ecdc4;border-color:#4ecdc4;background:rgba(78,205,196,0.1)">Veo 3.1</span>
+          </div>
+        </div>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-icon">🖼️</div>
+        <div>
+          <div class="usecase-label">Best for</div>
+          <div class="usecase-title">ภาพ + วีดีโอ ในที่เดียว</div>
+          <div class="usecase-tools">
+            <span class="tool-tag" style="color:#6c63ff;border-color:#6c63ff;background:rgba(108,99,255,0.1)">Leonardo.ai ⭐</span>
+          </div>
+        </div>
+      </div>
+      <div class="usecase-card">
+        <div class="usecase-icon">💰</div>
+        <div>
+          <div class="usecase-label">Best for</div>
+          <div class="usecase-title">งบน้อย / เริ่มต้นฟรี</div>
+          <div class="usecase-tools">
+            <span class="tool-tag" style="color:#f7971e;border-color:#f7971e;background:rgba(247,151,30,0.1)">MagicLight</span>
+            <span class="tool-tag" style="color:#6c63ff;border-color:#6c63ff;background:rgba(108,99,255,0.1)">Leonardo</span>
+            <span class="tool-tag" style="color:#43e97b;border-color:#43e97b;background:rgba(67,233,123,0.1)">Kling</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>ข้อมูล ณ พฤษภาคม 2026 · ราคาและฟีเจอร์อาจเปลี่ยนแปลงได้ · ควรตรวจสอบกับเว็บไซต์ทางการก่อนสมัคร</p>
+  </footer>
+
+</div>
+</body>
+</html>
