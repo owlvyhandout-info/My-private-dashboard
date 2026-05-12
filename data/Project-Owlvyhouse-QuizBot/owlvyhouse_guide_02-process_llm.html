@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owlvy House — คู่มือติดตั้งระบบ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Sarabun:wght@300;400;600&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --bg2: #161b27;
+    --bg3: #1e2535;
+    --border: #2a3347;
+    --accent: #4f8ef7;
+    --accent2: #38d9a9;
+    --accent3: #f7c94f;
+    --red: #f76f6f;
+    --text: #e2e8f4;
+    --text2: #8a96b0;
+    --text3: #5a6480;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans Thai', 'Sarabun', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 40px 20px 80px;
+  }
+
+  .container { max-width: 860px; margin: 0 auto; }
+
+  /* HEADER */
+  .header {
+    border-left: 4px solid var(--accent);
+    padding: 24px 28px;
+    background: var(--bg2);
+    border-radius: 0 12px 12px 0;
+    margin-bottom: 40px;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+  .header p {
+    color: var(--text2);
+    font-size: 14px;
+    margin-top: 6px;
+  }
+
+  /* FLOW OVERVIEW */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+    font-size: 13px;
+  }
+  .flow-item {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    color: var(--text2);
+    white-space: nowrap;
+  }
+  .flow-item.highlight { border-color: var(--accent); color: var(--accent); }
+  .flow-arrow { color: var(--text3); font-size: 16px; }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 36px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 24px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 14px;
+    flex-shrink: 0;
+  }
+  .num-blue { background: rgba(79,142,247,0.15); color: var(--accent); border: 1px solid rgba(79,142,247,0.3); }
+  .num-green { background: rgba(56,217,169,0.15); color: var(--accent2); border: 1px solid rgba(56,217,169,0.3); }
+  .num-yellow { background: rgba(247,201,79,0.15); color: var(--accent3); border: 1px solid rgba(247,201,79,0.3); }
+  .section-title { font-weight: 600; font-size: 16px; }
+  .section-sub { color: var(--text2); font-size: 13px; margin-top: 2px; }
+  .once-badge {
+    margin-left: auto;
+    background: rgba(79,142,247,0.1);
+    border: 1px solid rgba(79,142,247,0.3);
+    color: var(--accent);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .each-badge {
+    margin-left: auto;
+    background: rgba(56,217,169,0.1);
+    border: 1px solid rgba(56,217,169,0.3);
+    color: var(--accent2);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .section-body { padding: 20px 24px; }
+
+  /* STEP */
+  .step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .step-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: var(--text2);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-content { flex: 1; }
+  .step-action {
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .step-desc { color: var(--text2); font-size: 13px; }
+
+  /* BILINGUAL PATH */
+  .path {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin: 8px 0;
+    font-size: 13px;
+  }
+  .path-th {
+    background: rgba(79,142,247,0.08);
+    border: 1px solid rgba(79,142,247,0.2);
+    color: var(--accent);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-family: var(--sans);
+  }
+  .path-en {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .path-sep { color: var(--text3); }
+
+  /* CODE */
+  .code {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent2);
+    margin: 8px 0;
+    overflow-x: auto;
+  }
+
+  /* WARN BOX */
+  .warn {
+    background: rgba(247,111,111,0.07);
+    border: 1px solid rgba(247,111,111,0.25);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #f7a0a0;
+    margin: 10px 0;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .warn-icon { flex-shrink: 0; margin-top: 2px; }
+
+  /* TIP BOX */
+  .tip {
+    background: rgba(56,217,169,0.07);
+    border: 1px solid rgba(56,217,169,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #7eecd4;
+    margin: 10px 0;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  /* COMPARE TABLE */
+  .compare {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 10px 0;
+  }
+  .compare th {
+    background: var(--bg3);
+    color: var(--text2);
+    padding: 8px 14px;
+    text-align: left;
+    font-weight: 500;
+    border-bottom: 1px solid var(--border);
+  }
+  .compare td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .compare tr:last-child td { border-bottom: none; }
+  .compare .th-word { color: var(--accent); font-family: var(--sans); }
+  .compare .en-word { color: var(--text2); font-family: var(--mono); font-size: 12px; }
+  .compare .desc { color: var(--text2); }
+
+  /* ERROR SECTION */
+  .error-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+  }
+  .error-msg {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--red);
+    background: rgba(247,111,111,0.08);
+    border: 1px solid rgba(247,111,111,0.2);
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    overflow-x: auto;
+  }
+  .error-cause { font-size: 13px; color: var(--text2); margin-bottom: 6px; }
+  .error-fix { font-size: 13px; color: var(--accent2); }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; margin: 10px 0; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 7px 0;
+    font-size: 13px;
+    color: var(--text2);
+    border-bottom: 1px solid var(--border);
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .check-icon { color: var(--accent2); flex-shrink: 0; margin-top: 2px; }
+
+  /* SCOPE TABLE */
+  .scope-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0; }
+  .scope-table th {
+    background: var(--bg3);
+    color: var(--text2);
+    padding: 8px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+  }
+  .scope-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent2);
+  }
+  .scope-table td.desc {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .scope-table tr:last-child td { border-bottom: none; }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 32px 0;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .tag-must { background: rgba(247,111,111,0.15); color: var(--red); border: 1px solid rgba(247,111,111,0.3); }
+  .tag-once { background: rgba(79,142,247,0.15); color: var(--accent); border: 1px solid rgba(79,142,247,0.3); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>🦉 Owlvy House — คู่มือติดตั้งระบบ</h1>
+    <p>ขั้นตอนการติดตั้งตั้งแต่เริ่มต้น สำหรับ Account ใหม่หรือติดตั้งใหม่ทั้งหมด</p>
+  </div>
+
+  <!-- FLOW -->
+  <div class="flow">
+    <div class="flow-item highlight">Google Form</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item">Spreadsheet</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item highlight">OwlvyFormScript</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item highlight">OwlvyLib</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item">OpenRouter AI</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-item">ส่งเมล</div>
+  </div>
+
+  <!-- VOCABULARY TABLE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num num-yellow">📖</div>
+      <div>
+        <div class="section-title">คำศัพท์ที่ใช้ในคู่มือนี้</div>
+        <div class="section-sub">ภาษาไทย — ภาษาอังกฤษ บนหน้าจอจริง</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <table class="compare">
+        <tr>
+          <th>ภาษาไทย (ในคู่มือ)</th>
+          <th>ภาษาอังกฤษ (บนหน้าจอ)</th>
+          <th>หมายถึง</th>
+        </tr>
+        <tr>
+          <td class="th-word">ชื่อโครงการ</td>
+          <td class="en-word">Project Name</td>
+          <td class="desc">ชื่อที่เห็นใน Google Drive ตั้งเพื่อให้จำ</td>
+        </tr>
+        <tr>
+          <td class="th-word">รหัสระบุเฉพาะ</td>
+          <td class="en-word">Script ID</td>
+          <td class="desc">รหัสประจำตัวของโครงการ Apps Script ใช้เชื่อม Library</td>
+        </tr>
+        <tr>
+          <td class="th-word">ชื่อที่ใช้เรียกใน code</td>
+          <td class="en-word">Identifier</td>
+          <td class="desc">ต้องตรงกับที่เขียนใน code ทุกตัวอักษร</td>
+        </tr>
+        <tr>
+          <td class="th-word">เผยแพร่</td>
+          <td class="en-word">Deploy</td>
+          <td class="desc">ทำให้ Library พร้อมให้ script อื่นเรียกใช้</td>
+        </tr>
+        <tr>
+          <td class="th-word">อนุญาตสิทธิ์</td>
+          <td class="en-word">Authorization / Allow</td>
+          <td class="desc">ให้สิทธิ์ script เข้าถึง Sheet, Gmail, อินเทอร์เน็ต</td>
+        </tr>
+        <tr>
+          <td class="th-word">คุณสมบัติ script</td>
+          <td class="en-word">Script Properties</td>
+          <td class="desc">ที่เก็บ API Key ปลอดภัย ไม่โชว์ใน code</td>
+        </tr>
+        <tr>
+          <td class="th-word">ทริกเกอร์</td>
+          <td class="en-word">Triggers</td>
+          <td class="desc">ตัวกระตุ้นให้ script รันเมื่อมี Form submit</td>
+        </tr>
+        <tr>
+          <td class="th-word">ประวัติการรัน</td>
+          <td class="en-word">Executions</td>
+          <td class="desc">บันทึก log ทุกครั้งที่ script ทำงาน</td>
+        </tr>
+        <tr>
+          <td class="th-word">เวอร์ชันล่าสุดเสมอ</td>
+          <td class="en-word">Version: HEAD</td>
+          <td class="desc">ดึง code ปัจจุบันตลอด ไม่ติด version เก่า</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- STEP 1: OwlvyLib -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num num-blue">1</div>
+      <div>
+        <div class="section-title">สร้าง OwlvyLib — ไลบรารีกลาง</div>
+        <div class="section-sub">เก็บ Logic ทั้งหมด: AI, Prompt, Fallback, ส่งเมล</div>
+      </div>
+      <span class="once-badge">ทำครั้งเดียวตลอดไป</span>
+    </div>
+    <div class="section-body">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-action">สร้างโครงการ Apps Script ใหม่</div>
+          <div class="path">
+            <span class="path-th">ไปที่</span>
+            <span class="path-en">script.google.com</span>
+            <span class="path-sep">→</span>
+            <span class="path-th">โครงการใหม่</span>
+            <span class="path-en">New project</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-action">ตั้งชื่อโครงการ</div>
+          <div class="step-desc">คลิกที่ชื่อมุมบนซ้าย → เปลี่ยนเป็น</div>
+          <div class="code">OwlvyLib</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-action">วาง code จากไฟล์ OwlvyLib.gs</div>
+          <div class="step-desc">ลบ code เดิมออกทั้งหมด แล้ววาง code ใหม่ → บันทึก</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-action">เผยแพร่เป็นไลบรารี</div>
+          <div class="path">
+            <span class="path-th">เผยแพร่</span>
+            <span class="path-en">Deploy</span>
+            <span class="path-sep">→</span>
+            <span class="path-th">การติดตั้งใช้งานใหม่</span>
+            <span class="path-en">New deployment</span>
+            <span class="path-sep">→</span>
+            <span class="path-th">ประเภท: ไลบรารี</span>
+            <span class="path-en">Type: Library</span>
+            <span class="path-sep">→</span>
+            <span class="path-en">Deploy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-action">คัดลอกรหัสระบุเฉพาะ (Script ID) เก็บไว้</div>
+          <div class="path">
+            <span class="path-en">⚙️</span>
+            <span class="path-sep">→</span>
+            <span class="path-th">การตั้งค่าโครงการ</span>
+            <span class="path-en">Project Settings</span>
+            <span class="path-sep">→</span>
+            <span class="path-th">หัวข้อ IDs</span>
+            <span class="path-sep">→</span>
+            <span class="path-th">คัดลอก Script ID</span>
+          </div>
+          <div class="tip">
+            <span class="warn-icon">💡</span>
+            <span>Script ID จะมีลักษณะเป็นตัวอักษรยาวๆ เช่น <span style="font-family:var(--mono);font-size:11px">1BxiMVs0XRA5nFMdKvBdBZjgm...</span> — เก็บไว้ใช้ในขั้นตอนที่ 2</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- STEP 2: Form + Spreadsheet -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num num-green">2</div>
+      <div>
+        <div class="section-title">ติดตั้ง OwlvyFormScript ใน Spreadsheet</div>
+        <div class="section-sub">ทำทุกครั้งที่มี Google Form ใหม่</div>
+      </div>
+      <span class="each-badge">ทำทุก Form</span>
+    </div>
+    <div class="section-body">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-action">เข้า Spreadsheet ผ่าน Google Form</div>
+          <div class="path">
+            <span class="path-th">เปิด Google Form</span>
+            <span class="path-sep">→</span>
+            <span class="path-th">แท็บ คำตอบ</span>
+            <span class="path-en">Responses</span>
+            <span class="path-sep">→</span>
+            <span class="path-th">ไอคอน Spreadsheet สีเขียว</span>
+          </div>
+          <div class="warn">
+            <span class="warn-icon">⚠️</span>
+            <span>ถ้าขึ้น popup ให้เลือก — เลือก <strong>"เลือกสเปรดชีตที่มีอยู่"</strong> อย่าสร้างใหม่ เพราะ Spreadsheet ใหม่จะไม่มี Script ที่ติดตั้งไว้</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-action">เปิด Apps Script ของ Spreadsheet</div>
+          <div class="path">
+            <span class="path-th">ส่วนขยาย</span>
+            <span class="path-en">Extensions</span>
+            <span class="path-sep">→</span>
+            <span class="path-en">Apps Script</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-action">ตั้งชื่อโครงการ</div>
+          <div class="step-desc">คลิกชื่อมุมบนซ้าย → เปลี่ยนเป็น</div>
+          <div class="code">OwlvyFormScript — ชื่อวิชา เช่น OwlvyFormScript — วิทย์ ม.2</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-action">วาง code จากไฟล์ FormScript.gs</div>
+          <div class="step-desc">ลบ code เดิมออกทั้งหมด แล้ววาง code ใหม่ → บันทึก</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-action">เพิ่มไลบรารี OwlvyLib</div>
+          <div class="path">
+            <span class="path-th">แถบซ้าย</span>
+            <span class="path-sep">→</span>
+            <span class="path-en">Libraries</span>
+            <span class="path-sep">→</span>
+            <span class="path-en">+</span>
+            <span class="path-sep">→</span>
+            <span class="path-th">วาง Script ID จากขั้นตอนที่ 1</span>
+            <span class="path-sep">→</span>
+            <span class="path-en">Look up</span>
+          </div>
+          <div class="step-desc" style="margin-top:8px">ตั้งค่าดังนี้</div>
+          <table class="compare" style="margin-top:8px">
+            <tr>
+              <th>ช่อง</th>
+              <th>ค่าที่ต้องตั้ง</th>
+            </tr>
+            <tr>
+              <td class="desc">Version</td>
+              <td><span class="en-word">HEAD</span> <span style="color:var(--text3);font-size:12px">— ดึง code ล่าสุดเสมอ ไม่ต้อง Deploy ใหม่ทุกครั้ง</span></td>
+            </tr>
+            <tr>
+              <td class="desc">Identifier</td>
+              <td><span class="en-word">OwlvyLib</span> <span style="color:var(--red);font-size:12px">— ต้องตรงกับ code ทุกตัวอักษร</span></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <div class="step-action">ใส่ OpenRouter API Key</div>
+          <div class="path">
+            <span class="path-en">⚙️</span>
+            <span class="path-sep">→</span>
+            <span class="path-th">การตั้งค่าโครงการ</span>
+            <span class="path-en">Project Settings</span>
+            <span class="path-sep">→</span>
+            <span class="path-en">Script Properties</span>
+            <span class="path-sep">→</span>
+            <span class="path-en">Add row</span>
+          </div>
+          <table class="compare" style="margin-top:8px">
+            <tr>
+              <th>Property</th>
+              <th>Value</th>
+            </tr>
+            <tr>
+              <td class="en-word">apiKey</td>
+              <td class="desc">OpenRouter API Key ของคุณ</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <div class="step-action">ตั้งทริกเกอร์ (Trigger)</div>
+          <div class="path">
+            <span class="path-th">ไอคอนนาฬิกา</span>
+            <span class="path-en">Triggers</span>
+            <span class="path-sep">→</span>
+            <span class="path-en">+ Add Trigger</span>
+          </div>
+          <table class="compare" style="margin-top:8px">
+            <tr>
+              <th>ช่อง</th>
+              <th>ค่าที่ต้องตั้ง</th>
+            </tr>
+            <tr>
+              <td class="desc">Function</td>
+              <td class="en-word">onFormSubmit</td>
+            </tr>
+            <tr>
+              <td class="desc">Deployment</td>
+              <td class="en-word">Head</td>
+            </tr>
+            <tr>
+              <td class="desc">Event source</td>
+              <td class="en-word">From spreadsheet</td>
+            </tr>
+            <tr>
+              <td class="desc">Event type</td>
+              <td class="en-word">On form submit</td>
+            </tr>
+          </table>
+          <div class="step-desc" style="margin-top:8px">กด Save → ขึ้น popup → กด Allow</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">8</div>
+        <div class="step-content">
+          <div class="step-action">อนุญาตสิทธิ์ครบทุก scope <span class="tag tag-must">ห้ามข้าม</span></div>
+          <div class="warn">
+            <span class="warn-icon">⚠️</span>
+            <span>Google ขอสิทธิ์ทีละส่วน ไม่พร้อมกัน ถ้าไม่รัน authorizeAll จะเกิด error "You do not have permission" ภายหลัง</span>
+          </div>
+          <div class="path">
+            <span class="path-th">เลือกฟังก์ชัน</span>
+            <span class="path-en">authorizeAll</span>
+            <span class="path-sep">→</span>
+            <span class="path-th">กดรัน</span>
+            <span class="path-en">▶ Run</span>
+            <span class="path-sep">→</span>
+            <span class="path-en">Review permissions → Allow</span>
+          </div>
+          <div class="tip">
+            <span class="warn-icon">✅</span>
+            <span>ดู log ใน Executions ต้องเห็น: <span style="font-family:var(--mono);font-size:11px;color:var(--accent2)">✅ Authorized ครบทุก scope แล้ว</span></span>
+          </div>
+          <div class="step-desc" style="margin-top:6px">หลังจากนี้ไม่ต้องรัน authorizeAll อีก และไม่กระทบการทำงานปกติ</div>
+        </div>
+      </div>
+
+      <!-- OAuth Scopes -->
+      <div style="margin-top:16px">
+        <div class="step-desc" style="margin-bottom:8px">เช็คยืนยัน — ⚙️ → Project Settings → OAuth scopes ต้องเห็นครบ 3 บรรทัดนี้</div>
+        <table class="scope-table">
+          <tr>
+            <th>Scope</th>
+            <th>ใช้สำหรับ</th>
+          </tr>
+          <tr>
+            <td>https://www.googleapis.com/auth/script.external_request</td>
+            <td class="desc">เชื่อมต่ออินเทอร์เน็ต → OpenRouter API</td>
+          </tr>
+          <tr>
+            <td>https://www.googleapis.com/auth/spreadsheets</td>
+            <td class="desc">อ่าน/เขียน Spreadsheet</td>
+          </tr>
+          <tr>
+            <td>https://www.googleapis.com/auth/gmail.send</td>
+            <td class="desc">ส่งเมลหานักเรียน</td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ERROR GUIDE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num num-yellow">⚠</div>
+      <div>
+        <div class="section-title">Error ที่พบบ่อย และวิธีแก้</div>
+        <div class="section-sub">เช็คจาก Apps Script → Executions (ประวัติการรัน)</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="error-card">
+        <div class="error-msg">ReferenceError: OwlvyLib is not defined at onFormSubmit(รหัส:19:3)</div>
+        <div class="error-cause">🔍 สาเหตุ: ยังไม่ได้เพิ่ม Library / Identifier สะกดผิด / Script ID ผิด / Version ไม่ใช่ HEAD</div>
+        <div class="error-fix">✅ แก้: Libraries → เช็ค Script ID, Identifier ต้องเป็น OwlvyLib, Version ต้องเป็น HEAD</div>
+      </div>
+
+      <div class="error-card">
+        <div class="error-msg">Exception: You do not have permission to call UrlFetchApp.fetch</div>
+        <div class="error-cause">🔍 สาเหตุ: ยังไม่ได้รัน authorizeAll หรือกด Allow ไม่ครบ</div>
+        <div class="error-fix">✅ แก้: เลือกฟังก์ชัน authorizeAll → ▶ Run → Allow ให้ครบ</div>
+      </div>
+
+      <div class="error-card">
+        <div class="error-msg">TypeError: Cannot read properties of null (reading 'trim')</div>
+        <div class="error-cause">🔍 สาเหตุ: apiKey ใน Script Properties ว่างเปล่าหรือสะกดผิด</div>
+        <div class="error-fix">✅ แก้: ⚙️ → Script Properties → ตรวจสอบ key ชื่อ "apiKey" มีค่าถูกต้อง</div>
+      </div>
+
+      <div class="error-card">
+        <div class="error-msg">ไม่มี Execution ใหม่หลัง Submit Form</div>
+        <div class="error-cause">🔍 สาเหตุ: Form ไม่ได้เชื่อมกับ Spreadsheet ที่ติดตั้ง Script ไว้</div>
+        <div class="error-fix">✅ แก้: Form → Responses → ไอคอน Spreadsheet → เลือกสเปรดชีตที่มีอยู่ (ไม่สร้างใหม่)</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- WHEN MOVING ACCOUNT -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num num-blue">↗</div>
+      <div>
+        <div class="section-title">ย้าย Account ใหม่ — สิ่งที่ต้องทำ</div>
+        <div class="section-sub">สิ่งที่ผูกกับ Account ต้องตั้งใหม่เสมอ</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <table class="compare">
+        <tr>
+          <th>รายการ</th>
+          <th>ต้องทำใหม่ไหม</th>
+          <th>หมายเหตุ</th>
+        </tr>
+        <tr>
+          <td class="th-word">OwlvyLib (สร้าง + Deploy)</td>
+          <td><span style="color:var(--red)">✅ ต้องทำใหม่</span></td>
+          <td class="desc">Script ID จะเปลี่ยนใหม่ทุกครั้ง</td>
+        </tr>
+        <tr>
+          <td class="th-word">Script ID ใน Libraries</td>
+          <td><span style="color:var(--red)">✅ ต้องเปลี่ยน</span></td>
+          <td class="desc">ใส่ Script ID ใหม่จาก Account ใหม่</td>
+        </tr>
+        <tr>
+          <td class="th-word">apiKey ใน Script Properties</td>
+          <td><span style="color:var(--red)">✅ ต้องใส่ใหม่</span></td>
+          <td class="desc">สร้าง Key ใหม่ที่ openrouter.ai → Keys</td>
+        </tr>
+        <tr>
+          <td class="th-word">Trigger + authorizeAll</td>
+          <td><span style="color:var(--red)">✅ ต้องทำใหม่</span></td>
+          <td class="desc">สิทธิ์ผูกกับ Google Account</td>
+        </tr>
+        <tr>
+          <td class="th-word">Prompt ใน OwlvyLib</td>
+          <td><span style="color:var(--accent2)">❌ ไม่ต้องแก้</span></td>
+          <td class="desc">Copy code มาวางได้เลย</td>
+        </tr>
+        <tr>
+          <td class="th-word">ลำดับ MODELS</td>
+          <td><span style="color:var(--accent2)">❌ ไม่ต้องแก้</span></td>
+          <td class="desc">เหมือนเดิมทุกอย่าง</td>
+        </tr>
+        <tr>
+          <td class="th-word">คำถามใน Google Form</td>
+          <td><span style="color:var(--accent2)">❌ ไม่ต้องแก้</span></td>
+          <td class="desc">Copy Form มาได้เลย</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- WHERE TO FIX -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num num-green">🔧</div>
+      <div>
+        <div class="section-title">อยากแก้อะไร ไปที่ไหน</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <table class="compare">
+        <tr>
+          <th>อยากแก้</th>
+          <th>ไปที่</th>
+        </tr>
+        <tr>
+          <td class="th-word">Prompt, Model, Logic AI</td>
+          <td class="desc">Apps Script ของ <strong>OwlvyLib</strong></td>
+        </tr>
+        <tr>
+          <td class="th-word">API Key</td>
+          <td class="desc"><strong>OwlvyFormScript</strong> → ⚙️ → Script Properties</td>
+        </tr>
+        <tr>
+          <td class="th-word">Trigger</td>
+          <td class="desc"><strong>OwlvyFormScript</strong> → ไอคอนนาฬิกา Triggers</td>
+        </tr>
+        <tr>
+          <td class="th-word">คำถามในฟอร์ม</td>
+          <td class="desc"><strong>Google Form</strong> โดยตรง</td>
+        </tr>
+        <tr>
+          <td class="th-word">ดู log / error</td>
+          <td class="desc"><strong>OwlvyFormScript</strong> → ไอคอนหน้าจอ Executions</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
