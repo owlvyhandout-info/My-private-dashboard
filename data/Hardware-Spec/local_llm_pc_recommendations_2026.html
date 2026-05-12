@@ -1,0 +1,105 @@
+
+<h2 class="sr-only">แนะนำ PC/Mini PC สำหรับ Local LLM ปี 2026 แบ่งตาม tier งบประมาณ</h2>
+
+<div style="padding: 1rem 0;">
+
+<p style="font-size:13px; color:var(--color-text-secondary); margin:0 0 1.5rem;">แบ่งตามงบ · ราคาเป็น USD โดยประมาณ (2026)</p>
+
+<div style="display:grid; gap:12px;">
+
+<!-- TIER 1 -->
+<div style="background:var(--color-background-primary); border-radius:var(--border-radius-lg); border:0.5px solid var(--color-border-tertiary); padding:1rem 1.25rem;">
+  <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+    <span style="background:#EAF3DE; color:#27500A; font-size:11px; font-weight:500; padding:3px 10px; border-radius:var(--border-radius-md);">งบ $400–700</span>
+    <span style="font-size:15px; font-weight:500; color:var(--color-text-primary);">Mini PC ไม่มี GPU (iGPU)</span>
+  </div>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px;">
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:12px;">
+      <p style="font-size:13px; font-weight:500; margin:0 0 4px; color:var(--color-text-primary);">Beelink SER8 / GTR9 Pro</p>
+      <p style="font-size:12px; color:var(--color-text-secondary); margin:0 0 6px;">Ryzen 7 8845HS · Radeon 780M · 32GB DDR5</p>
+      <p style="font-size:12px; color:#27500A; margin:0;">✓ รัน E4B–7B ได้ดี ~15–25 tok/s</p>
+    </div>
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:12px;">
+      <p style="font-size:13px; font-weight:500; margin:0 0 4px; color:var(--color-text-primary);">Minisforum UM890 Pro</p>
+      <p style="font-size:12px; color:var(--color-text-secondary); margin:0 0 6px;">Ryzen 9 8945HS · มีพอร์ต OCuLink · 32GB</p>
+      <p style="font-size:12px; color:#27500A; margin:0;">✓ ต่อ eGPU ได้ในอนาคต</p>
+    </div>
+  </div>
+  <p style="font-size:12px; color:var(--color-text-secondary); margin:10px 0 0;">เหมาะกับ: ทดลองใช้ / Gemma 4 E4B–7B / ใช้งานส่วนตัว ประหยัดไฟ ~15W</p>
+</div>
+
+<!-- TIER 2 -->
+<div style="background:var(--color-background-primary); border-radius:var(--border-radius-lg); border:0.5px solid var(--color-border-tertiary); padding:1rem 1.25rem;">
+  <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+    <span style="background:#E6F1FB; color:#0C447C; font-size:11px; font-weight:500; padding:3px 10px; border-radius:var(--border-radius-md);">งบ $800–1,500</span>
+    <span style="font-size:15px; font-weight:500; color:var(--color-text-primary);">Desktop + Dedicated GPU</span>
+  </div>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px;">
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:12px;">
+      <p style="font-size:13px; font-weight:500; margin:0 0 4px; color:var(--color-text-primary);">Desktop + RTX 3060 12GB</p>
+      <p style="font-size:12px; color:var(--color-text-secondary); margin:0 0 6px;">Ryzen 7 7700 / i5-13th · RAM 32GB · มือสอง ~$200</p>
+      <p style="font-size:12px; color:#27500A; margin:0;">✓ 7B–13B ได้เร็วมาก 60–80 tok/s</p>
+    </div>
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:12px;">
+      <p style="font-size:13px; font-weight:500; margin:0 0 4px; color:var(--color-text-primary);">Desktop + RTX 4070 12GB</p>
+      <p style="font-size:12px; color:var(--color-text-secondary); margin:0 0 6px;">Ryzen 7 7700 · RAM 32GB · ใหม่ ~$600</p>
+      <p style="font-size:12px; color:#27500A; margin:0;">✓ 13B–26B Q4 ได้ดี ~50–80 tok/s</p>
+    </div>
+  </div>
+  <p style="font-size:12px; color:var(--color-text-secondary); margin:10px 0 0;">เหมาะกับ: ใช้งานจริงจัง / coding assistant / Gemma 4 26B MoE ลื่นหาย · CUDA ecosystem ดีที่สุด</p>
+</div>
+
+<!-- TIER 3 -->
+<div style="background:var(--color-background-primary); border-radius:var(--border-radius-lg); border:2px solid var(--color-border-info); padding:1rem 1.25rem; position:relative;">
+  <span style="position:absolute; top:-1px; left:1rem; background:var(--color-background-info); color:var(--color-text-info); font-size:11px; font-weight:500; padding:3px 10px; border-radius:0 0 var(--border-radius-md) var(--border-radius-md);">ดีที่สุดสำหรับ Local LLM</span>
+  <div style="display:flex; align-items:center; gap:10px; margin:12px 0 12px;">
+    <span style="background:#FAEEDA; color:#633806; font-size:11px; font-weight:500; padding:3px 10px; border-radius:var(--border-radius-md);">งบ $1,500–3,500</span>
+    <span style="font-size:15px; font-weight:500; color:var(--color-text-primary);">Strix Halo Mini PC (unified 128GB)</span>
+  </div>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px;">
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:12px;">
+      <p style="font-size:13px; font-weight:500; margin:0 0 4px; color:var(--color-text-primary);">Minisforum MS-S1 Max</p>
+      <p style="font-size:12px; color:var(--color-text-secondary); margin:0 0 6px;">Ryzen AI Max+ 395 · 128GB LPDDR5X · 126 TOPS</p>
+      <p style="font-size:12px; color:#27500A; margin:0;">✓ 70B Q4 ใส่ memory ได้ · 2 เครื่อง cluster รัน 235B</p>
+    </div>
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:12px;">
+      <p style="font-size:13px; font-weight:500; margin:0 0 4px; color:var(--color-text-primary);">Framework Desktop</p>
+      <p style="font-size:12px; color:var(--color-text-secondary); margin:0 0 6px;">Ryzen AI Max+ 395 · 128GB · ซ่อมได้-modular</p>
+      <p style="font-size:12px; color:#27500A; margin:0;">✓ spec เดียวกัน MS-S1 Max · อัปเกรดได้ง่าย</p>
+    </div>
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:12px;">
+      <p style="font-size:13px; font-weight:500; margin:0 0 4px; color:var(--color-text-primary);">Mac Mini M4 Pro 48GB</p>
+      <p style="font-size:12px; color:var(--color-text-secondary); margin:0 0 6px;">Apple Silicon · unified 48GB · ~$1,799</p>
+      <p style="font-size:12px; color:#27500A; margin:0;">✓ เงียบ ประหยัดไฟ 40W · setup ง่ายที่สุด</p>
+    </div>
+  </div>
+  <p style="font-size:12px; color:var(--color-text-secondary); margin:10px 0 0;">เหมาะกับ: developer จริงจัง / รัน 30B–70B / ไม่ต้องการ GPU แยก · unified memory คือจุดเด่นหลัก</p>
+</div>
+
+<!-- TIER 4 -->
+<div style="background:var(--color-background-primary); border-radius:var(--border-radius-lg); border:0.5px solid var(--color-border-tertiary); padding:1rem 1.25rem;">
+  <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+    <span style="background:#FCEBEB; color:#791F1F; font-size:11px; font-weight:500; padding:3px 10px; border-radius:var(--border-radius-md);">งบ $3,500+</span>
+    <span style="font-size:15px; font-weight:500; color:var(--color-text-primary);">Workstation / High-end</span>
+  </div>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px;">
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:12px;">
+      <p style="font-size:13px; font-weight:500; margin:0 0 4px; color:var(--color-text-primary);">Desktop + RTX 4090 24GB</p>
+      <p style="font-size:12px; color:var(--color-text-secondary); margin:0 0 6px;">Ryzen 9 / i9 · 32–64GB RAM</p>
+      <p style="font-size:12px; color:#27500A; margin:0;">✓ 32B Q4 ~60 tok/s · เร็วที่สุดต่อ token</p>
+    </div>
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:12px;">
+      <p style="font-size:13px; font-weight:500; margin:0 0 4px; color:var(--color-text-primary);">Mac Studio M4 Max 128GB</p>
+      <p style="font-size:12px; color:var(--color-text-secondary); margin:0 0 6px;">Apple Silicon · 128GB unified</p>
+      <p style="font-size:12px; color:#27500A; margin:0;">✓ รัน 70B ได้สบาย · เงียบสนิท</p>
+    </div>
+  </div>
+  <p style="font-size:12px; color:var(--color-text-secondary); margin:10px 0 0;">เหมาะกับ: AI researcher / production workload / multi-user inference server</p>
+</div>
+
+</div>
+
+<div style="margin-top:1.5rem; background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:12px 16px;">
+  <p style="font-size:13px; color:var(--color-text-secondary); margin:0;"><i class="ti ti-info-circle" aria-hidden="true" style="font-size:15px; vertical-align:-2px; margin-right:6px;"></i>ตัวแปรสำคัญ: VRAM/unified memory คือ bottleneck หลัก ไม่ใช่ CPU speed · Gemma 4 26B MoE Q4 ต้องการ RAM ~16GB+</p>
+</div>
+</div>
