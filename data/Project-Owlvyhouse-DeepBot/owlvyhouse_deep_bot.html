@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OwlvyHouseDeep_Bot 🦉</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+/* ============================================================ CSS VARIABLES - THEMES ============================================================ */
+:root {
+  --primary: #6C63FF; --primary-light: #8B85FF; --primary-dark: #4B44CC;
+  --secondary: #FF6584; --accent: #43E97B;
+  --bg-main: #F0F2FF; --bg-card: #FFFFFF; --bg-sidebar: #FFFFFF;
+  --text-primary: #2D3748; --text-secondary: #718096; --text-muted: #A0AEC0;
+  --border: #E2E8F0;
+  --shadow: 0 4px 20px rgba(108,99,255,0.15);
+  --shadow-hover: 0 8px 30px rgba(108,99,255,0.25);
+  --radius: 16px; --radius-sm: 8px;
+  --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="minimal"] {
+  --primary: #2D3748; --primary-light: #4A5568; --primary-dark: #1A202C;
+  --secondary: #718096; --accent: #48BB78;
+  --bg-main: #F7FAFC; --bg-card: #FFFFFF; --bg-sidebar: #FFFFFF;
+  --text-primary: #1A202C; --text-secondary: #4A5568; --text-muted: #A0AEC0;
+  --border: #E2E8F0;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-hover: 0 4px 20px rgba(0,0,0,0.12);
+}
+[data-theme="dark"] {
+  --primary: #7C73FF; --primary-light: #9D97FF; --primary-dark: #5B54CC;
+  --secondary: #FF6584; --accent: #43E97B;
+  --bg-main: #0F1117; --bg-card: #1A1D27; --bg-sidebar: #13151F;
+  --text-primary: #E2E8F0; --text-secondary: #A0AEC0; --text-muted: #718096;
+  --border: #2D3748;
+  --shadow: 0 4px 20px rgba(0,0,0,0.4);
+  --shadow-hover: 0 8px 30px rgba(0,0,0,0.5);
+}
+/* ============================================================ RESET & BASE ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Sarabun', sans-serif; background: var(--bg-main); color: var(--text-primary); min-height: 100vh; transition: var(--transition); overflow-x: hidden; }
+@keyframes float { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-30px) rotate(10deg)} }
+@keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+@keyframes spin { to{transform:rotate(360deg)} }
+@keyframes slideIn { from{opacity:0;transform:translateX(-20px)} to{opacity:1;transform:translateX(0)} }
+@keyframes expandIn { from{opacity:0;max-height:0;transform:scaleY(0)} to{opacity:1;max-height:500px;transform:scaleY(1)} }
+/* ============================================================ LOGIN PAGE ============================================================ */
+#login-page { min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#6C63FF 100%); position:relative; overflow:hidden; }
+#login-page::before { content:''; position:absolute; width:600px; height:600px; background:rgba(255,255,255,0.05); border-radius:50%; top:-200px; right:-200px; animation:float 8s ease-in-out infinite; }
+#login-page::after { content:''; position:absolute; width:400px; height:400px; background:rgba(255,255,255,0.05); border-radius:50%; bottom:-150px; left:-150px; animation:float 6s ease-in-out infinite reverse; }
+.login-card { background:rgba(255,255,255,0.12); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.2); border-radius:24px; padding:50px 45px; text-align:center; max-width:420px; width:90%; animation:fadeInUp 0.8s ease; position:relative; z-index:1; box-shadow:0 25px 50px rgba(0,0,0,0.2); }
+.login-owl { font-size:80px; display:block; margin-bottom:16px; animation:pulse 3s ease-in-out infinite; }
+.login-title { font-family:'Prompt',sans-serif; font-size:28px; font-weight:700; color:#fff; margin-bottom:8px; }
+.login-subtitle { font-size:15px; color:rgba(255,255,255,0.75); margin-bottom:36px; line-height:1.6; }
+.btn-google { display:flex; align-items:center; justify-content:center; gap:12px; width:100%; padding:14px 24px; background:#fff; color:#1A202C; border:none; border-radius:12px; font-family:'Sarabun',sans-serif; font-size:16px; font-weight:600; cursor:pointer; transition:var(--transition); box-shadow:0 4px 15px rgba(0,0,0,0.2); }
+.btn-google:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(0,0,0,0.3); }
+.btn-google img { width:22px; height:22px; }
+.login-note { margin-top:20px; font-size:13px; color:rgba(255,255,255,0.6); }
+/* ============================================================ MAIN APP LAYOUT ============================================================ */
+#app { display:none; min-height:100vh; }
+.app-layout { display:grid; grid-template-columns:290px 1fr; grid-template-rows:64px 1fr; min-height:100vh; }
+.topbar { grid-column:1/-1; background:var(--bg-card); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; position:sticky; top:0; z-index:100; box-shadow:var(--shadow); }
+.topbar-left { display:flex; align-items:center; gap:12px; }
+.topbar-logo { font-size:28px; }
+.topbar-title { font-family:'Prompt',sans-serif; font-size:18px; font-weight:700; color:var(--primary); }
+.topbar-right { display:flex; align-items:center; gap:16px; }
+.theme-switcher { display:flex; background:var(--bg-main); border-radius:10px; padding:4px; gap:2px; border:1px solid var(--border); }
+.theme-btn { padding:6px 12px; border:none; background:transparent; border-radius:7px; cursor:pointer; font-size:14px; color:var(--text-secondary); transition:var(--transition); font-family:'Sarabun',sans-serif; }
+.theme-btn.active { background:var(--primary); color:#fff; box-shadow:0 2px 8px rgba(108,99,255,0.3); }
+.user-badge { display:flex; align-items:center; gap:10px; padding:6px 14px 6px 8px; background:var(--bg-main); border-radius:50px; border:1px solid var(--border); cursor:pointer; transition:var(--transition); }
+.user-badge:hover { border-color:var(--primary); }
+.user-avatar-placeholder { width:30px; height:30px; border-radius:50%; background:var(--primary); display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; font-weight:600; }
+.user-name { font-size:14px; font-weight:600; color:var(--text-primary); max-width:120px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.btn-logout { padding:6px 14px; background:transparent; border:1px solid var(--border); border-radius:8px; color:var(--text-secondary); font-size:13px; cursor:pointer; transition:var(--transition); font-family:'Sarabun',sans-serif; display:flex; align-items:center; gap:6px; }
+.btn-logout:hover { border-color:#FC5C65; color:#FC5C65; background:rgba(252,92,101,0.08); }
+/* ============================================================ SIDEBAR ============================================================ */
+.sidebar { background:var(--bg-sidebar); border-right:1px solid var(--border); padding:20px 14px; overflow-y:auto; height:calc(100vh - 64px); position:sticky; top:64px; }
+.sidebar-section { margin-bottom:22px; }
+.sidebar-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); padding:0 8px; margin-bottom:8px; }
+.subject-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.subject-btn { padding:10px 6px; border:2px solid var(--border); border-radius:10px; background:var(--bg-card); cursor:pointer; transition:var(--transition); text-align:center; font-family:'Sarabun',sans-serif; }
+.subject-btn:hover { border-color:var(--primary-light); transform:translateY(-2px); box-shadow:var(--shadow); }
+.subject-btn.active { border-color:var(--primary); background:linear-gradient(135deg,var(--primary),var(--primary-light)); color:#fff; box-shadow:var(--shadow); }
+.subject-icon { font-size:22px; display:block; margin-bottom:4px; }
+.subject-name { font-size:11px; font-weight:600; }
+.subject-btn:not(.active) .subject-name { color:var(--text-secondary); }
+.subject-btn.active .subject-name { color:#fff; }
+.topic-list { display:flex; flex-direction:column; gap:4px; animation:expandIn 0.3s ease; transform-origin:top; }
+.topic-item { padding:9px 12px; border-radius:8px; cursor:pointer; font-size:13px; color:var(--text-secondary); transition:var(--transition); border:1px solid transparent; line-height:1.4; }
+.topic-item:hover { background:var(--bg-main); color:var(--primary); }
+.topic-item.active { background:rgba(108,99,255,0.1); color:var(--primary); border-color:rgba(108,99,255,0.2); font-weight:600; }
+.custom-topic-input { width:100%; padding:10px 14px; border:2px solid var(--border); border-radius:10px; background:var(--bg-card); color:var(--text-primary); font-family:'Sarabun',sans-serif; font-size:13px; transition:var(--transition); outline:none; }
+.custom-topic-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(108,99,255,0.15); }
+.custom-topic-input::placeholder { color:var(--text-muted); }
+/* ============================================================ MAIN CONTENT & CONFIG ============================================================ */
+.main-content { padding:24px; overflow-y:auto; height:calc(100vh - 64px); }
+.config-card { background:var(--bg-card); border-radius:var(--radius); padding:28px; border:1px solid var(--border); box-shadow:var(--shadow); margin-bottom:24px; }
+.config-title { font-family:'Prompt',sans-serif; font-size:18px; font-weight:600; color:var(--text-primary); margin-bottom:6px; display:flex; align-items:center; gap:10px; }
+.config-subtitle { font-size:14px; color:var(--text-secondary); margin-bottom:24px; }
+.qtype-toggle { display:flex; gap:12px; margin-bottom:24px; }
+.qtype-btn { flex:1; padding:12px; border:2px solid var(--border); border-radius:12px; background:var(--bg-card); cursor:pointer; transition:var(--transition); text-align:center; font-family:'Sarabun',sans-serif; }
+.qtype-btn:hover { border-color:var(--primary-light); }
+.qtype-btn.active { border-color:var(--primary); background:linear-gradient(135deg,rgba(108,99,255,0.1),rgba(139,133,255,0.1)); }
+.qtype-icon { font-size:24px; display:block; margin-bottom:6px; }
+.qtype-label { font-size:13px; font-weight:600; color:var(--text-primary); }
+.qtype-desc { font-size:11px; color:var(--text-secondary); margin-top:2px; }
+.bloom-section-title { font-size:15px; font-weight:600; color:var(--text-primary); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+.bloom-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:24px; }
+.bloom-card { border:2px solid var(--border); border-radius:14px; padding:14px; transition:var(--transition); background:var(--bg-card); position:relative; overflow:hidden; }
+.bloom-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--bloom-color); opacity:0; transition:var(--transition); }
+.bloom-card.active { border-color:var(--bloom-color); background:color-mix(in srgb,var(--bloom-color) 6%,var(--bg-card)); box-shadow:0 4px 16px color-mix(in srgb,var(--bloom-color) 20%,transparent); }
+.bloom-card.active::before { opacity:1; }
+.bloom-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.bloom-checkbox { width:20px; height:20px; border-radius:6px; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; transition:var(--transition); flex-shrink:0; cursor:pointer; }
+.bloom-card.active .bloom-checkbox { background:var(--bloom-color); border-color:var(--bloom-color); }
+.bloom-card.active .bloom-checkbox::after { content:'✓'; color:#fff; font-size:12px; font-weight:700; }
+.bloom-level-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; background:var(--bloom-color); color:#fff; opacity:0.85; }
+.bloom-icon { font-size:26px; display:block; margin-bottom:6px; }
+.bloom-name { font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:2px; }
+.bloom-name-en { font-size:10px; color:var(--text-muted); margin-bottom:4px; }
+.bloom-desc { font-size:11px; color:var(--text-secondary); margin-bottom:12px; line-height:1.4; }
+.bloom-count-wrap { display:flex; align-items:center; gap:6px; margin-bottom:12px; }
+.bloom-count-label { font-size:11px; color:var(--text-secondary); white-space:nowrap; }
+.bloom-count-input { width:52px; padding:4px 6px; border:2px solid var(--border); border-radius:7px; background:var(--bg-main); color:var(--text-primary); font-family:'Sarabun',sans-serif; font-size:14px; font-weight:600; text-align:center; outline:none; transition:var(--transition); }
+.bloom-count-input:focus { border-color:var(--bloom-color); }
+.count-btn { width:24px; height:24px; border:1px solid var(--border); border-radius:6px; background:var(--bg-main); color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; transition:var(--transition); }
+.count-btn:hover { background:var(--primary); color:#fff; border-color:var(--primary); }
+.difficulty-wrap { border-top:1px dashed var(--border); padding-top:10px; margin-top:2px; }
+.difficulty-label-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.difficulty-title { font-size:11px; font-weight:600; color:var(--text-secondary); }
+.difficulty-badge { font-size:10px; font-weight:700; padding:2px 10px; border-radius:20px; color:#fff; transition:var(--transition); }
+.difficulty-slider-wrap { position:relative; padding:4px 0; }
+.difficulty-track { height:6px; border-radius:3px; position:relative; overflow:visible; background:var(--border); }
+.difficulty-fill { position:absolute; left:0; top:0; height:100%; border-radius:3px; background:var(--bloom-color); transition:width 0.2s ease; }
+input[type="range"].diff-range { -webkit-appearance:none; appearance:none; width:100%; height:6px; background:transparent; position:absolute; top:0; left:0; margin:0; cursor:pointer; outline:none; }
+input[type="range"].diff-range::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:18px; height:18px; border-radius:50%; background:#fff; border:3px solid var(--bloom-color); cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.2); transition:transform 0.15s ease; }
+input[type="range"].diff-range::-webkit-slider-thumb:hover { transform:scale(1.2); }
+input[type="range"].diff-range::-moz-range-thumb { width:18px; height:18px; border-radius:50%; background:#fff; border:3px solid var(--bloom-color); cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.2); }
+.diff-ticks { display:flex; justify-content:space-between; margin-top:10px; padding:0 2px; }
+.diff-tick { font-size:9px; color:var(--text-muted); text-align:center; flex:1; cursor:pointer; transition:var(--transition); line-height:1.3; }
+.diff-tick.active { color:var(--bloom-color); font-weight:700; }
+.diff-desc-wrap { margin-top:8px; padding:6px 10px; border-radius:8px; font-size:10px; line-height:1.5; color:var(--text-secondary); border:1px solid var(--border); background:var(--bg-main); transition:var(--transition); min-height:38px; }
+.generate-wrap { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding-top:20px; border-top:1px solid var(--border); }
+.generate-summary { font-size:14px; color:var(--text-secondary); }
+.generate-summary span { color:var(--primary); font-weight:700; }
+.btn-generate { padding:14px 36px; background:linear-gradient(135deg,var(--primary),var(--primary-light)); color:#fff; border:none; border-radius:12px; font-family:'Prompt',sans-serif; font-size:16px; font-weight:600; cursor:pointer; transition:var(--transition); display:flex; align-items:center; gap:10px; box-shadow:0 4px 15px rgba(108,99,255,0.4); }
+.btn-generate:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(108,99,255,0.5); }
+.btn-generate:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+.loading-wrap { display:none; text-align:center; padding:60px 20px; }
+.loading-wrap.show { display:block; }
+.loading-owl { font-size:64px; display:block; margin-bottom:20px; animation:pulse 1.5s ease-in-out infinite; }
+.loading-spinner { width:40px; height:40px; border:4px solid var(--border); border-top-color:var(--primary); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 16px; }
+.loading-text { font-size:16px; color:var(--text-secondary); margin-bottom:8px; }
+.loading-model { font-size:13px; color:var(--text-muted); font-style:italic; }
+#questions-output { display:none; }
+#questions-output.show { display:block; }
+.output-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+.output-title { font-family:'Prompt',sans-serif; font-size:22px; font-weight:700; color:var(--text-primary); }
+.output-meta { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.meta-badge { padding:5px 14px; border-radius:20px; font-size:13px; font-weight:600; background:var(--bg-card); border:1px solid var(--border); color:var(--text-secondary); }
+.btn-new { padding:10px 20px; background:var(--bg-card); border:2px solid var(--primary); border-radius:10px; color:var(--primary); font-family:'Sarabun',sans-serif; font-size:14px; font-weight:600; cursor:pointer; transition:var(--transition); display:flex; align-items:center; gap:8px; }
+.btn-new:hover { background:var(--primary); color:#fff; }
+.bloom-section { margin-bottom:28px; animation:slideIn 0.4s ease; border-radius:14px; overflow:hidden; box-shadow:var(--shadow); }
+.bloom-section-header { display:flex; align-items:center; gap:12px; padding:14px 20px; }
+.bloom-section-icon { font-size:22px; }
+.bloom-section-name { font-family:'Prompt',sans-serif; font-size:15px; font-weight:700; color:#fff; }
+.bloom-section-count { margin-left:auto; background:rgba(255,255,255,0.25); padding:3px 12px; border-radius:20px; font-size:12px; color:#fff; font-weight:600; }
+.question-card { background:var(--bg-card); border:1px solid var(--border); border-left:4px solid var(--bloom-color); padding:20px 24px; transition:var(--transition); }
+.question-card:not(:last-child) { border-bottom:1px dashed var(--border); }
+.question-card:hover { box-shadow:inset 0 0 0 1px var(--bloom-color); }
+.question-number { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; background:var(--bloom-color); color:#fff; border-radius:50%; font-size:13px; font-weight:700; margin-bottom:10px; }
+.question-text { font-size:15px; color:var(--text-primary); line-height:1.7; margin-bottom:14px; font-weight:500; }
+.choices-list { list-style:none; margin-bottom:14px; display:flex; flex-direction:column; gap:6px; }
+.choice-item { display:flex; align-items:flex-start; gap:10px; padding:10px 14px; border-radius:8px; border:1px solid var(--border); font-size:14px; color:var(--text-secondary); transition:var(--transition); background:var(--bg-main); }
+.choice-item.correct { background:rgba(67,233,123,0.12); border-color:#43E97B; color:var(--text-primary); }
+.choice-label { font-weight:700; color:var(--primary); flex-shrink:0; min-width:20px; }
+.choice-item.correct .choice-label { color:#27ae60; }
+.answer-box { display:none; margin-top:14px; }
+.answer-box.show { display:block; animation:slideIn 0.3s ease; }
+.answer-inner { background:linear-gradient(135deg,rgba(108,99,255,0.05),rgba(67,233,123,0.05)); border:1px solid rgba(108,99,255,0.2); border-radius:12px; padding:16px 20px; }
+.answer-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--primary); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+.answer-text { font-size:14px; color:var(--text-primary); line-height:1.7; margin-bottom:10px; }
+.answer-ref { font-size:12px; color:var(--text-muted); font-style:italic; padding-top:10px; border-top:1px dashed var(--border); display:flex; align-items:flex-start; gap:6px; }
+.btn-answer { padding:8px 18px; border:2px solid var(--bloom-color); border-radius:8px; background:transparent; color:var(--bloom-color); font-family:'Sarabun',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:var(--transition); display:flex; align-items:center; gap:6px; }
+.btn-answer:hover, .btn-answer.show { background:var(--bloom-color); color:#fff; }
+.error-alert { display:none; padding:16px 20px; background:rgba(252,92,101,0.1); border:1px solid rgba(252,92,101,0.3); border-radius:12px; color:#FC5C65; font-size:14px; margin-bottom:20px; align-items:center; gap:12px; }
+.error-alert.show { display:flex; }
+.model-indicator { display:inline-flex; align-items:center; gap:6px; padding:4px 12px; background:var(--bg-main); border:1px solid var(--border); border-radius:20px; font-size:11px; color:var(--text-muted); margin-top:6px; }
+.model-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); }
+.welcome-state { text-align:center; padding:60px 20px; }
+.welcome-owl { font-size:80px; display:block; margin-bottom:20px; }
+.welcome-title { font-family:'Prompt',sans-serif; font-size:24px; font-weight:700; color:var(--text-primary); margin-bottom:12px; }
+.welcome-desc { font-size:15px; color:var(--text-secondary); line-height:1.7; max-width:500px; margin:0 auto 32px; }
+.steps-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; max-width:600px; margin:0 auto; }
+.step-card { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:20px 16px; text-align:center; }
+.step-num { width:32px; height:32px; background:linear-gradient(135deg,var(--primary),var(--primary-light)); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; margin:0 auto 10px; }
+.step-text { font-size:13px; color:var(--text-secondary); line-height:1.5; }
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--text-muted); }
+@media (max-width:900px) { .bloom-grid { grid-template-columns:repeat(2,1fr); } }
+@media (max-width:768px) { .app-layout { grid-template-columns:1fr; } .sidebar { height:auto; position:relative; top:0; border-right:none; border-bottom:1px solid var(--border); } .steps-grid { grid-template-columns:1fr; } }
+@media (max-width:480px) { .bloom-grid { grid-template-columns:1fr; } .qtype-toggle { flex-direction:column; } }
+</style>
+</head>
+<body>
+<!-- LOGIN PAGE -->
+<div id="login-page">
+  <div class="login-card">
+    <span class="login-owl">🦉</span>
+    <h1 class="login-title">OwlvyHouseDeep_Bot</h1>
+    <p class="login-subtitle">ระบบสร้างคำถามอัจฉริยะ<br>อิงตาม Bloom's Taxonomy</p>
+    <button class="btn-google" onclick="signInWithGoogle()"><img src="https://www.google.com/favicon.ico" alt="Google"> เข้าสู่ระบบด้วย Google</button>
+    <p class="login-note">🔒 ต้องใช้ Google Account เพื่อเข้าใช้งาน</p>
+  </div>
+</div>
+<!-- MAIN APP -->
+<div id="app">
+  <div class="app-layout">
+    <header class="topbar">
+      <div class="topbar-left"><span class="topbar-logo">🦉</span><span class="topbar-title">OwlvyHouseDeep_Bot</span></div>
+      <div class="topbar-right">
+        <div class="theme-switcher">
+          <button class="theme-btn active" onclick="setTheme('colorful',this)" title="สดใส">🎨</button>
+          <button class="theme-btn" onclick="setTheme('minimal',this)" title="มินิมอล">⬜</button>
+          <button class="theme-btn" onclick="setTheme('dark',this)" title="Dark">🌙</button>
+        </div>
+        <div class="user-badge"><div class="user-avatar-placeholder" id="user-initial">?</div><span class="user-name" id="user-name">Loading...</span></div>
+        <button class="btn-logout" onclick="signOut()"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</button>
+      </div>
+    </header>
+    <aside class="sidebar">
+      <div class="sidebar-section"><div class="sidebar-label">📚 หมวดวิชา</div>
+        <div class="subject-grid">
+          <button class="subject-btn" onclick="selectSubject('ASTROLOGY')" id="sub-ASTROLOGY"><span class="subject-icon">🔭</span><span class="subject-name">ASTROLOGY</span></button>
+          <button class="subject-btn" onclick="selectSubject('BIOLOGY')" id="sub-BIOLOGY"><span class="subject-icon">🧬</span><span class="subject-name">BIOLOGY</span></button>
+          <button class="subject-btn" onclick="selectSubject('CHEMISTRY')" id="sub-CHEMISTRY"><span class="subject-icon">⚗️</span><span class="subject-name">CHEMISTRY</span></button>
+          <button class="subject-btn" onclick="selectSubject('EARTH')" id="sub-EARTH"><span class="subject-icon">🌍</span><span class="subject-name">EARTH</span></button>
+          <button class="subject-btn" onclick="selectSubject('PHYSICS')" id="sub-PHYSICS"><span class="subject-icon">⚡</span><span class="subject-name">PHYSICS</span></button>
+        </div>
+      </div>
+      <div class="sidebar-section" id="topic-section" style="display:none"><div class="sidebar-label">📖 บทเรียน</div><div class="topic-list" id="topic-list"></div></div>
+      <div class="sidebar-section"><div class="sidebar-label">✏️ หรือพิมพ์หัวข้อเอง</div><input type="text" class="custom-topic-input" id="custom-topic" placeholder="เช่น การแบ่งเซลล์แบบไมโทซิส..." oninput="onCustomTopicInput()"></div>
+    </aside>
+    <main class="main-content">
+      <div class="error-alert" id="error-alert"><i class="fas fa-exclamation-circle" style="font-size:18px;flex-shrink:0"></i><span id="error-text">เกิดข้อผิดพลาด</span></div>
+      <div class="welcome-state" id="welcome-state"><span class="welcome-owl">🦉</span><h2 class="welcome-title">ยินดีต้อนรับสู่ OwlvyHouseDeep_Bot</h2><p class="welcome-desc">ระบบสร้างคำถามอัตโนมัติอิงตาม Bloom's Taxonomy<br>เริ่มต้นโดยเลือกหมวดวิชาและบทเรียนทางซ้ายมือ</p><div class="steps-grid"><div class="step-card"><div class="step-num">1</div><p class="step-text">เลือกหมวดวิชา<br>และบทเรียน</p></div><div class="step-card"><div class="step-num">2</div><p class="step-text">เลือกระดับ Bloom<br>ความยาก และจำนวนข้อ</p></div><div class="step-card"><div class="step-num">3</div><p class="step-text">กด Generate<br>รับคำถามทันที</p></div></div></div>
+      <div class="config-card" id="config-card" style="display:none"><h2 class="config-title"><i class="fas fa-sliders-h" style="color:var(--primary)"></i> ตั้งค่าคำถาม</h2><p class="config-subtitle">หัวข้อ: <strong id="config-topic-name"></strong></p>
+        <div style="margin-bottom:24px"><div class="bloom-section-title"><i class="fas fa-list-ul" style="color:var(--primary)"></i> ประเภทคำถาม</div><div class="qtype-toggle"><button class="qtype-btn active" onclick="setQType('mcq',this)"><span class="qtype-icon">📋</span><div class="qtype-label">ปรนัย</div><div class="qtype-desc">Multiple Choice 4 ตัวเลือก</div></button><button class="qtype-btn" onclick="setQType('essay',this)"><span class="qtype-icon">✍️</span><div class="qtype-label">อัตนัย</div><div class="qtype-desc">คำถามปลายเปิด</div></button></div></div>
+        <div style="margin-bottom:24px"><div class="bloom-section-title"><i class="fas fa-layer-group" style="color:var(--primary)"></i> ระดับ Bloom's Taxonomy <span style="font-size:12px;color:var(--text-muted);font-weight:400">(Tick เลือกระดับ • ตั้งความยากและจำนวนข้อแยกกันได้)</span></div><div class="bloom-grid" id="bloom-grid"></div></div>
+        <div class="generate-wrap"><div class="generate-summary">เลือก <span id="sum-levels">0</span> ระดับ &nbsp;|&nbsp; รวม <span id="sum-questions">0</span> ข้อ</div><button class="btn-generate" id="btn-generate" onclick="generateQuestions()" disabled><i class="fas fa-magic"></i> สร้างคำถาม</button></div>
+      </div>
+      <div class="loading-wrap" id="loading-wrap"><span class="loading-owl">🦉</span><div class="loading-spinner"></div><p class="loading-text">กำลังสร้างคำถาม...</p><p class="loading-model" id="loading-model">กำลังเชื่อมต่อ AI...</p></div>
+      <div id="questions-output"><div class="output-header"><div><h2 class="output-title" id="output-title">ชุดคำถาม</h2><div class="model-indicator"><div class="model-dot"></div><span id="model-used">-</span></div></div><div class="output-meta"><span class="meta-badge" id="meta-type">-</span><span class="meta-badge" id="meta-count">-</span><button class="btn-new" onclick="resetToConfig()"><i class="fas fa-plus"></i> สร้างใหม่</button></div></div><div id="questions-container"></div></div>
+    </main>
+  </div>
+</div>
+<!-- FIREBASE SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut as fbSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+// 🔧 แทนที่ด้วยค่าจาก Firebase Console
+const firebaseConfig = {
+  apiKey: "AIzaSyDOb15LZ13JRPiXLFb9TBWn4m4ld1LUDRE",
+  authDomain: "owlvyhousedeep-bot.firebaseapp.com",
+  projectId: "owlvyhousedeep-bot",
+  storageBucket: "owlvyhousedeep-bot.firebasestorage.app",
+  messagingSenderId: "725491730372",
+  appId: "1:725491730372:web:0a932bdbbc702bfaaac691"
+};
+const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app); const provider = new GoogleAuthProvider();
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    document.getElementById('login-page').style.display = 'none'; document.getElementById('app').style.display = 'block';
+    const name = user.displayName || user.email; document.getElementById('user-name').textContent = name.split(' ')[0];
+    document.getElementById('user-initial').textContent = (user.displayName || user.email).charAt(0).toUpperCase();
+    try { const snap = await getDoc(doc(db, 'config', 'openrouter')); if (snap.exists()) window.OPENROUTER_API_KEY = snap.data().apiKey; else showError('ไม่พบ API Key ใน Firestore กรุณาตั้งค่าก่อนใช้งาน'); }
+    catch(e) { showError('ไม่สามารถโหลด API Key: ' + e.message); }
+  } else { document.getElementById('login-page').style.display = 'flex'; document.getElementById('app').style.display = 'none'; }
+});
+window.signInWithGoogle = async () => { try { await signInWithPopup(auth, provider); } catch(e) { alert('เข้าสู่ระบบไม่สำเร็จ: ' + e.message); } };
+window.signOut = async () => { if (confirm('ต้องการออกจากระบบ?')) await fbSignOut(auth); };
+</script>
+<!-- MAIN JS -->
+<script>
+const SUBJECTS = { ASTROLOGY: { icon:'🔭', topics:['บทที่ 1 ปฏิสัมพันธ์ในระบบสุริยะ'] }, BIOLOGY: { icon:'🧬', topics:['เซลล์','การลำเลียงสารเข้าออกเซลล์','การสืบพันธ์และการขยายพันธ์ของพืชดอก','การสังเคราะห์ด้วยแสงของพืช','การลำเลียงน้ำ ธาตุอาหารและอาหารของพืช','ระบบหมุนเวียนเลือด','ระบบหายใจ','ระบบขับถ่าย','ระบบประสาท','ระบบสืบพันธุ์','การถ่ายทอดลักษณะทางพันธุกรรม','ระบบนิเวศ','ความหลากหลายทางชีวภาพ'] }, CHEMISTRY: { icon:'⚗️', topics:['สมบัติของสารบริสุทธิ์','การจำแนกและองค์ประกอบของสารบริสุทธิ์','องค์ประกอบของสารละลายและปัจจัยที่มีผลต่อสภาพละลายได้','ความเข้มข้นของสารละลาย','การแยกสารและการนำไปใช้','ปฏิกิริยาเคมี','วัสดุในชีวิตประจำวัน'] }, EARTH: { icon:'🌍', topics:['ลมฟ้าอากาศรอบตัว','มนุษย์และการเปลี่ยนแปลงลมฟ้าอากาศ (พายุ+การเปลี่ยนแปลงภูมิอากาศของโลก)','โครงสร้างภายในโลกและการเปลี่ยนแปลงบนผิวโลก','ดินและน้ำ','ภัยธรรมชาติบนผิวโลก','แหล่งพลังงาน'] }, PHYSICS: { icon:'⚡', topics:['ความร้อนกับการเปลี่ยนแปลงของสาร','การถ่ายโอนความร้อน','การเคลื่อนที่','แรง/แรงลัพธ์/ผลของแรงลัพธ์','แรงเสียดทาน','แรงและความดันของของเหลว และของไหล','แรงพยุงของของเหลว และของไหล','โมเมนต์ของแรง','แรงและสนามของแรง','งาน กำลัง และเครื่องกลอย่างง่าย','พลังงานกลและกฎการอนุรักษ์พลังงาน','คลื่น','แสง','วงจรไฟฟ้าอย่างง่าย','ไฟฟ้าในชีวิตประจำวัน'] } };
+const BLOOM_LEVELS = [ { id:1, name:'จำ', nameEn:'Remember', icon:'🧠', color:'#FF6B6B', desc:'ระลึกข้อมูล ข้อเท็จจริง นิยาม' }, { id:2, name:'เข้าใจ', nameEn:'Understand', icon:'💡', color:'#FF9F43', desc:'อธิบาย แปลความ สรุปความ' }, { id:3, name:'ประยุกต์ใช้', nameEn:'Apply', icon:'🔧', color:'#54A0FF', desc:'นำไปใช้ แก้ปัญหาในสถานการณ์ใหม่' }, { id:4, name:'วิเคราะห์', nameEn:'Analyze', icon:'🔍', color:'#5F27CD', desc:'แยกแยะ เปรียบเทียบ หาความสัมพันธ์' }, { id:5, name:'ประเมินค่า', nameEn:'Evaluate', icon:'⚖️', color:'#FF6584', desc:'ตัดสิน วิจารณ์ ประเมินความน่าเชื่อถือ' }, { id:6, name:'สร้างสรรค์', nameEn:'Create', icon:'✨', color:'#43E97B', desc:'ออกแบบ สร้างใหม่ วางแผนการทดลอง' } ];
+const DIFFICULTY_LEVELS = [ { value:1, label:'ง่าย', labelFull:'🟢 ง่าย', color:'#43E97B', standard:'ข้อสอบปลายภาค', desc:'เนื้อหา ม.ต้น พื้นฐาน ถามตรง ไม่ซับซ้อน เหมาะกับข้อสอบปลายภาคทั่วไป' }, { value:2, label:'ปานกลาง', labelFull:'🟡 ปานกลาง', color:'#FF9F43', standard:'แนว O-NET', desc:'เนื้อหา ม.ต้น เข้มข้น มีบริบทชีวิตจริง ต้องคิดวิเคราะห์ แนว O-NET' }, { value:3, label:'ยาก', labelFull:'🔴 ยาก', color:'#FF6B6B', standard:'แนว TEDET', desc:'เนื้อหา ม.ต้น–ปลาย ท้าทาย ต้องคิดลึก เชื่อมโยงหลายแนวคิด แนว TEDET' }, { value:4, label:'ยากมาก', labelFull:'🟣 ยากมาก', color:'#5F27CD', standard:'แนวแข่งขัน', desc:'เนื้อหา ม.ปลาย ขึ้นไป พบในข้อสอบแข่งขันระดับประเทศ ต้องการความเข้าใจเชิงลึก' } ];
+const MODELS = ["google/gemini-flash-1.5","deepseek/deepseek-chat","anthropic/claude-3-haiku","meta-llama/llama-3.3-70b-versatile","anthropic/claude-3.5-sonnet"];
+const SYSTEM_ROLE = `คุณคือผู้เชี่ยวชาญด้านการออกข้อสอบวิทยาศาสตร์ระดับมัธยมศึกษา มีความเชี่ยวชาญดังนี้:
+1. หลักสูตรวิทยาศาสตร์และเทคโนโลยี สสวท. พ.ศ. 2567 ครอบคลุม ม.1–3 และขยายถึง ม.4–6
+2. มาตรฐานข้อสอบ O-NET วิทยาศาสตร์: เน้นบริบทชีวิตจริง คิดวิเคราะห์ ไม่ถามท่องจำล้วน
+3. มาตรฐานข้อสอบ TEDET: เน้นคิดเชิงวิทยาศาสตร์ ท้าทาย มีความลึก ทดสอบความเข้าใจแท้จริง
+ข้อกำหนดเข้มงวด:
+- ใช้ศัพท์วิทยาศาสตร์ถูกต้องตามมาตรฐาน สสวท.
+- เฉลยถูกต้อง 100% ตรวจสอบได้ทางวิทยาศาสตร์
+- ตัวเลือกผิด (Distractor) ต้องสมเหตุสมผล ไม่ผิดชัดเจน
+- คำอธิบายอ้างอิงหลักการวิทยาศาสตร์ที่ถูกต้อง
+- แหล่งอ้างอิงระบุบทเรียน สสวท. ที่เกี่ยวข้อง
+- โจทย์สอดคล้องกับระดับ Bloom และความยากที่กำหนดอย่างชัดเจน
+- ห้ามสร้างข้อมูลที่ไม่มีอยู่จริงหรือขัดแย้งกับหลักวิทยาศาสตร์`;
+let state = { subject:null, topic:null, customTopic:'', qType:'mcq', bloomSelections:{} };
+function setTheme(theme, btn) { document.documentElement.setAttribute('data-theme', theme === 'colorful' ? '' : theme); document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+function selectSubject(key) { state.subject = key; state.topic = null; state.customTopic = ''; document.getElementById('custom-topic').value = ''; document.querySelectorAll('.subject-btn').forEach(b => b.classList.remove('active')); document.getElementById('sub-'+key).classList.add('active'); const ts = document.getElementById('topic-section'), tl = document.getElementById('topic-list'); tl.innerHTML = ''; ts.style.display = 'block'; SUBJECTS[key].topics.forEach((t,i) => { const d = document.createElement('div'); d.className='topic-item'; d.id='topic-'+i; d.textContent=t; d.onclick=()=>selectTopic(t,i); tl.appendChild(d); }); hideConfigCard(); }
+function selectTopic(t, i) { state.topic=t; state.customTopic=''; document.getElementById('custom-topic').value=''; document.querySelectorAll('.topic-item').forEach(x=>x.classList.remove('active')); document.getElementById('topic-'+i).classList.add('active'); showConfigCard(t); }
+function onCustomTopicInput() { const v = document.getElementById('custom-topic').value.trim(); state.customTopic=v; state.topic=null; document.querySelectorAll('.topic-item').forEach(x=>x.classList.remove('active')); document.querySelectorAll('.subject-btn').forEach(b=>b.classList.remove('active')); state.subject=null; v.length>2 ? showConfigCard(v) : hideConfigCard(); }
+function showConfigCard(n) { document.getElementById('welcome-state').style.display='none'; document.getElementById('config-card').style.display='block'; document.getElementById('config-topic-name').textContent=n; document.getElementById('questions-output').classList.remove('show'); document.getElementById('loading-wrap').classList.remove('show'); renderBloomGrid(); updateSummary(); }
+function hideConfigCard() { document.getElementById('config-card').style.display='none'; document.getElementById('welcome-state').style.display='block'; document.getElementById('questions-output').classList.remove('show'); }
+function setQType(t, b) { state.qType=t; document.querySelectorAll('.qtype-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); }
+function renderBloomGrid() { const g=document.getElementById('bloom-grid'); g.innerHTML=''; BLOOM_LEVELS.forEach(lv => { const s=state.bloomSelections[lv.id], act=!!s, cnt=s?s.count:3, diff=s?s.difficulty:2; const c=document.createElement('div'); c.className='bloom-card'+(act?' active':''); c.id='bloom-card-'+lv.id; c.style.setProperty('--bloom-color',lv.color); c.innerHTML=`<div class="bloom-header"><div class="bloom-checkbox" id="bloom-check-${lv.id}"></div><div class="bloom-level-badge">L${lv.id}</div></div><span class="bloom-icon">${lv.icon}</span><div class="bloom-name">${lv.name}</div><div class="bloom-name-en">${lv.nameEn}</div><div class="bloom-desc">${lv.desc}</div><div class="bloom-count-wrap"><span class="bloom-count-label">จำนวน:</span><button class="count-btn" onclick="changeCount(event,${lv.id},-1)">−</button><input class="bloom-count-input" type="number" min="3" max="5" value="${cnt}" id="bloom-count-${lv.id}" onchange="onCountChange(${lv.id},this.value)" onclick="event.stopPropagation()"><button class="count-btn" onclick="changeCount(event,${lv.id},1)">+</button></div><div class="difficulty-wrap"><div class="difficulty-label-row"><span class="difficulty-title">⚡ ระดับความยาก</span><span class="difficulty-badge" id="diff-badge-${lv.id}" style="background:${DIFFICULTY_LEVELS[diff-1].color}">${DIFFICULTY_LEVELS[diff-1].label}</span></div><div class="difficulty-slider-wrap"><div class="difficulty-track"><div class="difficulty-fill" id="diff-fill-${lv.id}" style="width:${((diff-1)/3)*100}%; background:${lv.color}"></div><input type="range" class="diff-range" id="diff-range-${lv.id}" min="1" max="4" step="1" value="${diff}" style="--bloom-color:${lv.color}" oninput="onDiffChange(${lv.id},this.value)" onclick="event.stopPropagation()"></div></div><div class="diff-ticks">${DIFFICULTY_LEVELS.map(d=>`<div class="diff-tick ${diff===d.value?'active':''}" id="diff-tick-${lv.id}-${d.value}" onclick="event.stopPropagation(); setDiffClick(${lv.id},${d.value})">${d.label}<br><span style="font-size:8px;opacity:0.7">${d.standard}</span></div>`).join('')}</div><div class="diff-desc-wrap" id="diff-desc-${lv.id}">${DIFFICULTY_LEVELS[diff-1].desc}</div></div>`; c.addEventListener('click',(e)=>{ if(e.target.classList.contains('count-btn')||e.target.classList.contains('bloom-count-input')||e.target.classList.contains('diff-range')||e.target.classList.contains('diff-tick')) return; if(e.target.closest('.difficulty-slider-wrap')||e.target.closest('.diff-ticks')) return; toggleBloom(lv.id); }); g.appendChild(c); }); }
+function toggleBloom(id) { if(state.bloomSelections[id]) delete state.bloomSelections[id]; else { state.bloomSelections[id]={count:3,difficulty:2}; document.getElementById('bloom-count-'+id).value=3; updateDiffUI(id,2); } document.getElementById('bloom-card-'+id).classList.toggle('active',!!state.bloomSelections[id]); updateSummary(); }
+function changeCount(e,id,d) { e.stopPropagation(); const i=document.getElementById('bloom-count-'+id); let v=Math.min(5,Math.max(3,parseInt(i.value)+d)); i.value=v; if(state.bloomSelections[id]) state.bloomSelections[id].count=v; updateSummary(); }
+function onCountChange(id,v) { v=Math.min(5,Math.max(3,parseInt(v)||3)); document.getElementById('bloom-count-'+id).value=v; if(state.bloomSelections[id]) state.bloomSelections[id].count=v; updateSummary(); }
+function onDiffChange(id,v) { v=parseInt(v); if(state.bloomSelections[id]) state.bloomSelections[id].difficulty=v; updateDiffUI(id,v); }
+function setDiffClick(id,v) { document.getElementById('diff-range-'+id).value=v; if(state.bloomSelections[id]) state.bloomSelections[id].difficulty=v; updateDiffUI(id,v); }
+function updateDiffUI(id,v) { const d=DIFFICULTY_LEVELS[v-1], bc=BLOOM_LEVELS.find(b=>b.id===id).color, badge=document.getElementById('diff-badge-'+id); if(badge){badge.textContent=d.label;badge.style.background=d.color;} const f=document.getElementById('diff-fill-'+id); if(f)f.style.width=((v-1)/3*100)+'%'; DIFFICULTY_LEVELS.forEach(dl=>{ const t=document.getElementById(`diff-tick-${id}-${dl.value}`); if(!t)return; if(dl.value===v){t.classList.add('active');t.style.setProperty('--bloom-color',bc);t.style.color=bc;t.style.fontWeight='700';}else{t.classList.remove('active');t.style.color='';t.style.fontWeight='';} }); const desc=document.getElementById('diff-desc-'+id); if(desc)desc.textContent=d.desc; }
+function updateSummary() { const e=Object.values(state.bloomSelections); document.getElementById('sum-levels').textContent=e.length; document.getElementById('sum-questions').textContent=e.reduce((a,b)=>a+b.count,0); document.getElementById('btn-generate').disabled=e.length===0; }
+function buildPrompt(topic, selectedLevels) { const qT=state.qType==='mcq'?'ปรนัย (4 ตัวเลือก ก ข ค ง)':'อัตนัย (คำถามปลายเปิด)'; const isM=state.qType==='mcq'; let p=`สร้างชุดคำถามภาษาไทยเกี่ยวกับ "${topic}"\nประเภทคำถาม: ${qT}\n\nรายละเอียดแต่ละระดับ Bloom:\n`; selectedLevels.forEach(l=>{ const s=state.bloomSelections[l.id], d=DIFFICULTY_LEVELS[s.difficulty-1]; p+=`• ระดับ ${l.id}: ${l.name} (${l.nameEn})\n  - จำนวน: ${s.count} ข้อ\n  - ความยาก: ${d.labelFull} — ${d.standard}\n  - นิยาม: ${d.desc}\n  - ลักษณะคำถามระดับนี้: ${l.desc}\n`; }); p+=`\nข้อกำหนดพิเศษ:\n- ความยากต้องแตกต่างกันชัดเจนตามที่กำหนด\n- ข้อยากต้องท้าทายจริง ไม่ใช่แค่ใช้คำศัพท์ยากขึ้น\n- ตัวเลือกผิดต้องเป็น Common Misconception ของนักเรียน\n- เฉลยและคำอธิบายต้องถูกต้อง 100%\n\nตอบเป็น JSON เท่านั้น รูปแบบดังนี้:\n`; if(isM) p+=`{\n  "levels": [{"levelId":1,"levelName":"จำ","difficulty":2,"difficultyLabel":"ปานกลาง","questions":[{"question":"คำถาม...","choices":{"ก":"...","ข":"...","ค":"...","ง":"..."},"answer":"ก","explanation":"คำอธิบาย...","reference":"อ้างอิง สสวท."}]}]\n}`; else p+=`{\n  "levels": [{"levelId":1,"levelName":"จำ","difficulty":2,"difficultyLabel":"ปานกลาง","questions":[{"question":"คำถาม...","answer":"เฉลย...","explanation":"คำอธิบาย...","reference":"อ้างอิง สสวท."}]}]\n}`; return p; }
+async function generateQuestions() { const t=state.topic||state.customTopic; if(!t||Object.keys(state.bloomSelections).length===0)return; hideError(); document.getElementById('config-card').style.display='none'; document.getElementById('questions-output').classList.remove('show'); const lw=document.getElementById('loading-wrap'); lw.classList.add('show'); const sl=BLOOM_LEVELS.filter(l=>state.bloomSelections[l.id]), pr=buildPrompt(t,sl); let res=null, um=null; for(let i=0;i<MODELS.length;i++){ document.getElementById('loading-model').textContent=`กำลังใช้ AI: ${MODELS[i]}`; try{ res=await callOpenRouter(pr,MODELS[i]); um=MODELS[i]; break; }catch(e){ console.warn(`Model ${MODELS[i]} failed:`,e.message); if(i===MODELS.length-1){ lw.classList.remove('show'); showError('ไม่สามารถเชื่อมต่อ AI ได้ กรุณาลองใหม่'); document.getElementById('config-card').style.display='block'; return; } } } lw.classList.remove('show'); try{ const parsed=parseResponse(res); renderQuestions(parsed,t,um); }catch(e){ showError('เกิดข้อผิดพลาดในการแสดงผล: '+e.message); document.getElementById('config-card').style.display='block'; } }
+async function callOpenRouter(prompt,model){ const k=window.OPENROUTER_API_KEY; if(!k)throw new Error('ไม่พบ API Key'); const r=await fetch('https://openrouter.ai/api/v1/chat/completions',{method:'POST',headers:{'Authorization':`Bearer ${k}`,'Content-Type':'application/json','HTTP-Referer':'https://owlvyhandout-info.github.io/OwlvyHouseDeep_Bot','X-Title':'OwlvyHouseDeep_Bot'},body:JSON.stringify({model,messages:[{role:'system',content:SYSTEM_ROLE},{role:'user',content:prompt}],temperature:0.7,max_tokens:4000,response_format:{type:'json_object'}})}); if(!r.ok){ const e=await r.json().catch(()=>({})); throw new Error(e.error?.message||`HTTP ${r.status}`); } const d=await r.json(); return d.choices[0].message.content; }
+function parseResponse(s){ const c=s.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim(); return JSON.parse(c).levels||[]; }
+function renderQuestions(levels,topic,usedModel){ const c=document.getElementById('questions-container'); c.innerHTML=''; const tq=levels.reduce((a,l)=>a+(l.questions?.length||0),0); document.getElementById('output-title').textContent=`📚 ${topic}`; document.getElementById('meta-type').textContent=state.qType==='mcq'?'📋 ปรนัย':'✍️ อัตนัย'; document.getElementById('meta-count').textContent=`${tq} ข้อ`; document.getElementById('model-used').textContent=`AI: ${usedModel}`; levels.forEach(level=>{ const bd=BLOOM_LEVELS.find(b=>b.id===level.levelId)||BLOOM_LEVELS[0], dd=DIFFICULTY_LEVELS[(level.difficulty||2)-1], qs=level.questions||[], sec=document.createElement('div'); sec.className='bloom-section'; const hdr=document.createElement('div'); hdr.className='bloom-section-header'; hdr.style.background=`linear-gradient(135deg,${bd.color},${adjustColor(bd.color,-25)})`; hdr.innerHTML=`<span class="bloom-section-icon">${bd.icon}</span><div><div class="bloom-section-name">ระดับ ${bd.id}: ${bd.name} (${bd.nameEn})</div><div style="font-size:11px;color:rgba(255,255,255,0.75);margin-top:2px">${dd.labelFull} &nbsp;·&nbsp; ${dd.standard}</div></div><span class="bloom-section-count">${qs.length} ข้อ</span>`; sec.appendChild(hdr); qs.forEach((q,idx)=>{ const card=document.createElement('div'); card.className='question-card'; card.style.setProperty('--bloom-color',bd.color); let chHTML=''; if(state.qType==='mcq'&&q.choices){ chHTML=`<ul class="choices-list">`; Object.entries(q.choices).forEach(([k,v])=>{ chHTML+=`<li class="choice-item" id="choice-${level.levelId}-${idx}-${k}"><span class="choice-label">${k}.</span><span>${v}</span></li>`; }); chHTML+='</ul>'; } const aId=`answer-${level.levelId}-${idx}`, bId=`btn-ans-${level.levelId}-${idx}`, sA=(q.answer||'').replace(/'/g,"\\'"); const aDisp=state.qType==='mcq'?`<strong>ตอบ: ${q.answer||''}</strong>`:`<strong>${q.answer||''}</strong>`; card.innerHTML=`<div class="question-number">${idx+1}</div><p class="question-text">${q.question}</p>${chHTML}<button class="btn-answer" id="${bId}" style="--bloom-color:${bd.color}" onclick="toggleAnswer('${aId}','${bId}','${level.levelId}','${idx}','${sA}')"><i class="fas fa-eye"></i> ดูเฉลย</button><div class="answer-box" id="${aId}"><div class="answer-inner"><div class="answer-label"><i class="fas fa-check-circle"></i> เฉลย</div><p class="answer-text">${aDisp}</p>${q.explanation?`<div class="answer-label" style="margin-top:10px"><i class="fas fa-book-open"></i> คำอธิบาย</div><p class="answer-text">${q.explanation}</p>`:''}${q.reference?`<div class="answer-ref"><i class="fas fa-link"></i><span>${q.reference}</span></div>`:''}</div></div>`; sec.appendChild(card); }); c.appendChild(sec); }); document.getElementById('questions-output').classList.add('show'); document.getElementById('questions-output').scrollIntoView({behavior:'smooth'}); }
+function toggleAnswer(aId,bId,lId,idx,cA){ const b=document.getElementById(aId), btn=document.getElementById(bId), sh=b.classList.toggle('show'); if(sh){ btn.innerHTML='<i class="fas fa-eye-slash"></i> ซ่อนเฉลย'; btn.classList.add('show'); if(state.qType==='mcq'&&cA){ const el=document.getElementById(`choice-${lId}-${idx}-${cA}`); if(el)el.classList.add('correct'); } } else { btn.innerHTML='<i class="fas fa-eye"></i> ดูเฉลย'; btn.classList.remove('show'); if(state.qType==='mcq'){ document.querySelectorAll(`[id^="choice-${lId}-${idx}-"]`).forEach(el=>el.classList.remove('correct')); } } }
+function resetToConfig(){ document.getElementById('questions-output').classList.remove('show'); document.getElementById('config-card').style.display='block'; }
+function showError(m){ const e=document.getElementById('error-alert'); document.getElementById('error-text').textContent=m; e.classList.add('show'); setTimeout(()=>e.classList.remove('show'),6000); }
+function hideError(){ document.getElementById('error-alert').classList.remove('show'); }
+function adjustColor(hex,amt){ const n=parseInt(hex.replace('#',''),16); return '#'+(((Math.min(255,Math.max(0,(n>>16)+amt))<<16)|(Math.min(255,Math.max(0,((n>>8)&0xFF)+amt))<<8)|Math.min(255,Math.max(0,(n&0xFF)+amt))).toString(16).padStart(6,'0')); }
+window.selectSubject        = selectSubject;
+window.onCustomTopicInput   = onCustomTopicInput;
+window.setTheme             = setTheme;
+window.showError            = showError;
+window.hideError            = hideError;
+window.generateQuestions    = generateQuestions;
+window.resetToConfig        = resetToConfig;
+window.toggleAnswer         = toggleAnswer;
+</script>
+</body>
+</html>
