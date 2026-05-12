@@ -1,0 +1,366 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); color: var(--color-text-primary); }
+
+.book { max-width: 820px; margin: 0 auto; padding: 1rem 0; }
+
+.page { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 2rem 2.5rem; margin-bottom: 1.5rem; }
+
+.chapter-header { border-bottom: 2px solid #1D9E75; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+.chapter-label { font-size: 12px; color: #1D9E75; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+.chapter-title { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+.chapter-sub { font-size: 14px; color: var(--color-text-secondary); margin-top: 4px; }
+
+.section-title { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin: 1.5rem 0 1rem; border-left: 3px solid #1D9E75; padding-left: 10px; }
+.sub-title { font-size: 15px; font-weight: 500; color: #0F6E56; margin: 1rem 0 0.5rem; }
+
+p { font-size: 14px; line-height: 1.8; color: var(--color-text-primary); margin-bottom: 0.75rem; }
+
+.highlight-box { background: #E1F5EE; border-left: 3px solid #1D9E75; border-radius: var(--border-radius-md); padding: 0.75rem 1rem; margin: 0.75rem 0; }
+.highlight-box p { margin: 0; color: #085041; font-size: 14px; }
+.highlight-box .label { font-size: 12px; font-weight: 500; color: #0F6E56; margin-bottom: 4px; }
+
+.def-box { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; margin: 0.75rem 0; }
+.def-box .term { font-size: 14px; font-weight: 500; color: #1D9E75; }
+.def-box .meaning { font-size: 13px; color: var(--color-text-secondary); margin-top: 3px; line-height: 1.6; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0.75rem 0; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 0.75rem 0; }
+
+.card { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; }
+.card-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+.card-body { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+
+.atom-diagram { display: flex; justify-content: center; margin: 1rem 0; }
+
+.table-wrap { overflow-x: auto; margin: 0.75rem 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #E1F5EE; color: #085041; padding: 8px 10px; text-align: left; font-weight: 500; border: 0.5px solid #9FE1CB; }
+td { padding: 7px 10px; border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); vertical-align: top; }
+tr:nth-child(even) td { background: var(--color-background-secondary); }
+
+.badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 500; margin: 2px 2px 2px 0; }
+.badge-metal { background: #B5D4F4; color: #0C447C; }
+.badge-nonmetal { background: #F0997B; color: #712B13; }
+.badge-semi { background: #FAC775; color: #633806; }
+
+.key-point { display: flex; align-items: flex-start; gap: 8px; margin: 6px 0; }
+.key-point::before { content: ""; display: block; width: 6px; height: 6px; background: #1D9E75; border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
+.key-point p { margin: 0; font-size: 14px; }
+
+.formula { font-family: var(--font-mono); background: var(--color-background-secondary); padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+
+.page-num { text-align: right; font-size: 12px; color: var(--color-text-secondary); margin-top: 1.5rem; padding-top: 0.75rem; border-top: 0.5px solid var(--color-border-tertiary); }
+
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 0.75rem 0; }
+.summary-card { background: #E1F5EE; border-radius: var(--border-radius-md); padding: 0.75rem; text-align: center; }
+.summary-card .num { font-size: 24px; font-weight: 500; color: #0F6E56; }
+.summary-card .lbl { font-size: 12px; color: #085041; margin-top: 2px; }
+
+.electron-shell { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 1rem 0; }
+.shell-row { display: flex; align-items: center; gap: 12px; }
+.shell-label { font-size: 12px; color: var(--color-text-secondary); width: 70px; text-align: right; }
+.shell-dots { display: flex; gap: 4px; flex-wrap: wrap; max-width: 200px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-e { background: #1D9E75; }
+.dot-p { background: #D85A30; }
+.dot-n { background: #888780; }
+.particle-key { display: flex; gap: 16px; margin-top: 8px; justify-content: center; }
+.pk { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--color-text-secondary); }
+</style>
+
+<div class="book">
+
+<!-- PAGE 1 -->
+<div class="page">
+  <div class="chapter-header">
+    <div class="chapter-label">วิทยาศาสตร์ · ชั้นมัธยมศึกษาตอนต้น</div>
+    <div class="chapter-title">บทที่ 2 การจำแนกและองค์ประกอบของสารบริสุทธิ์</div>
+    <div class="chapter-sub">Pure Substances — Classification and Components</div>
+  </div>
+
+  <div class="section-title">2.1 องค์ประกอบของสารบริสุทธิ์</div>
+
+  <p>สารบริสุทธิ์ (Pure Substance) คือสารที่มีองค์ประกอบทางเคมีคงที่ ไม่มีสิ่งเจือปน และมีสมบัติเฉพาะตัว เช่น จุดเดือด จุดหลอมเหลว ที่แน่นอน สารบริสุทธิ์แบ่งออกเป็น 2 ประเภทหลัก ได้แก่ ธาตุ และสารประกอบ</p>
+
+  <div class="highlight-box">
+    <div class="label">นิยามสำคัญ</div>
+    <p>สารบริสุทธิ์ = สารที่มีเพียงชนิดเดียว มีองค์ประกอบและสมบัติคงที่ตลอด ไม่ว่าจะนำมาจากที่ใดในโลก</p>
+  </div>
+
+  <div class="two-col">
+    <div class="def-box">
+      <div class="term">ธาตุ (Element)</div>
+      <div class="meaning">สารบริสุทธิ์ที่ประกอบด้วยอะตอมชนิดเดียวกันทั้งหมด ไม่สามารถแยกสลายด้วยวิธีทางเคมีให้เป็นสารอื่นที่ง่ายกว่าได้อีก เช่น ออกซิเจน (O), เหล็ก (Fe), ทอง (Au)</div>
+    </div>
+    <div class="def-box">
+      <div class="term">สารประกอบ (Compound)</div>
+      <div class="meaning">สารบริสุทธิ์ที่เกิดจากธาตุตั้งแต่ 2 ชนิดขึ้นไปรวมตัวกันทางเคมีในอัตราส่วนคงที่ สามารถแยกสลายได้ด้วยปฏิกิริยาเคมี เช่น น้ำ (H₂O), เกลือแกง (NaCl), คาร์บอนไดออกไซด์ (CO₂)</div>
+    </div>
+  </div>
+
+  <div class="sub-title">สมบัติของสารบริสุทธิ์ที่สำคัญ</div>
+  <div class="key-point"><p>มีจุดเดือดและจุดหลอมเหลวคงที่ที่ความดันบรรยากาศหนึ่ง</p></div>
+  <div class="key-point"><p>มีองค์ประกอบทางเคมีเหมือนกันทุกตัวอย่าง ไม่ว่าจะผลิตจากที่ใดในโลก</p></div>
+  <div class="key-point"><p>สมบัติทางกายภาพ เช่น ความหนาแน่น สี กลิ่น มีค่าคงที่</p></div>
+  <div class="key-point"><p>ไม่สามารถแยกองค์ประกอบได้ด้วยวิธีทางกายภาพ (เช่น การกรอง การระเหย)</p></div>
+
+  <div class="page-num">หน้า 1</div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page">
+  <div class="section-title">2.2 ธาตุและสารประกอบ</div>
+
+  <div class="sub-title">ธาตุ (Elements)</div>
+  <p>ปัจจุบันมีธาตุที่ค้นพบและสังเคราะห์แล้วทั้งหมด 118 ธาตุ แต่ละธาตุมีสัญลักษณ์เคมี (Chemical Symbol) เป็นตัวอักษรภาษาอังกฤษ 1–2 ตัว โดยตัวแรกพิมพ์ใหญ่เสมอ</p>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>ธาตุ</th><th>สัญลักษณ์</th><th>ประเภท</th><th>ลักษณะสำคัญ</th></tr>
+      <tr><td>ไฮโดรเจน</td><td><span class="formula">H</span></td><td><span class="badge badge-nonmetal">อโลหะ</span></td><td>แก๊สเบาที่สุดในโลก ติดไฟได้</td></tr>
+      <tr><td>ออกซิเจน</td><td><span class="formula">O</span></td><td><span class="badge badge-nonmetal">อโลหะ</span></td><td>จำเป็นต่อการหายใจ</td></tr>
+      <tr><td>เหล็ก</td><td><span class="formula">Fe</span></td><td><span class="badge badge-metal">โลหะ</span></td><td>แข็ง นำไฟฟ้าได้ เป็นสนิมได้</td></tr>
+      <tr><td>ทอง</td><td><span class="formula">Au</span></td><td><span class="badge badge-metal">โลหะ</span></td><td>ไม่เป็นสนิม ตีเป็นแผ่นบางได้</td></tr>
+      <tr><td>ซิลิกอน</td><td><span class="formula">Si</span></td><td><span class="badge badge-semi">กึ่งโลหะ</span></td><td>ใช้ทำชิปคอมพิวเตอร์</td></tr>
+      <tr><td>คาร์บอน</td><td><span class="formula">C</span></td><td><span class="badge badge-nonmetal">อโลหะ</span></td><td>มีหลายรูปแบบ: เพชร, แกรไฟต์</td></tr>
+    </table>
+  </div>
+
+  <div class="sub-title">สารประกอบ (Compounds)</div>
+  <p>สารประกอบเกิดจากการรวมตัวทางเคมีของธาตุตั้งแต่ 2 ชนิดขึ้นไป ในอัตราส่วนของจำนวนอะตอมที่แน่นอนตามสูตรเคมี สมบัติของสารประกอบจะแตกต่างจากธาตุที่เป็นองค์ประกอบโดยสิ้นเชิง</p>
+
+  <div class="highlight-box">
+    <div class="label">ตัวอย่างสำคัญ</div>
+    <p>น้ำ (<span class="formula">H₂O</span>): ไฮโดรเจนเป็นแก๊สติดไฟ + ออกซิเจนช่วยการเผาไหม้ → รวมกันได้น้ำซึ่งดับไฟได้ สมบัติต่างจากธาตุทั้งสองโดยสิ้นเชิง</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>สารประกอบ</th><th>สูตรเคมี</th><th>ธาตุองค์ประกอบ</th><th>การใช้ประโยชน์</th></tr>
+      <tr><td>น้ำ</td><td><span class="formula">H₂O</span></td><td>H, O</td><td>ดื่มกิน, ทำความสะอาด</td></tr>
+      <tr><td>เกลือแกง</td><td><span class="formula">NaCl</span></td><td>Na, Cl</td><td>ปรุงอาหาร, ถนอมอาหาร</td></tr>
+      <tr><td>คาร์บอนไดออกไซด์</td><td><span class="formula">CO₂</span></td><td>C, O</td><td>แก๊สในเครื่องดื่มอัดลม, ดับเพลิง</td></tr>
+      <tr><td>แคลเซียมคาร์บอเนต</td><td><span class="formula">CaCO₃</span></td><td>Ca, C, O</td><td>หินปูน, เปลือกหอย, ชอล์ก</td></tr>
+      <tr><td>แอมโมเนีย</td><td><span class="formula">NH₃</span></td><td>N, H</td><td>ปุ๋ย, สารทำความสะอาด</td></tr>
+    </table>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">ความแตกต่าง: ธาตุ vs สารประกอบ</div>
+      <div class="card-body">ธาตุ: อะตอมชนิดเดียว, แยกสลายไม่ได้<br>สารประกอบ: ธาตุหลายชนิดรวมกัน, แยกสลายได้ด้วยวิธีเคมี เช่น กระแสไฟฟ้า หรือความร้อน</div>
+    </div>
+    <div class="card">
+      <div class="card-title">วิธีแยกสารประกอบ</div>
+      <div class="card-body">แยกได้ด้วยปฏิกิริยาเคมีเท่านั้น เช่น<br>— การแยกน้ำด้วยไฟฟ้า (Electrolysis)<br>— การเผาไหม้<br>ไม่สามารถใช้วิธีทางกายภาพได้</div>
+    </div>
+  </div>
+
+  <div class="page-num">หน้า 2</div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page">
+  <div class="section-title">2.3 โครงสร้างอะตอม</div>
+
+  <p>อะตอม (Atom) คือหน่วยที่เล็กที่สุดของธาตุที่ยังคงสมบัติของธาตุนั้นไว้ อะตอมประกอบด้วยอนุภาค 3 ชนิดหลัก ได้แก่ โปรตอน นิวตรอน และอิเล็กตรอน</p>
+
+  <div class="three-col">
+    <div class="def-box">
+      <div class="term" style="color:#D85A30;">โปรตอน (p⁺)</div>
+      <div class="meaning">อยู่ในนิวเคลียส<br>มีประจุบวก (+1)<br>มวล ≈ 1 หน่วยมวลอะตอม<br>จำนวน = เลขอะตอม (Z)</div>
+    </div>
+    <div class="def-box">
+      <div class="term" style="color:#888780;">นิวตรอน (n)</div>
+      <div class="meaning">อยู่ในนิวเคลียส<br>ไม่มีประจุ (0)<br>มวล ≈ 1 หน่วยมวลอะตอม<br>จำนวน = เลขมวล − โปรตอน</div>
+    </div>
+    <div class="def-box">
+      <div class="term" style="color:#1D9E75;">อิเล็กตรอน (e⁻)</div>
+      <div class="meaning">อยู่รอบนิวเคลียส<br>มีประจุลบ (−1)<br>มวลน้อยมาก (≈ 0)<br>จำนวน = โปรตอน (อะตอมกลาง)</div>
+    </div>
+  </div>
+
+  <div class="sub-title">แบบจำลองอะตอม</div>
+  <p>แบบจำลองที่ใช้ในระดับมัธยมต้น คือ แบบจำลองของโบร์ (Bohr's Model) ซึ่งแสดงให้เห็นว่าอิเล็กตรอนวิ่งรอบนิวเคลียสเป็นวงกลม เรียกว่า ระดับพลังงาน (Shell / Energy Level)</p>
+
+  <div class="atom-diagram">
+    <svg viewBox="0 0 360 220" width="360" height="220" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="180" cy="110" r="22" fill="#FAECE7" stroke="#D85A30" stroke-width="1.5"/>
+      <text x="180" y="107" text-anchor="middle" font-size="10" fill="#993C1D" font-family="var(--font-sans)">นิวเคลียส</text>
+      <text x="180" y="120" text-anchor="middle" font-size="9" fill="#993C1D" font-family="var(--font-sans)">p⁺, n</text>
+      <circle cx="180" cy="110" r="55" fill="none" stroke="#9FE1CB" stroke-width="1" stroke-dasharray="4,3"/>
+      <circle cx="180" cy="110" r="85" fill="none" stroke="#9FE1CB" stroke-width="1" stroke-dasharray="4,3"/>
+      <circle cx="180" cy="110" r="110" fill="none" stroke="#9FE1CB" stroke-width="1" stroke-dasharray="4,3"/>
+      <circle cx="235" cy="110" r="6" fill="#1D9E75"/>
+      <circle cx="180" cy="55" r="6" fill="#1D9E75"/>
+      <circle cx="125" cy="110" r="6" fill="#1D9E75"/>
+      <circle cx="180" cy="165" r="6" fill="#1D9E75"/>
+      <circle cx="265" cy="110" r="6" fill="#1D9E75"/>
+      <circle cx="180" cy="25" r="6" fill="#1D9E75"/>
+      <circle cx="95" cy="110" r="6" fill="#1D9E75"/>
+      <circle cx="180" cy="195" r="6" fill="#1D9E75"/>
+      <circle cx="235" cy="55" r="6" fill="#1D9E75"/>
+      <circle cx="125" cy="55" r="6" fill="#1D9E75"/>
+      <circle cx="235" cy="165" r="6" fill="#1D9E75"/>
+      <text x="242" y="72" font-size="9" fill="#085041" font-family="var(--font-sans)">e⁻</text>
+      <text x="290" y="114" font-size="11" fill="#0F6E56" font-family="var(--font-sans)">ระดับ 1</text>
+      <text x="305" y="100" font-size="11" fill="#0F6E56" font-family="var(--font-sans)">ระดับ 2</text>
+      <text x="315" y="88" font-size="11" fill="#0F6E56" font-family="var(--font-sans)">ระดับ 3</text>
+      <line x1="286" y1="112" x2="235" y2="112" stroke="#9FE1CB" stroke-width="0.8"/>
+      <line x1="300" y1="98" x2="265" y2="112" stroke="#9FE1CB" stroke-width="0.8"/>
+    </svg>
+  </div>
+
+  <div class="sub-title">กฎของการจัดเรียงอิเล็กตรอน</div>
+  <p>อิเล็กตรอนจะจัดเรียงตัวในระดับพลังงานจากระดับในสุดออกมาตามลำดับ โดยมีจำนวนอิเล็กตรอนสูงสุดในแต่ละระดับดังนี้</p>
+
+  <div class="highlight-box">
+    <div class="label">จำนวนอิเล็กตรอนสูงสุดในแต่ละระดับ</div>
+    <p>ระดับที่ 1: สูงสุด 2 ตัว &nbsp;|&nbsp; ระดับที่ 2: สูงสุด 8 ตัว &nbsp;|&nbsp; ระดับที่ 3: สูงสุด 18 ตัว &nbsp;|&nbsp; ระดับนอกสุด: สูงสุด 8 ตัว</p>
+  </div>
+
+  <div class="sub-title">เลขอะตอม (Atomic Number) และเลขมวล (Mass Number)</div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">เลขอะตอม (Z)</div>
+      <div class="card-body">= จำนวนโปรตอนในนิวเคลียส<br>= จำนวนอิเล็กตรอน (อะตอมที่เป็นกลาง)<br>เลขอะตอมต่างกัน → ธาตุต่างกัน</div>
+    </div>
+    <div class="card">
+      <div class="card-title">เลขมวล (A)</div>
+      <div class="card-body">= จำนวนโปรตอน + จำนวนนิวตรอน<br>A = Z + N<br>จำนวนนิวตรอน = A − Z</div>
+    </div>
+  </div>
+
+  <div class="sub-title">ตัวอย่าง: อะตอมโซเดียม (Na)</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>ข้อมูล</th><th>ค่า</th><th>หมายเหตุ</th></tr>
+      <tr><td>เลขอะตอม (Z)</td><td>11</td><td>มีโปรตอน 11 ตัว</td></tr>
+      <tr><td>เลขมวล (A)</td><td>23</td><td>โปรตอน + นิวตรอน</td></tr>
+      <tr><td>จำนวนนิวตรอน</td><td>12</td><td>23 − 11 = 12</td></tr>
+      <tr><td>จำนวนอิเล็กตรอน</td><td>11</td><td>เท่ากับโปรตอน</td></tr>
+      <tr><td>การจัดเรียงอิเล็กตรอน</td><td>2, 8, 1</td><td>ระดับ1=2, ระดับ2=8, ระดับ3=1</td></tr>
+    </table>
+  </div>
+
+  <div class="page-num">หน้า 3</div>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page">
+  <div class="section-title">2.4 การจำแนกธาตุและการใช้ประโยชน์</div>
+
+  <p>ธาตุทั้ง 118 ชนิดสามารถจำแนกออกเป็น 3 กลุ่มหลักตามสมบัติทางกายภาพและเคมี ได้แก่ โลหะ อโลหะ และกึ่งโลหะ</p>
+
+  <div class="sub-title">โลหะ (Metals)</div>
+  <div class="highlight-box" style="background:#E6F1FB; border-left-color:#378ADD;">
+    <div class="label" style="color:#185FA5;">สมบัติของโลหะ</div>
+    <p style="color:#042C53;">นำไฟฟ้าและนำความร้อนได้ดี · มีผิวมันวาว · ตีเป็นแผ่นหรือดึงเป็นเส้นลวดได้ · มีจุดหลอมเหลวสูง · เป็นของแข็งที่อุณหภูมิห้อง (ยกเว้น Hg)</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>ธาตุโลหะ</th><th>สัญลักษณ์</th><th>การใช้ประโยชน์</th></tr>
+      <tr><td>เหล็ก</td><td><span class="formula">Fe</span></td><td>ก่อสร้าง, ทำเครื่องจักร, รถยนต์</td></tr>
+      <tr><td>อลูมิเนียม</td><td><span class="formula">Al</span></td><td>กระป๋องเครื่องดื่ม, ตัวเครื่องบิน, ฟอยล์</td></tr>
+      <tr><td>ทองแดง</td><td><span class="formula">Cu</span></td><td>สายไฟฟ้า, ท่อน้ำ, เหรียญ</td></tr>
+      <tr><td>ทอง</td><td><span class="formula">Au</span></td><td>เครื่องประดับ, วงจรอิเล็กทรอนิกส์</td></tr>
+      <tr><td>เงิน</td><td><span class="formula">Ag</span></td><td>เครื่องประดับ, กระจก, ยาฆ่าเชื้อ</td></tr>
+      <tr><td>ปรอท</td><td><span class="formula">Hg</span></td><td>เทอร์โมมิเตอร์ (โลหะที่เป็นของเหลว)</td></tr>
+    </table>
+  </div>
+
+  <div class="sub-title">อโลหะ (Non-metals)</div>
+  <div class="highlight-box" style="background:#FAECE7; border-left-color:#D85A30;">
+    <div class="label" style="color:#993C1D;">สมบัติของอโลหะ</div>
+    <p style="color:#4A1B0C;">ไม่นำไฟฟ้าและนำความร้อน · ผิวไม่มันวาว · เปราะแตกหักง่าย · มีทั้งสถานะแก๊ส ของเหลว และของแข็ง · จุดหลอมเหลวต่ำ</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <tr><th>ธาตุอโลหะ</th><th>สัญลักษณ์</th><th>การใช้ประโยชน์</th></tr>
+      <tr><td>ออกซิเจน</td><td><span class="formula">O</span></td><td>การหายใจ, เชื่อมโลหะ, การเผาไหม้</td></tr>
+      <tr><td>ไฮโดรเจน</td><td><span class="formula">H</span></td><td>เชื้อเพลิง, การผลิตแอมโมเนีย</td></tr>
+      <tr><td>คาร์บอน</td><td><span class="formula">C</span></td><td>เพชร (เครื่องประดับ, ตัดเจาะ), ถ่านหิน (เชื้อเพลิง)</td></tr>
+      <tr><td>ไนโตรเจน</td><td><span class="formula">N</span></td><td>แก๊สในบรรยากาศ 78%, ทำปุ๋ย, แช่แข็งอาหาร</td></tr>
+      <tr><td>คลอรีน</td><td><span class="formula">Cl</span></td><td>ฆ่าเชื้อโรคในน้ำประปา, พลาสติก PVC</td></tr>
+      <tr><td>กำมะถัน</td><td><span class="formula">S</span></td><td>ยาง, ปุ๋ย, กรดซัลฟิวริก</td></tr>
+    </table>
+  </div>
+
+  <div class="sub-title">กึ่งโลหะ (Metalloids / Semi-metals)</div>
+  <div class="highlight-box" style="background:#FAEEDA; border-left-color:#BA7517;">
+    <div class="label" style="color:#854F0B;">สมบัติของกึ่งโลหะ</div>
+    <p style="color:#412402;">มีสมบัติระหว่างโลหะและอโลหะ · นำไฟฟ้าได้บ้างในบางสภาวะ (สารกึ่งตัวนำ) · ใช้ในอุตสาหกรรมอิเล็กทรอนิกส์</p>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">ซิลิกอน (Si)</div>
+      <div class="card-body">ธาตุกึ่งโลหะที่สำคัญที่สุด ใช้ทำชิปคอมพิวเตอร์ แผงโซลาร์เซลล์ และ CPU ของอุปกรณ์อิเล็กทรอนิกส์ทุกชนิด</div>
+    </div>
+    <div class="card">
+      <div class="card-title">เจอร์เมเนียม (Ge)</div>
+      <div class="card-body">ใช้ในทรานซิสเตอร์รุ่นแรก และเลนส์อินฟราเรด ปัจจุบันถูกแทนที่ด้วยซิลิกอนเป็นส่วนใหญ่</div>
+    </div>
+  </div>
+
+  <div class="page-num">หน้า 4</div>
+</div>
+
+<!-- PAGE 5 — Summary & Review -->
+<div class="page">
+  <div class="section-title">สรุปบทที่ 2 และคำถามทบทวน</div>
+
+  <div class="sub-title">แผนผังสรุปสารบริสุทธิ์</div>
+  <div style="padding: 1rem; background: var(--color-background-secondary); border-radius: var(--border-radius-lg); margin-bottom: 1rem;">
+    <svg viewBox="0 0 680 220" width="100%" xmlns="http://www.w3.org/2000/svg">
+      <rect x="270" y="8" width="140" height="36" rx="6" fill="#E1F5EE" stroke="#1D9E75" stroke-width="1"/>
+      <text x="340" y="30" text-anchor="middle" font-size="13" font-weight="500" fill="#085041" font-family="var(--font-sans)">สารบริสุทธิ์</text>
+      <line x1="340" y1="44" x2="160" y2="80" stroke="#9FE1CB" stroke-width="1.5"/>
+      <line x1="340" y1="44" x2="520" y2="80" stroke="#9FE1CB" stroke-width="1.5"/>
+      <rect x="80" y="80" width="160" height="36" rx="6" fill="#B5D4F4" stroke="#378ADD" stroke-width="1"/>
+      <text x="160" y="102" text-anchor="middle" font-size="13" font-weight="500" fill="#042C53" font-family="var(--font-sans)">ธาตุ (Element)</text>
+      <rect x="440" y="80" width="160" height="36" rx="6" fill="#F5C4B3" stroke="#D85A30" stroke-width="1"/>
+      <text x="520" y="102" text-anchor="middle" font-size="13" font-weight="500" fill="#4A1B0C" font-family="var(--font-sans)">สารประกอบ (Compound)</text>
+      <line x1="100" y1="116" x2="60" y2="150" stroke="#B5D4F4" stroke-width="1.2"/>
+      <line x1="160" y1="116" x2="160" y2="150" stroke="#B5D4F4" stroke-width="1.2"/>
+      <line x1="220" y1="116" x2="260" y2="150" stroke="#B5D4F4" stroke-width="1.2"/>
+      <rect x="20" y="150" width="80" height="30" rx="5" fill="#E6F1FB" stroke="#B5D4F4" stroke-width="0.8"/>
+      <text x="60" y="169" text-anchor="middle" font-size="11" fill="#185FA5" font-family="var(--font-sans)">โลหะ</text>
+      <rect x="120" y="150" width="80" height="30" rx="5" fill="#FAECE7" stroke="#F5C4B3" stroke-width="0.8"/>
+      <text x="160" y="169" text-anchor="middle" font-size="11" fill="#993C1D" font-family="var(--font-sans)">อโลหะ</text>
+      <rect x="220" y="150" width="80" height="30" rx="5" fill="#FAEEDA" stroke="#FAC775" stroke-width="0.8"/>
+      <text x="260" y="169" text-anchor="middle" font-size="11" fill="#633806" font-family="var(--font-sans)">กึ่งโลหะ</text>
+      <line x1="480" y1="116" x2="440" y2="150" stroke="#F5C4B3" stroke-width="1.2"/>
+      <line x1="560" y1="116" x2="600" y2="150" stroke="#F5C4B3" stroke-width="1.2"/>
+      <rect x="390" y="150" width="100" height="30" rx="5" fill="#EAF3DE" stroke="#C0DD97" stroke-width="0.8"/>
+      <text x="440" y="169" text-anchor="middle" font-size="11" fill="#3B6D11" font-family="var(--font-sans)">แยกด้วยไฟฟ้า</text>
+      <rect x="560" y="150" width="100" height="30" rx="5" fill="#EAF3DE" stroke="#C0DD97" stroke-width="0.8"/>
+      <text x="610" y="169" text-anchor="middle" font-size="11" fill="#3B6D11" font-family="var(--font-sans)">แยกด้วยความร้อน</text>
+    </svg>
+  </div>
+
+  <div class="sub-title">คำถามทบทวน</div>
+  <div class="table-wrap">
+    <table>
+      <tr><th style="width:40px;">ข้อ</th><th>คำถาม</th><th>แนวคำตอบ</th></tr>
+      <tr><td>1</td><td>ธาตุกับสารประกอบต่างกันอย่างไร?</td><td>ธาตุมีอะตอมชนิดเดียว แยกสลายไม่ได้; สารประกอบมีธาตุหลายชนิด แยกสลายได้ทางเคมี</td></tr>
+      <tr><td>2</td><td>อนุภาคใดในอะตอมที่บอกชนิดของธาตุ?</td><td>โปรตอน (เลขอะตอม)</td></tr>
+      <tr><td>3</td><td>ธาตุ Na มีเลขอะตอม 11 เลขมวล 23 มีนิวตรอนกี่ตัว?</td><td>23 − 11 = 12 นิวตรอน</td></tr>
+      <tr><td>4</td><td>ซิลิกอนจัดเป็นธาตุประเภทใด? มีสมบัติอย่างไร?</td><td>กึ่งโลหะ; นำไฟฟ้าได้บ้าง ใช้ทำชิปคอมพิวเตอร์</td></tr>
+      <tr><td>5</td><td>ทำไมน้ำจึงเป็นสารประกอบ ไม่ใช่ธาตุ?</td><td>น้ำมีธาตุ 2 ชนิดรวมกัน (H และ O) ในอัตราส่วน H:O = 2:1</td></tr>
+      <tr><td>6</td><td>โลหะมีสมบัติใดบ้างที่แตกต่างจากอโลหะ?</td><td>โลหะ: นำไฟฟ้า มันวาว ดึงเป็นลวดได้; อโลหะ: ไม่นำไฟฟ้า ไม่มันวาว เปราะ</td></tr>
+    </table>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-card"><div class="num">118</div><div class="lbl">ธาตุที่รู้จักทั้งหมด</div></div>
+    <div class="summary-card"><div class="num">3</div><div class="lbl">อนุภาคในอะตอม</div></div>
+    <div class="summary-card"><div class="num">3</div><div class="lbl">ประเภทของธาตุ</div></div>
+    <div class="summary-card"><div class="num">2</div><div class="lbl">ประเภทของสารบริสุทธิ์</div></div>
+  </div>
+
+  <div class="page-num">หน้า 5</div>
+</div>
+
+</div>

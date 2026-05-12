@@ -1,0 +1,320 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1rem 0;max-width:820px}
+.unit-title{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+.unit-sub{font-size:14px;color:var(--color-text-secondary);margin-bottom:24px}
+.chapter{margin-bottom:28px}
+.ch-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;cursor:pointer;user-select:none}
+.ch-badge{font-size:12px;font-weight:500;padding:3px 10px;border-radius:8px;white-space:nowrap}
+.ch-title{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.ch-arrow{font-size:12px;color:var(--color-text-secondary);margin-left:auto;transition:transform .2s}
+.ch-arrow.open{transform:rotate(180deg)}
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:8px}
+.topic-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:12px;padding:14px 16px}
+.topic-label{font-size:11px;font-weight:500;letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase}
+.topic-name{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px}
+.topic-body{font-size:13px;color:var(--color-text-secondary);line-height:1.65}
+.formula-box{margin-top:10px;background:var(--color-background-secondary);border-radius:8px;padding:8px 12px;font-family:var(--font-mono);font-size:13px;color:var(--color-text-primary);line-height:1.6}
+.pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;margin:2px 2px 0 0;font-weight:500}
+.example-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:6px 0 14px}
+.section-label{font-size:12px;font-weight:500;color:var(--color-text-secondary);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.05em}
+.content-block{display:none}
+.content-block.open{display:block}
+.key-concept{border-left:3px solid;padding:8px 12px;border-radius:0 8px 8px 0;margin-top:10px;font-size:13px;line-height:1.65}
+.level-tag{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:500;vertical-align:middle;margin-left:6px}
+.life-list{margin-top:8px;padding-left:0;list-style:none}
+.life-list li{display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px;color:var(--color-text-secondary);line-height:1.55}
+.life-list li:last-child{border-bottom:none}
+.life-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.temp-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.temp-card{border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.7}
+</style>
+
+<div class="wrap">
+  <div class="unit-title">หน่วยที่ 2 — สารละลาย</div>
+  <div class="unit-sub">ครอบคลุมมัธยมต้น–ปลาย · เรียงตามลำดับการเรียนรู้</div>
+
+  <!-- CHAPTER 1 -->
+  <div class="chapter">
+    <div class="ch-header" onclick="toggle('ch1')">
+      <span class="ch-badge" style="background:#EEEDFE;color:#3C3489">บทที่ 1</span>
+      <span class="ch-title">องค์ประกอบของสารละลายและปัจจัยที่มีผลต่อสภาพละลายได้</span>
+      <span class="ch-arrow open" id="arr-ch1">▼</span>
+    </div>
+    <div class="content-block open" id="ch1">
+      <div class="topic-grid">
+        <div class="topic-card">
+          <div class="topic-label" style="color:#534AB7">องค์ประกอบของสารละลาย</div>
+          <div class="topic-name">ตัวละลาย + ตัวทำละลาย</div>
+          <div class="topic-body">
+            <b style="font-weight:500">สารละลาย</b> คือ ของผสมเนื้อเดียวกัน (homogeneous mixture) ที่มีองค์ประกอบ 2 ส่วน
+            <ul style="padding-left:16px;margin-top:6px">
+              <li><b style="font-weight:500">ตัวทำละลาย (solvent)</b> — ปริมาณมากกว่า กำหนดสถานะ เช่น น้ำ, แอลกอฮอล์</li>
+              <li style="margin-top:4px"><b style="font-weight:500">ตัวละลาย (solute)</b> — ปริมาณน้อยกว่า ถูกละลาย เช่น เกลือ, น้ำตาล, ก๊าซ CO₂</li>
+            </ul>
+          </div>
+          <div class="example-row">
+            <span class="pill" style="background:#EEEDFE;color:#534AB7">น้ำเกลือ</span>
+            <span class="pill" style="background:#EEEDFE;color:#534AB7">น้ำหวาน</span>
+            <span class="pill" style="background:#EEEDFE;color:#534AB7">น้ำโซดา</span>
+            <span class="pill" style="background:#EEEDFE;color:#534AB7">ทองเหลือง</span>
+          </div>
+          <div class="key-concept" style="border-color:#AFA9EC;background:#EEEDFE;color:#3C3489">
+            น้ำเป็น "ตัวทำละลายสากล" เพราะโมเลกุลมีขั้วละลายสารขั้วได้ดีที่สุด (like dissolves like)
+          </div>
+        </div>
+        <div class="topic-card">
+          <div class="topic-label" style="color:#0F6E56">สารละลายอิ่มตัวและสภาพละลายได้</div>
+          <div class="topic-name">ประเภทสารละลายตามความเข้มข้น</div>
+          <div class="topic-body">
+            <ul style="padding-left:16px">
+              <li><b style="font-weight:500">ไม่อิ่มตัว (unsaturated)</b> — ละลายตัวละลายเพิ่มได้อีก</li>
+              <li style="margin-top:4px"><b style="font-weight:500">อิ่มตัว (saturated)</b> — ละลายได้สูงสุดที่อุณหภูมิหนึ่ง</li>
+              <li style="margin-top:4px"><b style="font-weight:500">อิ่มตัวยวดยิ่ง (supersaturated)</b> — ละลายเกินจุดอิ่มตัว ไม่เสถียร</li>
+            </ul>
+          </div>
+          <div class="formula-box">สภาพละลายได้ = ปริมาณตัวละลายสูงสุด (g)<br>ที่ละลายได้ใน ตัวทำละลาย 100 g ณ อุณหภูมิหนึ่ง</div>
+        </div>
+      </div>
+
+      <div class="section-label">ปัจจัยที่มีผลต่อสภาพละลายได้</div>
+      <div class="topic-grid">
+        <div class="topic-card">
+          <div class="topic-label" style="color:#854F0B">อุณหภูมิ (Temperature)</div>
+          <div class="topic-body" style="margin-bottom:10px">ผลของอุณหภูมิขึ้นอยู่กับว่าปฏิกิริยาการละลายเป็นแบบใด</div>
+          <div class="temp-row">
+            <div class="temp-card" style="background:#FCEBEB;color:#501313">
+              <div style="font-weight:500;font-size:13px;margin-bottom:4px">คายความร้อน (Exothermic)</div>
+              <div style="font-size:12px;line-height:1.6">ΔH &lt; 0<br>ละลายได้ดีกว่าที่ <b style="font-weight:500">อุณหภูมิต่ำ</b><br>อุณหภูมิ↑ → สภาพละลายได้↓<br><span style="opacity:.8">เช่น NaOH, HCl, Ca(OH)₂, ก๊าซในน้ำ</span></div>
+            </div>
+            <div class="temp-card" style="background:#E6F1FB;color:#042C53">
+              <div style="font-weight:500;font-size:13px;margin-bottom:4px">ดูดความร้อน (Endothermic)</div>
+              <div style="font-size:12px;line-height:1.6">ΔH &gt; 0<br>ละลายได้ดีกว่าที่ <b style="font-weight:500">อุณหภูมิสูง</b><br>อุณหภูมิ↑ → สภาพละลายได้↑<br><span style="opacity:.8">เช่น KNO₃, NH₄NO₃, น้ำตาล</span></div>
+            </div>
+          </div>
+          <div class="key-concept" style="border-color:#EF9F27;background:#FAEEDA;color:#633806;margin-top:10px">
+            กราฟ solubility curve แสดงความสัมพันธ์ T กับ solubility — ใช้อ่านว่าสารใดอิ่มตัว/ไม่อิ่มตัวที่ T ใด
+          </div>
+        </div>
+        <div class="topic-card">
+          <div class="topic-label" style="color:#185FA5">ความดัน (Pressure)</div>
+          <div class="topic-body">มีผลเฉพาะ <b style="font-weight:500">ก๊าซ</b> ที่ละลายในของเหลว<br>ความดัน↑ → สภาพละลายได้ของก๊าซ↑</div>
+          <div class="formula-box">กฎของ Henry: S = k·P</div>
+          <div class="topic-body" style="margin-top:8px"><span style="font-size:12px;color:var(--color-text-secondary)">S = สภาพละลายได้ก๊าซ, k = ค่าคงที่ Henry, P = ความดันย่อยก๊าซ</span><br>ตัวอย่าง: น้ำอัดลมอัดก๊าซ CO₂ ความดันสูง → ซ่า เปิดฝา → ความดันลด → ก๊าซออก</div>
+        </div>
+        <div class="topic-card">
+          <div class="topic-label" style="color:#3B6D11">ธรรมชาติของตัวละลาย/ตัวทำละลาย</div>
+          <div class="topic-body">หลัก <b style="font-weight:500">"Like dissolves like"</b><br>สารขั้ว (polar) ละลายในตัวทำละลายขั้ว<br>สารไม่มีขั้ว (nonpolar) ละลายในตัวทำละลายไม่มีขั้ว</div>
+          <div class="example-row">
+            <span class="pill" style="background:#EAF3DE;color:#27500A">NaCl + น้ำ ✓</span>
+            <span class="pill" style="background:#EAF3DE;color:#27500A">ไขมัน + เฮกเซน ✓</span>
+            <span class="pill" style="background:#FCEBEB;color:#791F1F">ไขมัน + น้ำ ✗</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- CHAPTER 2 -->
+  <div class="chapter">
+    <div class="ch-header" onclick="toggle('ch2')">
+      <span class="ch-badge" style="background:#E1F5EE;color:#0F6E56">บทที่ 2</span>
+      <span class="ch-title">ความเข้มข้นของสารละลาย</span>
+      <span class="ch-arrow open" id="arr-ch2">▼</span>
+    </div>
+    <div class="content-block open" id="ch2">
+      <div class="topic-grid">
+        <div class="topic-card">
+          <div class="topic-label" style="color:#0F6E56">ร้อยละโดยมวล (%w/w)</div>
+          <div class="topic-name">%w/w — มัธยมต้น</div>
+          <div class="formula-box">%w/w = (มวลตัวละลาย / มวลสารละลาย) × 100</div>
+          <div class="topic-body" style="margin-top:8px">ตัวอย่าง: เกลือ 5 g ในสารละลาย 100 g → <b style="font-weight:500">5%w/w</b></div>
+        </div>
+        <div class="topic-card">
+          <div class="topic-label" style="color:#0F6E56">ร้อยละโดยปริมาตร (%v/v)</div>
+          <div class="topic-name">%v/v — ของเหลวในของเหลว</div>
+          <div class="formula-box">%v/v = (ปริมาตรตัวละลาย / ปริมาตรสารละลาย) × 100</div>
+          <div class="topic-body" style="margin-top:8px">ตัวอย่าง: แอลกอฮอล์ 70 mL ใน 100 mL → เอทานอล 70%</div>
+        </div>
+        <div class="topic-card">
+          <div class="topic-label" style="color:#0F6E56">ร้อยละมวลต่อปริมาตร (%w/v)</div>
+          <div class="topic-name">%w/v — ห้องปฏิบัติการ</div>
+          <div class="formula-box">%w/v = (มวลตัวละลาย (g) / ปริมาตรสารละลาย (mL)) × 100</div>
+          <div class="topic-body" style="margin-top:8px">ตัวอย่าง: น้ำเกลือ 0.9%w/v = NaCl 0.9 g ใน 100 mL</div>
+        </div>
+      </div>
+      <div class="section-label">หน่วยความเข้มข้นระดับมัธยมปลาย</div>
+      <div class="topic-grid">
+        <div class="topic-card">
+          <div class="topic-label" style="color:#534AB7">โมลาริตี (Molarity, M)</div>
+          <div class="topic-name">mol/L — หน่วยมาตรฐาน</div>
+          <div class="formula-box">M = จำนวนโมลตัวละลาย (mol) / ปริมาตรสารละลาย (L)</div>
+          <div class="topic-body" style="margin-top:8px">n = m / Mᵣ → หาโมลก่อน แล้วหาร V<br><span style="font-size:12px;color:var(--color-text-secondary)">เช่น NaOH 40 g ใน 1 L → M = 40/40 = 1 M</span></div>
+        </div>
+        <div class="topic-card">
+          <div class="topic-label" style="color:#534AB7">โมแลลิตี (Molality, m)</div>
+          <div class="topic-name">mol/kg — ใช้กับ colligative</div>
+          <div class="formula-box">m = จำนวนโมลตัวละลาย / มวลตัวทำละลาย (kg)</div>
+          <div class="topic-body" style="margin-top:8px"><span style="font-size:12px;color:var(--color-text-secondary)">ไม่เปลี่ยนตามอุณหภูมิ เหมาะสำหรับคำนวณ colligative properties</span></div>
+        </div>
+        <div class="topic-card">
+          <div class="topic-label" style="color:#534AB7">เศษส่วนโมล (Mole fraction, X)</div>
+          <div class="topic-name">ไม่มีหน่วย</div>
+          <div class="formula-box">Xₐ = nₐ / (nₐ + n_B + …)</div>
+          <div class="topic-body" style="margin-top:8px">X_ตัวละลาย + X_ตัวทำละลาย = 1<br><span style="font-size:12px;color:var(--color-text-secondary)">ใช้ใน Raoult's law คำนวณความดันไอ</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- CHAPTER 3 -->
+  <div class="chapter">
+    <div class="ch-header" onclick="toggle('ch3')">
+      <span class="ch-badge" style="background:#FAEEDA;color:#633806">บทที่ 3</span>
+      <span class="ch-title">กระบวนการละลายและพลังงาน</span>
+      <span class="ch-arrow open" id="arr-ch3">▼</span>
+    </div>
+    <div class="content-block open" id="ch3">
+      <div class="topic-grid">
+        <div class="topic-card">
+          <div class="topic-label" style="color:#854F0B">3 ขั้นตอนพลังงานการละลาย</div>
+          <div class="topic-name">วัฏจักรพลังงาน (ไอออนิก)</div>
+          <div class="topic-body">
+            <ol style="padding-left:16px;line-height:2">
+              <li>แยกพันธะผลึก → <b style="font-weight:500">พลังงานโครงผลึก</b> (ดูดความร้อน +)</li>
+              <li>แยกโมเลกุลน้ำ → <b style="font-weight:500">พลังงานแยกตัวทำละลาย</b> (ดูด +)</li>
+              <li>ไอออน + น้ำ → <b style="font-weight:500">พลังงานไฮเดรชัน</b> (คายความร้อน −)</li>
+            </ol>
+          </div>
+          <div class="formula-box">ΔH_soln = ΔH_lattice + ΔH_hydration</div>
+        </div>
+        <div class="topic-card">
+          <div class="topic-label" style="color:#854F0B">ผลลัพธ์พลังงานและอุณหภูมิ</div>
+          <div class="topic-name">เชื่อมกับสภาพละลายได้</div>
+          <div class="temp-row">
+            <div class="temp-card" style="background:#FCEBEB;color:#501313">
+              <div style="font-weight:500;font-size:12px;margin-bottom:4px">คายความร้อน ΔH &lt; 0</div>
+              <div style="font-size:12px;line-height:1.6">อุณหภูมิ↑ ยับยั้งการละลาย<br>ละลายดีที่ <b style="font-weight:500">T ต่ำ</b><br><span style="opacity:.8">NaOH, H₂SO₄, HCl, Ca(OH)₂</span></div>
+            </div>
+            <div class="temp-card" style="background:#E6F1FB;color:#042C53">
+              <div style="font-weight:500;font-size:12px;margin-bottom:4px">ดูดความร้อน ΔH &gt; 0</div>
+              <div style="font-size:12px;line-height:1.6">อุณหภูมิ↑ ส่งเสริมการละลาย<br>ละลายดีที่ <b style="font-weight:500">T สูง</b><br><span style="opacity:.8">KNO₃, NH₄Cl, น้ำตาล</span></div>
+            </div>
+          </div>
+          <div class="key-concept" style="border-color:#EF9F27;background:#FAEEDA;color:#633806;margin-top:10px">
+            หลัก Le Chatelier: เพิ่มอุณหภูมิ → ระบบต้านด้วยปฏิกิริยาดูดความร้อน ดังนั้น สารที่ละลายแบบดูดความร้อนจะละลายได้มากขึ้นเมื่ออุณหภูมิสูง และสารที่ละลายแบบคายความร้อนจะละลายได้น้อยลง
+          </div>
+        </div>
+        <div class="topic-card">
+          <div class="topic-label" style="color:#854F0B">เอนโทรปีและทิศทางการละลาย</div>
+          <div class="topic-name">ΔG = ΔH − TΔS</div>
+          <div class="topic-body">การละลายเกิดขึ้นเองเมื่อ ΔG &lt; 0<br>แม้ ΔH &gt; 0 ก็ยังละลายได้ถ้า TΔS มากพอ<br><span style="font-size:12px;color:var(--color-text-secondary)">ΔS มักเป็นบวกในการละลาย (ความไม่เป็นระเบียบเพิ่ม)</span></div>
+          <div class="formula-box">ΔG = ΔH − TΔS &lt; 0 → ละลายเอง</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- CHAPTER 4 -->
+  <div class="chapter">
+    <div class="ch-header" onclick="toggle('ch4')">
+      <span class="ch-badge" style="background:#E6F1FB;color:#185FA5">บทที่ 4</span>
+      <span class="ch-title">คุณสมบัติ Colligative ของสารละลาย <span class="level-tag" style="background:#E6F1FB;color:#0C447C">ม.ปลาย</span></span>
+      <span class="ch-arrow open" id="arr-ch4">▼</span>
+    </div>
+    <div class="content-block open" id="ch4">
+      <div class="topic-body" style="margin-bottom:14px;font-size:14px">
+        คุณสมบัติเหล่านี้ขึ้นกับ <b style="font-weight:500">จำนวนอนุภาค</b>ตัวละลาย ไม่ขึ้นกับชนิดสาร — ใช้โมแลลิตี (m) ในการคำนวณ
+      </div>
+
+      <div class="topic-grid">
+
+        <!-- VAPOR PRESSURE -->
+        <div class="topic-card">
+          <div class="topic-label" style="color:#185FA5">1. การลดลงของความดันไอ</div>
+          <div class="topic-name">Vapor Pressure Lowering</div>
+          <div class="formula-box">P_soln = X_solvent · P°_solvent<br>ΔP = X_solute · P°_solvent</div>
+          <div class="topic-body" style="margin-top:8px">ตัวละลายที่ไม่ระเหยลดความดันไอตัวทำละลาย (กฎของ Raoult)</div>
+          <div class="section-label" style="margin-top:12px">ตัวอย่างในชีวิตประจำวัน</div>
+          <ul class="life-list">
+            <li><span class="life-icon">🧂</span><span>น้ำเกลือหรือน้ำเชื่อมระเหยช้ากว่าน้ำบริสุทธิ์ — ทำให้อาหารหมักดองแห้งช้าและเก็บได้นาน</span></li>
+            <li><span class="life-icon">🌊</span><span>น้ำทะเลระเหยช้ากว่าน้ำจืด เนื่องจากมีเกลือแร่ละลายอยู่มาก ส่งผลต่อวัฏจักรน้ำ</span></li>
+            <li><span class="life-icon">🔬</span><span>ในอุตสาหกรรมยา ใช้ตัวทำละลายผสมเพื่อลดความดันไอ ป้องกันการระเหยของส่วนผสมที่ระเหยง่าย</span></li>
+          </ul>
+        </div>
+
+        <!-- BOILING POINT -->
+        <div class="topic-card">
+          <div class="topic-label" style="color:#185FA5">2. การเพิ่มของจุดเดือด</div>
+          <div class="topic-name">Boiling Point Elevation (ΔT_b)</div>
+          <div class="formula-box">ΔT_b = K_b · m · i</div>
+          <div class="topic-body" style="margin-top:8px">K_b น้ำ = 0.512 °C·kg/mol | i = van't Hoff factor<br><span style="font-size:12px;color:var(--color-text-secondary)">NaCl → i=2, น้ำตาล → i=1</span></div>
+          <div class="section-label" style="margin-top:12px">ตัวอย่างในชีวิตประจำวัน</div>
+          <ul class="life-list">
+            <li><span class="life-icon">🍝</span><span>ต้มมะกะโรนีในน้ำเดือด — ใส่เกลือในน้ำต้มทำให้น้ำมีจุดเดือดสูงขึ้นเล็กน้อย อาหารสุกเร็วขึ้น</span></li>
+            <li><span class="life-icon">🚗</span><span>สารหล่อเย็นรถยนต์ (coolant/antifreeze) ผสม ethylene glycol ทำให้น้ำในหม้อน้ำเดือดที่อุณหภูมิสูงขึ้น ป้องกันเครื่องยนต์ร้อนจัด</span></li>
+            <li><span class="life-icon">🍬</span><span>การทำลูกอม/น้ำเชื่อม — ต้มน้ำตาลเข้มข้นจนอุณหภูมิสูงกว่า 100°C เพื่อให้ได้เนื้อสัมผัสตามต้องการ</span></li>
+          </ul>
+        </div>
+
+        <!-- FREEZING POINT -->
+        <div class="topic-card">
+          <div class="topic-label" style="color:#185FA5">3. การลดลงของจุดเยือกแข็ง</div>
+          <div class="topic-name">Freezing Point Depression (ΔT_f)</div>
+          <div class="formula-box">ΔT_f = K_f · m · i</div>
+          <div class="topic-body" style="margin-top:8px">K_f น้ำ = 1.86 °C·kg/mol<br><span style="font-size:12px;color:var(--color-text-secondary)">จุดเยือกแข็งสารละลาย = 0°C − ΔT_f</span></div>
+          <div class="section-label" style="margin-top:12px">ตัวอย่างในชีวิตประจำวัน</div>
+          <ul class="life-list">
+            <li><span class="life-icon">❄️</span><span>โรยเกลือบนถนนหิมะ — NaCl ลดจุดเยือกแข็งของน้ำต่ำกว่า 0°C ป้องกันน้ำแข็งก่อตัวบนพื้นผิวถนน</span></li>
+            <li><span class="life-icon">🚘</span><span>น้ำยา antifreeze ผสม ethylene glycol ป้องกันน้ำในหม้อน้ำไม่ให้แข็งตัวในฤดูหนาวที่อุณหภูมิต่ำกว่า 0°C</span></li>
+            <li><span class="life-icon">🍦</span><span>ทำไอศกรีมแบบโบราณ — แช่ภาชนะในน้ำแข็งผสมเกลือ ซึ่งเย็นต่ำกว่า 0°C ทำให้ไอศกรีมแข็งตัวได้</span></li>
+            <li><span class="life-icon">🩸</span><span>เลือดและน้ำเลี้ยงในเซลล์มีจุดเยือกแข็งต่ำกว่า 0°C เพราะมีสารละลายต่าง ๆ ป้องกันเซลล์แข็งตัวในอากาศเย็น</span></li>
+          </ul>
+        </div>
+
+        <!-- OSMOSIS -->
+        <div class="topic-card">
+          <div class="topic-label" style="color:#185FA5">4. ออสโมซิสและความดันออสโมติก</div>
+          <div class="topic-name">Osmotic Pressure (π)</div>
+          <div class="formula-box">π = MRT</div>
+          <div class="topic-body" style="margin-top:8px">M = โมลาริตี, R = 0.08206 L·atm/mol·K, T (K)<br><span style="font-size:12px;color:var(--color-text-secondary)">น้ำซึมผ่านเยื่อกึ่งซึมผ่านได้จากสารละลายเจือ → เข้มข้น</span></div>
+          <div class="section-label" style="margin-top:12px">ตัวอย่างในชีวิตประจำวัน</div>
+          <ul class="life-list">
+            <li><span class="life-icon">💧</span><span>เครื่องกรองน้ำ RO (Reverse Osmosis) — อัดความดันสูงกว่าความดันออสโมติกเพื่อดันน้ำบริสุทธิ์ผ่านเมมเบรน กรองเกลือและสิ่งปนเปื้อนออก</span></li>
+            <li><span class="life-icon">🥗</span><span>ผักเหี่ยวเมื่อโรยเกลือ — เกลือดึงน้ำออกจากเซลล์ผักผ่านออสโมซิส (hypertonic) ทำให้เซลล์เสียน้ำและเหี่ยวลง</span></li>
+            <li><span class="life-icon">🏥</span><span>น้ำเกลือ 0.9% (normal saline) สำหรับให้สารน้ำทางหลอดเลือด — เป็น isotonic กับเลือด ไม่ทำให้เม็ดเลือดแดงแตกหรือเหี่ยว</span></li>
+            <li><span class="life-icon">🌿</span><span>รากต้นไม้ดูดน้ำจากดิน — ความเข้มข้นของน้ำเลี้ยงในรากสูงกว่าน้ำในดิน น้ำจึงซึมเข้ารากตามออสโมซิสโดยไม่ต้องใช้พลังงาน</span></li>
+          </ul>
+          <div class="key-concept" style="border-color:#85B7EB;background:#E6F1FB;color:#0C447C;margin-top:10px">
+            isotonic = ความดันเท่ากัน | hypertonic → เซลล์เหี่ยว (plasmolysis) | hypotonic → เซลล์บวม/แตก (lysis)
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">ตัวประกอบ van't Hoff (i)</div>
+      <div style="background:var(--color-background-secondary);border-radius:8px;padding:12px 16px;font-size:13px;color:var(--color-text-primary);line-height:2">
+        ไม่แตกตัว (น้ำตาล, กลูโคส): i = 1 &nbsp;|&nbsp; NaCl → Na⁺ + Cl⁻: i = 2 &nbsp;|&nbsp; CaCl₂ → Ca²⁺ + 2Cl⁻: i = 3 &nbsp;|&nbsp; Fe(NO₃)₃: i = 4
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div style="font-size:12px;color:var(--color-text-secondary);padding-bottom:1rem">คลิกหัวข้อบทเพื่อย่อ/ขยาย · สูตรในกรอบ monospace คือสูตรใช้คำนวณจริง</div>
+</div>
+
+<script>
+function toggle(id){
+  const el=document.getElementById(id);
+  const arr=document.getElementById('arr-'+id);
+  if(el.classList.contains('open')){el.classList.remove('open');arr.classList.remove('open')}
+  else{el.classList.add('open');arr.classList.add('open')}
+}
+</script>

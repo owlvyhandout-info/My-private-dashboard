@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>หน่วยความเข้มข้น — เคมี</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Noto+Serif+Thai:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e2a;
+    --border: #252a38;
+    --text: #e8ecf4;
+    --muted: #7a8299;
+    --solid-color: #f4a261;
+    --solid-light: #fde8d4;
+    --liquid-color: #4cc9f0;
+    --liquid-light: #d0f4ff;
+    --gas-color: #a8d5a2;
+    --gas-light: #dff5dc;
+    --accent: #f72585;
+    --gold: #ffd60a;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    position: relative;
+    padding: 80px 40px 60px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, #1a2040 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 14px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.1s forwards;
+  }
+  .hero h1 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.25;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.25s forwards;
+  }
+  .hero h1 span {
+    color: var(--gold);
+  }
+  .hero-sub {
+    margin-top: 16px;
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.4s forwards;
+  }
+  .hero-divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
+    margin: 36px auto 0;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.55s forwards;
+  }
+
+  /* ===== LAYOUT ===== */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ===== PRINCIPLE BLOCK ===== */
+  .principle {
+    margin: 48px 0 56px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 28px 32px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.6s forwards;
+  }
+  .principle-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .principle h2 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .principle p {
+    color: var(--muted);
+    font-size: 0.97rem;
+  }
+  .principle strong {
+    color: var(--text);
+  }
+
+  /* ===== FLOW DIAGRAM ===== */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 40px 0 56px;
+    flex-wrap: wrap;
+    row-gap: 16px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.75s forwards;
+  }
+  .flow-step {
+    text-align: center;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    min-width: 170px;
+  }
+  .flow-step .emoji { font-size: 1.6rem; margin-bottom: 6px; }
+  .flow-step .title {
+    font-size: 0.8rem;
+    font-family: var(--mono);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .flow-step .val { font-weight: 600; font-size: 0.95rem; }
+  .flow-arrow {
+    color: var(--muted);
+    font-size: 1.4rem;
+    padding: 0 8px;
+  }
+
+  /* ===== SECTION TITLE ===== */
+  .section-title {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ===== STATE CARDS ===== */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 56px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeUp 0.7s forwards;
+  }
+  .card:nth-child(1) { animation-delay: 0.9s; }
+  .card:nth-child(2) { animation-delay: 1.05s; }
+  .card:nth-child(3) { animation-delay: 1.2s; }
+
+  .card-header {
+    padding: 20px 24px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  .card.solid .card-icon { background: rgba(244,162,97,0.15); }
+  .card.liquid .card-icon { background: rgba(76,201,240,0.15); }
+  .card.gas .card-icon { background: rgba(168,213,162,0.15); }
+  .card-header-text h3 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  .card.solid .card-header-text h3 { color: var(--solid-color); }
+  .card.liquid .card-header-text h3 { color: var(--liquid-color); }
+  .card.gas .card-header-text h3 { color: var(--gas-color); }
+  .card-header-text span {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .card-body { padding: 20px 24px; }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-row .label { color: var(--muted); }
+  .info-row .value { font-weight: 600; }
+  .card.solid .info-row .value { color: var(--solid-color); }
+  .card.liquid .info-row .value { color: var(--liquid-color); }
+  .card.gas .info-row .value { color: var(--gas-color); }
+
+  /* ===== FORMULA BLOCKS ===== */
+  .formulas {
+    margin-bottom: 56px;
+  }
+  .formula-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .formula-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+    opacity: 0;
+    animation: fadeUp 0.6s forwards;
+  }
+  .formula-card:nth-child(1) { animation-delay: 1.3s; }
+  .formula-card:nth-child(2) { animation-delay: 1.4s; }
+  .formula-card:nth-child(3) { animation-delay: 1.5s; }
+
+  .formula-type {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    margin-bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .formula-type .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .formula-card.ww .formula-type { color: var(--solid-color); }
+  .formula-card.ww .dot { background: var(--solid-color); }
+  .formula-card.wv .formula-type { color: var(--liquid-color); }
+  .formula-card.wv .dot { background: var(--liquid-color); }
+  .formula-card.vv .formula-type { color: var(--gas-color); }
+  .formula-card.vv .dot { background: var(--gas-color); }
+
+  .formula-box {
+    background: var(--bg);
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-family: var(--mono);
+    font-size: 0.88rem;
+    text-align: center;
+    margin-bottom: 14px;
+    line-height: 2.2;
+  }
+  .fraction {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    vertical-align: middle;
+    margin: 0 4px;
+  }
+  .frac-num, .frac-den {
+    display: block;
+    text-align: center;
+    font-size: 0.82rem;
+  }
+  .frac-line {
+    display: block;
+    width: 100%;
+    min-width: 80px;
+    height: 1px;
+    background: var(--muted);
+    margin: 3px 0;
+  }
+  .formula-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .formula-desc strong { color: var(--text); }
+  .use-when {
+    margin-top: 10px;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .use-when span {
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  /* ===== SUMMARY TABLE ===== */
+  .table-section {
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.7s 1.6s forwards;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  thead tr {
+    background: var(--surface2);
+  }
+  thead th {
+    padding: 12px 16px;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  tbody tr:hover { background: var(--surface2); }
+  tbody td {
+    padding: 14px 16px;
+    vertical-align: middle;
+  }
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .tag.s { background: rgba(244,162,97,0.15); color: var(--solid-color); }
+  .tag.l { background: rgba(76,201,240,0.15); color: var(--liquid-color); }
+  .tag.g { background: rgba(168,213,162,0.15); color: var(--gas-color); }
+
+  /* ===== INSIGHTS ===== */
+  .insights {
+    margin-bottom: 56px;
+  }
+  .insight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .insight-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    opacity: 0;
+    animation: fadeUp 0.6s forwards;
+  }
+  .insight-item:nth-child(1) { animation-delay: 1.7s; }
+  .insight-item:nth-child(2) { animation-delay: 1.8s; }
+  .insight-item:nth-child(3) { animation-delay: 1.9s; }
+  .insight-item:nth-child(4) { animation-delay: 2.0s; }
+  .insight-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+  }
+  .insight-item p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .insight-item p strong { color: var(--text); }
+
+  /* ===== GIFTED BOX ===== */
+  .gifted-box {
+    background: linear-gradient(135deg, rgba(247,37,133,0.07) 0%, rgba(76,201,240,0.07) 100%);
+    border: 1px solid rgba(247,37,133,0.3);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.7s 2.1s forwards;
+  }
+  .gifted-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .gifted-label::before {
+    content: '★';
+  }
+  .gifted-box h3 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+  }
+  .gifted-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .gifted-point {
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 0.87rem;
+    color: var(--muted);
+    line-height: 1.6;
+    border-left: 3px solid transparent;
+  }
+  .gifted-point strong { color: var(--text); display: block; margin-bottom: 4px; }
+  .gifted-point:nth-child(1) { border-color: var(--solid-color); }
+  .gifted-point:nth-child(2) { border-color: var(--liquid-color); }
+  .gifted-point:nth-child(3) { border-color: var(--gas-color); }
+  .gifted-point:nth-child(4) { border-color: var(--gold); }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .hero { padding: 60px 20px 40px; }
+    .container { padding: 0 16px 60px; }
+    .principle { padding: 20px; }
+    .flow { gap: 4px; }
+    .flow-step { min-width: 120px; padding: 12px; }
+    .gifted-box { padding: 20px; }
+    thead th:nth-child(3), tbody td:nth-child(3) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-badge">Chemistry · Concentration Units</div>
+  <h1>หน่วย<span>ความเข้มข้น</span><br>ของสารละลาย</h1>
+  <p class="hero-sub">เข้าใจหลักคิด ไม่ใช่แค่จำสูตร — สถานะของสสารกำหนดวิธีวัดและหน่วยที่เหมาะสม</p>
+  <div class="hero-divider"></div>
+</header>
+
+<div class="container">
+
+  <!-- PRINCIPLE -->
+  <div class="principle">
+    <div class="principle-label">🔬 หลักคิดหลัก</div>
+    <h2>สถานะของสสาร → กำหนดวิธีวัด → กำหนดหน่วยความเข้มข้น</h2>
+    <p>แก่นของเรื่องนี้คือ: เรา <strong>"วัดอะไรได้แม่นที่สุด"</strong> ในแต่ละสถานะ — และสิ่งนั้นเองที่กลายเป็นตัวตั้งในการคำนวณความเข้มข้น ไม่ใช่การจำสูตรล้วน ๆ</p>
+  </div>
+
+  <!-- FLOW DIAGRAM -->
+  <div class="flow">
+    <div class="flow-step">
+      <div class="emoji">⚗️</div>
+      <div class="title">สถานะ</div>
+      <div class="val">ของแข็ง / ของเหลว / แก๊ส</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="emoji">📏</div>
+      <div class="title">วิธีวัดที่แม่น</div>
+      <div class="val">มวล หรือ ปริมาตร</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="emoji">🧮</div>
+      <div class="title">หน่วยความเข้มข้น</div>
+      <div class="val">w/w, w/v, v/v</div>
+    </div>
+  </div>
+
+  <!-- STATE CARDS -->
+  <div class="section-title">สามสถานะ สามวิธีวัด</div>
+  <div class="cards">
+
+    <div class="card solid">
+      <div class="card-header">
+        <div class="card-icon">🧱</div>
+        <div class="card-header-text">
+          <h3>ของแข็ง</h3>
+          <span>Solid State</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="info-row"><span class="label">วัดหลัก</span><span class="value">มวล (g)</span></div>
+        <div class="info-row"><span class="label">เครื่องมือ</span><span class="value">เครื่องชั่ง</span></div>
+        <div class="info-row"><span class="label">หน่วยนิยม</span><span class="value">%w/w</span></div>
+        <div class="info-row"><span class="label">เหตุผล</span><span class="value" style="font-size:0.82rem">รูปร่างไม่แน่นอน วัดปริมาตรยาก</span></div>
+        <div class="info-row"><span class="label">ตัวอย่าง</span><span class="value" style="font-size:0.82rem">ปุ๋ย, ยาเม็ด, โลหะผสม</span></div>
+      </div>
+    </div>
+
+    <div class="card liquid">
+      <div class="card-header">
+        <div class="card-icon">💧</div>
+        <div class="card-header-text">
+          <h3>ของเหลว</h3>
+          <span>Liquid State</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="info-row"><span class="label">วัดหลัก</span><span class="value">ปริมาตร (mL, L)</span></div>
+        <div class="info-row"><span class="label">เครื่องมือ</span><span class="value">ปิเปต, กระบอกตวง</span></div>
+        <div class="info-row"><span class="label">หน่วยนิยม</span><span class="value">%w/v, %v/v</span></div>
+        <div class="info-row"><span class="label">เหตุผล</span><span class="value" style="font-size:0.82rem">ไหลได้ วัดปริมาตรสะดวก</span></div>
+        <div class="info-row"><span class="label">ตัวอย่าง</span><span class="value" style="font-size:0.82rem">น้ำเกลือ, แอลกอฮอล์</span></div>
+      </div>
+    </div>
+
+    <div class="card gas">
+      <div class="card-header">
+        <div class="card-icon">🌫️</div>
+        <div class="card-header-text">
+          <h3>แก๊ส</h3>
+          <span>Gas State</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="info-row"><span class="label">วัดหลัก</span><span class="value">ปริมาตร (คุม T, P)</span></div>
+        <div class="info-row"><span class="label">เครื่องมือ</span><span class="value">Gas Syringe</span></div>
+        <div class="info-row"><span class="label">หน่วยนิยม</span><span class="value">%v/v</span></div>
+        <div class="info-row"><span class="label">เหตุผล</span><span class="value" style="font-size:0.82rem">ปริมาตร ∝ จำนวนโมล (อาโวกาโดร)</span></div>
+        <div class="info-row"><span class="label">ตัวอย่าง</span><span class="value" style="font-size:0.82rem">O₂ 21%, N₂ 78% ในอากาศ</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FORMULAS -->
+  <div class="formulas">
+    <div class="section-title">สูตรคำนวณ</div>
+    <div class="formula-grid">
+
+      <div class="formula-card ww">
+        <div class="formula-type"><span class="dot"></span>%w/w — มวลต่อมวล</div>
+        <div class="formula-box">
+          %w/w = 
+          <span class="fraction">
+            <span class="frac-num" style="color:var(--solid-color)">มวลตัวถูกละลาย (g)</span>
+            <span class="frac-line"></span>
+            <span class="frac-den">มวลสารละลาย (g)</span>
+          </span>
+          × 100
+        </div>
+        <div class="formula-desc">
+          ใช้เมื่อ: <strong>ของแข็งผสมของแข็ง</strong><br>
+          หรือระบบที่ต้องการค่าที่ <strong>ไม่ขึ้นกับอุณหภูมิ</strong>
+        </div>
+        <div class="use-when">⚡ <span>ข้อดี:</span> แม่นที่สุด ไม่เปลี่ยนตามอุณหภูมิ</div>
+      </div>
+
+      <div class="formula-card wv">
+        <div class="formula-type"><span class="dot"></span>%w/v — มวลต่อปริมาตร</div>
+        <div class="formula-box">
+          %w/v = 
+          <span class="fraction">
+            <span class="frac-num" style="color:var(--liquid-color)">มวลตัวถูกละลาย (g)</span>
+            <span class="frac-line"></span>
+            <span class="frac-den">ปริมาตรสารละลาย (mL)</span>
+          </span>
+          × 100
+        </div>
+        <div class="formula-desc">
+          ใช้เมื่อ: <strong>ของแข็งละลายในของเหลว</strong>
+        </div>
+        <div class="use-when">📌 <span>ตัวอย่าง:</span> น้ำเกลือ 0.9%w/v, น้ำเชื่อม</div>
+      </div>
+
+      <div class="formula-card vv">
+        <div class="formula-type"><span class="dot"></span>%v/v — ปริมาตรต่อปริมาตร</div>
+        <div class="formula-box">
+          %v/v = 
+          <span class="fraction">
+            <span class="frac-num" style="color:var(--gas-color)">ปริมาตรตัวถูกละลาย</span>
+            <span class="frac-line"></span>
+            <span class="frac-den">ปริมาตรสารละลายรวม</span>
+          </span>
+          × 100
+        </div>
+        <div class="formula-desc">
+          ใช้เมื่อ: <strong>ของเหลว + ของเหลว</strong> หรือ <strong>แก๊สผสมแก๊ส</strong>
+        </div>
+        <div class="use-when">📌 <span>ตัวอย่าง:</span> เอทานอล 70%v/v, อากาศ (O₂/N₂)</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div class="table-section">
+    <div class="section-title">ตารางสรุป</div>
+    <table>
+      <thead>
+        <tr>
+          <th>สถานะ</th>
+          <th>วัดหลัก</th>
+          <th>เหตุผลสำคัญ</th>
+          <th>หน่วยนิยม</th>
+          <th>ตัวอย่าง</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag s">🧱 ของแข็ง</span></td>
+          <td>มวล (g)</td>
+          <td>รูปร่างไม่แน่นอน ปริมาตรวัดยาก</td>
+          <td><span class="tag s">%w/w</span></td>
+          <td>ปุ๋ย, ยา, โลหะผสม</td>
+        </tr>
+        <tr>
+          <td><span class="tag l">💧 ของเหลว</span></td>
+          <td>ปริมาตร (mL)</td>
+          <td>ไหลได้ ตวงสะดวก</td>
+          <td><span class="tag l">%w/v</span> <span class="tag l">%v/v</span></td>
+          <td>น้ำเกลือ, แอลกอฮอล์</td>
+        </tr>
+        <tr>
+          <td><span class="tag g">🌫️ แก๊ส</span></td>
+          <td>ปริมาตร (คุม T,P)</td>
+          <td>V ∝ n ตามกฎอาโวกาโดร</td>
+          <td><span class="tag g">%v/v</span></td>
+          <td>O₂, N₂ ในอากาศ</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- INSIGHTS -->
+  <div class="insights">
+    <div class="section-title">Insight สำคัญ</div>
+    <div class="insight-grid">
+      <div class="insight-item">
+        <div class="insight-num">01 — ACCURACY</div>
+        <p><strong>%w/w แม่นที่สุด</strong><br>ไม่ขึ้นกับอุณหภูมิและความดัน เหมาะกับงานที่ต้องการความแม่นยำสูงสุด</p>
+      </div>
+      <div class="insight-item">
+        <div class="insight-num">02 — CAUTION</div>
+        <p><strong>%v/v ระวังอุณหภูมิ</strong><br>ของเหลวขยาย/หดตัวตาม T จึงต้องระบุอุณหภูมิอ้างอิงเสมอ</p>
+      </div>
+      <div class="insight-item">
+        <div class="insight-num">03 — GAS LAW</div>
+        <p><strong>แก๊ส: กฎอาโวกาโดร</strong><br>ที่ T, P เท่ากัน ปริมาตร ∝ จำนวนโมล → ใช้ %v/v แทนสัดส่วนโมลได้</p>
+      </div>
+      <div class="insight-item">
+        <div class="insight-num">04 — LAB PRACTICE</div>
+        <p><strong>ห้องแล็บจริงใช้ Molarity</strong><br>หน่วย mol/L (M) แม่นกว่าทุกหน่วยเพราะนับจำนวนอนุภาคโดยตรง</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- GIFTED BOX -->
+  <div class="gifted-box">
+    <div class="gifted-label">ระดับ Gifted — เชื่อมโยงเชิงลึก</div>
+    <h3>ทำไมนักเคมีถึงชอบ Molarity (mol/L) มากกว่า %?</h3>
+    <p style="color:var(--muted); font-size:0.9rem; margin-bottom:4px;">หน่วย % ทั้งสามรูปแบบใช้งานได้ดีในชีวิตประจำวัน แต่ในเคมีเชิงปริมาณมีข้อจำกัดสำคัญ:</p>
+    <div class="gifted-grid">
+      <div class="gifted-point">
+        <strong>w/w — แม่น แต่…</strong>
+        ยุ่งยากเมื่อต้องหา "จำนวนโมล" เพราะต้องแปลงมวลด้วย molar mass อีกที
+      </div>
+      <div class="gifted-point">
+        <strong>v/v — สะดวก แต่…</strong>
+        เปลี่ยนตาม T ทำให้ความเข้มข้น "จริง" แตกต่างตามอุณหภูมิห้องแล็บ
+      </div>
+      <div class="gifted-point">
+        <strong>mol/L — ดีที่สุดเพราะ…</strong>
+        นับอนุภาคโดยตรง ใช้กับสมการเคมีได้ทันที (stoichiometry) ไม่ขึ้นกับ molar mass ของตัวทำละลาย
+      </div>
+      <div class="gifted-point">
+        <strong>ข้อควรรู้เพิ่ม</strong>
+        นอกจากนี้ยังมี Molality (mol/kg) ซึ่ง<em>ไม่ขึ้นกับอุณหภูมิเลย</em> — ใช้ในงานที่ T เปลี่ยนแปลงมาก เช่น colligative properties
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK RECAP -->
+  <div class="section-title" style="margin-top:8px">สรุปจำง่าย</div>
+  <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px 28px; display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:16px; margin-bottom:48px; opacity:0; animation: fadeUp 0.7s 2.2s forwards;">
+    <div style="text-align:center; padding:12px; border-radius:8px; background:rgba(244,162,97,0.08);">
+      <div style="font-size:2rem">🧱</div>
+      <div style="font-family:var(--mono); font-size:0.75rem; color:var(--solid-color); font-weight:600; margin:8px 0 4px">ของแข็ง</div>
+      <div style="font-size:0.85rem; color:var(--muted)">"ชั่ง" → <strong style="color:var(--text)">%w/w</strong></div>
+    </div>
+    <div style="text-align:center; padding:12px; border-radius:8px; background:rgba(76,201,240,0.08);">
+      <div style="font-size:2rem">💧</div>
+      <div style="font-family:var(--mono); font-size:0.75rem; color:var(--liquid-color); font-weight:600; margin:8px 0 4px">ของเหลว</div>
+      <div style="font-size:0.85rem; color:var(--muted)">"ตวง" → <strong style="color:var(--text)">%w/v หรือ %v/v</strong></div>
+    </div>
+    <div style="text-align:center; padding:12px; border-radius:8px; background:rgba(168,213,162,0.08);">
+      <div style="font-size:2rem">🌫️</div>
+      <div style="font-family:var(--mono); font-size:0.75rem; color:var(--gas-color); font-weight:600; margin:8px 0 4px">แก๊ส</div>
+      <div style="font-size:0.85rem; color:var(--muted)">"วัดปริมาตร+คุม T,P" → <strong style="color:var(--text)">%v/v</strong></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  เคมี · หน่วยความเข้มข้นของสารละลาย · เนื้อหาสำหรับ ม.ปลาย และระดับ Gifted
+</footer>
+
+</body>
+</html>
