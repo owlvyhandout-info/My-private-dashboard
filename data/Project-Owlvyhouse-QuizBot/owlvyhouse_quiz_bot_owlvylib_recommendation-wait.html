@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>OwlvyLib OpenRouter Fallback Guide</title>
+<style>
+body{
+    font-family: Arial, sans-serif;
+    line-height:1.7;
+    margin:40px;
+    background:#f4f7fb;
+    color:#222;
+}
+h1,h2,h3{
+    color:#1f4e79;
+}
+code, pre{
+    background:#1e1e1e;
+    color:#d4d4d4;
+    padding:12px;
+    border-radius:8px;
+    overflow:auto;
+    display:block;
+    font-size:14px;
+}
+.section{
+    background:white;
+    padding:24px;
+    border-radius:16px;
+    margin-bottom:24px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+ul{
+    padding-left:24px;
+}
+.note{
+    background:#fff8d9;
+    padding:12px;
+    border-left:5px solid #f4c542;
+    border-radius:8px;
+}
+</style>
+</head>
+<body>
+
+<h1>🦉 OwlvyLib – OpenRouter Fallback System Guide</h1>
+
+<div class="section">
+<h2>1. จุดประสงค์</h2>
+
+<p>ระบบนี้ช่วยให้ OwlvyHouse สามารถ:</p>
+
+<ul>
+<li>สลับ AI Model อัตโนมัติเมื่อ Model แรกใช้งานไม่ได้</li>
+<li>Fallback ไปใช้ฟรีเมื่อเครดิตหมด</li>
+<li>ลดปัญหา Provider ล่ม / Timeout</li>
+<li>ทำให้ Bot ตอบได้ต่อเนื่อง</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>2. แก้ไข MODELS</h2>
+
+<p>เพิ่ม Free Fallback Model เข้าไปท้ายสุด</p>
+
+<pre>
+const MODELS = [
+
+  // PRIMARY
+  "google/gemini-2.5-flash-lite",
+
+  // FALLBACKS
+  "deepseek/deepseek-chat",
+  "anthropic/claude-3-haiku",
+  "meta-llama/llama-3.3-70b-versatile",
+  "anthropic/claude-3.5-sonnet",
+
+  // FREE FALLBACK
+  "openrouter/free"
+
+];
+</pre>
+
+<div class="note">
+ถ้า Paid Model ใช้งานไม่ได้ ระบบจะลองใช้ฟรีอัตโนมัติ
+</div>
+</div>
+
+<div class="section">
+<h2>3. Function askAI()</h2>
+
+<p>Function นี้จะวนลอง Model ทีละตัวจนกว่าจะสำเร็จ</p>
+
+<pre>
+function askAI(userMessage) {
+
+  for (const model of MODELS) {
+
+    try {
+
+      Logger.log("Trying model: " + model);
+
+      const result = callOpenRouter(model, userMessage);
+
+      if (result) {
+
+        Logger.log("SUCCESS: " + model);
+
+        return {
+          success: true,
+          model: model,
+          answer: result
+        };
+
+      }
+
+    } catch (err) {
+
+      Logger.log("FAILED: " + model);
+      Logger.log(err);
+
+    }
+
+  }
+
+  return {
+    success: false,
+    answer: "ขออภัย ระบบ AI ไม่พร้อมใช้งานชั่วคราว"
+  };
+
+}
+</pre>
+</div>
+
+<div class="section">
+<h2>4. Function callOpenRouter()</h2>
+
+<p>Function นี้เป็นส่วนเรียก OpenRouter API จริง</p>
+
+<pre>
+function callOpenRouter(model, userMessage) {
+
+  const apiKey = PropertiesService
+    .getScriptProperties()
+    .getProperty("OPENROUTER_API_KEY");
+
+  const url = "https://openrouter.ai/api/v1/chat/completions";
+
+  const payload = {
+
+    model: model,
+
+    messages: [
+      {
+        role: "user",
+        content: userMessage
+      }
+    ],
+
+    max_tokens: 1000,
+    temperature: 0.7
+
+  };
+
+  const options = {
+
+    method: "post",
+
+    contentType: "application/json",
+
+    headers: {
+      "Authorization": "Bearer " + apiKey
+    },
+
+    payload: JSON.stringify(payload),
+
+    muteHttpExceptions: true
+
+  };
+
+  const response = UrlFetchApp.fetch(url, options);
+
+  const code = response.getResponseCode();
+
+  Logger.log("HTTP CODE: " + code);
+
+  if (code !== 200) {
+
+    throw new Error(
+      "API ERROR " + code + " : " + response.getContentText()
+    );
+
+  }
+
+  const data = JSON.parse(response.getContentText());
+
+  if (
+    !data.choices ||
+    !data.choices[0] ||
+    !data.choices[0].message
+  ) {
+
+    throw new Error("Invalid response");
+
+  }
+
+  return data.choices[0].message.content;
+
+}
+</pre>
+</div>
+
+<div class="section">
+<h2>5. วิธีเรียกใช้งาน OwlvyLib</h2>
+
+<pre>
+const result = OwlvyLib.askAI(
+  "อธิบายแรงโน้มถ่วงแบบเด็กประถม"
+);
+
+Logger.log(result.answer);
+</pre>
+
+<p>หรือใน Telegram Bot:</p>
+
+<pre>
+const ai = OwlvyLib.askAI(userText);
+
+sendTelegramMessage(chatId, ai.answer);
+</pre>
+</div>
+
+<div class="section">
+<h2>6. ขั้นตอน Deploy Library</h2>
+
+<h3>STEP 1 — แก้ไข Library</h3>
+<ul>
+<li>เปิด Project OwlvyLib</li>
+<li>แก้ไขโค้ด</li>
+<li>กด Save</li>
+</ul>
+
+<h3>STEP 2 — Deploy Version ใหม่</h3>
+
+<ul>
+<li>Deploy</li>
+<li>Manage Deployments</li>
+<li>Edit</li>
+<li>Create New Version</li>
+<li>Deploy</li>
+</ul>
+
+<h3>STEP 3 — ไปที่ Project ลูก</h3>
+
+<p>เช่น:</p>
+
+<ul>
+<li>Telegram Bot</li>
+<li>Spreadsheet</li>
+<li>Google Form</li>
+<li>Web App</li>
+</ul>
+
+<p>เปิด:</p>
+
+<pre>
+Libraries
+</pre>
+
+<p>แล้วเปลี่ยน Version ใหม่ของ OwlvyLib</p>
+
+<pre>
+Version 12 → Version 13
+</pre>
+
+</div>
+
+<div class="section">
+<h2>7. Development Mode (แนะนำตอนพัฒนา)</h2>
+
+<p>ถ้ากำลังทดลองระบบ แนะนำให้เปิด:</p>
+
+<pre>
+Use development mode
+</pre>
+
+<p>ข้อดี:</p>
+
+<ul>
+<li>แก้ Library → ใช้ได้ทันที</li>
+<li>ไม่ต้อง Deploy ทุกครั้ง</li>
+<li>เหมาะกับการ Debug</li>
+</ul>
+
+<div class="note">
+Production จริงควรกลับมาใช้ Fixed Version เพื่อความเสถียร
+</div>
+
+</div>
+
+<div class="section">
+<h2>8. ระบบนี้ช่วยอะไรได้บ้าง</h2>
+
+<ul>
+<li>✅ AI ล่ม → ยังตอบได้</li>
+<li>✅ เครดิตหมด → ยังตอบได้</li>
+<li>✅ Provider down → ยังตอบได้</li>
+<li>✅ Realtime Bot เสถียรขึ้น</li>
+<li>✅ ลด Downtime</li>
+<li>✅ คุมค่าใช้จ่ายได้</li>
+</ul>
+
+</div>
+
+</body>
+</html>
