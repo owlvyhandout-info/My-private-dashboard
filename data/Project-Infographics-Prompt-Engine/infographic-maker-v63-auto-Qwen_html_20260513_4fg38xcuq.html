@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Owlvy Infographic Engine v6.3 (Auto-Rules)</title>
+  <style>
+    :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; --card: #ffffff; }
+    body { font-family: 'Sarabun', 'Segoe UI', sans-serif; background: var(--bg); color: #333; padding: 20px; margin: 0; }
+    .container { max-width: 850px; margin: 0 auto; background: var(--card); padding: 30px; border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+    h1 { color: var(--primary); text-align: center; margin-bottom: 5px; }
+    .version-badge { font-size: 0.5em; color: #888; background: #eee; padding: 3px 8px; border-radius: 20px; vertical-align: middle; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; color: #444; }
+    select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 15px; transition: border 0.2s; }
+    select:focus, textarea:focus { border-color: var(--accent); outline: none; }
+    textarea { min-height: 100px; resize: vertical; }
+    .btn { background: var(--accent); color: white; padding: 14px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; font-weight: 600; margin-top: 10px; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn:hover { background: #2980b9; }
+    .btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+    #status { margin-top: 12px; text-align: center; font-weight: 600; min-height: 24px; }
+    .loading { color: #e67e22; }
+    .error { color: #e74c3c; }
+    .success { color: #27ae60; }
+    #output { background: #f8f9fa; padding: 16px; border-radius: 10px; margin-top: 20px; white-space: pre-wrap; display: none; border: 1px dashed #ccc; line-height: 1.6; font-family: monospace; font-size: 14px; }
+    .rule-status { font-size: 14px; color: #666; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .info-box { background: #e8f5e9; border: 1px solid #4caf50; padding: 10px 14px; border-radius: 8px; margin: 10px 0; font-size: 14px; color: #2e7d32; }
+    .copy-btn { background: #95a5a6; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; margin-top: 10px; display: none; }
+    .copy-btn:hover { background: #7f8c8d; }
+    .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 0.8s linear infinite; display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🦉 อาว์ลวี่ เฮาส์: Infographic Prompt Engine <span class="version-badge">v6.3-Auto</span></h1>
+    <p class="rule-status" id="ruleStatus">🔄 กำลังโหลดกฎทั้งหมดจากฐานข้อมูล...</p>
+
+    <div class="form-group">
+      <label>หมวดวิชา (ระบบจะดึงกฎที่เกี่ยวข้องอัตโนมัติ)</label>
+      <select id="subject" onchange="applyRulesBySubject(this.value)">
+        <option>ชีววิทยา</option><option>เคมี</option><option>ฟิสิกส์</option><option>โลกศาสตร์ (Earth Science)</option><option>ดาราศาสตร์</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>ระดับความเข้มข้น</label>
+      <select id="level"><option>ประถมศึกษา</option><option>มัธยมต้น</option><option>มัธยมปลาย</option><option>Gifted / SMT Program</option></select>
+    </div>
+    <div class="form-group">
+      <label>เนื้อหาวิชาการ (Content to Process)</label>
+      <textarea id="content" placeholder="วางเนื้อหาหรือคำอธิบายที่ต้องการทำเป็นอินโฟกราฟิก..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>สไตล์ภาพ (Visual Style)</label>
+      <select id="style">
+        <option>การถ่ายภาพ ภาพยนตร์ / ภาพนิ่งจากภาพยนตร์</option><option>อนิเมะ / มังงะ</option><option>ภาพประกอบ ภาพร่าง / ลายเส้น</option><option>การ์ตูน / นิยายภาพ Western Comic (สีสันฉูดฉาด)</option><option>ภาพเรนเดอร์ 3 มิติ</option><option>จิบิ / Q-Style</option><option>ไอโซเมตริก</option><option>พิกเซลอาร์ต</option><option>ภาพวาดสีน้ำมัน</option><option>สีน้ำ</option><option>หมึก / สไตล์จีน</option><option>ย้อนยุค / วินเทจ</option><option>ไซเบอร์พังก์ / ไซไฟ</option><option>มินิมอลลิสต์</option><option>Diorama</option><option>Cut Section</option><option>Glass / Transparent Anatomy</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>จำนวนหน้า (Pages)</label>
+      <select id="pages"><option value="Auto">Auto (ให้ AI คำนวณความเหมาะสม)</option><option value="1">1 หน้า</option><option value="2">2 หน้า</option><option value="3">3 หน้า</option><option value="4">4 หน้า</option><option value="5">5 หน้า</option></select>
+    </div>
+    <div class="form-group">
+      <label>รูปแบบภาษาของผลลัพธ์</label>
+      <select id="language"><option value="Prompt_EN_Content_TH">พร้อมท์ ENG | เนื้อหาภาพ TH (แนะนำ)</option><option value="Full_Thai">พร้อมท์ TH | เนื้อหาภาพ TH</option><option value="Full_ENG">พร้อมท์ ENG | เนื้อหาภาพ ENG</option></select>
+    </div>
+
+    <div class="info-box">
+      ✅ <b>ระบบอัตโนมัติ:</b> เมื่อเลือกหมวดวิชา กฎด้านวิชาการและกฎการสร้างภาพที่เกี่ยวข้องจะถูกโหลดและรวมเข้า Prompt โดยอัตโนมัติ
+    </div>
+
+    <button class="btn" id="generateBtn" onclick="generatePrompt()">
+      <span id="btnText">🚀 สร้าง Master Prompt (v6.3)</span>
+      <span id="btnSpinner" class="spinner" style="display:none"></span>
+    </button>
+    <div id="status"></div>
+    <div id="output"></div>
+    <button class="copy-btn" id="copyBtn" onclick="copyOutput()">📋 คัดลอก Prompt</button>
+  </div>
+
+  <script>
+    // ================= CONFIG =================
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
+    // ==========================================
+
+    let allRules = {};
+    let activeRulesText = "ไม่มีกฎเฉพาะสำหรับหมวดนี้";
+    const ruleStatusEl = document.getElementById("ruleStatus");
+    const statusEl = document.getElementById("status");
+    const outputEl = document.getElementById("output");
+    const generateBtn = document.getElementById("generateBtn");
+    const btnText = document.getElementById("btnText");
+    const btnSpinner = document.getElementById("btnSpinner");
+    const copyBtn = document.getElementById("copyBtn");
+
+    // ดึงกฎทั้งหมดจาก GAS มาเก็บไว้
+    async function syncRulesFromSheet() {
+      if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL.includes("YOUR_DEPLOYMENT_ID")) {
+        ruleStatusEl.innerHTML = "❌ <b>กรุณาวาง GAS Web App URL ในโค้ดก่อนใช้งาน</b>";
+        ruleStatusEl.style.color = "#e74c3c"; return;
+      }
+
+      ruleStatusEl.innerHTML = "🔄 กำลังโหลดกฎจากฐานข้อมูล...";
+      ruleStatusEl.style.color = "#e67e22";
+
+      try {
+        const res = await fetch(GAS_WEB_APP_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ action: "get_rules" }),
+          redirect: "follow"
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        if (data.status === "success" && data.rules) {
+          allRules = data.rules;
+          ruleStatusEl.innerHTML = `✅ โหลดกฎทั้งหมดสำเร็จ (${Object.keys(allRules).length} กฎ) พร้อมกรองอัตโนมัติ`;
+          ruleStatusEl.style.color = "#27ae60";
+          applyRulesBySubject(document.getElementById("subject").value); // กรองทันทีเมื่อโหลดเสร็จ
+        } else {
+          throw new Error(data.message || "รูปแบบข้อมูลไม่ถูกต้อง");
+        }
+      } catch (err) {
+        console.error("Fetch Rules Error:", err);
+        ruleStatusEl.innerHTML = `⚠️ ไม่สามารถโหลดกฎได้: ${err.message}`;
+        ruleStatusEl.style.color = "#e67e22";
+      }
+    }
+
+    // ฟังก์ชันกรองกฎตามหมวดวิชาที่เลือก
+    function applyRulesBySubject(subject) {
+      if (Object.keys(allRules).length === 0) return;
+
+      // กรอง Key ที่มีคำว่า Subject อยู่ (เช่น ฟิสิกส์_001, ชีววิทยา-ภาพ_02)
+      const matchedKeys = Object.keys(allRules).filter(k => k.includes(subject));
+      activeRulesText = matchedKeys.length > 0 
+        ? matchedKeys.map(k => `• ${allRules[k]}`).join('\n') 
+        : "ไม่พบกฎเฉพาะสำหรับหมวดนี้ (จะใช้ค่าเริ่มต้น)";
+
+      ruleStatusEl.innerHTML = `📚 หมวด: <b>${subject}</b> | ดึงกฎที่เกี่ยวข้องอัตโนมัติ: ${matchedKeys.length} ข้อ`;
+      ruleStatusEl.style.color = "#2980b9";
+    }
+
+    async function generatePrompt() {
+      const payload = {
+        subject: document.getElementById("subject").value,
+        level: document.getElementById("level").value,
+        content: document.getElementById("content").value,
+        style: document.getElementById("style").value,
+        pages: document.getElementById("pages").value,
+        language: document.getElementById("language").value,
+        cautions: activeRulesText, // ✅ ใช้กฎที่กรองอัตโนมัติแล้ว
+        action: "generate_prompt"
+      };
+
+      if (!payload.content.trim()) {
+        setStatus("❌ กรุณากรอกเนื้อหาวิชาการก่อนสร้าง Prompt", "error");
+        return;
+      }
+
+      generateBtn.disabled = true;
+      btnText.textContent = "⏳ AI กำลังคิด...";
+      btnSpinner.style.display = "inline-block";
+      setStatus("🔄 กำลังส่งคำขอไปยัง AI Engine...", "loading");
+      outputEl.style.display = "none";
+      copyBtn.style.display = "none";
+
+      try {
+        const res = await fetch(GAS_WEB_APP_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload),
+          redirect: "follow"
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        if (data.status === "success") {
+          outputEl.textContent = data.aiResponse;
+          outputEl.style.display = "block";
+          copyBtn.style.display = "inline-block";
+          setStatus("✅ สร้าง Master Prompt สำเร็จ!", "success");
+        } else {
+          throw new Error(data.message || "AI ตอบกลับไม่สำเร็จ");
+        }
+      } catch (err) {
+        console.error("Generate Error:", err);
+        setStatus(`❌ เกิดข้อผิดพลาด: ${err.message}`, "error");
+        outputEl.style.display = "none";
+      } finally {
+        generateBtn.disabled = false;
+        btnText.textContent = "🚀 สร้าง Master Prompt (v6.3)";
+        btnSpinner.style.display = "none";
+      }
+    }
+
+    function setStatus(msg, type) { statusEl.textContent = msg; statusEl.className = type; }
+    async function copyOutput() {
+      try {
+        await navigator.clipboard.writeText(outputEl.textContent);
+        const original = copyBtn.textContent;
+        copyBtn.textContent = "✅ คัดลอกแล้ว!";
+        setTimeout(() => copyBtn.textContent = original, 2000);
+      } catch (e) { setStatus("❌ คัดลอกไม่สำเร็จ", "error"); }
+    }
+
+    window.onload = syncRulesFromSheet;
+  </script>
+</body>
+</html>
