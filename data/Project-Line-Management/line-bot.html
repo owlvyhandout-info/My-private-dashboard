@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>LINE Bot Dashboard</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        margin: 0;
+        padding: 20px;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+    .container {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+        margin-top: 30px;
+    }
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        width: 300px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .card h2 {
+        margin-top: 0;
+    }
+    .green { border-top: 6px solid #00c300; }
+    .blue { border-top: 6px solid #007bff; }
+    .yellow { border-top: 6px solid #ffc107; }
+
+    a {
+        display: block;
+        margin: 10px 0;
+        padding: 10px;
+        background: #eef3ff;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #333;
+        transition: 0.2s;
+    }
+    a:hover {
+        background: #dbe5ff;
+    }
+
+    .note {
+        margin-top: 40px;
+        text-align: center;
+        font-size: 14px;
+        color: #666;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>🧠 LINE Bot Control Panel</h1>
+
+<div class="container">
+
+    <div class="card green">
+        <h2>📊 ดูโควตา / การใช้งาน</h2>
+        <a href="https://manager.line.biz" target="_blank">
+            LINE OA Manager
+        </a>
+        <a href="https://manager.line.biz/account" target="_blank">
+            เข้าบัญชีโดยตรง
+        </a>
+        <p>✔ ดูข้อความที่ใช้<br>✔ ดู quota<br>✔ ดูแพ็กเกจ</p>
+    </div>
+
+    <div class="card blue">
+        <h2>⚙️ ตั้งค่า Bot</h2>
+        <a href="https://developers.line.biz/console/" target="_blank">
+            Developer Console
+        </a>
+        <a href="https://developers.line.biz/en/docs/messaging-api/" target="_blank">
+            Messaging API Docs
+        </a>
+        <p>✔ Webhook<br>✔ Token<br>✔ API</p>
+    </div>
+
+    <div class="card yellow">
+        <h2>💡 จำง่าย ๆ</h2>
+        <p>
+            💰 ดูโควตา → manager.line.biz<br><br>
+            🔧 ตั้งค่า Bot → developers.line.biz
+        </p>
+    </div>
+
+</div>
+
+<div class="note">
+    ⚠️ 1 การตอบกลับ = 1 Message (นับโควตา)
+</div>
+
+</body>
+</html>
