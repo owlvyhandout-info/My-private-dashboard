@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ไฟลัมสัตว์ไม่มีกระดูกสันหลัง — ระบบร่างกาย</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Sarabun', 'Segoe UI', sans-serif; background: #f8f7f4; color: #1a1a1a; font-size: 15px; line-height: 1.6; }
+  .page { max-width: 960px; margin: 0 auto; padding: 2rem 1.25rem; }
+  h1 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #666; margin-bottom: 1.5rem; }
+
+  /* Tip box */
+  .tip-box { background: #fff8e6; border-left: 4px solid #d4880a; border-radius: 0 8px 8px 0; padding: 14px 16px; margin-bottom: 1.5rem; }
+  .tip-title { font-size: 13px; font-weight: 600; color: #a06800; margin-bottom: 8px; }
+  .tip-items { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .tip-items li { font-size: 13px; padding-left: 14px; position: relative; }
+  .tip-items li::before { content: "★"; position: absolute; left: 0; color: #d4880a; font-size: 10px; top: 2px; }
+  .hl { display: inline-block; padding: 1px 7px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 2px; }
+  .hl-warn { background: #fff0c2; color: #8a5e00; }
+  .hl-info { background: #ddeeff; color: #1155aa; }
+  .hl-ok   { background: #d6f0da; color: #1a6b2a; }
+  .hl-red  { background: #fce8e8; color: #a32020; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .tab { padding: 6px 15px; border-radius: 8px; border: 1px solid #ccc; font-size: 13px; cursor: pointer; background: #fff; color: #555; transition: all .15s; }
+  .tab.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; font-weight: 500; }
+  .tab:hover:not(.active) { background: #f0eeea; }
+
+  /* Cards */
+  .card { background: #fff; border: 1px solid #e0ddd8; border-radius: 12px; overflow: hidden; margin-bottom: 1.25rem; }
+  .phylum-header { padding: 14px 16px; border-bottom: 1px solid #e8e5e0; display: flex; justify-content: space-between; align-items: center; background: #faf9f7; }
+  .phylum-name { font-size: 16px; font-weight: 600; color: #1a1a1a; }
+  .phylum-th { font-size: 13px; color: #777; margin-top: 2px; }
+  .example-badge { font-size: 11px; background: #e6effc; color: #1a55a0; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th { background: #f5f3ef; color: #777; text-align: left; padding: 8px 14px; font-weight: 500; font-size: 12px; border-bottom: 1px solid #e8e5e0; }
+  td { padding: 10px 14px; border-bottom: 1px solid #f0eeea; vertical-align: top; line-height: 1.55; }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { color: #777; font-size: 12px; width: 115px; }
+
+  /* Comparison table */
+  .compare-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
+  .compare-table { min-width: 700px; width: 100%; border-collapse: collapse; font-size: 12px; border: 1px solid #e0ddd8; border-radius: 8px; overflow: hidden; }
+  .compare-table th { background: #1a1a1a; color: #fff; padding: 9px 10px; font-weight: 500; text-align: center; white-space: nowrap; }
+  .compare-table th:first-child { text-align: left; }
+  .compare-table td { padding: 8px 10px; border-bottom: 1px solid #eee; text-align: center; vertical-align: middle; }
+  .compare-table td:first-child { font-weight: 500; text-align: left; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:nth-child(even) td { background: #fafaf8; }
+  .dot-closed { color: #1a6b2a; font-weight: 700; }
+  .dot-open   { color: #1155aa; font-weight: 700; }
+  .dot-none   { color: #bbb; }
+  .dot-complete { color: #1a6b2a; font-weight: 700; }
+  .dot-incomplete { color: #cc4400; font-weight: 700; }
+  
+  @media (max-width: 600px) {
+    h1 { font-size: 18px; }
+    td:first-child { width: 90px; font-size: 11px; }
+    .phylum-name { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1>ไฟลัมสัตว์ไม่มีกระดูกสันหลัง</h1>
+  <p class="subtitle">จำแนกตามระบบร่างกาย · รวมประเด็นสำคัญออกข้อสอบบ่อย</p>
+
+  <!-- Tip box -->
+  <div class="tip-box">
+    <div class="tip-title">★ จุดท่องจำ / ออกสอบบ่อย</div>
+    <ul class="tip-items">
+      <li>ไฟลัม <strong>Annelida</strong> (ไส้เดือนดิน) — ระบบหมุนเวียนเลือด<span class="hl hl-ok">แบบปิด</span> เหมือนสัตว์มีกระดูกสันหลัง</li>
+      <li>ไฟลัม <strong>Annelida &amp; Nematoda</strong> — ระบบทางเดินอาหาร<span class="hl hl-ok">สมบูรณ์</span> (ปากแยกจากทวาร) เหมือนสัตว์มีกระดูกสันหลัง</li>
+      <li>หอยทาก / ทากบก (Mollusca) — หายใจด้วย<span class="hl hl-info">ปอด (Pulmonary sac)</span> ไม่ใช่เหงือก</li>
+      <li>แมลง (Arthropoda: Insecta) — ขับถ่ายในรูป<span class="hl hl-warn">กรดยูริก</span> เหมือนสัตว์ปีก (นก)</li>
+      <li>Platyhelminthes, Nematoda, Porifera, Cnidaria, Echinodermata — ขับถ่ายในรูป<span class="hl hl-red">แอมโมเนีย</span> เหมือนปลา</li>
+      <li>ปลาหมึก (Mollusca: Cephalopoda) — มีระบบหมุนเวียนเลือด<span class="hl hl-ok">แบบปิด</span> ต่างจากหอยชนิดอื่น</li>
+      <li>แมงมุม (Arthropoda: Arachnida) — หายใจด้วย<span class="hl hl-info">ปอดหนังสือ (Book lungs)</span></li>
+    </ul>
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="showAll(this)">ทั้งหมด</button>
+    <button class="tab" onclick="filterSystem(this,'blood')">ระบบเลือด</button>
+    <button class="tab" onclick="filterSystem(this,'nerve')">ระบบประสาท</button>
+    <button class="tab" onclick="filterSystem(this,'digest')">ทางเดินอาหาร</button>
+    <button class="tab" onclick="filterSystem(this,'breath')">ระบบหายใจ</button>
+    <button class="tab" onclick="filterSystem(this,'excrete')">ขับถ่าย</button>
+    <button class="tab" onclick="showCompare(this)">ตารางเปรียบเทียบ</button>
+  </div>
+
+  <div id="cards-container"></div>
+  <div id="compare-container" style="display:none"></div>
+
+</div>
+
+<script>
+const data = [
+  {
+    name: "Porifera", th: "ฟองน้ำ", example: "ฟองน้ำ",
+    blood: "ไม่มีระบบหมุนเวียนเลือด — แลกเปลี่ยนสารผ่านกระแสน้ำที่ไหลเวียนผ่านร่างกาย (pinacoderm)",
+    bloodType: "none",
+    nerve: "ไม่มีระบบประสาท — ตอบสนองได้บางส่วนผ่านเซลล์กล้ามเนื้อ (myocytes)",
+    digest: "ย่อยภายในเซลล์ (intracellular) โดยเซลล์คอลลาร์ (choanocytes) — ไม่มีช่องย่อยอาหาร",
+    digestType: "none",
+    breath: "ไม่มีอวัยวะหายใจ — แพร่ก๊าซผ่านเซลล์ผิวโดยตรง",
+    excrete: "ไม่มีอวัยวะขับถ่าย — แพร่ของเสียออกทางเซลล์ผิว ขับในรูป<strong>แอมโมเนีย</strong>",
+    excreteProduct: "แอมโมเนีย"
+  },
+  {
+    name: "Cnidaria", th: "ไนดาเรีย", example: "แมงกะพรุน, ปะการัง, ดอกไม้ทะเล, ไฮดรา",
+    blood: "ไม่มีระบบหมุนเวียนเลือด — แพร่สารผ่านโพรง gastrovascular cavity",
+    bloodType: "none",
+    nerve: "ร่างแหประสาท (nerve net) กระจายทั่วร่างกาย — ไม่มีสมอง ไม่มีการรวมศูนย์ประสาท",
+    digest: "ไม่สมบูรณ์ — มีช่องเดียว ปากทำหน้าที่เป็นทวารด้วย ย่อยทั้งภายนอกและในเซลล์",
+    digestType: "incomplete",
+    breath: "ไม่มีอวัยวะหายใจ — แพร่ก๊าซผ่านเซลล์ผิวทั้งหมด",
+    excrete: "ไม่มีอวัยวะขับถ่ายเฉพาะ — แพร่ของเสียออกผ่านผิว ขับในรูป<strong>แอมโมเนีย</strong>",
+    excreteProduct: "แอมโมเนีย"
+  },
+  {
+    name: "Platyhelminthes", th: "พลาทิเฮลมินทิส", example: "พลานาเรีย, พยาธิใบไม้, พยาธิตัวตืด",
+    blood: "ไม่มีระบบหมุนเวียนเลือด — ลำตัวแบนช่วยเพิ่มพื้นที่แลกเปลี่ยนสาร",
+    bloodType: "none",
+    nerve: "ปมประสาทที่หัว (cerebral ganglia) + เส้นประสาทตามยาว 2 เส้น — เริ่มมีการรวมศูนย์ประสาท (cephalization)",
+    digest: "ไม่สมบูรณ์ — ปากอยู่กลางลำตัว ไม่มีทวาร (พยาธิตัวตืดไม่มีระบบย่อยอาหารเลย ดูดซึมผ่านผิว)",
+    digestType: "incomplete",
+    breath: "ไม่มีอวัยวะหายใจ — แพร่ก๊าซผ่านผิวหนังชุ่มชื้น",
+    excrete: "เฟลมเซลล์ (flame cells / protonephridia) — ขับในรูป<strong>แอมโมเนีย</strong>",
+    excreteProduct: "แอมโมเนีย"
+  },
+  {
+    name: "Nematoda", th: "เนมาโทดา", example: "ไส้เดือนฝอย, พยาธิเส้นด้าย, Ascaris lumbricoides",
+    blood: "ไม่มีระบบหมุนเวียนเลือด — แพร่สารผ่านของเหลวในช่อง pseudocoelom",
+    bloodType: "none",
+    nerve: "วงแหวนประสาทรอบปาก (nerve ring) + เส้นประสาทด้านหลังและด้านท้อง",
+    digest: "สมบูรณ์ — มีปากและทวารแยกกัน ท่อย่อยอาหารตรง",
+    digestType: "complete",
+    breath: "ไม่มีอวัยวะหายใจ — แพร่ก๊าซผ่านผิว บางชนิดมีระบบเมแทบอลิซึมแบบไม่ใช้ออกซิเจน",
+    excrete: "เซลล์ renette หรือท่อรูป H (H-shaped tubule) — ขับในรูป<strong>แอมโมเนีย</strong>",
+    excreteProduct: "แอมโมเนีย"
+  },
+  {
+    name: "Annelida", th: "แอนเนลิดา", example: "ไส้เดือนดิน, ทากทะเล (polychaete), ปลิง",
+    blood: "<strong>ปิด</strong> — มีหัวใจเทียม (aortic arches) 5 คู่, มีเฮโมโกลบิน — เหมือนสัตว์มีกระดูกสันหลัง",
+    bloodType: "closed",
+    nerve: "ปมประสาทที่หัว (cerebral ganglia) + เส้นประสาทด้านท้อง (ventral nerve cord) มีปมประสาททุกปล้อง",
+    digest: "สมบูรณ์ — ปาก → คอหอย → กระเพาะพัก (crop) → กระเพาะบด (gizzard) → ลำไส้ → ทวาร",
+    digestType: "complete",
+    breath: "ผ่านผิวหนังชุ่มชื้น (ไส้เดือนดิน); เหงือก (gills) ในทากทะเลและปลิงทะเล",
+    excrete: "เนฟริเดีย (nephridia) ทุกปล้อง — ขับในรูป<strong>ยูเรีย / แอมโมเนีย</strong>",
+    excreteProduct: "ยูเรีย/แอมโมเนีย"
+  },
+  {
+    name: "Mollusca", th: "มอลลัสกา", example: "หอยทาก, หอยแมลงภู่, ทาก, ปลาหมึก, หมึกยักษ์",
+    blood: "เปิด (ส่วนใหญ่) — มีฮีโมไซยานิน (สีน้ำเงิน); <strong>ปลาหมึกมีระบบปิด</strong>",
+    bloodType: "open",
+    nerve: "ปมประสาท 3 คู่ (cerebral, visceral, pedal ganglia) — ปลาหมึกมีสมองพัฒนาสูงมาก",
+    digest: "สมบูรณ์ — มีอวัยวะขูดอาหาร (radula) ยกเว้นหอยสองฝา (กรองกิน)",
+    digestType: "complete",
+    breath: "เหงือก (gills/ctenidia) ในน้ำ; <strong>ปอด (pulmonary sac)</strong> ในหอยทากและทากบก",
+    excrete: "เนฟริเดีย (nephridia/kidney) — ขับในรูป<strong>แอมโมเนีย</strong> (หอยน้ำ) หรือ<strong>กรดยูริก</strong> (หอยทากบก)",
+    excreteProduct: "แอมโมเนีย/กรดยูริก"
+  },
+  {
+    name: "Arthropoda", th: "อาร์โทรโพดา", example: "แมลง, กุ้ง, ปู, แมงมุม, กิ้งกือ, แมงป่อง",
+    blood: "เปิด — ฮีโมลิมฟ์ (hemolymph) ไหลในช่อง hemocoel; กุ้ง/ปูมีฮีโมไซยานิน",
+    bloodType: "open",
+    nerve: "ปมประสาทที่หัวขนาดใหญ่ (สมอง) + เส้นประสาทด้านท้อง — แมลงมีระบบประสาทซับซ้อนมาก",
+    digest: "สมบูรณ์ — ปาก → กระเพาะ → ลำไส้ → ทวาร; มีต่อมน้ำลาย ตับ และ cecum",
+    digestType: "complete",
+    breath: "ท่อลม (trachea) ในแมลง; เหงือก (gills) ในกุ้ง/ปู; ปอดหนังสือ (book lungs) ในแมงมุม/แมงป่อง",
+    excrete: "ท่อมัลพิเกียน (Malpighian tubules) — ขับในรูป<strong>กรดยูริก</strong> เหมือนสัตว์ปีก (นก)",
+    excreteProduct: "กรดยูริก"
+  },
+  {
+    name: "Echinodermata", th: "เอไคโนเดอร์มาตา", example: "ดาวทะเล, เม่นทะเล, ปลิงทะเล, ดาวเปราะ",
+    blood: "ไม่มีระบบเลือดจริง — มีระบบน้ำ (water vascular system) ช่วยลำเลียงสารและการเคลื่อนที่",
+    bloodType: "none",
+    nerve: "ร่างแหประสาทรัศมี — ไม่มีสมอง มีวงประสาทกลาง (nerve ring) รอบปาก",
+    digest: "สมบูรณ์ — ดาวทะเลพลิกกระเพาะออกมาย่อยเหยื่อภายนอกได้",
+    digestType: "complete",
+    breath: "เหงือกผิวหนัง (papulae) และ tube feet; ปลิงทะเลมีปอดน้ำ (respiratory trees)",
+    excrete: "ไม่มีอวัยวะขับถ่ายเฉพาะ — แพร่ของเสียออกทาง tube feet และผิวหนัง ขับในรูป<strong>แอมโมเนีย</strong>",
+    excreteProduct: "แอมโมเนีย"
+  }
+];
+
+const systemLabels = {
+  blood: 'ระบบหมุนเวียนเลือด',
+  nerve: 'ระบบประสาท',
+  digest: 'ระบบทางเดินอาหาร',
+  breath: 'ระบบหายใจ',
+  excrete: 'ระบบขับถ่าย'
+};
+
+let currentSystem = 'all';
+
+function renderCards(sys) {
+  const container = document.getElementById('cards-container');
+  container.innerHTML = '';
+  data.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    let rows = '';
+    if (sys === 'all') {
+      rows = Object.keys(systemLabels).map(k =>
+        `<tr><td>${systemLabels[k]}</td><td>${p[k]}</td></tr>`
+      ).join('');
+    } else {
+      rows = `<tr><td>${systemLabels[sys]}</td><td>${p[sys]}</td></tr>`;
+    }
+    card.innerHTML = `
+      <div class="phylum-header">
+        <div>
+          <div class="phylum-name">${p.name}</div>
+          <div class="phylum-th">${p.th}</div>
+        </div>
+        <span class="example-badge">${p.example}</span>
+      </div>
+      <table>
+        <thead><tr><th>ระบบ</th><th>รายละเอียด</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+    container.appendChild(card);
+  });
+}
+
+function renderCompare() {
+  const container = document.getElementById('compare-container');
+  const bloodMap = { closed:'<span class="dot-closed">● ปิด</span>', open:'<span class="dot-open">● เปิด</span>', none:'<span class="dot-none">— ไม่มี</span>' };
+  const digestMap = { complete:'<span class="dot-complete">✓ สมบูรณ์</span>', incomplete:'<span class="dot-incomplete">✗ ไม่สมบูรณ์</span>', none:'<span class="dot-incomplete">✗ ไม่มี</span>' };
+  let rows = data.map(p => `
+    <tr>
+      <td><strong>${p.name}</strong><br><span style="color:#888;font-size:11px">${p.th}</span></td>
+      <td>${bloodMap[p.bloodType]}</td>
+      <td>${digestMap[p.digestType]}</td>
+      <td style="font-size:12px">${p.breath.replace(/<[^>]+>/g,'')}</td>
+      <td><span class="hl hl-warn">${p.excreteProduct}</span></td>
+    </tr>`).join('');
+  container.innerHTML = `<div class="compare-wrap">
+    <table class="compare-table">
+      <thead><tr>
+        <th>ไฟลัม</th>
+        <th>ระบบเลือด</th>
+        <th>ทางเดินอาหาร</th>
+        <th>ระบบหายใจ</th>
+        <th>ขับถ่าย</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+}
+
+function showAll(btn) {
+  setActive(btn);
+  currentSystem = 'all';
+  document.getElementById('cards-container').style.display = '';
+  document.getElementById('compare-container').style.display = 'none';
+  renderCards('all');
+}
+
+function filterSystem(btn, sys) {
+  setActive(btn);
+  currentSystem = sys;
+  document.getElementById('cards-container').style.display = '';
+  document.getElementById('compare-container').style.display = 'none';
+  renderCards(sys);
+}
+
+function showCompare(btn) {
+  setActive(btn);
+  document.getElementById('cards-container').style.display = 'none';
+  document.getElementById('compare-container').style.display = '';
+  renderCompare();
+}
+
+function setActive(btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+renderCards('all');
+</script>
+</body>
+</html>

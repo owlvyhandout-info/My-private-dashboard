@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>หน่วยพื้นฐานของสิ่งมีชีวิต — สรุปชีววิทยา ม.ต้น–ม.4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2230;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --green: #3fb950;
+    --green-dim: #1a3a22;
+    --green-glow: rgba(63,185,80,0.15);
+    --blue: #58a6ff;
+    --blue-dim: #0d2044;
+    --purple: #bc8cff;
+    --purple-dim: #2a1a4a;
+    --amber: #d29922;
+    --amber-dim: #2e1f00;
+    --red: #f85149;
+    --red-dim: #3a0a09;
+    --teal: #39d353;
+    --accent: #3fb950;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* ─── HEADER ─── */
+  .site-header {
+    background: linear-gradient(180deg, #0a1628 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 200px;
+    background: radial-gradient(ellipse, rgba(63,185,80,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--green-dim);
+    border: 1px solid rgba(63,185,80,0.3);
+    color: var(--green);
+    font-size: 12px; font-weight: 500;
+    padding: 4px 12px; border-radius: 20px;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+  .badge::before { content: '●'; font-size: 8px; }
+  .site-header h1 {
+    font-size: clamp(24px, 5vw, 42px);
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    margin-bottom: 10px;
+  }
+  .site-header h1 span { color: var(--green); }
+  .site-header p {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* ─── NAV ─── */
+  .toc-nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex; gap: 0; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .toc-nav::-webkit-scrollbar { display: none; }
+  .toc-link {
+    display: flex; align-items: center; gap: 7px;
+    padding: 14px 18px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px; font-weight: 500;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all .2s;
+  }
+  .toc-link:hover { color: var(--text); border-color: var(--border2); }
+  .toc-link.active { color: var(--green); border-color: var(--green); }
+  .toc-link .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor; opacity: 0.6;
+  }
+
+  /* ─── LAYOUT ─── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* ─── SECTION ─── */
+  .section {
+    margin-top: 56px;
+    animation: fadeUp .5s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .section-label {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; font-weight: 600;
+    color: var(--green);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .section-label::after {
+    content: ''; flex: 1;
+    height: 1px; background: var(--border);
+  }
+  .section h2 {
+    font-size: 26px; font-weight: 700;
+    color: var(--text); margin-bottom: 20px;
+    letter-spacing: -0.3px;
+  }
+  .section h3 {
+    font-size: 18px; font-weight: 600;
+    color: var(--text); margin: 28px 0 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section h3::before {
+    content: ''; display: block;
+    width: 3px; height: 18px;
+    background: var(--green);
+    border-radius: 2px;
+  }
+
+  /* ─── CARD ─── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: border-color .2s;
+  }
+  .card:hover { border-color: var(--border2); }
+
+  /* ─── TABLE ─── */
+  .table-wrap { overflow-x: auto; margin: 16px 0; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  thead tr { background: var(--surface2); }
+  th {
+    padding: 12px 16px; text-align: left;
+    color: var(--muted); font-weight: 600;
+    font-size: 12px; letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top; line-height: 1.6;
+    color: var(--text);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .tag-yes { color: var(--green); font-weight: 600; }
+  .tag-no  { color: var(--red); }
+  .tag-plant { color: var(--green); font-weight: 600; }
+  .tag-animal { color: #f0883e; font-weight: 600; }
+  .tag-both { color: var(--blue); }
+
+  /* ─── INFO GRID ─── */
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+  .info-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px;
+    transition: all .2s;
+  }
+  .info-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+  .info-card .ic-label { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px; }
+  .info-card .ic-value { font-size: 15px; font-weight: 600; color: var(--text); }
+  .info-card .ic-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ─── ALERT / HIGHLIGHT BOXES ─── */
+  .alert {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 14px 16px; border-radius: 8px; margin: 16px 0;
+    font-size: 14px; line-height: 1.6;
+  }
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .alert-green { background: var(--green-dim); border: 1px solid rgba(63,185,80,0.25); color: #7ee787; }
+  .alert-blue  { background: var(--blue-dim);  border: 1px solid rgba(88,166,255,0.25);  color: #79c0ff; }
+  .alert-amber { background: var(--amber-dim); border: 1px solid rgba(210,153,34,0.3);   color: #e3b341; }
+  .alert-purple{ background: var(--purple-dim);border: 1px solid rgba(188,140,255,0.25);  color: #d2a8ff; }
+
+  /* ─── FORMULA ─── */
+  .formula {
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--green);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    font-size: 14px; color: var(--green);
+    margin: 12px 0;
+  }
+  .formula span { color: var(--muted); font-size: 12px; display: block; margin-top: 4px; }
+
+  /* ─── INTERACTIVE: CELL DIAGRAM ─── */
+  .cell-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+  .cell-tab {
+    padding: 8px 20px; border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted); font-size: 14px;
+    cursor: pointer; transition: all .2s;
+    font-family: 'Sarabun', sans-serif;
+  }
+  .cell-tab.active {
+    background: var(--green-dim);
+    border-color: rgba(63,185,80,0.4);
+    color: var(--green);
+  }
+  .cell-diagram-wrap { position: relative; }
+  .part-info-box {
+    margin-top: 12px; padding: 12px 16px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; font-size: 14px; color: var(--muted);
+    min-height: 44px; line-height: 1.6; transition: all .3s;
+  }
+  .part-info-box strong { color: var(--green); }
+
+  /* ─── OSMOSIS ─── */
+  .osm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+  .osm-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+    text-align: center; transition: all .2s;
+  }
+  .osm-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .osm-card-head { padding: 10px; font-size: 13px; font-weight: 600; }
+  .osm-card-head.hypo { background: rgba(63,185,80,0.12); color: var(--green); }
+  .osm-card-head.iso  { background: rgba(88,166,255,0.10); color: var(--blue); }
+  .osm-card-head.hyper{ background: rgba(248,81,73,0.10);  color: var(--red); }
+  .osm-card svg { display: block; margin: 0 auto; }
+  .osm-card-body { padding: 10px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .osm-org-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+  .osm-tab {
+    padding: 6px 16px; border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface2); color: var(--muted);
+    font-size: 13px; cursor: pointer; transition: all .2s;
+    font-family: 'Sarabun', sans-serif;
+  }
+  .osm-tab.active { background: var(--blue-dim); border-color: rgba(88,166,255,0.3); color: var(--blue); }
+
+  /* ─── FLOW ─── */
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 0; margin: 16px 0; }
+  .flow-step {
+    padding: 10px 18px; background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 14px; font-weight: 500; color: var(--text);
+    text-align: center;
+  }
+  .flow-step small { display: block; font-size: 11px; color: var(--muted); font-weight: 400; margin-top: 2px; }
+  .flow-arrow { padding: 0 8px; color: var(--border2); font-size: 18px; }
+
+  /* ─── EXAM TIPS ─── */
+  .exam-list { list-style: none; padding: 0; }
+  .exam-list li {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+    font-size: 14px; color: var(--text); line-height: 1.6;
+  }
+  .exam-list li:last-child { border-bottom: none; }
+  .exam-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; color: var(--green);
+    background: var(--green-dim);
+    padding: 2px 7px; border-radius: 4px;
+    flex-shrink: 0; margin-top: 2px;
+  }
+
+  /* ─── COMPARE TABLE COLORS ─── */
+  .ch1 { color: var(--green);  }
+  .ch2 { color: var(--purple); }
+  .ch3 { color: var(--amber);  }
+  .ch4 { color: var(--blue);   }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center; padding: 32px 24px;
+    border-top: 1px solid var(--border);
+    color: var(--muted); font-size: 13px;
+  }
+  footer a { color: var(--green); text-decoration: none; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 600px) {
+    .osm-grid { grid-template-columns: 1fr; }
+    .info-grid { grid-template-columns: 1fr 1fr; }
+    .flow { flex-direction: column; align-items: flex-start; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+
+  /* ─── PRINT ─── */
+  @media print {
+    body { background: #fff; color: #111; }
+    .site-header, .toc-nav { display: none; }
+    .card, .info-card, .osm-card { border: 1px solid #ddd; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="badge">ชีววิทยา ม.ต้น–ม.4</div>
+  <h1>หน่วยพื้นฐานของ<span>สิ่งมีชีวิต</span></h1>
+  <p>สรุปเนื้อหาครบถ้วน เตรียมสอบเข้า ม.4 พร้อมแผนภาพและตารางเปรียบเทียบ</p>
+</header>
+
+<!-- NAV -->
+<nav class="toc-nav">
+  <a href="#microscope"   class="toc-link active"><span class="dot"></span>กล้องจุลทรรศน์</a>
+  <a href="#cell-structure" class="toc-link"><span class="dot"></span>โครงสร้างเซลล์</a>
+  <a href="#compare"      class="toc-link"><span class="dot"></span>เปรียบเทียบเซลล์</a>
+  <a href="#organization" class="toc-link"><span class="dot"></span>การจัดระบบ</a>
+  <a href="#diffusion"    class="toc-link"><span class="dot"></span>การแพร่</a>
+  <a href="#osmosis"      class="toc-link"><span class="dot"></span>ออสโมซิส</a>
+  <a href="#exam"         class="toc-link"><span class="dot"></span>แนวข้อสอบ</a>
+</nav>
+
+<div class="container">
+
+<!-- ══════════════════════════════════════════
+     บทที่ 1: เซลล์
+══════════════════════════════════════════ -->
+
+<!-- §1 กล้องจุลทรรศน์ -->
+<section class="section" id="microscope">
+  <div class="section-label">บทที่ 1 — เซลล์</div>
+  <h2>การศึกษาเซลล์ด้วยกล้องจุลทรรศน์</h2>
+
+  <p style="color:var(--muted);margin-bottom:20px;">กล้องจุลทรรศน์ทำให้มนุษย์สามารถมองเห็นโครงสร้างที่ตาเปล่ามองไม่เห็น มี 2 ประเภทหลักที่ต้องรู้:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>คุณสมบัติ</th>
+          <th class="ch1">กล้องใช้แสง (LM)</th>
+          <th class="ch2">กล้องอิเล็กตรอน (EM)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>กำลังขยายสูงสุด</td><td>~1,000×</td><td>~500,000×</td></tr>
+        <tr><td>ความละเอียด</td><td>~0.2 ไมโครเมตร (µm)</td><td>~0.2 นาโนเมตร (nm)</td></tr>
+        <tr><td>สิ่งที่ใช้ส่อง</td><td>แสงที่มองเห็นได้</td><td>ลำอิเล็กตรอน</td></tr>
+        <tr><td>ดูสิ่งมีชีวิตได้?</td><td><span class="tag-yes">✓ ได้</span></td><td><span class="tag-no">✗ ไม่ได้</span></td></tr>
+        <tr><td>ราคา / ความสะดวก</td><td>ถูก ใช้ง่าย</td><td>แพง ต้องเตรียมชิ้นตัวอย่างพิเศษ</td></tr>
+        <tr><td>โครงสร้างที่เห็นได้</td><td>นิวเคลียส, ผนังเซลล์, คลอโรพลาสต์</td><td>ไมโตคอนเดรีย, ไรโบโซม, เยื่อหุ้มชั้นใน</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>หน่วยวัดขนาดเซลล์</h3>
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="ic-label">เมตร (m)</div>
+      <div class="ic-value">10⁰ m</div>
+      <div class="ic-sub">หน่วยฐาน</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">มิลลิเมตร (mm)</div>
+      <div class="ic-value">10⁻³ m</div>
+      <div class="ic-sub">มองเห็นด้วยตาเปล่า</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">ไมโครเมตร (µm)</div>
+      <div class="ic-value">10⁻⁶ m</div>
+      <div class="ic-sub">ขนาดเซลล์ทั่วไป</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">นาโนเมตร (nm)</div>
+      <div class="ic-value">10⁻⁹ m</div>
+      <div class="ic-sub">ขนาดโมเลกุล</div>
+    </div>
+  </div>
+
+  <div class="formula">
+    กำลังขยายรวม = กำลังขยายเลนส์ใกล้ตา × กำลังขยายเลนส์ใกล้วัตถุ
+    <span>ตัวอย่าง: 10× × 40× = 400 เท่า</span>
+  </div>
+</section>
+
+<!-- §2 โครงสร้างเซลล์ -->
+<section class="section" id="cell-structure">
+  <div class="section-label">บทที่ 1 — เซลล์</div>
+  <h2>โครงสร้างและหน้าที่ของเซลล์</h2>
+
+  <div class="cell-tabs">
+    <button class="cell-tab active" onclick="showCell('plant',this)">🌿 เซลล์พืช</button>
+    <button class="cell-tab" onclick="showCell('animal',this)">🐾 เซลล์สัตว์</button>
+  </div>
+
+  <div class="card" style="padding:16px;">
+    <!-- PLANT CELL SVG -->
+    <svg id="svg-plant" width="100%" viewBox="0 0 660 340" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <!-- Cell wall -->
+      <rect x="80" y="20" width="320" height="300" rx="16" fill="rgba(63,185,80,0.08)" stroke="#3fb950" stroke-width="4" opacity="0.7"/>
+      <!-- Cell membrane -->
+      <rect x="94" y="34" width="292" height="272" rx="10" fill="none" stroke="#3fb950" stroke-width="1.5" stroke-dasharray="5 3" opacity="0.5"/>
+      <!-- Vacuole -->
+      <ellipse cx="250" cy="175" rx="95" ry="100" fill="rgba(88,166,255,0.12)" stroke="#58a6ff" stroke-width="1.2"/>
+      <!-- Nucleus -->
+      <ellipse cx="195" cy="130" rx="46" ry="40" fill="rgba(188,140,255,0.18)" stroke="#bc8cff" stroke-width="1.5"/>
+      <ellipse cx="195" cy="130" rx="16" ry="14" fill="#bc8cff" opacity="0.7"/>
+      <!-- Chloroplasts -->
+      <ellipse cx="148" cy="230" rx="24" ry="13" fill="#3fb950" opacity="0.7" stroke="#2ea043" stroke-width="1"/>
+      <ellipse cx="340" cy="65" rx="24" ry="13" fill="#3fb950" opacity="0.7" stroke="#2ea043" stroke-width="1"/>
+      <ellipse cx="365" cy="250" rx="24" ry="13" fill="#3fb950" opacity="0.7" stroke="#2ea043" stroke-width="1"/>
+      <!-- Mitochondria -->
+      <ellipse cx="118" cy="148" rx="18" ry="10" fill="#d29922" opacity="0.8" stroke="#9e6a03" stroke-width="1"/>
+      <ellipse cx="375" cy="150" rx="18" ry="10" fill="#d29922" opacity="0.8" stroke="#9e6a03" stroke-width="1"/>
+
+      <!-- Leader lines + labels -->
+      <line x1="400" y1="38" x2="430" y2="50" stroke="#3fb950" stroke-width="0.7" stroke-dasharray="3 2" marker-end="url(#arr)"/>
+      <text x="432" y="47" font-size="12" fill="#3fb950" font-family="Sarabun,sans-serif">ผนังเซลล์</text>
+
+      <line x1="400" y1="68" x2="430" y2="78" stroke="#2ea043" stroke-width="0.7" stroke-dasharray="3 2" marker-end="url(#arr)"/>
+      <text x="432" y="75" font-size="12" fill="#7ee787" font-family="Sarabun,sans-serif">เยื่อหุ้มเซลล์</text>
+
+      <line x1="400" y1="118" x2="430" y2="118" stroke="#bc8cff" stroke-width="0.7" stroke-dasharray="3 2" marker-end="url(#arr)"/>
+      <text x="432" y="115" font-size="12" fill="#d2a8ff" font-family="Sarabun,sans-serif">นิวเคลียส</text>
+      <text x="432" y="130" font-size="10" fill="#bc8cff" font-family="Sarabun,sans-serif">นิวคลีโอลัส</text>
+
+      <line x1="400" y1="175" x2="350" y2="175" stroke="#58a6ff" stroke-width="0.7" stroke-dasharray="3 2" marker-end="url(#arr)"/>
+      <text x="402" y="172" font-size="12" fill="#79c0ff" font-family="Sarabun,sans-serif">แวคิวโอล</text>
+      <text x="402" y="186" font-size="10" fill="#58a6ff" font-family="Sarabun,sans-serif">(ขนาดใหญ่)</text>
+
+      <line x1="400" y1="232" x2="374" y2="232" stroke="#3fb950" stroke-width="0.7" stroke-dasharray="3 2" marker-end="url(#arr)"/>
+      <text x="402" y="229" font-size="12" fill="#7ee787" font-family="Sarabun,sans-serif">คลอโรพลาสต์</text>
+
+      <line x1="400" y1="265" x2="390" y2="255" stroke="#d29922" stroke-width="0.7" stroke-dasharray="3 2" marker-end="url(#arr)"/>
+      <text x="402" y="262" font-size="12" fill="#e3b341" font-family="Sarabun,sans-serif">ไมโตคอนเดรีย</text>
+
+      <!-- Clickable zones -->
+      <ellipse cx="195" cy="130" rx="46" ry="40" fill="transparent" style="cursor:pointer" onclick="showInfo('นิวเคลียส','ศูนย์กลางควบคุมการทำงานของเซลล์ เก็บข้อมูลพันธุกรรม DNA ภายในมีนิวคลีโอลัสซึ่งสร้าง rRNA')"/>
+      <ellipse cx="250" cy="175" rx="95" ry="100" fill="transparent" style="cursor:pointer" onclick="showInfo('แวคิวโอล','ในเซลล์พืชมีขนาดใหญ่มาก เก็บน้ำ สารอาหาร และของเสีย ช่วยพยุงรูปร่างเซลล์ด้วยแรงดันเต่ง')"/>
+      <ellipse cx="148" cy="230" rx="24" ry="13" fill="transparent" style="cursor:pointer" onclick="showInfo('คลอโรพลาสต์','แหล่งสังเคราะห์แสง มีคลอโรฟิลล์สีเขียว ภายในมีไทลาคอยด์และสโตรมา พบเฉพาะในเซลล์พืช')"/>
+      <ellipse cx="118" cy="148" rx="18" ry="10" fill="transparent" style="cursor:pointer" onclick="showInfo('ไมโตคอนเดรีย','โรงงานพลังงานของเซลล์ ผลิต ATP จากการหายใจระดับเซลล์ มี 2 ชั้นเมมเบรน พบทั้งในพืชและสัตว์')"/>
+      <rect x="80" y="20" width="320" height="300" rx="16" fill="transparent" style="cursor:pointer" onclick="showInfo('ผนังเซลล์','พบเฉพาะในเซลล์พืช เชื้อรา และแบคทีเรีย ทำจากเซลลูโลส ให้ความแข็งแรง คงรูป ไม่มีชีวิต ยอมให้สารผ่านได้อย่างอิสระ')"/>
+    </svg>
+
+    <!-- ANIMAL CELL SVG -->
+    <svg id="svg-animal" width="100%" viewBox="0 0 660 340" xmlns="http://www.w3.org/2000/svg" style="display:none">
+      <defs>
+        <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <!-- Cell membrane -->
+      <ellipse cx="250" cy="170" rx="165" ry="148" fill="rgba(248,81,73,0.06)" stroke="#f85149" stroke-width="2" opacity="0.8"/>
+      <!-- Nucleus -->
+      <ellipse cx="230" cy="155" rx="58" ry="50" fill="rgba(188,140,255,0.18)" stroke="#bc8cff" stroke-width="1.5"/>
+      <ellipse cx="230" cy="155" rx="20" ry="17" fill="#bc8cff" opacity="0.7"/>
+      <!-- Small vacuoles -->
+      <ellipse cx="320" cy="235" rx="20" ry="15" fill="rgba(88,166,255,0.18)" stroke="#58a6ff" stroke-width="0.8"/>
+      <ellipse cx="172" cy="245" rx="14" ry="11" fill="rgba(88,166,255,0.18)" stroke="#58a6ff" stroke-width="0.8"/>
+      <!-- Mitochondria -->
+      <ellipse cx="158" cy="160" rx="20" ry="11" fill="#d29922" opacity="0.8" stroke="#9e6a03" stroke-width="1"/>
+      <ellipse cx="340" cy="165" rx="20" ry="11" fill="#d29922" opacity="0.8" stroke="#9e6a03" stroke-width="1"/>
+      <ellipse cx="285" cy="90" rx="20" ry="11" fill="#d29922" opacity="0.8" stroke="#9e6a03" stroke-width="1"/>
+      <!-- Centrioles -->
+      <rect x="328" y="118" width="18" height="8" rx="4" fill="#f0883e" opacity="0.9" stroke="#bd561d" stroke-width="0.8"/>
+      <rect x="338" y="108" width="14" height="6" rx="3" fill="#f0883e" opacity="0.7" stroke="#bd561d" stroke-width="0.8"/>
+
+      <!-- Labels -->
+      <line x1="415" y1="60" x2="380" y2="90" stroke="#f85149" stroke-width="0.7" stroke-dasharray="3 2" marker-end="url(#arr2)"/>
+      <text x="417" y="57" font-size="12" fill="#ffa198" font-family="Sarabun,sans-serif">เยื่อหุ้มเซลล์</text>
+      <text x="417" y="71" font-size="10" fill="#f85149" font-family="Sarabun,sans-serif">(ไม่มีผนังเซลล์)</text>
+
+      <line x1="415" y1="140" x2="390" y2="148" stroke="#bc8cff" stroke-width="0.7" stroke-dasharray="3 2" marker-end="url(#arr2)"/>
+      <text x="417" y="137" font-size="12" fill="#d2a8ff" font-family="Sarabun,sans-serif">นิวเคลียส</text>
+
+      <line x1="415" y1="175" x2="394" y2="168" stroke="#d29922" stroke-width="0.7" stroke-dasharray="3 2" marker-end="url(#arr2)"/>
+      <text x="417" y="172" font-size="12" fill="#e3b341" font-family="Sarabun,sans-serif">ไมโตคอนเดรีย</text>
+
+      <line x1="415" y1="210" x2="395" y2="227" stroke="#58a6ff" stroke-width="0.7" stroke-dasharray="3 2" marker-end="url(#arr2)"/>
+      <text x="417" y="207" font-size="12" fill="#79c0ff" font-family="Sarabun,sans-serif">แวคิวโอล</text>
+      <text x="417" y="221" font-size="10" fill="#58a6ff" font-family="Sarabun,sans-serif">(ขนาดเล็ก)</text>
+
+      <line x1="415" y1="248" x2="400" y2="238" stroke="#f0883e" stroke-width="0.7" stroke-dasharray="3 2" marker-end="url(#arr2)"/>
+      <text x="417" y="245" font-size="12" fill="#f0883e" font-family="Sarabun,sans-serif">เซนทริโอล</text>
+      <text x="417" y="259" font-size="10" fill="#bd561d" font-family="Sarabun,sans-serif">(ไม่มีในพืช)</text>
+
+      <!-- Clickable -->
+      <ellipse cx="230" cy="155" rx="58" ry="50" fill="transparent" style="cursor:pointer" onclick="showInfo('นิวเคลียส','ศูนย์กลางควบคุมการทำงานของเซลล์ เก็บข้อมูลพันธุกรรม DNA ภายในมีนิวคลีโอลัสซึ่งสร้าง rRNA')"/>
+      <ellipse cx="158" cy="160" rx="20" ry="11" fill="transparent" style="cursor:pointer" onclick="showInfo('ไมโตคอนเดรีย','โรงงานพลังงานของเซลล์ ผลิต ATP จากการหายใจระดับเซลล์ มี 2 ชั้นเมมเบรน ชั้นในพับเป็นคริสตี')"/>
+      <rect x="322" y="104" width="32" height="26" rx="4" fill="transparent" style="cursor:pointer" onclick="showInfo('เซนทริโอล','พบเฉพาะในเซลล์สัตว์และโพรทิสต์บางชนิด ช่วยในการแบ่งเซลล์ ดึงโครโมโซมให้แยกออกจากกัน')"/>
+      <ellipse cx="250" cy="170" rx="165" ry="148" fill="transparent" style="cursor:pointer" onclick="showInfo('เยื่อหุ้มเซลล์','พบทั้งในพืชและสัตว์ ทำจากฟอสโฟลิพิดสองชั้น ควบคุมการเข้าออกของสาร เป็นเยื่อกึ่งผ่านได้')"/>
+    </svg>
+
+    <div class="part-info-box" id="part-info">
+      <span style="color:var(--muted)">👆 คลิกที่ส่วนต่างๆ ของเซลล์เพื่อดูข้อมูล</span>
+    </div>
+  </div>
+</section>
+
+<!-- §3 เปรียบเทียบเซลล์ -->
+<section class="section" id="compare">
+  <div class="section-label">บทที่ 1 — เซลล์</div>
+  <h2>เปรียบเทียบเซลล์พืชและเซลล์สัตว์</h2>
+
+  <div class="alert alert-amber">
+    <span class="alert-icon">⚡</span>
+    <div>จำง่ายๆ: มีเฉพาะ<strong>เซลล์พืช</strong> = <strong>ผนังเซลล์ + คลอโรพลาสต์ + แวคิวโอลใหญ่</strong> | มีเฉพาะ<strong>เซลล์สัตว์</strong> = <strong>เซนทริโอล</strong></div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>โครงสร้าง / ออร์แกเนลล์</th>
+          <th class="ch1">เซลล์พืช</th>
+          <th style="color:#f0883e">เซลล์สัตว์</th>
+          <th>หน้าที่สำคัญ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>เยื่อหุ้มเซลล์</td><td class="tag-yes">✓ มี</td><td class="tag-yes">✓ มี</td><td>ควบคุมการเข้าออกของสาร (เยื่อกึ่งผ่านได้)</td></tr>
+        <tr><td>ผนังเซลล์ (เซลลูโลส)</td><td class="tag-yes">✓ มี</td><td class="tag-no">✗ ไม่มี</td><td>ให้ความแข็งแรง คงรูป ไม่มีชีวิต</td></tr>
+        <tr><td>นิวเคลียส</td><td class="tag-yes">✓ มี</td><td class="tag-yes">✓ มี</td><td>ควบคุมการทำงาน เก็บ DNA</td></tr>
+        <tr><td>ไมโตคอนเดรีย</td><td class="tag-yes">✓ มี</td><td class="tag-yes">✓ มี</td><td>ผลิตพลังงาน ATP (การหายใจระดับเซลล์)</td></tr>
+        <tr><td>คลอโรพลาสต์</td><td class="tag-yes">✓ มี</td><td class="tag-no">✗ ไม่มี</td><td>สังเคราะห์แสง — พบเฉพาะพืชและสาหร่าย</td></tr>
+        <tr><td>แวคิวโอล</td><td><span class="tag-yes">✓</span> ขนาดใหญ่มาก (มักมี 1 อัน)</td><td><span class="tag-yes">✓</span> ขนาดเล็ก (มีหลายอัน)</td><td>เก็บน้ำ สาร ของเสีย</td></tr>
+        <tr><td>เซนทริโอล</td><td class="tag-no">✗ ไม่มี</td><td class="tag-yes">✓ มี</td><td>ช่วยการแบ่งเซลล์ (ดึงโครโมโซม)</td></tr>
+        <tr><td>ไรโบโซม</td><td class="tag-yes">✓ มี</td><td class="tag-yes">✓ มี</td><td>สังเคราะห์โปรตีน</td></tr>
+        <tr><td>กอลจิบอดี</td><td class="tag-yes">✓ มี</td><td class="tag-yes">✓ มี</td><td>แปรรูปและขนส่งโปรตีน</td></tr>
+        <tr><td>เอนโดพลาสมิกเรติคิวลัม</td><td class="tag-yes">✓ มี</td><td class="tag-yes">✓ มี</td><td>ขนส่งสารภายในเซลล์</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>เปรียบเทียบ: โพรคาริโอต vs ยูคาริโอต</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>คุณสมบัติ</th><th class="ch3">โพรคาริโอต</th><th class="ch4">ยูคาริโอต</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>เยื่อหุ้มนิวเคลียส</td><td class="tag-no">✗ ไม่มี</td><td class="tag-yes">✓ มี</td></tr>
+        <tr><td>ออร์แกเนลล์ที่มีเมมเบรนหุ้ม</td><td class="tag-no">✗ ไม่มี</td><td class="tag-yes">✓ มี</td></tr>
+        <tr><td>ไรโบโซม</td><td>มี (ขนาดเล็กกว่า 70S)</td><td>มี (ขนาดใหญ่กว่า 80S)</td></tr>
+        <tr><td>ตัวอย่าง</td><td>แบคทีเรีย, ไซยาโนแบคทีเรีย</td><td>พืช สัตว์ เชื้อรา โพรทิสต์</td></tr>
+        <tr><td>ขนาดโดยทั่วไป</td><td>1–10 µm</td><td>10–100 µm</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- §4 การจัดระบบ -->
+<section class="section" id="organization">
+  <div class="section-label">บทที่ 1 — เซลล์</div>
+  <h2>เซลล์และการจัดระบบของสิ่งมีชีวิต</h2>
+
+  <p style="color:var(--muted);margin-bottom:20px;">สิ่งมีชีวิตมีการจัดระบบเป็นลำดับขั้น จากเล็กไปใหญ่ดังนี้:</p>
+
+  <div class="flow">
+    <div class="flow-step">เซลล์<small>Cell</small></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">เนื้อเยื่อ<small>Tissue</small></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">อวัยวะ<small>Organ</small></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">ระบบอวัยวะ<small>Organ System</small></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">สิ่งมีชีวิต<small>Organism</small></div>
+  </div>
+
+  <div class="alert alert-blue">
+    <span class="alert-icon">💡</span>
+    <div>ตัวอย่าง: เซลล์กล้ามเนื้อ → เนื้อเยื่อกล้ามเนื้อ → <strong>หัวใจ</strong> → ระบบไหลเวียนเลือด → มนุษย์</div>
+  </div>
+
+  <h3>ประเภทของเนื้อเยื่อในสัตว์</h3>
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="ic-label">เนื้อเยื่อบุผิว</div>
+      <div class="ic-value">Epithelial</div>
+      <div class="ic-sub">คลุมผิว ป้องกัน ดูดซึม หลั่งสาร</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">เนื้อเยื่อเกี่ยวพัน</div>
+      <div class="ic-value">Connective</div>
+      <div class="ic-sub">ค้ำจุน เชื่อมโยงโครงสร้าง เช่น กระดูก เลือด</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">เนื้อเยื่อกล้ามเนื้อ</div>
+      <div class="ic-value">Muscle</div>
+      <div class="ic-sub">หดตัว สร้างแรงและการเคลื่อนไหว</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">เนื้อเยื่อประสาท</div>
+      <div class="ic-value">Nervous</div>
+      <div class="ic-sub">รับและส่งสัญญาณไฟฟ้า</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     บทที่ 2: การลำเลียงสาร
+══════════════════════════════════════════ -->
+
+<!-- §5 การแพร่ -->
+<section class="section" id="diffusion">
+  <div class="section-label">บทที่ 2 — การลำเลียงสารเข้าออกเซลล์</div>
+  <h2>การแพร่ (Diffusion)</h2>
+
+  <div class="card">
+    <p>การแพร่คือการเคลื่อนที่ของอนุภาคสาร <strong style="color:var(--green)">จากบริเวณที่มีความเข้มข้นสูงไปยังบริเวณที่มีความเข้มข้นต่ำกว่า</strong> โดย<strong style="color:var(--amber)">ไม่ต้องใช้พลังงาน</strong> (passive transport)</p>
+  </div>
+
+  <h3>ปัจจัยที่มีผลต่ออัตราการแพร่</h3>
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="ic-label">ความแตกต่างของความเข้มข้น</div>
+      <div class="ic-value" style="color:var(--green)">ยิ่งต่าง → เร็ว</div>
+      <div class="ic-sub">gradient มาก แพร่เร็ว</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">อุณหภูมิ</div>
+      <div class="ic-value" style="color:var(--amber)">สูงขึ้น → เร็ว</div>
+      <div class="ic-sub">พลังงานจลน์มากขึ้น</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">ขนาดของอนุภาค</div>
+      <div class="ic-value" style="color:var(--blue)">เล็กลง → เร็ว</div>
+      <div class="ic-sub">มวลน้อย เคลื่อนไหวได้เร็ว</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">พื้นที่ผิว</div>
+      <div class="ic-value" style="color:var(--purple)">มากขึ้น → เร็ว</div>
+      <div class="ic-sub">พื้นที่ให้อนุภาคผ่านมาก</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">ระยะทาง</div>
+      <div class="ic-value" style="color:var(--red)">ไกลขึ้น → ช้า</div>
+      <div class="ic-sub">ต้องใช้เวลานานขึ้น</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">ความหนาแน่นของตัวกลาง</div>
+      <div class="ic-value" style="color:var(--muted)">มากขึ้น → ช้า</div>
+      <div class="ic-sub">ในน้ำช้ากว่าในอากาศ</div>
+    </div>
+  </div>
+
+  <div class="alert alert-green">
+    <span class="alert-icon">🌡️</span>
+    <div>ตัวอย่างในชีวิตประจำวัน: น้ำหอมกระจายในอากาศ, หยดสีในน้ำ, O₂ แพร่จากถุงลมปอดเข้าสู่เลือด, CO₂ แพร่จากเลือดออกสู่ถุงลมปอด</div>
+  </div>
+</section>
+
+<!-- §6 ออสโมซิส -->
+<section class="section" id="osmosis">
+  <div class="section-label">บทที่ 2 — การลำเลียงสารเข้าออกเซลล์</div>
+  <h2>ออสโมซิส (Osmosis)</h2>
+
+  <div class="card">
+    <p>ออสโมซิสคือการแพร่ของ <strong style="color:var(--blue)">น้ำ</strong> ผ่านเยื่อกึ่งผ่านได้ จากบริเวณที่มีความเข้มข้นของตัวถูกละลาย<strong style="color:var(--green)">ต่ำกว่า</strong> (น้ำมากกว่า) ไปยังบริเวณที่ความเข้มข้นของตัวถูกละลาย<strong style="color:var(--red)">สูงกว่า</strong> (น้ำน้อยกว่า)</p>
+  </div>
+
+  <div class="osm-org-tabs">
+    <button class="osm-tab active" onclick="setOrg('animal',this)">🩸 เซลล์สัตว์ (เม็ดเลือดแดง)</button>
+    <button class="osm-tab" onclick="setOrg('plant',this)">🌿 เซลล์พืช</button>
+  </div>
+
+  <div class="osm-grid" id="osm-grid">
+    <!-- Filled by JS -->
+  </div>
+
+  <h3>ศัพท์สำคัญ</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>คำศัพท์</th><th>ความหมาย</th><th>ตัวอย่าง</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong style="color:var(--green)">Hypotonic</strong></td><td>สารละลายเข้มข้นน้อยกว่าเซลล์</td><td>น้ำกลั่น vs เลือด</td></tr>
+        <tr><td><strong style="color:var(--blue)">Isotonic</strong></td><td>สารละลายเข้มข้นเท่ากับเซลล์</td><td>น้ำเกลือ 0.9% vs เลือด</td></tr>
+        <tr><td><strong style="color:var(--red)">Hypertonic</strong></td><td>สารละลายเข้มข้นมากกว่าเซลล์</td><td>น้ำเค็มจัด vs เลือด</td></tr>
+        <tr><td><strong style="color:var(--green)">Turgid</strong></td><td>เซลล์พืชเต่ง เพราะน้ำไหลเข้า</td><td>ใบพืชสดแข็ง</td></tr>
+        <tr><td><strong style="color:var(--amber)">Plasmolysis</strong></td><td>เยื่อหุ้มเซลล์พืชหดออกจากผนัง</td><td>ผักโรยเกลือเหี่ยว</td></tr>
+        <tr><td><strong style="color:var(--red)">Hemolysis</strong></td><td>เม็ดเลือดแดงแตก</td><td>ใส่ในน้ำกลั่น</td></tr>
+        <tr><td><strong style="color:var(--amber)">Crenation</strong></td><td>เม็ดเลือดแดงหดเหี่ยว เป็นหนาม</td><td>ใส่ในน้ำเกลือเข้มข้น</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>สรุปเปรียบเทียบ: การแพร่ vs ออสโมซิส</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th></th><th class="ch1">การแพร่</th><th class="ch4">ออสโมซิส</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>สารที่เคลื่อนที่</td><td>อนุภาคสารทุกชนิด</td><td><strong style="color:var(--blue)">น้ำเท่านั้น</strong></td></tr>
+        <tr><td>เยื่อหุ้ม</td><td>ไม่จำเป็น</td><td>ต้องมีเยื่อกึ่งผ่านได้</td></tr>
+        <tr><td>ทิศทาง</td><td>ความเข้มข้นสูง → ต่ำ</td><td>น้ำไหลสู่ด้านที่มีตัวถูกละลายมากกว่า</td></tr>
+        <tr><td>ใช้พลังงาน</td><td class="tag-no">ไม่ใช้</td><td class="tag-no">ไม่ใช้</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- §7 แนวข้อสอบ -->
+<section class="section" id="exam">
+  <div class="section-label">สรุป</div>
+  <h2>แนวข้อสอบเข้า ม.4 ที่มักออก</h2>
+
+  <ul class="exam-list">
+    <li>
+      <span class="exam-num">01</span>
+      <div><strong>เปรียบเทียบเซลล์พืช-สัตว์</strong> — มักให้ระบุว่าออร์แกเนลล์ใดพบเฉพาะในพืชหรือสัตว์ หรือระบุว่าเซลล์ในภาพเป็นพืชหรือสัตว์เพราะเหตุใด</div>
+    </li>
+    <li>
+      <span class="exam-num">02</span>
+      <div><strong>คำนวณกำลังขยาย</strong> — ใช้สูตร กำลังขยายรวม = ตา × วัตถุ และอาจถามขนาดจริงของวัตถุ</div>
+    </li>
+    <li>
+      <span class="exam-num">03</span>
+      <div><strong>ออสโมซิส</strong> — มักให้ทำนายว่าเซลล์จะเปลี่ยนแปลงอย่างไรเมื่อแช่ในสารละลาย hypotonic / isotonic / hypertonic</div>
+    </li>
+    <li>
+      <span class="exam-num">04</span>
+      <div><strong>ลำดับขั้นการจัดระบบ</strong> — เซลล์ → เนื้อเยื่อ → อวัยวะ → ระบบอวัยวะ → สิ่งมีชีวิต อาจให้เรียงลำดับหรือยกตัวอย่าง</div>
+    </li>
+    <li>
+      <span class="exam-num">05</span>
+      <div><strong>Plasmolysis vs Turgid</strong> — บอกความหมายและเกิดในสภาวะใด พบได้เฉพาะเซลล์พืชเนื่องจากมีผนังเซลล์</div>
+    </li>
+    <li>
+      <span class="exam-num">06</span>
+      <div><strong>ปัจจัยการแพร่</strong> — ถามว่าปัจจัยใดทำให้แพร่เร็วขึ้น / ช้าลง อุณหภูมิ ความเข้มข้น ขนาดอนุภาค</div>
+    </li>
+    <li>
+      <span class="exam-num">07</span>
+      <div><strong>กล้องจุลทรรศน์</strong> — เลือกประเภทกล้องที่เหมาะสมกับการศึกษาโครงสร้าง หรือเปรียบเทียบ LM กับ EM</div>
+    </li>
+  </ul>
+
+  <div class="alert alert-purple">
+    <span class="alert-icon">🎯</span>
+    <div>เคล็ดลับ: ออสโมซิสมักสับสนกับการแพร่ จำไว้ว่า <strong>ออสโมซิส = น้ำเท่านั้น</strong> และ <strong>น้ำไหลเข้าหาด้านที่เข้มข้นกว่าเสมอ</strong> (ตรงข้ามกับตัวถูกละลาย)</div>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  <p>สรุปชีววิทยา · หน่วยพื้นฐานของสิ่งมีชีวิต · ม.ต้น–ม.4</p>
+  <p style="margin-top:6px;font-size:12px;">เนื้อหาเตรียมสอบเข้า ม.4 — ครอบคลุม บทที่ 1 เซลล์ และ บทที่ 2 การลำเลียงสาร</p>
+</footer>
+
+<script>
+/* ─── CELL DIAGRAM ─── */
+function showCell(type, btn) {
+  document.getElementById('svg-plant').style.display = type==='plant'?'block':'none';
+  document.getElementById('svg-animal').style.display = type==='animal'?'block':'none';
+  document.querySelectorAll('.cell-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('part-info').innerHTML = '<span style="color:var(--muted)">👆 คลิกที่ส่วนต่างๆ ของเซลล์เพื่อดูข้อมูล</span>';
+}
+function showInfo(name, desc) {
+  document.getElementById('part-info').innerHTML = '<strong>'+name+'</strong> — '+desc;
+}
+
+/* ─── OSMOSIS ─── */
+const osmData = {
+  animal: {
+    hypo:  { label:'Hypotonic', sub:'ความเข้มข้นต่ำกว่าเซลล์', cls:'hypo', txt:'💧 น้ำไหลเข้า<br>เซลล์พอง (Turgid)<br><strong style="color:#f85149">อาจแตก (Hemolysis)</strong>', color:'#3fb950', bg:'rgba(63,185,80,0.15)',
+             draw: (c,R,r,clr)=>`<ellipse cx="${c}" cy="${c}" rx="${R}" ry="${R}" fill="${bg(clr)}" stroke="${clr}" stroke-width="1.5"/>` },
+    iso:   { label:'Isotonic',  sub:'ความเข้มข้นเท่ากับเซลล์', cls:'iso',  txt:'⇌ สมดุล<br>รูปร่างปกติ<br>น้ำเข้า = ออก', color:'#58a6ff', bg:'rgba(88,166,255,0.12)' },
+    hyper: { label:'Hypertonic',sub:'ความเข้มข้นสูงกว่าเซลล์',  cls:'hyper',txt:'💧 น้ำออก<br>เซลล์หดตัว<br><strong style="color:#f85149">Crenation</strong>', color:'#f85149', bg:'rgba(248,81,73,0.1)' }
+  },
+  plant: {
+    hypo:  { label:'Hypotonic', sub:'ความเข้มข้นต่ำกว่าเซลล์', cls:'hypo', txt:'💧 น้ำไหลเข้า<br>เซลล์เต่ง (Turgid)<br><strong style="color:#3fb950">ผนังเซลล์ป้องกันไม่แตก</strong>', color:'#3fb950', bg:'rgba(63,185,80,0.15)' },
+    iso:   { label:'Isotonic',  sub:'ความเข้มข้นเท่ากับเซลล์', cls:'iso',  txt:'⇌ สมดุล<br>รูปร่างปกติ<br>น้ำเข้า = ออก', color:'#58a6ff', bg:'rgba(88,166,255,0.12)' },
+    hyper: { label:'Hypertonic',sub:'ความเข้มข้นสูงกว่าเซลล์',  cls:'hyper',txt:'💧 น้ำออก<br>เยื่อหุ้มหดออกจากผนัง<br><strong style="color:#f85149">Plasmolysis</strong>', color:'#f85149', bg:'rgba(248,81,73,0.1)' }
+  }
+};
+
+function makeCellSVG(key, org) {
+  const d = osmData[org][key];
+  const c = 60, S = 120;
+  let shapes = '';
+  if (org === 'animal') {
+    if (key==='hypo')  shapes = `<ellipse cx="${c}" cy="${c}" rx="52" ry="50" fill="${d.bg}" stroke="${d.color}" stroke-width="1.5"/>`;
+    if (key==='iso')   shapes = `<ellipse cx="${c}" cy="${c}" rx="36" ry="35" fill="${d.bg}" stroke="${d.color}" stroke-width="1.5"/>`;
+    if (key==='hyper') shapes = `<ellipse cx="${c}" cy="${c}" rx="26" ry="24" fill="${d.bg}" stroke="${d.color}" stroke-width="1.5"/>
+      <path d="M34 42 Q44 36 38 30 Q52 38 48 44 Q56 35 54 47 Q42 38 50 52 Q38 46 48 54 Q34 48 36 56 Q26 44 34 42Z" fill="${d.color}" opacity="0.25"/>`;
+  } else {
+    if (key==='hypo')  shapes = `<rect x="8" y="8" width="${2*c-16}" height="${2*c-16}" rx="8" fill="${d.bg}" stroke="${d.color}" stroke-width="2"/>
+      <rect x="14" y="14" width="${2*c-28}" height="${2*c-28}" rx="5" fill="${d.color}" opacity="0.08"/>`;
+    if (key==='iso')   shapes = `<rect x="8" y="8" width="${2*c-16}" height="${2*c-16}" rx="8" fill="${d.bg}" stroke="${d.color}" stroke-width="1.5"/>
+      <rect x="18" y="18" width="${2*c-36}" height="${2*c-36}" rx="4" fill="${d.color}" opacity="0.08"/>`;
+    if (key==='hyper') shapes = `<rect x="8" y="8" width="${2*c-16}" height="${2*c-16}" rx="8" fill="none" stroke="${d.color}" stroke-width="1.5" stroke-dasharray="4 2"/>
+      <rect x="22" y="22" width="${2*c-44}" height="${2*c-44}" rx="4" fill="${d.bg}" stroke="${d.color}" stroke-width="1"/>`;
+  }
+  return `<svg width="100%" viewBox="0 0 ${S} ${S}" xmlns="http://www.w3.org/2000/svg">${shapes}</svg>`;
+}
+
+function renderOsm(org) {
+  const grid = document.getElementById('osm-grid');
+  grid.innerHTML = ['hypo','iso','hyper'].map(key => {
+    const d = osmData[org][key];
+    return `<div class="osm-card">
+      <div class="osm-card-head ${d.cls}">${d.label}<br><small style="font-weight:400;font-size:11px">${d.sub}</small></div>
+      ${makeCellSVG(key, org)}
+      <div class="osm-card-body">${d.txt}</div>
+    </div>`;
+  }).join('');
+}
+
+let curOrg = 'animal';
+function setOrg(org, btn) {
+  curOrg = org;
+  document.querySelectorAll('.osm-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderOsm(org);
+}
+renderOsm('animal');
+
+/* ─── SCROLL SPY for NAV ─── */
+const sections = document.querySelectorAll('section[id]');
+const links = document.querySelectorAll('.toc-link');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.toggle('active', l.getAttribute('href')==='#'+e.target.id));
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>

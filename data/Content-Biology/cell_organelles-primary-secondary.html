@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>องค์ประกอบเซลล์ที่ควรรู้</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f4f0;
+    --bg3: #eeede8;
+    --text: #1a1a18;
+    --text2: #5c5b56;
+    --text3: #8a8880;
+    --border: rgba(0,0,0,0.12);
+    --border2: rgba(0,0,0,0.22);
+    --radius: 10px;
+    --radius-lg: 14px;
+    --blue-bg: #e6f1fb; --blue-text: #0c447c; --blue-border: #b5d4f4;
+    --green-bg: #eaf3de; --green-text: #3b6d11; --green-border: #c0dd97;
+    --amber-bg: #faeeda; --amber-text: #854f0b; --amber-border: #fac775;
+    --red-bg: #fcebeb; --red-text: #a32d2d; --red-border: #f7c1c1;
+    --teal-bg: #e1f5ee; --teal-text: #0f6e56; --teal-border: #9fe1cb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1c; --bg2: #28271f; --bg3: #2e2d25;
+      --text: #e8e6dc; --text2: #a8a69c; --text3: #6e6c64;
+      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.2);
+      --blue-bg: #042c53; --blue-text: #b5d4f4; --blue-border: #185fa5;
+      --green-bg: #173404; --green-text: #c0dd97; --green-border: #3b6d11;
+      --amber-bg: #412402; --amber-text: #fac775; --amber-border: #854f0b;
+      --red-bg: #501313; --red-text: #f7c1c1; --red-border: #a32d2d;
+      --teal-bg: #04342c; --teal-text: #9fe1cb; --teal-border: #0f6e56;
+    }
+  }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: var(--bg3); color: var(--text); line-height: 1.6; min-height: 100vh; }
+  .page { max-width: 900px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 26px; font-weight: 500; margin-bottom: 4px; }
+  .subtitle { font-size: 14px; color: var(--text2); margin-bottom: 20px; }
+  .legend { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+  .badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; display: inline-flex; align-items: center; }
+  .badge-p { background: var(--green-bg); color: var(--green-text); border: 0.5px solid var(--green-border); }
+  .badge-e { background: var(--amber-bg); color: var(--amber-text); border: 0.5px solid var(--amber-border); }
+  .badge-b { background: var(--blue-bg); color: var(--blue-text); border: 0.5px solid var(--blue-border); }
+  .leg-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text2); }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+  .tab { padding: 7px 18px; border: 0.5px solid var(--border2); border-radius: 20px; background: var(--bg); cursor: pointer; font-size: 13px; color: var(--text2); transition: all .15s; font-family: inherit; }
+  .tab:hover { background: var(--bg2); }
+  .tab.active { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue-border); font-weight: 500; }
+  .section { display: none; }
+  .section.show { display: block; }
+  .sec-title { font-size: 12px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; margin: 0 0 12px; }
+  .grid { display: grid; gap: 10px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 600px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+  .full { grid-column: 1 / -1; }
+  .card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; }
+  .card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
+  .organ-name { font-weight: 500; font-size: 15px; }
+  .organ-eng { font-size: 12px; color: var(--text3); margin-bottom: 7px; }
+  .func { font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .func strong { color: var(--text); }
+  .tip-box { background: var(--amber-bg); border: 0.5px solid var(--amber-border); border-radius: 8px; padding: 9px 12px; margin-top: 10px; }
+  .tip-label { font-size: 11px; font-weight: 500; color: var(--amber-text); margin-bottom: 3px; }
+  .tip-text { font-size: 12px; color: var(--text); line-height: 1.5; }
+  .warn-box { background: var(--red-bg); border: 0.5px solid var(--red-border); border-radius: 8px; padding: 9px 12px; margin-top: 10px; }
+  .warn-label { font-size: 11px; font-weight: 500; color: var(--red-text); margin-bottom: 3px; }
+  .warn-text { font-size: 12px; color: var(--text); line-height: 1.5; }
+  .info-box { background: var(--blue-bg); border: 0.5px solid var(--blue-border); border-radius: 8px; padding: 9px 12px; margin-top: 10px; }
+  .info-label { font-size: 11px; font-weight: 500; color: var(--blue-text); margin-bottom: 3px; }
+  .info-text { font-size: 12px; color: var(--text); line-height: 1.5; }
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .compare-table th { font-weight: 500; padding: 8px 10px; border-bottom: 0.5px solid var(--border2); text-align: left; }
+  .compare-table td { padding: 8px 10px; border-bottom: 0.5px solid var(--border); vertical-align: top; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .col-plant { color: var(--green-text); font-weight: 500; }
+  .col-animal { color: var(--amber-text); font-weight: 500; }
+  .inner-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 10px; }
+  @media (max-width: 600px) { .inner-grid { grid-template-columns: 1fr; } }
+  .inner-card { padding: 10px 12px; background: var(--bg2); border-radius: 8px; }
+  .inner-card-title { font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+  .inner-card-text { font-size: 12px; color: var(--text2); line-height: 1.5; }
+  .pathway { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 8px 0; font-size: 13px; }
+  .pathway-step { background: var(--blue-bg); color: var(--blue-text); border: 0.5px solid var(--blue-border); border-radius: 6px; padding: 4px 10px; font-size: 12px; font-weight: 500; }
+  .pathway-arrow { color: var(--text3); font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>องค์ประกอบเซลล์ที่ควรรู้</h1>
+  <p class="subtitle">จำแนกตามระดับชั้น พร้อมประเด็นที่มักออกข้อสอบ</p>
+
+  <div class="legend">
+    <div class="leg-item"><span class="badge badge-p">พืช</span> พบในเซลล์พืชเท่านั้น</div>
+    <div class="leg-item"><span class="badge badge-e">สัตว์</span> พบในเซลล์สัตว์เท่านั้น</div>
+    <div class="leg-item"><span class="badge badge-b">ทั้งคู่</span> พบในทั้งสองชนิด</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="show('m1',this)">มัธยมต้น</button>
+    <button class="tab" onclick="show('m4',this)">มัธยมปลาย</button>
+    <button class="tab" onclick="show('exam',this)">ประเด็นสอบ</button>
+    <button class="tab" onclick="show('extra',this)">น่ารู้เพิ่มเติม</button>
+  </div>
+
+  <!-- มัธยมต้น -->
+  <div class="section show" id="m1">
+    <div class="sec-title">โครงสร้างหลัก — มัธยมต้น</div>
+    <div class="grid grid-2">
+
+      <div class="card">
+        <div class="card-head"><span class="organ-name">เยื่อหุ้มเซลล์</span><span class="badge badge-b">ทั้งคู่</span></div>
+        <div class="organ-eng">Cell membrane / Plasma membrane</div>
+        <div class="func">ควบคุมการผ่านเข้า-ออกของสารแบบกึ่งซึมผ่าน (selectively permeable) ห่อหุ้มเซลล์ไว้ทั้งหมด</div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="organ-name">ผนังเซลล์</span><span class="badge badge-p">พืช</span></div>
+        <div class="organ-eng">Cell wall</div>
+        <div class="func">ประกอบด้วย cellulose ทำให้เซลล์แข็งแรงและคงรูป อยู่ด้านนอกของเยื่อหุ้มเซลล์</div>
+        <div class="tip-box"><div class="tip-label">ข้อสอบถามบ่อย</div><div class="tip-text">เซลล์สัตว์ <strong>ไม่มี</strong>ผนังเซลล์ — หากโจทย์ถามว่า "สิ่งใดทำให้เซลล์พืชแข็งแรง?" ตอบ ผนังเซลล์</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="organ-name">นิวเคลียส</span><span class="badge badge-b">ทั้งคู่</span></div>
+        <div class="organ-eng">Nucleus</div>
+        <div class="func">ศูนย์ควบคุมเซลล์ เก็บสารพันธุกรรม (DNA) ควบคุมการสร้างโปรตีนและการแบ่งเซลล์</div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="organ-name">ไซโทพลาซึม</span><span class="badge badge-b">ทั้งคู่</span></div>
+        <div class="organ-eng">Cytoplasm</div>
+        <div class="func">ของเหลวภายในเซลล์ บรรจุออร์แกเนลล์ต่าง ๆ เป็นที่เกิดปฏิกิริยาเคมีหลายอย่าง</div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="organ-name">คลอโรพลาสต์</span><span class="badge badge-p">พืช</span></div>
+        <div class="organ-eng">Chloroplast</div>
+        <div class="func">แหล่งสังเคราะห์แสง มีคลอโรฟิลล์ดักจับแสง เปลี่ยน CO₂ + H₂O → น้ำตาล + O₂</div>
+        <div class="tip-box"><div class="tip-label">จำให้ได้</div><div class="tip-text">พบในเซลล์พืช <strong>ไม่มี</strong>ในเซลล์สัตว์และเซลล์ราก</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="organ-name">แวคิวโอล</span><span class="badge badge-b">ทั้งคู่</span></div>
+        <div class="organ-eng">Vacuole</div>
+        <div class="func">เก็บน้ำ สารอาหาร ของเสีย — เซลล์พืช: central vacuole ขนาดใหญ่, เซลล์สัตว์: เล็กและมีหลายอัน</div>
+        <div class="tip-box"><div class="tip-label">ข้อสอบถามบ่อย</div><div class="tip-text">แวคิวโอลพืชช่วย "พยุงเซลล์" เมื่อเต็มน้ำ → turgid cell ทำให้ต้นไม้ตั้งตรง</div></div>
+      </div>
+
+      <div class="card full">
+        <div class="card-head"><span class="organ-name">ไมโทคอนเดรีย</span><span class="badge badge-b">ทั้งคู่</span></div>
+        <div class="organ-eng">Mitochondria</div>
+        <div class="func">โรงงานพลังงานของเซลล์ — ย่อยสลายอาหาร (กลูโคส) ผ่านการหายใจระดับเซลล์ ผลิต ATP</div>
+        <div class="tip-box"><div class="tip-label">คำจำง่าย</div><div class="tip-text">"Powerhouse of the cell" — เซลล์ที่ใช้พลังงานมาก เช่น กล้ามเนื้อ มีไมโทคอนเดรียมากกว่าปกติ</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- มัธยมปลาย -->
+  <div class="section" id="m4">
+    <div class="sec-title">ออร์แกเนลล์เพิ่มเติม — มัธยมปลาย</div>
+    <div class="grid grid-2">
+
+      <div class="card">
+        <div class="card-head"><span class="organ-name">ไรโบโซม</span><span class="badge badge-b">ทั้งคู่</span></div>
+        <div class="organ-eng">Ribosome</div>
+        <div class="func">สังเคราะห์โปรตีน ไม่มีเยื่อหุ้ม (non-membrane bound) มีสองแบบ: อิสระในไซโทพลาซึม และติดอยู่กับ ER</div>
+        <div class="warn-box"><div class="warn-label">มักสับสน</div><div class="warn-text">ไรโบโซม <strong>ไม่มีเยื่อหุ้ม</strong> — ต่างจากออร์แกเนลล์อื่นส่วนใหญ่ และพบใน prokaryote ด้วย</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="organ-name">ไลโซโซม</span><span class="badge badge-e">สัตว์</span></div>
+        <div class="organ-eng">Lysosome</div>
+        <div class="func">ย่อยสลายสารขนาดใหญ่ สิ่งแปลกปลอม ออร์แกเนลล์เสื่อม ด้วยเอนไซม์ hydrolytic มีสภาพเป็นกรด (pH ~5)</div>
+        <div class="warn-box"><div class="warn-label">มักสับสน</div><div class="warn-text">พบในเซลล์สัตว์ <strong>เกือบไม่มี</strong>ในเซลล์พืช (พืชใช้ vacuole แทน) — มักออกข้อสอบคู่กับ autophagy</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="organ-name">เอนโดพลาสมิก เรติคิวลัม</span><span class="badge badge-b">ทั้งคู่</span></div>
+        <div class="organ-eng">Endoplasmic Reticulum (ER)</div>
+        <div class="func"><strong>Rough ER</strong>: มีไรโบโซมเกาะ สร้างโปรตีนเพื่อส่งออก<br><br><strong>Smooth ER</strong>: สังเคราะห์ไขมัน ฮอร์โมนสเตียรอยด์ กำจัดพิษ (ตับ)</div>
+        <div class="tip-box"><div class="tip-label">จำง่าย</div><div class="tip-text">Rough = มีไรโบโซม → ขรุขระ / Smooth = ไม่มีไรโบโซม → เรียบ</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="organ-name">กอลไจแอพพาราตัส</span><span class="badge badge-b">ทั้งคู่</span></div>
+        <div class="organ-eng">Golgi apparatus</div>
+        <div class="func">แปรรูป บรรจุ และส่งโปรตีน/ไขมันไปยังปลายทาง (ทั้งนอกและในเซลล์) เปรียบเป็น "ไปรษณีย์ของเซลล์"</div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="organ-name">เซนทริโอล</span><span class="badge badge-e">สัตว์</span></div>
+        <div class="organ-eng">Centriole</div>
+        <div class="func">ช่วยสร้าง spindle fiber ระหว่างการแบ่งเซลล์ (mitosis/meiosis) จัดเรียงโครโมโซม</div>
+        <div class="tip-box"><div class="tip-label">จำให้ได้</div><div class="tip-text">เซลล์พืชแบ่งเซลล์ได้โดย <strong>ไม่ต้องใช้</strong>เซนทริโอล — ออกสอบบ่อยมาก</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="organ-name">เปอร์ออกซิโซม</span><span class="badge badge-b">ทั้งคู่</span></div>
+        <div class="organ-eng">Peroxisome</div>
+        <div class="func">กำจัด H₂O₂ (ไฮโดรเจนเปอร์ออกไซด์) ที่เป็นพิษต่อเซลล์ ด้วยเอนไซม์ catalase แปลงเป็น H₂O + O₂</div>
+      </div>
+
+      <div class="card full">
+        <div class="card-head"><span class="organ-name">ไซโทสเกเลตัน</span><span class="badge badge-b">ทั้งคู่</span></div>
+        <div class="organ-eng">Cytoskeleton</div>
+        <div class="func">โครงร่างภายในเซลล์ ประกอบด้วย 3 ส่วน:<br><br>
+          <strong>Microfilament</strong> (actin) — รับผิดชอบการเคลื่อนที่และรูปร่างเซลล์<br>
+          <strong>Intermediate filament</strong> — ค้ำจุนนิวเคลียสและโครงสร้างภายใน<br>
+          <strong>Microtubule</strong> — ทาง "highway" ขนส่งสารในเซลล์ และสร้าง spindle fiber
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ประเด็นข้อสอบ -->
+  <div class="section" id="exam">
+    <div class="sec-title">เปรียบเทียบที่สับสนบ่อย</div>
+    <div class="grid">
+
+      <div class="card full">
+        <div class="organ-name" style="margin-bottom:12px">เซลล์พืช vs เซลล์สัตว์</div>
+        <table class="compare-table">
+          <tr>
+            <th>ลักษณะ</th>
+            <th class="col-plant">เซลล์พืช</th>
+            <th class="col-animal">เซลล์สัตว์</th>
+          </tr>
+          <tr><td>ผนังเซลล์</td><td>มี (cellulose)</td><td>ไม่มี</td></tr>
+          <tr><td>คลอโรพลาสต์</td><td>มี</td><td>ไม่มี</td></tr>
+          <tr><td>แวคิวโอล</td><td>ใหญ่ 1 อัน (central vacuole)</td><td>เล็ก หลายอัน</td></tr>
+          <tr><td>เซนทริโอล</td><td>ไม่มี (ส่วนใหญ่)</td><td>มี</td></tr>
+          <tr><td>ไลโซโซม</td><td>น้อยมาก</td><td>มี</td></tr>
+          <tr><td>รูปร่าง</td><td>สี่เหลี่ยม/คงที่</td><td>กลม/เปลี่ยนแปลงได้</td></tr>
+        </table>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="organ-name" style="margin-bottom:8px">ไรโบโซม vs ไลโซโซม</div>
+          <div class="func">
+            <strong>ไรโบโซม</strong>: สร้างโปรตีน, ไม่มีเยื่อหุ้ม, มีทั้งใน prokaryote และ eukaryote<br><br>
+            <strong>ไลโซโซม</strong>: ย่อยสลายสาร, มีเยื่อหุ้ม, พบเฉพาะ eukaryote (สัตว์)
+          </div>
+          <div class="warn-box"><div class="warn-label">ข้อผิดพลาดที่พบบ่อย</div><div class="warn-text">หลายคนคิดว่า ไรโบโซม = ย่อยอาหาร → ผิด! ไรโบโซม = สร้างโปรตีน</div></div>
+        </div>
+
+        <div class="card">
+          <div class="organ-name" style="margin-bottom:8px">ไมโทคอนเดรีย vs คลอโรพลาสต์</div>
+          <div class="func">
+            <strong>ไมโทคอนเดรีย</strong>: หายใจระดับเซลล์ → ผลิต ATP (พืช+สัตว์)<br><br>
+            <strong>คลอโรพลาสต์</strong>: สังเคราะห์แสง → ผลิตน้ำตาล (พืชเท่านั้น)
+          </div>
+          <div class="tip-box"><div class="tip-label">เชื่อมโยงกัน</div><div class="tip-text">พืชสร้างน้ำตาลจากคลอโรพลาสต์ แล้วนำไปสลายที่ไมโทคอนเดรียเพื่อพลังงาน</div></div>
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="organ-name" style="margin-bottom:8px">Rough ER vs Smooth ER</div>
+          <div class="func">
+            <strong>Rough ER</strong>: มีไรโบโซมเกาะ → สร้างโปรตีนส่งออกนอกเซลล์<br><br>
+            <strong>Smooth ER</strong>: ไม่มีไรโบโซม → สร้างไขมัน, สเตียรอยด์, กำจัดพิษ (ตับ)
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="organ-name" style="margin-bottom:8px">เส้นทางโปรตีน (Secretory pathway)</div>
+          <div class="func" style="margin-bottom:10px">เส้นทางการส่งโปรตีนออกนอกเซลล์:</div>
+          <div class="pathway">
+            <span class="pathway-step">ไรโบโซม</span>
+            <span class="pathway-arrow">→</span>
+            <span class="pathway-step">Rough ER</span>
+            <span class="pathway-arrow">→</span>
+            <span class="pathway-step">Golgi</span>
+            <span class="pathway-arrow">→</span>
+            <span class="pathway-step">Vesicle</span>
+            <span class="pathway-arrow">→</span>
+            <span class="pathway-step">นอกเซลล์</span>
+          </div>
+          <div class="info-box" style="margin-top:10px"><div class="info-label">ออกสอบบ่อยมาก</div><div class="info-text">ถ้า Golgi ถูกทำลาย → โปรตีนถูกสร้างแต่ส่งออกไม่ได้</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- น่ารู้เพิ่มเติม -->
+  <div class="section" id="extra">
+    <div class="sec-title">ประเด็นน่าสนใจเพิ่มเติม</div>
+    <div class="grid grid-2">
+
+      <div class="card">
+        <div class="organ-name" style="margin-bottom:6px">Endosymbiotic Theory</div>
+        <div class="func">ไมโทคอนเดรียและคลอโรพลาสต์เคยเป็น <strong>แบคทีเรียอิสระ</strong> ที่ถูกกลืนเข้ามาในเซลล์บรรพบุรุษและกลายมาเป็นพันธมิตร</div>
+        <div class="info-box"><div class="info-label">หลักฐาน</div><div class="info-text">มี DNA วงกลมของตัวเอง · เยื่อหุ้มสองชั้น · ไรโบโซมคล้าย prokaryote · แบ่งตัวด้วย binary fission</div></div>
+      </div>
+
+      <div class="card">
+        <div class="organ-name" style="margin-bottom:6px">Autophagy — "เซลล์กินตัวเอง"</div>
+        <div class="func">เซลล์สร้าง autophagosome ห่อหุ้มออร์แกเนลล์เสื่อมแล้วรวมกับ lysosome ย่อยสลายเพื่อนำวัสดุกลับมาใช้ใหม่</div>
+        <div class="info-box"><div class="info-label">Nobel Prize 2016</div><div class="info-text">Yoshinori Ohsumi ได้รับรางวัลโนเบลสาขาสรีรวิทยาจากการค้นพบกลไก autophagy</div></div>
+      </div>
+
+      <div class="card">
+        <div class="organ-name" style="margin-bottom:6px">ทำไมเซลล์กล้ามเนื้อมีไมโทคอนเดรียมาก?</div>
+        <div class="func">เซลล์กล้ามเนื้อต้องการ ATP จำนวนมากสำหรับการหดตัว จึงมีไมโทคอนเดรียหลายพันอัน โดยเฉพาะกล้ามเนื้อหัวใจที่ทำงานตลอด 24 ชม.</div>
+      </div>
+
+      <div class="card">
+        <div class="organ-name" style="margin-bottom:6px">Prokaryote vs Eukaryote</div>
+        <div class="func">
+          <strong>Prokaryote</strong> (แบคทีเรีย): ไม่มีนิวเคลียส, ไม่มีออร์แกเนลล์ที่มีเยื่อหุ้ม มีแต่ไรโบโซม<br><br>
+          <strong>Eukaryote</strong> (พืช สัตว์ รา): มีนิวเคลียส มีออร์แกเนลล์ครบ
+        </div>
+        <div class="warn-box"><div class="warn-label">ข้อสอบ ม.ปลาย</div><div class="warn-text">ไรโบโซมเป็นออร์แกเนลล์เดียวที่พบได้ใน <strong>ทั้ง prokaryote และ eukaryote</strong></div></div>
+      </div>
+
+      <div class="card full">
+        <div class="organ-name" style="margin-bottom:12px">โรคที่เกิดจากออร์แกเนลล์ผิดปกติ</div>
+        <div class="inner-grid">
+          <div class="inner-card">
+            <div class="inner-card-title">Lysosomal storage disease</div>
+            <div class="inner-card-text">ไลโซโซมไม่สามารถย่อยสารบางชนิดได้ → สะสมในเซลล์ เช่น Tay-Sachs disease (ไม่มีเอนไซม์ย่อย GM2 ganglioside)</div>
+          </div>
+          <div class="inner-card">
+            <div class="inner-card-title">Mitochondrial disease</div>
+            <div class="inner-card-text">ถ่ายทอดทางแม่เท่านั้น (mtDNA) ส่งผลต่อกล้ามเนื้อและสมองที่ต้องการพลังงานสูง</div>
+          </div>
+          <div class="inner-card">
+            <div class="inner-card-title">Cilia defect (Kartagener syndrome)</div>
+            <div class="inner-card-text">microtubule ใน cilia ผิดปกติ → อวัยวะกลับด้าน, ปอดอักเสบซ้ำ, ภาวะมีบุตรยาก</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('show'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('show');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

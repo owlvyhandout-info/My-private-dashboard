@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สิ่งมีชีวิตที่ชวนสับสน 🔬</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&family=Mitr:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #FF6B9D;
+    --purple: #C77DFF;
+    --blue: #4CC9F0;
+    --teal: #06D6A0;
+    --yellow: #FFD166;
+    --orange: #F4845F;
+    --red: #EF233C;
+    --green: #52B788;
+    --navy: #1A1A2E;
+    --soft-bg: #FFFDF7;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--soft-bg);
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(255,107,157,0.07) 0%, transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba(76,201,240,0.07) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(199,125,255,0.05) 0%, transparent 70%);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%);
+    padding: 40px 20px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 20px,
+      rgba(255,255,255,0.02) 20px, rgba(255,255,255,0.02) 40px
+    );
+  }
+  .header-emoji-row {
+    font-size: 2.2rem;
+    letter-spacing: 8px;
+    margin-bottom: 12px;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  header h1 {
+    font-family: 'Mitr', sans-serif;
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 30px rgba(76,201,240,0.5);
+    position: relative;
+  }
+  header p {
+    color: rgba(255,255,255,0.65);
+    margin-top: 8px;
+    font-size: 1rem;
+    position: relative;
+  }
+  .bubbles {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; overflow: hidden;
+  }
+  .bubble {
+    position: absolute; border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    animation: rise linear infinite;
+  }
+  .bubble:nth-child(1) { width:20px;height:20px; left:10%; animation-duration:8s; animation-delay:0s; }
+  .bubble:nth-child(2) { width:14px;height:14px; left:30%; animation-duration:10s; animation-delay:2s; }
+  .bubble:nth-child(3) { width:30px;height:30px; left:55%; animation-duration:7s; animation-delay:1s; }
+  .bubble:nth-child(4) { width:10px;height:10px; left:75%; animation-duration:12s; animation-delay:4s; }
+  .bubble:nth-child(5) { width:22px;height:22px; left:90%; animation-duration:9s; animation-delay:3s; }
+  @keyframes rise {
+    0% { bottom: -40px; opacity: 0.6; }
+    100% { bottom: 110%; opacity: 0; }
+  }
+
+  /* ─── LAYOUT ─── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
+
+  .section-label {
+    display: inline-block;
+    font-family: 'Mitr', sans-serif;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 28px 24px;
+    margin: 28px 0;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    border-top: 5px solid transparent;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 36px rgba(0,0,0,0.11);
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    opacity: 0.08;
+  }
+
+  .card-pink   { border-top-color: var(--pink);   } .card-pink::after   { background: var(--pink);   }
+  .card-blue   { border-top-color: var(--blue);   } .card-blue::after   { background: var(--blue);   }
+  .card-teal   { border-top-color: var(--teal);   } .card-teal::after   { background: var(--teal);   }
+  .card-purple { border-top-color: var(--purple); } .card-purple::after { background: var(--purple); }
+  .card-orange { border-top-color: var(--orange); } .card-orange::after { background: var(--orange); }
+  .card-yellow { border-top-color: var(--yellow); } .card-yellow::after { background: var(--yellow); }
+  .card-green  { border-top-color: var(--green);  } .card-green::after  { background: var(--green);  }
+
+  .card-title {
+    font-family: 'Mitr', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-title .icon { font-size: 1.5rem; }
+
+  /* ─── COMPARE TABLE ─── */
+  .compare {
+    display: grid;
+    gap: 12px;
+    margin: 10px 0;
+  }
+  .compare-2 { grid-template-columns: 1fr 1fr; }
+  .compare-3 { grid-template-columns: repeat(3, 1fr); }
+  .compare-4 { grid-template-columns: repeat(4, 1fr); }
+
+  @media (max-width: 640px) {
+    .compare-3, .compare-4 { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 400px) {
+    .compare-2, .compare-3, .compare-4 { grid-template-columns: 1fr; }
+  }
+
+  .org-box {
+    border-radius: 16px;
+    padding: 16px 14px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .org-box .cartoon { font-size: 2.8rem; margin-bottom: 8px; display: block; animation: wiggle 4s ease-in-out infinite; }
+  @keyframes wiggle {
+    0%,90%,100% { transform: rotate(0deg); }
+    92% { transform: rotate(-5deg); }
+    96% { transform: rotate(5deg); }
+  }
+  .org-box .org-name {
+    font-family: 'Mitr', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .org-box .sci-name {
+    font-size: 0.72rem;
+    font-style: italic;
+    color: #888;
+    margin-bottom: 10px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin: 2px;
+    letter-spacing: 0.5px;
+  }
+  .tag-bacteria { background: #FFE0E6; color: #D63260; }
+  .tag-protist  { background: #E0F0FF; color: #1565C0; }
+  .tag-plant    { background: #E0F7ED; color: #1B7A4A; }
+  .tag-fern     { background: #FFF3CD; color: #8B6300; }
+  .tag-gymnos   { background: #F3E5F5; color: #7B1FA2; }
+  .tag-fungus   { background: #FBE9E7; color: #BF360C; }
+  .tag-virus    { background: #EEEEEE; color: #424242; }
+  .tag-multi    { background: #E3F2FD; color: #0D47A1; }
+  .tag-uni      { background: #E8F5E9; color: #1B5E20; }
+
+  /* row details */
+  .row-list { margin: 6px 0 0; list-style: none; }
+  .row-list li {
+    display: flex; align-items: baseline; gap: 6px;
+    font-size: 0.82rem;
+    color: #555;
+    padding: 3px 0;
+    border-bottom: 1px dashed #eee;
+  }
+  .row-list li:last-child { border-bottom: none; }
+  .row-list .key {
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: #888;
+    white-space: nowrap;
+    min-width: 80px;
+  }
+  .yes { color: var(--teal); font-weight: 700; }
+  .no  { color: var(--red);  font-weight: 700; }
+
+  /* ─── MEMORY BOX ─── */
+  .memory-box {
+    background: linear-gradient(135deg, #1A1A2E, #16213E);
+    color: #fff;
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-top: 16px;
+    font-size: 0.88rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .memory-box::before {
+    content: '🔑';
+    position: absolute;
+    top: 12px; right: 14px;
+    font-size: 1.4rem;
+    opacity: 0.4;
+  }
+  .memory-box strong { color: var(--yellow); }
+  .memory-box p { line-height: 1.7; }
+
+  /* ─── KINGDOM PATH ─── */
+  .kingdom-flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin: 12px 0;
+  }
+  .kf-box {
+    background: var(--navy);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .kf-arrow { font-size: 1.2rem; color: #aaa; }
+
+  /* ─── BIG TABLE ─── */
+  .scroll-x { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 6px;
+    font-size: 0.82rem;
+    min-width: 500px;
+  }
+  thead tr th {
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-family: 'Mitr', sans-serif;
+    font-weight: 600;
+  }
+  thead tr th:first-child { border-radius: 10px 0 0 10px; }
+  thead tr th:last-child  { border-radius: 0 10px 10px 0; }
+  tbody tr td {
+    background: #F9F9F9;
+    padding: 10px 12px;
+    color: var(--navy);
+    vertical-align: middle;
+  }
+  tbody tr td:first-child { border-radius: 10px 0 0 10px; font-weight: 700; }
+  tbody tr td:last-child  { border-radius: 0 10px 10px 0; }
+  tbody tr:hover td { background: #f0f0f0; }
+
+  /* ─── DIVIDER ─── */
+  .section-divider {
+    text-align: center;
+    margin: 40px 0 8px;
+    position: relative;
+  }
+  .section-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ddd, transparent);
+  }
+  .section-divider span {
+    background: var(--soft-bg);
+    padding: 0 16px;
+    position: relative;
+    font-family: 'Mitr', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  /* ─── TIPS ROW ─── */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+    margin-top: 10px;
+  }
+  .tip-card {
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: #333;
+  }
+  .tip-card .tip-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .tip-card strong { display: block; font-family: 'Mitr', sans-serif; font-size: 0.85rem; margin-bottom: 3px; }
+
+  /* ─── COLOR helpers ─── */
+  .bg-pink-light   { background: #FFF0F5; }
+  .bg-blue-light   { background: #F0F7FF; }
+  .bg-green-light  { background: #F0FBF5; }
+  .bg-yellow-light { background: #FFFBF0; }
+  .bg-purple-light { background: #F8F0FF; }
+  .bg-teal-light   { background: #F0FDFB; }
+  .bg-orange-light { background: #FFF5F0; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center;
+    padding: 32px 16px 16px;
+    color: #aaa;
+    font-size: 0.82rem;
+  }
+  footer span { font-size: 1.2rem; }
+
+  /* ─── ANIMATE IN ─── */
+  .card { animation: slideUp 0.5s ease both; }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .card:nth-child(2)  { animation-delay: 0.05s; }
+  .card:nth-child(3)  { animation-delay: 0.10s; }
+  .card:nth-child(4)  { animation-delay: 0.15s; }
+  .card:nth-child(5)  { animation-delay: 0.20s; }
+  .card:nth-child(6)  { animation-delay: 0.25s; }
+
+  /* ─── DECORATIVE DNA ─── */
+  .dna-strip {
+    width: 100%;
+    height: 10px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--pink) 0px, var(--pink) 20px,
+      var(--purple) 20px, var(--purple) 40px,
+      var(--blue) 40px, var(--blue) 60px,
+      var(--teal) 60px, var(--teal) 80px,
+      var(--yellow) 80px, var(--yellow) 100px,
+      var(--orange) 100px, var(--orange) 120px
+    );
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="dna-strip"></div>
+
+<header>
+  <div class="bubbles">
+    <div class="bubble"></div><div class="bubble"></div>
+    <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+  </div>
+  <div class="header-emoji-row">🔬 🦠 🌿 🍄 🧬</div>
+  <h1>สิ่งมีชีวิตที่ชวนสับสน</h1>
+  <p>เปรียบเทียบ · อธิบาย · จำง่าย สำหรับนักเรียนชีววิทยา</p>
+</header>
+
+<div class="container">
+
+  <!-- ══════════════════════════════════════ -->
+  <div class="section-divider"><span>🌀 ตอนที่ 1 — ชื่อคล้ายกัน สับสนกันบ่อย</span></div>
+
+  <!-- CARD 1: Spirulina vs Spirogyra -->
+  <div class="card card-blue">
+    <div class="card-title">
+      <span class="icon">🌊</span>
+      Spirulina vs Spirogyra — สาหร่ายสองตัวที่ไม่เหมือนกันเลย
+    </div>
+    <div class="compare compare-2">
+      <div class="org-box bg-blue-light">
+        <span class="cartoon">🧫</span>
+        <div class="org-name">Spirulina</div>
+        <div class="sci-name">สาหร่ายเกลียวทอง</div>
+        <span class="tag tag-bacteria">แบคทีเรีย</span><span class="tag tag-uni">เซลล์เดียว</span>
+        <ul class="row-list">
+          <li><span class="key">อาณาจักร</span> Bacteria</li>
+          <li><span class="key">เซลล์</span> โพรคาริโอต</li>
+          <li><span class="key">คลอโรพลาสต์</span> <span class="no">✗ ไม่มี</span></li>
+          <li><span class="key">นิวเคลียส</span> <span class="no">✗ ไม่มี</span></li>
+          <li><span class="key">ประโยชน์</span> อาหารเสริม โปรตีนสูง</li>
+        </ul>
+      </div>
+      <div class="org-box bg-teal-light">
+        <span class="cartoon">🌿</span>
+        <div class="org-name">Spirogyra</div>
+        <div class="sci-name">ตะไคร่น้ำ / สาหร่ายเส้นด้าย</div>
+        <span class="tag tag-protist">โพรทิสต์</span><span class="tag tag-multi">หลายเซลล์</span>
+        <ul class="row-list">
+          <li><span class="key">อาณาจักร</span> Protista</li>
+          <li><span class="key">เซลล์</span> ยูคาริโอต</li>
+          <li><span class="key">คลอโรพลาสต์</span> <span class="yes">✓ มี (เกลียว)</span></li>
+          <li><span class="key">นิวเคลียส</span> <span class="yes">✓ มี</span></li>
+          <li><span class="key">ลักษณะ</span> เส้นใยเรียงต่อกัน</li>
+        </ul>
+      </div>
+    </div>
+    <div class="memory-box">
+      <p>🔑 <strong>จำง่าย:</strong> Spiro<strong>gyra</strong> → gyrate = หมุน → คลอโรพลาสต์หมุนเป็น<strong>เกลียว</strong> → สาหร่ายจริง (โพรทิสต์)<br>
+      Spiru<strong>lina</strong> → ขายใน<strong>ร้านขายยา</strong> → เป็น<strong>แบคทีเรีย</strong>ที่คนกิน ❌ ไม่มีคลอโรพลาสต์</p>
+    </div>
+  </div>
+
+  <!-- CARD 2: จอก แหน แหนเป็ด vs จอกหูหนู แหนแดง -->
+  <div class="card card-green">
+    <div class="card-title">
+      <span class="icon">🌱</span>
+      จอก / แหน / แหนเป็ด (พืชดอก) vs จอกหูหนู / แหนแดง (เฟิร์น)
+    </div>
+    <div class="compare compare-4">
+      <div class="org-box bg-green-light">
+        <span class="cartoon">🪷</span>
+        <div class="org-name">จอก</div>
+        <span class="tag tag-plant">พืชดอก</span>
+        <ul class="row-list">
+          <li><span class="key">ท่อลำเลียง</span> <span class="yes">✓</span></li>
+          <li><span class="key">เมล็ด</span> <span class="yes">✓</span></li>
+          <li><span class="key">ดอก</span> <span class="yes">✓</span></li>
+          <li><span class="key">ลักษณะ</span> ใบกลม ลอยน้ำ</li>
+        </ul>
+      </div>
+      <div class="org-box bg-green-light">
+        <span class="cartoon">🍀</span>
+        <div class="org-name">แหน / แหนเป็ด</div>
+        <span class="tag tag-plant">พืชดอก</span>
+        <ul class="row-list">
+          <li><span class="key">ท่อลำเลียง</span> <span class="yes">✓</span></li>
+          <li><span class="key">เมล็ด</span> <span class="yes">✓</span></li>
+          <li><span class="key">ดอก</span> <span class="yes">✓ (เล็กมาก)</span></li>
+          <li><span class="key">ลักษณะ</span> ต้นจิ๋ว ลอยน้ำ</li>
+        </ul>
+      </div>
+      <div class="org-box bg-yellow-light">
+        <span class="cartoon">🐭</span>
+        <div class="org-name">จอกหูหนู</div>
+        <span class="tag tag-fern">เฟิร์น</span>
+        <ul class="row-list">
+          <li><span class="key">ท่อลำเลียง</span> <span class="yes">✓</span></li>
+          <li><span class="key">เมล็ด</span> <span class="no">✗</span></li>
+          <li><span class="key">สืบพันธุ์</span> สปอร์</li>
+          <li><span class="key">ลักษณะ</span> ใบมีขนคล้ายหูหนู</li>
+        </ul>
+      </div>
+      <div class="org-box bg-yellow-light">
+        <span class="cartoon">🍂</span>
+        <div class="org-name">แหนแดง (Azolla)</div>
+        <span class="tag tag-fern">เฟิร์น</span>
+        <ul class="row-list">
+          <li><span class="key">ท่อลำเลียง</span> <span class="yes">✓</span></li>
+          <li><span class="key">เมล็ด</span> <span class="no">✗</span></li>
+          <li><span class="key">ประโยชน์</span> ปุ๋ยพืชสด</li>
+          <li><span class="key">พิเศษ</span> ตรึง N₂ ร่วมกับแบคทีเรีย</li>
+        </ul>
+      </div>
+    </div>
+    <div class="memory-box">
+      <p>🔑 ถ้าชื่อมี <strong>"หูหนู"</strong> หรือ <strong>"แดง"</strong> = <strong>เฟิร์น</strong> ไม่ใช่พืชดอก! แหนเป็ดดูเหมือนเล็กจนนึกว่าไม่มีดอก แต่<strong>มีดอกจริง</strong> (แค่เล็กมาก)</p>
+    </div>
+  </div>
+
+  <!-- CARD 3: สาหร่ายต่าง Kingdom -->
+  <div class="card card-teal">
+    <div class="card-title">
+      <span class="icon">🌈</span>
+      "สาหร่าย" — ชื่อเดียวกัน แต่อยู่คนละอาณาจักร!
+    </div>
+    <div class="compare compare-4">
+      <div class="org-box" style="background:#FFF0F5">
+        <span class="cartoon">💙</span>
+        <div class="org-name">สาหร่ายสีเขียวแกมน้ำเงิน</div>
+        <div class="sci-name">Cyanobacteria</div>
+        <span class="tag tag-bacteria">แบคทีเรีย</span><span class="tag tag-uni">เซลล์เดียว</span>
+        <ul class="row-list">
+          <li><span class="key">เซลล์</span> โพรคาริโอต</li>
+          <li><span class="key">คลอโรพลาสต์</span> <span class="no">✗</span></li>
+          <li><span class="key">ตัวอย่าง</span> Spirulina, Anabaena</li>
+        </ul>
+      </div>
+      <div class="org-box bg-teal-light">
+        <span class="cartoon">🟢</span>
+        <div class="org-name">สาหร่ายสีเขียว</div>
+        <div class="sci-name">Chlorophyta</div>
+        <span class="tag tag-protist">โพรทิสต์</span>
+        <ul class="row-list">
+          <li><span class="key">เซลล์</span> ยูคาริโอต</li>
+          <li><span class="key">คลอโรพลาสต์</span> <span class="yes">✓</span></li>
+          <li><span class="key">ตัวอย่าง</span> Spirogyra, Chlorella</li>
+        </ul>
+      </div>
+      <div class="org-box" style="background:#FFF5E0">
+        <span class="cartoon">🔴</span>
+        <div class="org-name">สาหร่ายสีแดง/น้ำตาล</div>
+        <div class="sci-name">Rhodophyta / Phaeophyta</div>
+        <span class="tag tag-protist">โพรทิสต์</span>
+        <ul class="row-list">
+          <li><span class="key">เซลล์</span> ยูคาริโอต</li>
+          <li><span class="key">คลอโรพลาสต์</span> <span class="yes">✓</span></li>
+          <li><span class="key">ตัวอย่าง</span> สาหร่ายทะเลกินได้</li>
+        </ul>
+      </div>
+      <div class="org-box bg-green-light">
+        <span class="cartoon">🌾</span>
+        <div class="org-name">สาหร่ายหางกระรอก / ข้าวเหนียว</div>
+        <div class="sci-name">พืชน้ำ</div>
+        <span class="tag tag-plant">พืชดอก</span>
+        <ul class="row-list">
+          <li><span class="key">ท่อลำเลียง</span> <span class="yes">✓</span></li>
+          <li><span class="key">ดอก</span> <span class="yes">✓</span></li>
+          <li><span class="key">ราก</span> <span class="yes">✓</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="memory-box">
+      <p>🔑 ชื่อมี <strong>"แกมน้ำเงิน"</strong> = <strong>แบคทีเรีย</strong> เสมอ | "หางกระรอก / ข้าวเหนียว" = <strong>พืชดอก</strong> มีดอกจริง | สาหร่ายทะเลในร้านอาหารญี่ปุ่น = <strong>โพรทิสต์</strong></p>
+    </div>
+  </div>
+
+  <!-- CARD 4: สน -->
+  <div class="card card-purple">
+    <div class="card-title">
+      <span class="icon">🌲</span>
+      "สน" — บางต้นเมล็ดเปลือย บางต้นพืชดอก!
+    </div>
+    <div class="compare compare-2">
+      <div class="org-box bg-purple-light">
+        <span class="cartoon">🌲</span>
+        <div class="org-name">สนเขา / สนสองใบ / สนสามใบ</div>
+        <div class="sci-name">Pinaceae</div>
+        <span class="tag" style="background:#E8D5F5;color:#6A0DAD">เมล็ดเปลือย</span>
+        <ul class="row-list">
+          <li><span class="key">กลุ่ม</span> Gymnosperm</li>
+          <li><span class="key">เมล็ด</span> เปลือย บนเกล็ดโคน</li>
+          <li><span class="key">โคนสน</span> <span class="yes">✓ มีชัดเจน</span></li>
+          <li><span class="key">ใบ</span> เป็นเข็ม เป็นมัด</li>
+        </ul>
+      </div>
+      <div class="org-box bg-green-light">
+        <span class="cartoon">🌴</span>
+        <div class="org-name">สนทะเล / สนปฏิพัทธิ์</div>
+        <div class="sci-name">Casuarinaceae</div>
+        <span class="tag tag-plant">พืชดอก</span>
+        <ul class="row-list">
+          <li><span class="key">กลุ่ม</span> Angiosperm</li>
+          <li><span class="key">เมล็ด</span> มีผลห่อหุ้ม</li>
+          <li><span class="key">โคนสน</span> <span class="no">✗ ไม่มี</span></li>
+          <li><span class="key">ลักษณะ</span> กิ่งเรียว คล้ายเข็ม แต่จริงๆ คือกิ่ง</li>
+        </ul>
+      </div>
+    </div>
+    <div class="memory-box">
+      <p>🔑 <strong>สน + ทะเล / ปฏิพัทธิ์</strong> = ดูสวยงามชายทะเล → <strong>พืชดอก</strong> (หลอกตา!)
+      <br><strong>สนสอง/สามใบ</strong> = นับใบเป็นมัด + มีโคนสนจริง = <strong>Gymnosperm</strong></p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <div class="section-divider"><span>🌿 ตอนที่ 2 — กลุ่มพืชไม่มีดอก</span></div>
+
+  <!-- CARD 5: มอส เฟิร์น -->
+  <div class="card card-orange">
+    <div class="card-title">
+      <span class="icon">🍄</span>
+      มอส / ลิเวอร์เวิร์ต / ฮอร์นเวิร์ต vs เฟิร์น — ต่างกันที่ท่อลำเลียง
+    </div>
+    <div class="compare compare-4">
+      <div class="org-box bg-green-light">
+        <span class="cartoon">🌱</span>
+        <div class="org-name">มอส (Moss)</div>
+        <span class="tag" style="background:#D0F0E0;color:#1B6B3A">Bryophyta</span>
+        <ul class="row-list">
+          <li><span class="key">ท่อลำเลียง</span> <span class="no">✗</span></li>
+          <li><span class="key">ราก</span> <span class="no">✗ (ไรซอยด์)</span></li>
+          <li><span class="key">เมล็ด</span> <span class="no">✗ สปอร์</span></li>
+          <li><span class="key">ลักษณะ</span> ต้นตั้งตรง ใบเล็ก</li>
+        </ul>
+      </div>
+      <div class="org-box bg-green-light">
+        <span class="cartoon">🫁</span>
+        <div class="org-name">ลิเวอร์เวิร์ต</div>
+        <span class="tag" style="background:#D0F0E0;color:#1B6B3A">Bryophyta</span>
+        <ul class="row-list">
+          <li><span class="key">ท่อลำเลียง</span> <span class="no">✗</span></li>
+          <li><span class="key">ราก</span> <span class="no">✗</span></li>
+          <li><span class="key">เมล็ด</span> <span class="no">✗ สปอร์</span></li>
+          <li><span class="key">ลักษณะ</span> แบนราบ คล้ายตับ</li>
+        </ul>
+      </div>
+      <div class="org-box bg-green-light">
+        <span class="cartoon">🪺</span>
+        <div class="org-name">ฮอร์นเวิร์ต</div>
+        <span class="tag" style="background:#D0F0E0;color:#1B6B3A">Bryophyta</span>
+        <ul class="row-list">
+          <li><span class="key">ท่อลำเลียง</span> <span class="no">✗</span></li>
+          <li><span class="key">ราก</span> <span class="no">✗</span></li>
+          <li><span class="key">เมล็ด</span> <span class="no">✗ สปอร์</span></li>
+          <li><span class="key">ลักษณะ</span> มีแกนกลางคล้ายแตร</li>
+        </ul>
+      </div>
+      <div class="org-box bg-yellow-light">
+        <span class="cartoon">🌿</span>
+        <div class="org-name">เฟิร์น</div>
+        <span class="tag tag-fern">Pteridophyta</span>
+        <ul class="row-list">
+          <li><span class="key">ท่อลำเลียง</span> <span class="yes">✓</span></li>
+          <li><span class="key">ราก</span> <span class="yes">✓</span></li>
+          <li><span class="key">เมล็ด</span> <span class="no">✗ สปอร์</span></li>
+          <li><span class="key">ลักษณะ</span> ใบใหญ่ สปอร์ใต้ใบ</li>
+        </ul>
+      </div>
+    </div>
+    <div class="memory-box">
+      <p>🔑 <strong>ไบรโอไฟต์</strong> (มอส+ลิเวอร์เวิร์ต+ฮอร์นเวิร์ต) = ❌ท่อลำเลียง ❌ราก ❌เมล็ด<br>
+      <strong>เฟิร์น</strong> = ✅ท่อลำเลียง ✅ราก ❌เมล็ด (อยู่ "กลาง" ระหว่างไบรโอไฟต์กับพืชมีเมล็ด)</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <div class="section-divider"><span>🦠 ตอนที่ 3 — โพรทิสต์ที่คนสับสน</span></div>
+
+  <!-- CARD 6: ยูกลีนา พารามีเซียม อะมีบา -->
+  <div class="card card-pink">
+    <div class="card-title">
+      <span class="icon">🔬</span>
+      ยูกลีนา vs พารามีเซียม vs อะมีบา — โพรทิสต์ต่างนิสัย
+    </div>
+    <div class="compare compare-3">
+      <div class="org-box bg-pink-light">
+        <span class="cartoon">👁️</span>
+        <div class="org-name">ยูกลีนา</div>
+        <div class="sci-name">Euglena</div>
+        <span class="tag tag-protist">โพรทิสต์</span>
+        <ul class="row-list">
+          <li><span class="key">เคลื่อนที่</span> แฟลกเจลลา (หาง)</li>
+          <li><span class="key">สังเคราะห์แสง</span> <span class="yes">✓ ได้</span></li>
+          <li><span class="key">กินอาหาร</span> <span class="yes">✓ ได้ด้วย</span></li>
+          <li><span class="key">พิเศษ</span> มีจุดตาแดง</li>
+          <li><span class="key">จำพวก</span> Mixotroph</li>
+        </ul>
+      </div>
+      <div class="org-box bg-blue-light">
+        <span class="cartoon">🥿</span>
+        <div class="org-name">พารามีเซียม</div>
+        <div class="sci-name">Paramecium</div>
+        <span class="tag tag-protist">โพรทิสต์</span>
+        <ul class="row-list">
+          <li><span class="key">เคลื่อนที่</span> ซิเลีย (ขนรอบตัว)</li>
+          <li><span class="key">สังเคราะห์แสง</span> <span class="no">✗</span></li>
+          <li><span class="key">กินอาหาร</span> กินแบคทีเรีย</li>
+          <li><span class="key">ลักษณะ</span> คล้ายรองเท้าแตะ</li>
+        </ul>
+      </div>
+      <div class="org-box" style="background:#FFF5F0">
+        <span class="cartoon">🫧</span>
+        <div class="org-name">อะมีบา</div>
+        <div class="sci-name">Amoeba</div>
+        <span class="tag tag-protist">โพรทิสต์</span>
+        <ul class="row-list">
+          <li><span class="key">เคลื่อนที่</span> ซูโดโพเดีย (เท้าเทียม)</li>
+          <li><span class="key">สังเคราะห์แสง</span> <span class="no">✗</span></li>
+          <li><span class="key">กินอาหาร</span> ล้อมจับเหยื่อ</li>
+          <li><span class="key">รูปร่าง</span> เปลี่ยนได้ตลอด</li>
+        </ul>
+      </div>
+    </div>
+    <div class="memory-box">
+      <p>🔑 <strong>ยูกลีนา</strong> = ทำได้ทั้งสองอย่าง (สังเคราะห์แสง + กินอาหาร) จึงไม่ใช่ทั้งพืชและสัตว์ → จัดเป็น <strong>โพรทิสต์</strong> | <strong>Anabaena ≠ Amoeba</strong> — Anabaena คือแบคทีเรียตรึงไนโตรเจน!</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <div class="section-divider"><span>🍄 ตอนที่ 4 — เห็ด รา ไลเคน ไวรัส</span></div>
+
+  <!-- CARD 7 -->
+  <div class="card card-yellow">
+    <div class="card-title">
+      <span class="icon">🍄</span>
+      เห็ด vs รา vs ไลเคน vs ไวรัส — ไม่ใช่พืชทั้งหมด!
+    </div>
+    <div class="compare compare-4">
+      <div class="org-box bg-orange-light">
+        <span class="cartoon">🍄</span>
+        <div class="org-name">เห็ด</div>
+        <span class="tag tag-fungus">Fungi</span>
+        <ul class="row-list">
+          <li><span class="key">เซลล์</span> ยูคาริโอต</li>
+          <li><span class="key">สังเคราะห์แสง</span> <span class="no">✗</span></li>
+          <li><span class="key">ลักษณะ</span> มีดอกเห็ด (fruiting body)</li>
+          <li><span class="key">สืบพันธุ์</span> สปอร์</li>
+        </ul>
+      </div>
+      <div class="org-box bg-orange-light">
+        <span class="cartoon">🦠</span>
+        <div class="org-name">รา</div>
+        <span class="tag tag-fungus">Fungi</span>
+        <ul class="row-list">
+          <li><span class="key">เซลล์</span> ยูคาริโอต</li>
+          <li><span class="key">สังเคราะห์แสง</span> <span class="no">✗</span></li>
+          <li><span class="key">ลักษณะ</span> ไม่มีดอกเห็ด</li>
+          <li><span class="key">สืบพันธุ์</span> สปอร์</li>
+        </ul>
+      </div>
+      <div class="org-box bg-yellow-light">
+        <span class="cartoon">🪨</span>
+        <div class="org-name">ไลเคน</div>
+        <span class="tag tag-fungus">Fungi</span><span class="tag tag-protist">+สาหร่าย</span>
+        <ul class="row-list">
+          <li><span class="key">คือ</span> ราบวกสาหร่ายอยู่ด้วยกัน</li>
+          <li><span class="key">ความสัมพันธ์</span> Symbiosis</li>
+          <li><span class="key">พิเศษ</span> บอกค่า pH อากาศ</li>
+        </ul>
+      </div>
+      <div class="org-box" style="background:#F5F5F5">
+        <span class="cartoon">💉</span>
+        <div class="org-name">ไวรัส</div>
+        <span class="tag tag-virus">ไม่ใช่เซลล์</span>
+        <ul class="row-list">
+          <li><span class="key">เซลล์</span> <span class="no">✗ ไม่มี</span></li>
+          <li><span class="key">สืบพันธุ์</span> ต้องอาศัยเซลล์โฮสต์</li>
+          <li><span class="key">ลักษณะ</span> DNA/RNA + โปรตีนห่อหุ้ม</li>
+          <li><span class="key">มีชีวิต?</span> ถกเถียง!</li>
+        </ul>
+      </div>
+    </div>
+    <div class="memory-box">
+      <p>🔑 <strong>ไลเคน</strong> ≠ สิ่งมีชีวิตชนิดเดียว! = รา + สาหร่าย อยู่ร่วมกัน | <strong>ไวรัส</strong> = ไม่มีเซลล์ → จัดอาณาจักรไม่ได้เลย (บางคนไม่นับว่ามีชีวิต)</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <div class="section-divider"><span>📋 สรุปรวม — ตารางเปรียบเทียบ</span></div>
+
+  <div class="card card-teal">
+    <div class="card-title"><span class="icon">📊</span> ตารางสรุปหลักการจำแนก</div>
+    <div class="scroll-x">
+      <table>
+        <thead>
+          <tr>
+            <th>กลุ่ม</th>
+            <th>ท่อลำเลียง</th>
+            <th>เมล็ด</th>
+            <th>ผลห่อเมล็ด</th>
+            <th>เซลล์</th>
+            <th>ตัวอย่าง</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>🦠 แบคทีเรีย</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td>โพรคาริโอต</td><td>Spirulina, Anabaena</td></tr>
+          <tr><td>🔬 โพรทิสต์</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td>ยูคาริโอต</td><td>สาหร่ายสีเขียว, ยูกลีนา</td></tr>
+          <tr><td>🍄 ฟังไจ</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td>ยูคาริโอต</td><td>เห็ด, รา</td></tr>
+          <tr><td>🌱 ไบรโอไฟต์</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td>ยูคาริโอต</td><td>มอส, ลิเวอร์เวิร์ต</td></tr>
+          <tr><td>🌿 เฟิร์น</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td>ยูคาริโอต</td><td>กูด, แหนแดง, จอกหูหนู</td></tr>
+          <tr><td>🌲 Gymnosperm</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗ เปลือย</td><td>ยูคาริโอต</td><td>สนสองใบ, สนสามใบ</td></tr>
+          <tr><td>🌸 Angiosperm</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓ มีผล</td><td>ยูคาริโอต</td><td>สนทะเล, แหน, จอก, ข้าว</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <div class="section-divider"><span>💡 เคล็ดลับจำ</span></div>
+
+  <div class="card" style="border-top:5px solid var(--yellow)">
+    <div class="card-title"><span class="icon">💡</span> 5 หลักคิด จำแนกสิ่งมีชีวิตให้ถูก</div>
+    <div class="tips-grid">
+      <div class="tip-card bg-pink-light">
+        <span class="tip-icon">1️⃣</span>
+        <div>
+          <strong>ชื่อไทยหลอกได้!</strong>
+          "สาหร่าย" และ "สน" มีได้หลายอาณาจักร ต้องดูโครงสร้างจริง ไม่ใช่ชื่อ
+        </div>
+      </div>
+      <div class="tip-card bg-blue-light">
+        <span class="tip-icon">2️⃣</span>
+        <div>
+          <strong>มีท่อลำเลียงไหม?</strong>
+          ไม่มี = ไบรโอไฟต์ (หรือต่ำกว่า) | มี = เฟิร์นหรือสูงกว่า
+        </div>
+      </div>
+      <div class="tip-card bg-green-light">
+        <span class="tip-icon">3️⃣</span>
+        <div>
+          <strong>มีเมล็ดไหม?</strong>
+          ไม่มี = เฟิร์นหรือต่ำกว่า | มี = พืชเมล็ด (Gymnosperm หรือ Angiosperm)
+        </div>
+      </div>
+      <div class="tip-card bg-yellow-light">
+        <span class="tip-icon">4️⃣</span>
+        <div>
+          <strong>เมล็ดเปลือยหรือมีผล?</strong>
+          เปลือย = Gymnosperm (สนเขา) | ห่อด้วยผล = Angiosperm (สนทะเล)
+        </div>
+      </div>
+      <div class="tip-card bg-purple-light">
+        <span class="tip-icon">5️⃣</span>
+        <div>
+          <strong>โพรคาริโอต = แบคทีเรียเท่านั้น!</strong>
+          ทุกสิ่งมีชีวิตอื่นล้วนเป็น ยูคาริโอต
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end container -->
+
+<footer>
+  <span>🔬</span> สรุปชีววิทยา · สิ่งมีชีวิตที่ชวนสับสน <span>🌿</span>
+  <br>จัดทำเพื่อการศึกษา
+</footer>
+
+<div class="dna-strip"></div>
+
+</body>
+</html>

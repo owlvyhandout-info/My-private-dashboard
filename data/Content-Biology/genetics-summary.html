@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>พันธุกรรม: การจำแนกลักษณะและโรค</title>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #87CEEB;
+    --deep-sky: #4A90D9;
+    --grass: #5DBB63;
+    --sunshine: #FFD700;
+    --coral: #FF6B6B;
+    --lavender: #9B59B6;
+    --mint: #1ABC9C;
+    --orange: #F39C12;
+    --pink: #E91E8C;
+    --bg: #F0F8FF;
+    --card-bg: #ffffff;
+    --text: #2C3E50;
+    --shadow: rgba(0,0,0,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Mitr', sans-serif;
+    background: linear-gradient(135deg, #E3F2FD 0%, #F0F8FF 50%, #E8F5E9 100%);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(160deg, #1a237e 0%, #283593 30%, #3949AB 60%, #5C6BC0 100%);
+    padding: 60px 20px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(255,215,0,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(100,200,255,0.15) 0%, transparent 60%);
+  }
+  .hero-dna {
+    font-size: 80px;
+    margin-bottom: 10px;
+    animation: float 3s ease-in-out infinite;
+    display: block;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  .hero h1 {
+    font-family: 'Kanit', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: #fff;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    position: relative;
+    margin-bottom: 10px;
+  }
+  .hero p {
+    color: rgba(255,255,255,0.85);
+    font-size: 1.1rem;
+    position: relative;
+  }
+
+  /* CONTAINER */
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+
+  /* PART HEADER */
+  .part-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 22px 32px;
+    border-radius: 20px;
+    margin: 40px 0 24px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  }
+  .part-header::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(255,255,255,0.15) 0%, transparent 100%);
+  }
+  .part-header.part-a { background: linear-gradient(135deg, #E91E8C, #9B59B6); }
+  .part-header.part-b { background: linear-gradient(135deg, #2196F3, #00BCD4); }
+  .part-emoji { font-size: 3rem; }
+  .part-header h2 {
+    font-family: 'Kanit', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    position: relative;
+  }
+  .part-header p { font-size: 0.95rem; opacity: 0.9; position: relative; }
+
+  /* SECTION CARD */
+  .section-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 24px var(--shadow);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .section-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+  }
+  .section-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    border-radius: 20px 20px 0 0;
+  }
+  .card-a1::before { background: linear-gradient(90deg, #FF6B6B, #FF8E53); }
+  .card-a2g::before { background: linear-gradient(90deg, #9B59B6, #E91E8C); }
+  .card-a2k::before { background: linear-gradient(90deg, #E91E8C, #FF6B6B); }
+  .card-b1::before { background: linear-gradient(90deg, #2196F3, #03A9F4); }
+  .card-b2::before { background: linear-gradient(90deg, #FF5722, #FF9800); }
+  .card-b3::before { background: linear-gradient(90deg, #009688, #4CAF50); }
+  .card-b4::before { background: linear-gradient(90deg, #673AB7, #3F51B5); }
+
+  .section-title {
+    font-family: 'Kanit', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+  }
+  .badge-red { background: linear-gradient(135deg, #FF6B6B, #FF8E53); }
+  .badge-purple { background: linear-gradient(135deg, #9B59B6, #E91E8C); }
+  .badge-pink { background: linear-gradient(135deg, #E91E8C, #FF6B6B); }
+  .badge-blue { background: linear-gradient(135deg, #2196F3, #03A9F4); }
+  .badge-orange { background: linear-gradient(135deg, #FF5722, #FF9800); }
+  .badge-teal { background: linear-gradient(135deg, #009688, #4CAF50); }
+  .badge-indigo { background: linear-gradient(135deg, #673AB7, #3F51B5); }
+
+  .desc {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-left: 4px solid #dee2e6;
+    border-radius: 0 12px 12px 0;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #495057;
+  }
+
+  /* PIXAR CHARACTER CONTAINER */
+  .pixar-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 0;
+  }
+
+  /* SVG Pixar-style characters */
+  .char-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(145deg, #f0f0f0, #ffffff);
+    border-radius: 16px;
+    padding: 14px 12px;
+    min-width: 110px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.9);
+    transition: transform 0.2s;
+  }
+  .char-card:hover { transform: scale(1.05); }
+  .char-card svg { width: 70px; height: 80px; }
+  .char-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-align: center;
+    color: #555;
+    max-width: 100px;
+    line-height: 1.3;
+  }
+
+  /* ITEMS GRID */
+  .items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .item-pill {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    transition: all 0.2s;
+  }
+  .item-pill:hover {
+    border-color: #adb5bd;
+    background: linear-gradient(135deg, #e9ecef, #dee2e6);
+    transform: translateX(4px);
+  }
+  .item-pill .emoji { font-size: 1.4rem; flex-shrink: 0; }
+  .item-pill .item-text { line-height: 1.4; }
+  .item-pill .item-name { font-weight: 600; color: #333; font-size: 0.92rem; }
+  .item-pill .item-desc { font-size: 0.8rem; color: #666; margin-top: 2px; }
+
+  /* COLOR VARIANTS for pills */
+  .pill-red { border-color: #FFCDD2; background: linear-gradient(135deg, #FFF5F5, #FFEBEE); }
+  .pill-red:hover { border-color: #EF9A9A; }
+  .pill-purple { border-color: #E1BEE7; background: linear-gradient(135deg, #F9F5FF, #F3E5F5); }
+  .pill-purple:hover { border-color: #CE93D8; }
+  .pill-pink { border-color: #F8BBD9; background: linear-gradient(135deg, #FFF0F7, #FCE4EC); }
+  .pill-blue { border-color: #BBDEFB; background: linear-gradient(135deg, #F0F7FF, #E3F2FD); }
+  .pill-orange { border-color: #FFCCBC; background: linear-gradient(135deg, #FFF8F5, #FBE9E7); }
+  .pill-teal { border-color: #B2DFDB; background: linear-gradient(135deg, #F0FFF8, #E0F2F1); }
+  .pill-indigo { border-color: #C5CAE9; background: linear-gradient(135deg, #F5F0FF, #E8EAF6); }
+  .pill-yellow { border-color: #FFF9C4; background: linear-gradient(135deg, #FFFFF0, #FFFDE7); }
+
+  /* SUB-SECTION */
+  .sub-section {
+    background: linear-gradient(145deg, #fafafa, #f5f5f5);
+    border-radius: 14px;
+    padding: 20px;
+    margin: 16px 0;
+    border: 1px solid #e0e0e0;
+  }
+  .sub-section-title {
+    font-family: 'Kanit', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #333;
+  }
+
+  /* DOMINANT / RECESSIVE TAGS */
+  .gene-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  .dominant { background: #FF6B6B; color: white; }
+  .recessive { background: #9B59B6; color: white; }
+  .gene-group { margin-bottom: 14px; }
+  .gene-group-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    color: #444;
+  }
+
+  /* CHROMOSOME VISUAL */
+  .chromo-visual {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 16px 0;
+  }
+  .chromo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .chromo svg { width: 50px; height: 80px; }
+  .chromo-label { font-size: 0.8rem; font-weight: 600; color: #555; }
+
+  /* SCROLL PROGRESS */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #FFD700, #FF6B6B, #9B59B6, #2196F3);
+    z-index: 9999;
+    transition: width 0.1s;
+    width: 0%;
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* TOC */
+  .toc {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 24px var(--shadow);
+  }
+  .toc h3 {
+    font-family: 'Kanit', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 14px;
+    color: #333;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+  }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: inherit;
+    border: 1.5px solid #e0e0e0;
+  }
+  .toc-item:hover {
+    background: #f0f8ff;
+    border-color: #90CAF9;
+    transform: translateX(3px);
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    font-size: 0.9rem;
+    background: linear-gradient(135deg, #1a237e, #283593);
+    color: rgba(255,255,255,0.7);
+    margin-top: 40px;
+  }
+
+  /* SPECIAL INTRO NOTE */
+  .intro-note {
+    background: linear-gradient(135deg, #FFF8E1, #FFFDE7);
+    border: 2px solid #FFE082;
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin: 12px 0 20px;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: #6D4C41;
+  }
+
+  @media (max-width: 600px) {
+    .items-grid { grid-template-columns: 1fr; }
+    .pixar-row { gap: 8px; }
+    .char-card { min-width: 90px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-dna">🧬</span>
+  <h1>พันธุกรรม: การจำแนกลักษณะและโรค</h1>
+  <p>สรุปเนื้อหาพันธุกรรมฉบับสมบูรณ์ พร้อมภาพประกอบสไตล์ Pixar 3D</p>
+</div>
+
+<div class="container">
+
+  <!-- TOC -->
+  <div class="toc">
+    <h3>📋 สารบัญ</h3>
+    <div class="toc-grid">
+      <a href="#a1" class="toc-item">🎨 A1 ลักษณะไม่ใช่พันธุกรรม</a>
+      <a href="#a2g" class="toc-item">🔵 A2-ก พันธุกรรมไม่ต่อเนื่อง</a>
+      <a href="#a2k" class="toc-item">📈 A2-ข พันธุกรรมต่อเนื่อง</a>
+      <a href="#b1" class="toc-item">🏥 B1 โรคไม่ติดต่อ</a>
+      <a href="#b2" class="toc-item">🦠 B2 โรคติดต่อสัมผัส</a>
+      <a href="#b3" class="toc-item">🤱 B3 โรคแม่สู่ลูก (ไม่ใช่พันธุกรรม)</a>
+      <a href="#b4g1" class="toc-item">🔬 B4-ก/1 โครโมโซมร่างกายผิดปกติ</a>
+      <a href="#b4g2" class="toc-item">🔬 B4-ก/2 โครโมโซมเพศผิดปกติ</a>
+      <a href="#b4k1" class="toc-item">🧬 B4-ข/1 ยีนโครโมโซมร่างกาย</a>
+      <a href="#b4k2" class="toc-item">🧬 B4-ข/2 ยีนโครโมโซมเพศ</a>
+    </div>
+  </div>
+
+  <!-- ===================== PART A ===================== -->
+  <div class="part-header part-a">
+    <div class="part-emoji">👤</div>
+    <div>
+      <h2>ส่วน A: ลักษณะทางกายภาพภายนอก</h2>
+      <p>การจำแนกลักษณะที่มองเห็นได้ด้วยตาเปล่า ระหว่างลักษณะที่เกิดจากสิ่งแวดล้อม และลักษณะที่ถ่ายทอดทางพันธุกรรม</p>
+    </div>
+  </div>
+
+  <!-- A1 -->
+  <div class="section-card card-a1" id="a1">
+    <div class="section-title">
+      <span class="badge badge-red">A1</span>
+      ลักษณะที่ <u>ไม่ใช่</u>ลักษณะทางพันธุกรรม
+    </div>
+
+    <div class="desc">
+      💡 <strong>คำอธิบาย:</strong> ลักษณะเหล่านี้เกิดจาก <strong>สิ่งแวดล้อม วัฒนธรรม พฤติกรรม หรืออุบัติเหตุ</strong> ไม่ได้ถ่ายทอดผ่าน DNA ไปยังรุ่นลูกหลาน เช่น ผิวแทนจากแสงแดด รอยสัก หรือกล้ามเนื้อที่เพิ่มจากการออกกำลังกาย
+    </div>
+
+    <!-- Pixar characters -->
+    <div class="pixar-row">
+
+      <!-- สีผิวจากแสงแดด -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <!-- Body -->
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#F4A460"/>
+          <!-- Head -->
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#DEB887"/>
+          <!-- Sun tan effect -->
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="url(#tanGrad)" opacity="0.4"/>
+          <defs>
+            <radialGradient id="tanGrad" cx="50%" cy="30%">
+              <stop offset="0%" stop-color="#D2691E"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+          </defs>
+          <!-- Eyes -->
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#4A3728"/>
+          <circle cx="63" cy="47" r="3" fill="#4A3728"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <!-- Smile -->
+          <path d="M38 65 Q50 75 62 65" stroke="#A0522D" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Sun icon -->
+          <circle cx="80" cy="18" r="10" fill="#FFD700" opacity="0.9"/>
+          <line x1="80" y1="5" x2="80" y2="1" stroke="#FFD700" stroke-width="2"/>
+          <line x1="80" y1="31" x2="80" y2="35" stroke="#FFD700" stroke-width="2"/>
+          <line x1="67" y1="18" x2="63" y2="18" stroke="#FFD700" stroke-width="2"/>
+          <line x1="93" y1="18" x2="97" y2="18" stroke="#FFD700" stroke-width="2"/>
+          <!-- Cheeks blush -->
+          <ellipse cx="28" cy="58" rx="8" ry="5" fill="#CD853F" opacity="0.4"/>
+          <ellipse cx="72" cy="58" rx="8" ry="5" fill="#CD853F" opacity="0.4"/>
+        </svg>
+        <div class="char-label">สีผิวจากแสงแดด ☀️</div>
+      </div>
+
+      <!-- รอยสัก -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M38 65 Q50 73 62 65" stroke="#8B4513" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Tattoo on arm -->
+          <path d="M18 85 Q22 80 26 85 Q30 90 34 85" stroke="#3F51B5" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M20 78 L25 88" stroke="#E91E63" stroke-width="1.5"/>
+          <circle cx="23" cy="76" r="3" fill="#E91E63" opacity="0.8"/>
+          <!-- Arrow tattoo -->
+          <path d="M66 80 L80 80" stroke="#009688" stroke-width="2" stroke-linecap="round"/>
+          <polygon points="80,77 86,80 80,83" fill="#009688"/>
+        </svg>
+        <div class="char-label">รอยสัก 🎨</div>
+      </div>
+
+      <!-- กล้ามเนื้อจากออกกำลังกาย -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="32" ry="22" fill="#FFDAB9"/>
+          <!-- Big muscles -->
+          <ellipse cx="22" cy="82" rx="14" ry="12" fill="#FFCCAA"/>
+          <ellipse cx="78" cy="82" rx="14" ry="12" fill="#FFCCAA"/>
+          <ellipse cx="50" cy="95" rx="28" ry="20" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#3E2723"/>
+          <circle cx="63" cy="47" r="3" fill="#3E2723"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <!-- Confident smile -->
+          <path d="M36 64 Q50 76 64 64" stroke="#8B4513" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Dumbbell -->
+          <rect x="42" y="28" width="16" height="4" rx="2" fill="#607D8B"/>
+          <rect x="38" y="25" width="6" height="10" rx="3" fill="#455A64"/>
+          <rect x="56" y="25" width="6" height="10" rx="3" fill="#455A64"/>
+          <!-- Sweat -->
+          <ellipse cx="74" cy="38" rx="3" ry="4" fill="#64B5F6" opacity="0.7"/>
+        </svg>
+        <div class="char-label">กล้ามเนื้อจากออกกำลังกาย 💪</div>
+      </div>
+
+      <!-- ทรงผมจากการตัด -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFF0E0"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFF0E0"/>
+          <!-- Stylish haircut -->
+          <path d="M20 40 Q20 15 50 15 Q80 15 80 40" fill="#4A3728"/>
+          <rect x="20" y="38" width="6" height="15" rx="3" fill="#4A3728"/>
+          <rect x="74" y="38" width="6" height="15" rx="3" fill="#4A3728"/>
+          <!-- Pompadour style -->
+          <path d="M28 28 Q50 10 72 28" fill="#3E2723"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#212121"/>
+          <circle cx="63" cy="47" r="3" fill="#212121"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M39 65 Q50 74 61 65" stroke="#8B4513" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Scissors -->
+          <line x1="78" y1="15" x2="90" y2="5" stroke="#9E9E9E" stroke-width="2"/>
+          <line x1="78" y1="5" x2="90" y2="15" stroke="#9E9E9E" stroke-width="2"/>
+          <circle cx="78" cy="10" r="4" fill="none" stroke="#9E9E9E" stroke-width="1.5"/>
+        </svg>
+        <div class="char-label">ทรงผมจากการตัด ✂️</div>
+      </div>
+
+      <!-- รอยแผลเป็น -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFE0CC"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFE0CC"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M40 65 Q50 72 60 65" stroke="#8B4513" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Scar on cheek -->
+          <path d="M68 52 L74 62" stroke="#C2856A" stroke-width="3" stroke-linecap="round"/>
+          <!-- Bandage on arm -->
+          <rect x="14" y="82" width="18" height="8" rx="3" fill="white"/>
+          <rect x="16" y="84" width="14" height="4" rx="1" fill="#EF9A9A"/>
+          <line x1="22" y1="82" x2="22" y2="90" stroke="#FFCDD2" stroke-width="1"/>
+        </svg>
+        <div class="char-label">รอยแผลเป็น 🩹</div>
+      </div>
+
+      <!-- น้ำหนักตัว -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <!-- Chubby body -->
+          <ellipse cx="50" cy="98" rx="36" ry="20" fill="#FFD6B0"/>
+          <ellipse cx="50" cy="52" rx="32" ry="34" fill="#FFD6B0"/>
+          <!-- Chubby cheeks -->
+          <ellipse cx="24" cy="58" rx="10" ry="8" fill="#FFCCAA"/>
+          <ellipse cx="76" cy="58" rx="10" ry="8" fill="#FFCCAA"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#4A3728"/>
+          <circle cx="63" cy="47" r="3" fill="#4A3728"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <!-- Happy smile -->
+          <path d="M34 66 Q50 80 66 66" stroke="#8B4513" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Fork and spoon -->
+          <line x1="82" y1="20" x2="82" y2="35" stroke="#9E9E9E" stroke-width="2.5" stroke-linecap="round"/>
+          <ellipse cx="82" cy="18" rx="4" ry="5" fill="none" stroke="#9E9E9E" stroke-width="1.5"/>
+          <line x1="90" y1="18" x2="90" y2="35" stroke="#9E9E9E" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M87 18 Q90 14 93 18" fill="none" stroke="#9E9E9E" stroke-width="1.5"/>
+        </svg>
+        <div class="char-label">น้ำหนักจากอาหาร 🍔</div>
+      </div>
+
+    </div>
+
+    <div class="items-grid">
+      <div class="item-pill pill-red"><span class="emoji">☀️</span><div class="item-text"><div class="item-name">สีผิวจากแสงแดด</div><div class="item-desc">เกิดจากเมลานินที่ถูกกระตุ้นโดย UV ไม่ถ่ายทอดสู่ลูก</div></div></div>
+      <div class="item-pill pill-red"><span class="emoji">🎨</span><div class="item-text"><div class="item-name">รอยสัก</div><div class="item-desc">เกิดจากการฉีดสีลงในผิวหนัง เป็นการดัดแปลงร่างกาย</div></div></div>
+      <div class="item-pill pill-red"><span class="emoji">💪</span><div class="item-text"><div class="item-name">กล้ามเนื้อจากออกกำลังกาย</div><div class="item-desc">เกิดจากการฝึกซ้อม ไม่ใช่พันธุกรรม</div></div></div>
+      <div class="item-pill pill-red"><span class="emoji">✂️</span><div class="item-text"><div class="item-name">ทรงผมจากการตัด</div><div class="item-desc">เกิดจากการตัดแต่ง วัฒนธรรม และแฟชั่น</div></div></div>
+      <div class="item-pill pill-red"><span class="emoji">🩹</span><div class="item-text"><div class="item-name">รอยแผลเป็น</div><div class="item-desc">เกิดจากการบาดเจ็บ การผ่าตัด หรืออุบัติเหตุ</div></div></div>
+      <div class="item-pill pill-red"><span class="emoji">🍔</span><div class="item-text"><div class="item-name">น้ำหนักตัวจากอาหาร</div><div class="item-desc">เกิดจากพฤติกรรมการกินและการออกกำลังกาย</div></div></div>
+    </div>
+  </div>
+
+  <!-- A2-ก -->
+  <div class="section-card card-a2g" id="a2g">
+    <div class="section-title">
+      <span class="badge badge-purple">A2-ก</span>
+      พันธุกรรมชนิด <u>ผันแปรไม่ต่อเนื่อง</u> (Discontinuous Variation)
+    </div>
+    <div class="desc">
+      💡 <strong>คำอธิบาย:</strong> ลักษณะที่แบ่งออกเป็น <strong>กลุ่มชัดเจน ไม่มีลักษณะกลาง</strong> เช่น มีหรือไม่มี หมู่เลือด A B AB O ควบคุมโดยยีนจำนวนน้อย (1-2 ยีน) มักอยู่ในรูปแบบ ยีนเด่น-ยีนด้อย กราฟแสดงข้อมูลแบบแท่งแยกชัดเจน
+    </div>
+
+    <div class="pixar-row">
+      <!-- หมู่เลือด -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M38 65 Q50 74 62 65" stroke="#8B4513" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Blood drop badge -->
+          <path d="M76 10 Q76 6 80 10 Q88 18 80 26 Q72 18 76 10 Z" fill="#F44336"/>
+          <text x="80" y="22" text-anchor="middle" font-size="8" fill="white" font-weight="bold">A</text>
+        </svg>
+        <div class="char-label">หมู่เลือด 🩸</div>
+      </div>
+
+      <!-- ติ่งหู -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFE4C4"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFE4C4"/>
+          <!-- Ears with free earlobe -->
+          <ellipse cx="18" cy="55" rx="8" ry="14" fill="#FFCCAA"/>
+          <ellipse cx="82" cy="55" rx="8" ry="14" fill="#FFCCAA"/>
+          <!-- Free hanging earlobe -->
+          <ellipse cx="18" cy="68" rx="6" ry="5" fill="#FFCCAA"/>
+          <ellipse cx="82" cy="68" rx="6" ry="5" fill="#FFCCAA"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M38 65 Q50 74 62 65" stroke="#8B4513" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="char-label">ติ่งหูแนบหรือห้อย 👂</div>
+      </div>
+
+      <!-- ลักยิ้ม -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#4A3728"/>
+          <circle cx="63" cy="47" r="3" fill="#4A3728"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <!-- Big dimple smile -->
+          <path d="M34 64 Q50 80 66 64" stroke="#8B4513" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Dimples -->
+          <circle cx="33" cy="66" r="4" fill="#FFB6A0" opacity="0.7"/>
+          <circle cx="67" cy="66" r="4" fill="#FFB6A0" opacity="0.7"/>
+          <circle cx="33" cy="66" r="2" fill="#F08070" opacity="0.5"/>
+          <circle cx="67" cy="66" r="2" fill="#F08070" opacity="0.5"/>
+        </svg>
+        <div class="char-label">ลักยิ้ม 😄</div>
+      </div>
+
+      <!-- ลิ้นม้วน -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFE4B5"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFE4B5"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <!-- Open mouth with rolled tongue -->
+          <path d="M36 63 Q50 80 64 63" fill="#F44336" stroke="#8B4513" stroke-width="1.5"/>
+          <!-- Rolled tongue -->
+          <path d="M42 70 Q50 82 58 70 Q54 76 50 78 Q46 76 42 70Z" fill="#E57373"/>
+          <path d="M44 70 Q50 77 56 70" fill="none" stroke="#C62828" stroke-width="1.5"/>
+        </svg>
+        <div class="char-label">ม้วนลิ้นได้ 👅</div>
+      </div>
+
+      <!-- ผิวเผือก -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFF8F0"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFF8F0"/>
+          <!-- White hair -->
+          <path d="M20 40 Q20 12 50 12 Q80 12 80 40" fill="#F5F5F5"/>
+          <circle cx="38" cy="46" r="5" fill="#FFCCCC"/>
+          <circle cx="62" cy="46" r="5" fill="#FFCCCC"/>
+          <!-- Pinkish iris -->
+          <circle cx="39" cy="47" r="3" fill="#CC8888"/>
+          <circle cx="63" cy="47" r="3" fill="#CC8888"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M38 65 Q50 74 62 65" stroke="#CC8888" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Sparkle effect -->
+          <circle cx="75" cy="20" r="2" fill="#FFD700"/>
+          <circle cx="82" cy="15" r="1.5" fill="#FFD700"/>
+          <circle cx="70" cy="14" r="1" fill="#FFD700"/>
+        </svg>
+        <div class="char-label">โรคผิวเผือก (albino) ✨</div>
+      </div>
+    </div>
+
+    <div class="items-grid">
+      <div class="item-pill pill-purple"><span class="emoji">🩸</span><div class="item-text"><div class="item-name">หมู่เลือด ABO</div><div class="item-desc">มี 4 กลุ่มชัดเจน A, B, AB, O ไม่มีค่ากลาง</div></div></div>
+      <div class="item-pill pill-purple"><span class="emoji">👂</span><div class="item-text"><div class="item-name">ติ่งหู</div><div class="item-desc">แบบห้อยอิสระ หรือแนบติดแก้ม แบ่งชัด 2 กลุ่ม</div></div></div>
+      <div class="item-pill pill-purple"><span class="emoji">😄</span><div class="item-text"><div class="item-name">ลักยิ้ม</div><div class="item-desc">มีหรือไม่มี ไม่มีค่ากลาง ยีนเด่นควบคุม</div></div></div>
+      <div class="item-pill pill-purple"><span class="emoji">👅</span><div class="item-text"><div class="item-name">ม้วนลิ้นได้</div><div class="item-desc">ทำได้ หรือทำไม่ได้ แบ่ง 2 กลุ่มชัดเจน</div></div></div>
+      <div class="item-pill pill-purple"><span class="emoji">✨</span><div class="item-text"><div class="item-name">ผิวเผือก (Albinism)</div><div class="item-desc">มีหรือไม่มีเมลานิน ไม่มีสภาพกลาง</div></div></div>
+      <div class="item-pill pill-purple"><span class="emoji">🎯</span><div class="item-text"><div class="item-name">นิ้วมือ 6 นิ้ว (Polydactyly)</div><div class="item-desc">มีหรือไม่มี ยีนเด่น ไม่มีค่ากลาง</div></div></div>
+    </div>
+  </div>
+
+  <!-- A2-ข -->
+  <div class="section-card card-a2k" id="a2k">
+    <div class="section-title">
+      <span class="badge badge-pink">A2-ข</span>
+      พันธุกรรมชนิด <u>ผันแปรต่อเนื่อง</u> (Continuous Variation)
+    </div>
+    <div class="desc">
+      💡 <strong>คำอธิบาย:</strong> ลักษณะที่ <strong>แสดงค่าเป็นช่วงต่อเนื่อง</strong> ไม่มีการแบ่งกลุ่มชัดเจน เกิดจากยีนหลายคู่ร่วมกับสิ่งแวดล้อม เช่น ส่วนสูง อาจอยู่ที่ 150-190 ซม. ไม่ได้แค่ "สูง" หรือ "เตี้ย" กราฟแสดงข้อมูลแบบโค้งระฆัง (Bell curve)
+    </div>
+
+    <div class="pixar-row">
+      <!-- ส่วนสูง -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <!-- Short person -->
+          <ellipse cx="28" cy="100" rx="16" ry="14" fill="#FFB74D"/>
+          <ellipse cx="28" cy="70" rx="16" ry="20" fill="#FFB74D"/>
+          <circle cx="22" cy="62" r="3" fill="white"/>
+          <circle cx="34" cy="62" r="3" fill="white"/>
+          <circle cx="22.5" cy="63" r="1.5" fill="#5D4037"/>
+          <circle cx="34.5" cy="63" r="1.5" fill="#5D4037"/>
+          <path d="M22 74 Q28 80 34 74" stroke="#8B4513" stroke-width="1.5" fill="none"/>
+          <!-- Tall person -->
+          <ellipse cx="72" cy="105" rx="18" ry="14" fill="#64B5F6"/>
+          <ellipse cx="72" cy="62" rx="18" ry="38" fill="#64B5F6"/>
+          <circle cx="64" cy="48" r="4" fill="white"/>
+          <circle cx="80" cy="48" r="4" fill="white"/>
+          <circle cx="64.5" cy="49" r="2" fill="#1A237E"/>
+          <circle cx="80.5" cy="49" r="2" fill="#1A237E"/>
+          <path d="M64 62 Q72 70 80 62" stroke="#1565C0" stroke-width="2" fill="none"/>
+          <!-- Height arrows -->
+          <line x1="46" y1="18" x2="46" y2="115" stroke="#9E9E9E" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="46" y="16" text-anchor="middle" font-size="7" fill="#666">↕</text>
+        </svg>
+        <div class="char-label">ส่วนสูง 📏</div>
+      </div>
+
+      <!-- สีผิว -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <!-- 3 people with different skin tones -->
+          <ellipse cx="20" cy="98" rx="14" ry="12" fill="#8D5524"/>
+          <ellipse cx="20" cy="72" rx="14" ry="20" fill="#8D5524"/>
+          <ellipse cx="20" cy="60" rx="8" ry="10" fill="#8D5524"/>
+          <circle cx="16" cy="57" r="2" fill="white"/><circle cx="24" cy="57" r="2" fill="white"/>
+          <circle cx="16.5" cy="57.5" r="1" fill="#333"/><circle cx="24.5" cy="57.5" r="1" fill="#333"/>
+          <path d="M15 65 Q20 70 25 65" stroke="#5D3010" stroke-width="1.5" fill="none"/>
+
+          <ellipse cx="50" cy="98" rx="14" ry="12" fill="#C68642"/>
+          <ellipse cx="50" cy="72" rx="14" ry="20" fill="#C68642"/>
+          <ellipse cx="50" cy="60" rx="8" ry="10" fill="#C68642"/>
+          <circle cx="46" cy="57" r="2" fill="white"/><circle cx="54" cy="57" r="2" fill="white"/>
+          <circle cx="46.5" cy="57.5" r="1" fill="#5D3010"/><circle cx="54.5" cy="57.5" r="1" fill="#5D3010"/>
+          <path d="M45 65 Q50 70 55 65" stroke="#8B4513" stroke-width="1.5" fill="none"/>
+
+          <ellipse cx="80" cy="98" rx="14" ry="12" fill="#FFDAB9"/>
+          <ellipse cx="80" cy="72" rx="14" ry="20" fill="#FFDAB9"/>
+          <ellipse cx="80" cy="60" rx="8" ry="10" fill="#FFDAB9"/>
+          <circle cx="76" cy="57" r="2" fill="white"/><circle cx="84" cy="57" r="2" fill="white"/>
+          <circle cx="76.5" cy="57.5" r="1" fill="#4A3728"/><circle cx="84.5" cy="57.5" r="1" fill="#4A3728"/>
+          <path d="M75 65 Q80 70 85 65" stroke="#8B4513" stroke-width="1.5" fill="none"/>
+        </svg>
+        <div class="char-label">สีผิว (หลายเฉด) 🎨</div>
+      </div>
+
+      <!-- น้ำหนัก -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="100" width="80" height="12" rx="4" fill="#B0BEC5"/>
+          <rect x="30" y="88" width="40" height="14" rx="3" fill="#CFD8DC"/>
+          <ellipse cx="50" cy="92" rx="18" ry="6" fill="#90A4AE"/>
+          <!-- Scale display -->
+          <rect x="33" y="90" width="34" height="10" rx="2" fill="#263238"/>
+          <text x="50" y="98" text-anchor="middle" font-size="7" fill="#00E5FF" font-weight="bold">65 kg</text>
+          <!-- Person on scale -->
+          <ellipse cx="50" cy="60" rx="22" ry="24" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="48" rx="18" ry="20" fill="#FFDAB9"/>
+          <circle cx="43" cy="42" r="4" fill="white"/>
+          <circle cx="57" cy="42" r="4" fill="white"/>
+          <circle cx="43.5" cy="43" r="2" fill="#5D4037"/>
+          <circle cx="57.5" cy="43" r="2" fill="#5D4037"/>
+          <circle cx="44" cy="42" r="1" fill="white"/>
+          <circle cx="58" cy="42" r="1" fill="white"/>
+          <path d="M40 58 Q50 66 60 58" stroke="#8B4513" stroke-width="2" fill="none"/>
+        </svg>
+        <div class="char-label">น้ำหนักตัว ⚖️</div>
+      </div>
+
+      <!-- ขนาดสมอง/IQ -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#CE93D8"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#CE93D8"/>
+          <!-- Brain outline on head -->
+          <path d="M30 35 Q28 28 35 24 Q42 20 50 22 Q58 20 65 24 Q72 28 70 35" fill="#9C27B0" opacity="0.3"/>
+          <!-- Brain folds -->
+          <path d="M32 35 Q36 30 40 35 Q44 40 48 35 Q52 30 56 35 Q60 40 64 35 Q68 30 68 35" fill="none" stroke="#7B1FA2" stroke-width="1.5" opacity="0.5"/>
+          <circle cx="38" cy="48" r="5" fill="white"/>
+          <circle cx="62" cy="48" r="5" fill="white"/>
+          <circle cx="39" cy="49" r="3" fill="#4A148C"/>
+          <circle cx="63" cy="49" r="3" fill="#4A148C"/>
+          <circle cx="40" cy="48" r="1" fill="white"/>
+          <circle cx="64" cy="48" r="1" fill="white"/>
+          <path d="M38 66 Q50 76 62 66" stroke="#6A1B9A" stroke-width="2.5" fill="none"/>
+          <!-- Light bulb idea -->
+          <circle cx="80" cy="18" r="9" fill="#FFF176"/>
+          <path d="M77 24 L83 24" stroke="#F57F17" stroke-width="1.5"/>
+          <path d="M78 26 L82 26" stroke="#F57F17" stroke-width="1.5"/>
+          <line x1="80" y1="9" x2="80" y2="6" stroke="#F57F17" stroke-width="1.5"/>
+          <text x="80" y="22" text-anchor="middle" font-size="9" fill="#F57F17">💡</text>
+        </svg>
+        <div class="char-label">ระดับสติปัญญา 🧠</div>
+      </div>
+
+      <!-- ความยาวนิ้ว -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFCCBC"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFCCBC"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M38 65 Q50 74 62 65" stroke="#8B4513" stroke-width="2" fill="none"/>
+          <!-- Fingers of different lengths -->
+          <rect x="34" y="80" width="6" height="25" rx="3" fill="#FFCCBC" stroke="#DEB887" stroke-width="1"/>
+          <rect x="42" y="74" width="6" height="30" rx="3" fill="#FFCCBC" stroke="#DEB887" stroke-width="1"/>
+          <rect x="50" y="72" width="6" height="32" rx="3" fill="#FFCCBC" stroke="#DEB887" stroke-width="1"/>
+          <rect x="58" y="76" width="6" height="28" rx="3" fill="#FFCCBC" stroke="#DEB887" stroke-width="1"/>
+          <rect x="66" y="82" width="5" height="22" rx="2.5" fill="#FFCCBC" stroke="#DEB887" stroke-width="1"/>
+        </svg>
+        <div class="char-label">ความยาวนิ้วมือ 🖐️</div>
+      </div>
+    </div>
+
+    <div class="items-grid">
+      <div class="item-pill pill-pink"><span class="emoji">📏</span><div class="item-text"><div class="item-name">ส่วนสูง</div><div class="item-desc">มีค่าต่อเนื่อง 140-200+ ซม. แจกแจงแบบ Bell curve</div></div></div>
+      <div class="item-pill pill-pink"><span class="emoji">🎨</span><div class="item-text"><div class="item-name">สีผิว</div><div class="item-desc">มีหลายเฉดสี ขาว-เข้มมีค่าต่อเนื่องไม่ตัดขาด</div></div></div>
+      <div class="item-pill pill-pink"><span class="emoji">⚖️</span><div class="item-text"><div class="item-name">น้ำหนักตัว</div><div class="item-desc">มีค่าต่อเนื่อง ยีน + อาหาร + การออกกำลังกาย</div></div></div>
+      <div class="item-pill pill-pink"><span class="emoji">🧠</span><div class="item-text"><div class="item-name">ระดับสติปัญญา (IQ)</div><div class="item-desc">กระจายต่อเนื่อง 70-160 ขึ้นอยู่กับยีนและสิ่งแวดล้อม</div></div></div>
+      <div class="item-pill pill-pink"><span class="emoji">🖐️</span><div class="item-text"><div class="item-name">ความยาวนิ้วมือ</div><div class="item-desc">มีค่าต่อเนื่อง ไม่แบ่งกลุ่มชัดเจน</div></div></div>
+      <div class="item-pill pill-pink"><span class="emoji">💛</span><div class="item-text"><div class="item-name">ปริมาณเมลานิน (สีผม)</div><div class="item-desc">ค่อยๆ เปลี่ยนจากดำ น้ำตาล บลอนด์ แดง</div></div></div>
+    </div>
+  </div>
+
+  <!-- ===================== PART B ===================== -->
+  <div class="part-header part-b">
+    <div class="part-emoji">🏥</div>
+    <div>
+      <h2>ส่วน B: โรค</h2>
+      <p>การจำแนกโรคตามสาเหตุ กลไกการเกิดและการถ่ายทอด</p>
+    </div>
+  </div>
+
+  <!-- B1 -->
+  <div class="section-card card-b1" id="b1">
+    <div class="section-title">
+      <span class="badge badge-blue">B1</span>
+      โรคไม่ติดต่อ (Non-Communicable Diseases)
+    </div>
+    <div class="desc">
+      💡 <strong>คำอธิบาย:</strong> โรคที่ <strong>ไม่แพร่กระจายจากคนสู่คน</strong> เกิดจากพฤติกรรม สิ่งแวดล้อม การเสื่อมของร่างกาย หรือปัจจัยเสี่ยงส่วนบุคคล เช่น การสูบบุหรี่ อาหาร ความเครียด มักเป็นโรคเรื้อรัง รักษาไม่หาย แต่ควบคุมได้
+    </div>
+
+    <div class="pixar-row">
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M40 67 Q50 62 60 67" stroke="#8B4513" stroke-width="2" fill="none"/>
+          <!-- Sugar/donut -->
+          <circle cx="75" cy="20" r="10" fill="#FF8A65"/>
+          <circle cx="75" cy="20" r="5" fill="white"/>
+          <circle cx="75" cy="20" r="3" fill="#FF7043"/>
+          <!-- Blood sugar monitor -->
+          <rect x="14" y="78" width="20" height="14" rx="3" fill="#37474F"/>
+          <text x="24" y="88" text-anchor="middle" font-size="6" fill="#F44336">HIGH</text>
+        </svg>
+        <div class="char-label">เบาหวาน 🍬</div>
+      </div>
+
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <!-- Worried expression -->
+          <path d="M40 67 Q50 62 60 67" stroke="#8B4513" stroke-width="2" fill="none"/>
+          <!-- Heart with blood pressure -->
+          <path d="M68 15 Q68 10 74 10 Q80 10 80 15 Q80 20 74 26 Q68 20 68 15Z" fill="#F44336"/>
+          <!-- Pressure arrows -->
+          <text x="78" y="24" font-size="8" fill="#F44336">↑↑</text>
+        </svg>
+        <div class="char-label">ความดันโลหิตสูง 💓</div>
+      </div>
+
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M40 67 Q50 62 60 67" stroke="#8B4513" stroke-width="2" fill="none"/>
+          <!-- Cancer crab symbol -->
+          <circle cx="75" cy="18" r="8" fill="#7B1FA2" opacity="0.8"/>
+          <text x="75" y="22" text-anchor="middle" font-size="10" fill="white">☢</text>
+        </svg>
+        <div class="char-label">มะเร็ง 🔬</div>
+      </div>
+
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <!-- Older look -->
+          <path d="M22 42 Q20 12 50 12 Q80 12 78 42" fill="#D3D3D3"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#A9A9A9"/>
+          <circle cx="63" cy="47" r="3" fill="#A9A9A9"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M40 67 Q50 62 60 67" stroke="#808080" stroke-width="2" fill="none"/>
+          <!-- Brain with puzzle piece -->
+          <text x="78" y="22" font-size="16">🧩</text>
+        </svg>
+        <div class="char-label">อัลไซเมอร์ 🧩</div>
+      </div>
+
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M40 67 Q50 62 60 67" stroke="#8B4513" stroke-width="2" fill="none"/>
+          <!-- Lung -->
+          <path d="M68 12 Q64 10 62 16 Q60 22 64 26 Q68 30 72 26 Q76 22 74 16 Q72 10 68 12Z" fill="#EF9A9A"/>
+          <path d="M80 12 Q76 10 74 16 Q72 22 76 26 Q80 30 84 26 Q88 22 86 16 Q84 10 80 12Z" fill="#EF9A9A"/>
+          <text x="76" y="36" font-size="8" fill="#F44336">😮‍💨</text>
+        </svg>
+        <div class="char-label">ถุงลมโป่งพอง 🫁</div>
+      </div>
+    </div>
+
+    <div class="items-grid">
+      <div class="item-pill pill-blue"><span class="emoji">🍬</span><div class="item-text"><div class="item-name">เบาหวาน</div><div class="item-desc">ความผิดปกติในการควบคุมน้ำตาลในเลือด ไม่แพร่ติดต่อ</div></div></div>
+      <div class="item-pill pill-blue"><span class="emoji">💓</span><div class="item-text"><div class="item-name">ความดันโลหิตสูง</div><div class="item-desc">เกิดจากพฤติกรรม อาหาร ความเครียด ไม่ติดต่อ</div></div></div>
+      <div class="item-pill pill-blue"><span class="emoji">🔬</span><div class="item-text"><div class="item-name">โรคมะเร็ง</div><div class="item-desc">เซลล์แบ่งตัวผิดปกติ เกิดจากสารก่อมะเร็งหรือกรรมพันธุ์บางส่วน</div></div></div>
+      <div class="item-pill pill-blue"><span class="emoji">🧩</span><div class="item-text"><div class="item-name">อัลไซเมอร์</div><div class="item-desc">โรคสมองเสื่อมในผู้สูงอายุ ไม่ติดต่อผู้อื่น</div></div></div>
+      <div class="item-pill pill-blue"><span class="emoji">🫁</span><div class="item-text"><div class="item-name">ถุงลมโป่งพอง</div><div class="item-desc">เกิดจากการสูบบุหรี่ มลพิษ ไม่ติดต่อ</div></div></div>
+      <div class="item-pill pill-blue"><span class="emoji">🦴</span><div class="item-text"><div class="item-name">โรคกระดูกพรุน</div><div class="item-desc">ความหนาแน่นกระดูกลดลง ไม่ติดต่อ</div></div></div>
+    </div>
+  </div>
+
+  <!-- B2 -->
+  <div class="section-card card-b2" id="b2">
+    <div class="section-title">
+      <span class="badge badge-orange">B2</span>
+      โรคติดต่อผ่านการสัมผัสหรือตัวกลางกายภาพ
+    </div>
+    <div class="desc">
+      💡 <strong>คำอธิบาย:</strong> โรคที่เชื้อโรคสามารถ <strong>ถ่ายทอดจากคนสู่คน หรือผ่านสิ่งมีชีวิต สิ่งแวดล้อม</strong> เช่น ยุง น้ำ อาหาร การสัมผัส หรือละอองฝอย เชื้ออาจเป็น แบคทีเรีย ไวรัส พยาธิ เชื้อรา
+    </div>
+
+    <div class="pixar-row">
+      <!-- Mosquito/malaria -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <!-- Sick look -->
+          <path d="M40 67 Q50 62 60 67" stroke="#8B4513" stroke-width="2" fill="none"/>
+          <text x="50" y="40" text-anchor="middle" font-size="10">😰</text>
+          <!-- Mosquito -->
+          <ellipse cx="80" cy="15" rx="5" ry="8" fill="#4E342E"/>
+          <ellipse cx="74" cy="13" rx="6" ry="3" fill="#6D4C41" opacity="0.7"/>
+          <ellipse cx="86" cy="13" rx="6" ry="3" fill="#6D4C41" opacity="0.7"/>
+          <line x1="80" y1="7" x2="80" y2="2" stroke="#4E342E" stroke-width="1"/>
+          <line x1="78" y1="23" x2="80" y2="30" stroke="#4E342E" stroke-width="1"/>
+        </svg>
+        <div class="char-label">มาลาเรีย 🦟</div>
+      </div>
+
+      <!-- Flu -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFCCBC"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFCCBC"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <!-- Sick face -->
+          <path d="M40 68 Q50 63 60 68" stroke="#8B4513" stroke-width="2" fill="none"/>
+          <!-- Runny nose -->
+          <ellipse cx="50" cy="61" rx="6" ry="4" fill="#FFAA80"/>
+          <ellipse cx="50" cy="65" rx="3" ry="2" fill="#90CAF9"/>
+          <!-- Droplets -->
+          <ellipse cx="74" cy="12" rx="3" ry="4" fill="#90CAF9" opacity="0.8"/>
+          <ellipse cx="80" cy="8" rx="2" ry="3" fill="#64B5F6" opacity="0.8"/>
+          <ellipse cx="70" cy="20" rx="2" ry="3" fill="#90CAF9" opacity="0.6"/>
+          <!-- Fever/heat lines -->
+          <text x="80" y="28" font-size="8">🌡️</text>
+        </svg>
+        <div class="char-label">ไข้หวัดใหญ่ 🤧</div>
+      </div>
+
+      <!-- TB -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M40 68 Q50 63 60 68" stroke="#8B4513" stroke-width="2" fill="none"/>
+          <!-- Coughing -->
+          <path d="M62 60 Q75 55 80 48" stroke="#FF8A65" stroke-width="2" fill="none"/>
+          <circle cx="82" cy="46" r="3" fill="#FF8A65" opacity="0.7"/>
+          <circle cx="88" cy="42" r="2" fill="#FF8A65" opacity="0.5"/>
+          <circle cx="77" cy="40" r="2" fill="#FF8A65" opacity="0.5"/>
+          <!-- Bacteria -->
+          <ellipse cx="16" cy="22" rx="5" ry="8" fill="#8BC34A" opacity="0.8"/>
+          <line x1="16" y1="14" x2="16" y2="11" stroke="#558B2F" stroke-width="1"/>
+          <line x1="16" y1="30" x2="16" y2="33" stroke="#558B2F" stroke-width="1"/>
+        </svg>
+        <div class="char-label">วัณโรค 🫁</div>
+      </div>
+
+      <!-- Cholera -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M40 68 Q50 63 60 68" stroke="#8B4513" stroke-width="2" fill="none"/>
+          <!-- Contaminated water -->
+          <path d="M66 14 Q72 8 78 14 Q84 20 78 26 Q72 20 66 14Z" fill="#4FC3F7" opacity="0.8"/>
+          <ellipse cx="73" cy="20" rx="3" ry="2" fill="#EF9A9A" opacity="0.7"/>
+          <text x="73" y="24" text-anchor="middle" font-size="6" fill="#C62828">!</text>
+        </svg>
+        <div class="char-label">อหิวาตกโรค 💧</div>
+      </div>
+
+      <!-- COVID/virus -->
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M40 68 Q50 63 60 68" stroke="#8B4513" stroke-width="2" fill="none"/>
+          <!-- Virus illustration -->
+          <circle cx="78" cy="18" r="9" fill="#E53935" opacity="0.85"/>
+          <line x1="78" y1="5" x2="78" y2="2" stroke="#E53935" stroke-width="2"/><circle cx="78" cy="2" r="2" fill="#C62828"/>
+          <line x1="78" y1="31" x2="78" y2="34" stroke="#E53935" stroke-width="2"/><circle cx="78" cy="34" r="2" fill="#C62828"/>
+          <line x1="65" y1="18" x2="62" y2="18" stroke="#E53935" stroke-width="2"/><circle cx="62" cy="18" r="2" fill="#C62828"/>
+          <line x1="91" y1="18" x2="94" y2="18" stroke="#E53935" stroke-width="2"/><circle cx="94" cy="18" r="2" fill="#C62828"/>
+          <line x1="68" y1="8" x2="66" y2="6" stroke="#E53935" stroke-width="2"/><circle cx="65" cy="5" r="2" fill="#C62828"/>
+          <line x1="88" y1="8" x2="90" y2="6" stroke="#E53935" stroke-width="2"/><circle cx="91" cy="5" r="2" fill="#C62828"/>
+        </svg>
+        <div class="char-label">โควิด-19 😷</div>
+      </div>
+    </div>
+
+    <div class="items-grid">
+      <div class="item-pill pill-orange"><span class="emoji">🦟</span><div class="item-text"><div class="item-name">มาลาเรีย</div><div class="item-desc">ติดต่อผ่านยุงก้นปล่อง เชื้อ Plasmodium</div></div></div>
+      <div class="item-pill pill-orange"><span class="emoji">🤧</span><div class="item-text"><div class="item-name">ไข้หวัดใหญ่</div><div class="item-desc">ติดต่อผ่านละอองฝอยจากการไอ จาม</div></div></div>
+      <div class="item-pill pill-orange"><span class="emoji">🫁</span><div class="item-text"><div class="item-name">วัณโรค</div><div class="item-desc">ติดต่อผ่านอากาศ เชื้อ Mycobacterium tuberculosis</div></div></div>
+      <div class="item-pill pill-orange"><span class="emoji">💧</span><div class="item-text"><div class="item-name">อหิวาตกโรค</div><div class="item-desc">ติดต่อผ่านน้ำและอาหารที่ปนเปื้อน</div></div></div>
+      <div class="item-pill pill-orange"><span class="emoji">😷</span><div class="item-text"><div class="item-name">COVID-19</div><div class="item-desc">ติดต่อผ่านละอองฝอย การสัมผัส</div></div></div>
+      <div class="item-pill pill-orange"><span class="emoji">🦠</span><div class="item-text"><div class="item-name">ไข้เลือดออก</div><div class="item-desc">ติดต่อผ่านยุงลาย เชื้อไวรัสเดงกี</div></div></div>
+    </div>
+  </div>
+
+  <!-- B3 -->
+  <div class="section-card card-b3" id="b3">
+    <div class="section-title">
+      <span class="badge badge-teal">B3</span>
+      โรคที่ถ่ายทอดจากแม่สู่ลูกขณะตั้งครรภ์ (แต่ไม่ใช่พันธุกรรม)
+    </div>
+    <div class="desc">
+      💡 <strong>คำอธิบาย:</strong> โรคเหล่านี้เกิดจาก <strong>เชื้อโรค (ไวรัส แบคทีเรีย) ไม่ใช่ยีน</strong> แม่ที่ติดเชื้อสามารถส่งผ่านไปยังทารกในครรภ์ผ่านรก สายสะดือ หรือระหว่างคลอด หรือทางน้ำนม แม้ลูกจะป่วย แต่ยีนของลูกปกติ และลูกของลูกไม่จำเป็นต้องป่วย
+    </div>
+
+    <div class="pixar-row">
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <!-- Mother -->
+          <ellipse cx="38" cy="88" rx="22" ry="20" fill="#F8BBD9"/>
+          <!-- Pregnant belly -->
+          <ellipse cx="38" cy="80" rx="18" ry="22" fill="#F8BBD9"/>
+          <ellipse cx="42" cy="85" rx="12" ry="13" fill="#FCE4EC"/>
+          <ellipse cx="38" cy="55" rx="18" ry="22" fill="#F8BBD9"/>
+          <circle cx="30" cy="48" r="4" fill="white"/>
+          <circle cx="46" cy="48" r="4" fill="white"/>
+          <circle cx="30.5" cy="49" r="2" fill="#880E4F"/>
+          <circle cx="46.5" cy="49" r="2" fill="#880E4F"/>
+          <circle cx="31" cy="48" r="1" fill="white"/>
+          <circle cx="47" cy="48" r="1" fill="white"/>
+          <path d="M28 64 Q38 70 48 64" stroke="#880E4F" stroke-width="2" fill="none"/>
+          <!-- HIV virus in belly -->
+          <circle cx="44" cy="85" r="5" fill="#E53935" opacity="0.6"/>
+          <line x1="44" y1="79" x2="44" y2="77" stroke="#E53935" stroke-width="1.5"/><circle cx="44" cy="76" r="1.5" fill="#C62828"/>
+          <line x1="44" y1="91" x2="44" y2="93" stroke="#E53935" stroke-width="1.5"/><circle cx="44" cy="94" r="1.5" fill="#C62828"/>
+          <line x1="38" y1="85" x2="36" y2="85" stroke="#E53935" stroke-width="1.5"/><circle cx="35" cy="85" r="1.5" fill="#C62828"/>
+          <line x1="50" y1="85" x2="52" y2="85" stroke="#E53935" stroke-width="1.5"/><circle cx="53" cy="85" r="1.5" fill="#C62828"/>
+          <!-- Baby -->
+          <ellipse cx="78" cy="95" rx="14" ry="12" fill="#FFE4E1"/>
+          <ellipse cx="78" cy="75" rx="14" ry="18" fill="#FFE4E1"/>
+          <circle cx="72" cy="70" r="3.5" fill="white"/>
+          <circle cx="84" cy="70" r="3.5" fill="white"/>
+          <circle cx="72.5" cy="71" r="2" fill="#C62828" opacity="0.7"/>
+          <circle cx="84.5" cy="71" r="2" fill="#C62828" opacity="0.7"/>
+          <path d="M72 82 Q78 86 84 82" stroke="#E57373" stroke-width="1.5" fill="none"/>
+        </svg>
+        <div class="char-label">HIV/AIDS 🤱</div>
+      </div>
+
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFE4B5"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFE4B5"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M40 68 Q50 63 60 68" stroke="#8B4513" stroke-width="2" fill="none"/>
+          <!-- Hepatitis B icon -->
+          <circle cx="78" cy="18" r="10" fill="#FF8F00"/>
+          <text x="78" y="22" text-anchor="middle" font-size="9" fill="white" font-weight="bold">HB</text>
+        </svg>
+        <div class="char-label">ไวรัสตับอักเสบ B 🔶</div>
+      </div>
+
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M40 68 Q50 63 60 68" stroke="#8B4513" stroke-width="2" fill="none"/>
+          <!-- Toxoplasma/cat -->
+          <text x="73" y="22" font-size="18">🐱</text>
+        </svg>
+        <div class="char-label">ท็อกโซพลาสโมซิส 🐱</div>
+      </div>
+
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M40 68 Q50 63 60 68" stroke="#8B4513" stroke-width="2" fill="none"/>
+          <!-- Rubella rash dots -->
+          <circle cx="30" cy="70" r="3" fill="#FF6B6B" opacity="0.7"/>
+          <circle cx="38" cy="75" r="2" fill="#FF6B6B" opacity="0.7"/>
+          <circle cx="62" cy="70" r="3" fill="#FF6B6B" opacity="0.7"/>
+          <circle cx="56" cy="78" r="2.5" fill="#FF6B6B" opacity="0.7"/>
+          <text x="78" y="22" font-size="16">🔴</text>
+        </svg>
+        <div class="char-label">หัดเยอรมัน 🔴</div>
+      </div>
+
+      <div class="char-card">
+        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="95" rx="28" ry="22" fill="#FFDAB9"/>
+          <ellipse cx="50" cy="52" rx="30" ry="32" fill="#FFDAB9"/>
+          <circle cx="38" cy="46" r="5" fill="white"/>
+          <circle cx="62" cy="46" r="5" fill="white"/>
+          <circle cx="39" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="63" cy="47" r="3" fill="#5D4037"/>
+          <circle cx="40" cy="46" r="1" fill="white"/>
+          <circle cx="64" cy="46" r="1" fill="white"/>
+          <path d="M40 68 Q50 63 60 68" stroke="#8B4513" stroke-width="2" fill="none"/>
+          <!-- CMV -->
+          <circle cx="78" cy="18" r="9" fill="#7E57C2" opacity="0.85"/>
+          <text x="78" y="22" text-anchor="middle" font-size="7" fill="white" font-weight="bold">CMV</text>
+        </svg>
+        <div class="char-label">ไซโตเมกาโลไวรัส 🟣</div>
+      </div>
+    </div>
+
+    <div class="items-grid">
+      <div class="item-pill pill-teal"><span class="emoji">🔴</span><div class="item-text"><div class="item-name">HIV/AIDS</div><div class="item-desc">แม่ติดเชื้อ HIV ส่งผ่านรก/ระหว่างคลอด/น้ำนม ไม่ใช่พันธุกรรม</div></div></div>
+      <div class="item-pill pill-teal"><span class="emoji">🔶</span><div class="item-text"><div class="item-name">ไวรัสตับอักเสบ B</div><div class="item-desc">ส่งผ่านระหว่างคลอด ทารกอาจเป็นพาหะได้</div></div></div>
+      <div class="item-pill pill-teal"><span class="emoji">🐱</span><div class="item-text"><div class="item-name">ท็อกโซพลาสโมซิส</div><div class="item-desc">เชื้อ Toxoplasma gondii ผ่านรก ทำทารกพิการได้</div></div></div>
+      <div class="item-pill pill-teal"><span class="emoji">🔴</span><div class="item-text"><div class="item-name">หัดเยอรมัน (Rubella)</div><div class="item-desc">ไวรัสผ่านรก ทำให้ทารกหูหนวก ตาบอดแต่กำเนิด</div></div></div>
+      <div class="item-pill pill-teal"><span class="emoji">🟣</span><div class="item-text"><div class="item-name">ไซโตเมกาโลไวรัส (CMV)</div><div class="item-desc">ไวรัสผ่านรกและน้ำนม ทำให้สมองพิการในทารกได้</div></div></div>
+      <div class="item-pill pill-teal"><span class="emoji">🌡️</span><div class="item-text"><div class="item-name">ซิฟิลิสแต่กำเนิด</div><div class="item-desc">เชื้อแบคทีเรีย Treponema pallidum ผ่านรก ไม่ใช่พันธุกรรม</div></div></div>
+    </div>
+  </div>
+
+  <!-- B4 Header -->
+  <div class="section-card card-b4" id="b4">
+    <div class="section-title">
+      <span class="badge badge-indigo">B4</span>
+      โรคที่ถ่ายทอดทางพันธุกรรม (Genetic Diseases)
+    </div>
+    <div class="desc">
+      💡 <strong>คำอธิบาย:</strong> โรคที่เกิดจาก <strong>ความผิดปกติของ DNA หรือโครโมโซม</strong> ถ่ายทอดจากพ่อแม่สู่ลูกผ่านยีน แบ่งออกเป็น 2 กลุ่มใหญ่ คือ โรคที่เกิดจาก <strong>จำนวนโครโมโซมผิดปกติ</strong> และโรคที่เกิดจาก <strong>ยีนบนโครโมโซมผิดปกติ</strong>
+    </div>
+
+    <!-- B4-ก -->
+    <div class="sub-section" id="b4g1">
+      <div class="sub-section-title">🔬 B4-ก โรคที่เกิดจากจำนวนแท่งโครโมโซมผิดปกติ (Chromosomal Number Disorders)</div>
+      <div class="desc" style="margin-top:0">
+        เกิดจากความผิดพลาดในการแบ่งเซลล์ (Non-disjunction) ทำให้จำนวนโครโมโซมมากหรือน้อยกว่าปกติ เช่น ได้รับ 3 แท่งแทน 2 แท่ง (Trisomy) หรือ 1 แท่ง (Monosomy)
+      </div>
+
+      <!-- B4-ก/1 -->
+      <div class="gene-group" id="b4g1-autosomes">
+        <div class="gene-group-title">
+          <span style="font-size:1.2rem">🧬</span>
+          B4-ก/1 โครโมโซมร่างกาย (Autosomal) ผิดปกติจากจำนวน
+        </div>
+
+        <div class="intro-note">
+          ⚠️ <strong>หมายเหตุ:</strong> โรคจากจำนวนโครโมโซมผิดปกติส่วนใหญ่ <strong>ไม่จัดอยู่ในประเภทยีนเด่น-ยีนด้อย</strong> เนื่องจากเกิดจากการมีโครโมโซมเกินหรือขาด ไม่ใช่อัลลีลเดี่ยว แต่บางส่วนมีผลทางพันธุกรรมที่คล้ายคลึงกัน
+        </div>
+
+        <div class="items-grid">
+          <div class="item-pill pill-indigo">
+            <span class="emoji">🌸</span>
+            <div class="item-text">
+              <div class="item-name">กลุ่มอาการดาวน์ (Down Syndrome)</div>
+              <div class="item-desc">โครโมโซมคู่ที่ 21 เกิน 1 แท่ง (Trisomy 21) · หน้าแบน นิ้วสั้น พัฒนาการช้า</div>
+            </div>
+          </div>
+          <div class="item-pill pill-indigo">
+            <span class="emoji">🧩</span>
+            <div class="item-text">
+              <div class="item-name">กลุ่มอาการพาเทา (Patau Syndrome)</div>
+              <div class="item-desc">โครโมโซมคู่ที่ 13 เกิน 1 แท่ง (Trisomy 13) · ปากแหว่ง เพดานโหว่ รุนแรงมาก</div>
+            </div>
+          </div>
+          <div class="item-pill pill-indigo">
+            <span class="emoji">💙</span>
+            <div class="item-text">
+              <div class="item-name">กลุ่มอาการเอ็ดเวิร์ด (Edwards Syndrome)</div>
+              <div class="item-desc">โครโมโซมคู่ที่ 18 เกิน 1 แท่ง (Trisomy 18) · หัวใจพิการ นิ้วมือซ้อน</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B4-ก/2 -->
+      <div class="gene-group" id="b4g2">
+        <div class="gene-group-title">
+          <span style="font-size:1.2rem">⚥</span>
+          B4-ก/2 โครโมโซมเพศ (Sex Chromosome) ผิดปกติจากจำนวน
+        </div>
+
+        <div class="gene-group">
+          <div class="gene-group-title"><span class="gene-tag dominant">ยีนเด่น / ลักษณะเด่น</span></div>
+          <div class="items-grid">
+            <div class="item-pill pill-yellow">
+              <span class="emoji">👩</span>
+              <div class="item-text">
+                <div class="item-name">กลุ่มอาการเทอร์เนอร์ (Turner Syndrome)</div>
+                <div class="item-desc">โครโมโซมเพศ XO · เพศหญิง รังไข่ฝ่อ เตี้ย ไม่มีประจำเดือน</div>
+              </div>
+            </div>
+            <div class="item-pill pill-yellow">
+              <span class="emoji">👨</span>
+              <div class="item-text">
+                <div class="item-name">กลุ่มอาการไคลน์เฟลเตอร์ (Klinefelter)</div>
+                <div class="item-desc">โครโมโซมเพศ XXY · เพศชาย หน้าอกโต อัณฑะเล็ก มีบุตรยาก</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gene-group">
+          <div class="gene-group-title"><span class="gene-tag recessive">ยีนด้อย / ลักษณะด้อย</span></div>
+          <div class="items-grid">
+            <div class="item-pill pill-purple">
+              <span class="emoji">🔵</span>
+              <div class="item-text">
+                <div class="item-name">กลุ่มอาการ XYY</div>
+                <div class="item-desc">โครโมโซม XYY · เพศชาย สูงมาก บางรายก้าวร้าว แต่ส่วนใหญ่ปกติ</div>
+              </div>
+            </div>
+            <div class="item-pill pill-purple">
+              <span class="emoji">🔴</span>
+              <div class="item-text">
+                <div class="item-name">กลุ่มอาการ XXX (Triple X)</div>
+                <div class="item-desc">โครโมโซม XXX · เพศหญิง พัฒนาการช้าเล็กน้อย มีบุตรได้</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B4-ข -->
+    <div class="sub-section" id="b4k1">
+      <div class="sub-section-title">🧬 B4-ข โรคที่เกิดจากยีนบนโครโมโซมผิดปกติ (Single Gene Disorders)</div>
+      <div class="desc" style="margin-top:0">
+        เกิดจากการกลายพันธุ์ของยีนเดี่ยว (ไม่ใช่จำนวนโครโมโซม) สามารถแบ่งเป็นยีนเด่น (แค่ 1 ก็เป็นโรค) และยีนด้อย (ต้องได้รับ 2 ก๊อปปี้)
+      </div>
+
+      <!-- B4-ข/1 Autosomal -->
+      <div class="gene-group" id="b4k1-detail">
+        <div class="gene-group-title">
+          <span style="font-size:1.2rem">🧬</span>
+          B4-ข/1 ยีนบนโครโมโซมร่างกาย (Autosomal)
+        </div>
+
+        <div class="gene-group">
+          <div class="gene-group-title"><span class="gene-tag dominant">ยีนเด่น (Autosomal Dominant)</span> — รับยีนจากพ่อหรือแม่เพียงข้างเดียวก็เป็นโรค</div>
+          <div class="items-grid">
+            <div class="item-pill pill-red">
+              <span class="emoji">🖐️</span>
+              <div class="item-text">
+                <div class="item-name">นิ้วเกิน (Polydactyly)</div>
+                <div class="item-desc">มีนิ้วมือ/เท้าเกิน 5 นิ้ว ยีนเด่นบนโครโมโซมร่างกาย</div>
+              </div>
+            </div>
+            <div class="item-pill pill-red">
+              <span class="emoji">🦴</span>
+              <div class="item-text">
+                <div class="item-name">โรคแคระ Achondroplasia</div>
+                <div class="item-desc">กระดูกแขนขาสั้นผิดปกติ ยีนเด่น FGFR3 กลายพันธุ์</div>
+              </div>
+            </div>
+            <div class="item-pill pill-red">
+              <span class="emoji">🧠</span>
+              <div class="item-text">
+                <div class="item-name">โรคฮันติงตัน (Huntington's)</div>
+                <div class="item-desc">สมองเสื่อม กล้ามเนื้อกระตุก เริ่มอาการวัย 30-50 ปี ยีนเด่น</div>
+              </div>
+            </div>
+            <div class="item-pill pill-red">
+              <span class="emoji">🫀</span>
+              <div class="item-text">
+                <div class="item-name">ไขมันในเลือดสูงทางพันธุกรรม (FH)</div>
+                <div class="item-desc">Familial Hypercholesterolemia ยีนเด่น LDL receptor กลายพันธุ์</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gene-group">
+          <div class="gene-group-title"><span class="gene-tag recessive">ยีนด้อย (Autosomal Recessive)</span> — ต้องได้รับยีนผิดปกติจากทั้งพ่อและแม่จึงเป็นโรค</div>
+          <div class="items-grid">
+            <div class="item-pill pill-purple">
+              <span class="emoji">🌀</span>
+              <div class="item-text">
+                <div class="item-name">โรคธาลัสซีเมีย (Thalassemia)</div>
+                <div class="item-desc">เลือดจาง ฮีโมโกลบินผิดปกติ พบมากในไทย ยีนด้อย</div>
+              </div>
+            </div>
+            <div class="item-pill pill-purple">
+              <span class="emoji">✨</span>
+              <div class="item-text">
+                <div class="item-name">โรคผิวเผือก (Albinism)</div>
+                <div class="item-desc">ขาดเมลานิน ผิวขาว ผมขาว ตาสีชมพู ยีนด้อย</div>
+              </div>
+            </div>
+            <div class="item-pill pill-purple">
+              <span class="emoji">🫁</span>
+              <div class="item-text">
+                <div class="item-name">ซิสติกไฟโบรซิส (Cystic Fibrosis)</div>
+                <div class="item-desc">เมือกข้นในปอดและตับอ่อน ยีนด้อย CFTR กลายพันธุ์</div>
+              </div>
+            </div>
+            <div class="item-pill pill-purple">
+              <span class="emoji">🧪</span>
+              <div class="item-text">
+                <div class="item-name">PKU (Phenylketonuria)</div>
+                <div class="item-desc">ขาดเอนไซม์ย่อยฟีนิลอะลานีน ทำสมองพิการ ยีนด้อย</div>
+              </div>
+            </div>
+            <div class="item-pill pill-purple">
+              <span class="emoji">🔴</span>
+              <div class="item-text">
+                <div class="item-name">โรคเม็ดเลือดแดงรูปเคียว (Sickle Cell)</div>
+                <div class="item-desc">เม็ดเลือดแดงรูปเคียว อุดหลอดเลือด ยีนด้อย HbS</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B4-ข/2 Sex-linked -->
+      <div class="gene-group" id="b4k2">
+        <div class="gene-group-title">
+          <span style="font-size:1.2rem">⚧</span>
+          B4-ข/2 ยีนบนโครโมโซมเพศ (X-linked / Y-linked)
+        </div>
+
+        <div class="gene-group">
+          <div class="gene-group-title"><span class="gene-tag dominant">ยีนเด่น X-linked Dominant</span> — รับจากโครโมโซม X เพียง 1 ก็อปปี้ก็เป็นโรค ทั้งชายและหญิง</div>
+          <div class="items-grid">
+            <div class="item-pill pill-yellow">
+              <span class="emoji">🦷</span>
+              <div class="item-text">
+                <div class="item-name">ฟันผิดปกติ X-linked (Amelogenesis Imperfecta)</div>
+                <div class="item-desc">เคลือบฟันผิดปกติ เปราะ เหลือง ยีนเด่นบน X</div>
+              </div>
+            </div>
+            <div class="item-pill pill-yellow">
+              <span class="emoji">🩻</span>
+              <div class="item-text">
+                <div class="item-name">โรคกระดูกอ่อน X-linked (Hypophosphatemia)</div>
+                <div class="item-desc">ขาดฟอสเฟต กระดูกอ่อน โค้ง ยีนเด่นบน X</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gene-group">
+          <div class="gene-group-title"><span class="gene-tag recessive">ยีนด้อย X-linked Recessive</span> — ผู้ชาย (XY) เป็นโรคได้ง่ายกว่าผู้หญิง เพราะมี X แท่งเดียว</div>
+          <div class="items-grid">
+            <div class="item-pill pill-purple">
+              <span class="emoji">🩸</span>
+              <div class="item-text">
+                <div class="item-name">โรคฮีโมฟีเลีย (Hemophilia)</div>
+                <div class="item-desc">เลือดไม่แข็งตัว ยีนด้อยบน X พบในผู้ชายมากกว่า</div>
+              </div>
+            </div>
+            <div class="item-pill pill-purple">
+              <span class="emoji">🎨</span>
+              <div class="item-text">
+                <div class="item-name">ตาบอดสี (Color Blindness)</div>
+                <div class="item-desc">แยกสีแดง-เขียวไม่ออก ยีนด้อยบน X พบในผู้ชายมาก</div>
+              </div>
+            </div>
+            <div class="item-pill pill-purple">
+              <span class="emoji">💪</span>
+              <div class="item-text">
+                <div class="item-name">Duchenne Muscular Dystrophy</div>
+                <div class="item-desc">กล้ามเนื้ออ่อนแรงในเด็กผู้ชาย ยีน dystrophin บน X</div>
+              </div>
+            </div>
+            <div class="item-pill pill-purple">
+              <span class="emoji">🔬</span>
+              <div class="item-text">
+                <div class="item-name">Fabry Disease (X-linked)</div>
+                <div class="item-desc">ขาดเอนไซม์ alpha-galactosidase A บน X ส่งผลต่อหัวใจไต</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY DIAGRAM -->
+  <div class="section-card" style="background: linear-gradient(135deg, #1a237e, #283593); color: white; margin-top: 32px;">
+    <div style="text-align:center; padding: 20px 0;">
+      <div style="font-size:3rem; margin-bottom:12px;">🧬</div>
+      <h2 style="font-family:'Kanit',sans-serif; font-size:1.6rem; margin-bottom:16px;">สรุปแผนผัง: การจำแนกโรคทางพันธุกรรม</h2>
+      <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:16px;">
+        <div style="background:rgba(255,255,255,0.15); border-radius:12px; padding:12px 18px; min-width:150px;">
+          <div style="font-size:1.5rem">🔢</div>
+          <div style="font-weight:700; margin:4px 0;">จำนวนโครโมโซมผิดปกติ</div>
+          <div style="font-size:0.82rem; opacity:0.85;">Down, Turner, Klinefelter</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.15); border-radius:12px; padding:12px 18px; min-width:150px;">
+          <div style="font-size:1.5rem">🧬</div>
+          <div style="font-weight:700; margin:4px 0;">ยีนเด่น โครโมโซมร่างกาย</div>
+          <div style="font-size:0.82rem; opacity:0.85;">Huntington, Polydactyly, FH</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.15); border-radius:12px; padding:12px 18px; min-width:150px;">
+          <div style="font-size:1.5rem">🔵</div>
+          <div style="font-weight:700; margin:4px 0;">ยีนด้อย โครโมโซมร่างกาย</div>
+          <div style="font-size:0.82rem; opacity:0.85;">ธาลัสซีเมีย, Albinism, PKU</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.15); border-radius:12px; padding:12px 18px; min-width:150px;">
+          <div style="font-size:1.5rem">⚡</div>
+          <div style="font-weight:700; margin:4px 0;">ยีนด้อย โครโมโซม X</div>
+          <div style="font-size:0.82rem; opacity:0.85;">ฮีโมฟีเลีย, ตาบอดสี, DMD</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div style="font-size:2rem; margin-bottom:10px;">🧬</div>
+  <p>สรุปเนื้อหาพันธุกรรม | ลักษณะทางกายภาพและโรค</p>
+  <p style="font-size:0.8rem; margin-top:6px; opacity:0.6;">ภาพประกอบสไตล์ Pixar 3D · เนื้อหาเพื่อการศึกษา</p>
+</footer>
+
+<script>
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('progressBar').style.width = scrolled + '%';
+  });
+
+  // Smooth scroll for TOC
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Animate cards on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.section-card, .char-card').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(card);
+  });
+</script>
+</body>
+</html>
