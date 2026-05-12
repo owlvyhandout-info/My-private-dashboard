@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owlvy Infographic Engine v6.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; background-color: #f0f4f8; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto bg-white p-6 md:p-10 rounded-2xl shadow-2xl border border-blue-50">
+        <div class="flex items-center mb-8 border-b pb-6">
+            <span class="text-5xl mr-4">🦉</span>
+            <div>
+                <h1 class="text-2xl font-bold text-blue-900">อาว์ลวี่ เฮาส์: Infographic Prompt Engine</h1>
+                <p class="text-sm text-blue-500 font-medium">v6.0 | Master-Controlled Structure & Dynamic Styles</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">หมวดวิชา</label>
+                <select id="subject" class="w-full border-2 border-gray-100 p-3 rounded-xl focus:border-blue-500 outline-none transition" onchange="updateCautions()">
+                    <option value="ชีววิทยาและเคมี">ชีววิทยาและเคมี</option>
+                    <option value="ฟิสิกส์">ฟิสิกส์</option>
+                    <option value="โลกศาสตร์ (Earth Science)">โลกศาสตร์ (Earth Science)</option>
+                    <option value="ดาราศาสตร์">ดาราศาสตร์</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">ระดับความเข้มข้น</label>
+                <select id="level" class="w-full border-2 border-gray-100 p-3 rounded-xl">
+                    <option value="Primary School">ประถมศึกษา</option>
+                    <option value="Middle School">มัธยมต้น</option>
+                    <option value="High School">มัธยมปลาย</option>
+                    <option value="GIFTED/SMT">Gifted / SMT Program</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-8">
+            <label class="block text-sm font-bold text-gray-700 mb-2">เนื้อหาวิชาการ (Content to Process)</label>
+            <textarea id="raw_content" rows="6" class="w-full border-2 border-gray-100 p-4 rounded-xl focus:border-blue-500 outline-none" placeholder="วางเนื้อหาที่ต้องการสรุปที่นี่..."></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 bg-slate-50 p-6 rounded-2xl border border-slate-100">
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">สไตล์ภาพ (Visual Style)</label>
+                <select id="style_mode" class="w-full border-0 p-2 rounded-lg shadow-sm">
+                    <option value="Photography">การถ่ายภาพ</option>
+                    <option value="Cinematic / Still from film">ภาพยนตร์ / ภาพนิ่งจากภาพยนตร์</option>
+                    <option value="Anime / Manga">อนิเมะ / มังงะ</option>
+                    <option value="Illustration">ภาพประกอบ</option>
+                    <option value="Sketch / Line Art">ภาพร่าง / ลายเส้น</option>
+                    <option value="Comic / Graphic Novel">การ์ตูน / นิยายภาพ</option>
+                    <option value="Western Comic (DC/Marvel Style)">Western Comic (สีสันฉูดฉาด)</option>
+                    <option value="3D Render">ภาพเรนเดอร์ 3 มิติ</option>
+                    <option value="Chibi / Q-Style">จิบิ / Q-Style</option>
+                    <option value="Isometric">ไอโซเมตริก</option>
+                    <option value="Pixel Art">พิกเซลอาร์ต</option>
+                    <option value="Oil Painting">ภาพวาดสีน้ำมัน</option>
+                    <option value="Watercolor">สีน้ำ</option>
+                    <option value="Ink / Chinese Style">หมึก / สไตล์จีน</option>
+                    <option value="Retro / Vintage">ย้อนยุค / วินเทจ</option>
+                    <option value="Cyberpunk / Sci-Fi">ไซเบอร์พังก์ / ไซไฟ</option>
+                    <option value="Minimalist">มินิมอลลิสต์</option>
+                    <option value="Diorama Cut Section">Diorama Cut Section</option>
+                    <option value="Glass / Transparent Anatomy">Glass / Transparent Anatomy</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">จำนวนหน้า (Pages)</label>
+                <select id="pages" class="w-full border-0 p-2 rounded-lg shadow-sm">
+                    <option value="Auto">Auto (ให้ AI คำนวณความเหมาะสม)</option>
+                    <option value="1">1 หน้า</option>
+                    <option value="2">2 หน้า</option>
+                    <option value="3">3 หน้า</option>
+                    <option value="4">4 หน้า</option>
+                    <option value="5">5 หน้า</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-blue-700 mb-2">รูปแบบภาษาของผลลัพธ์</label>
+                <select id="output_lang" class="w-full border-0 p-2 rounded-lg shadow-sm bg-white text-blue-600 font-bold">
+                    <option value="Prompt_EN_Content_TH">พร้อมท์ ENG | เนื้อหาภาพ TH (แนะนำ)</option>
+                    <option value="Prompt_TH_Content_TH">พร้อมท์ TH | เนื้อหาภาพ TH</option>
+                    <option value="Prompt_EN_Content_EN">พร้อมท์ ENG | เนื้อหาภาพ ENG</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-8">
+            <label class="block text-sm font-bold text-red-600 mb-2">กฎเฉพาะของเนื้อหา (Content & Visual Accuracy)</label>
+            <p class="text-xs text-gray-500 mb-2">คุณสามารถแก้ไขหรือเพิ่มเติมกฎเกณฑ์เฉพาะงานนี้ได้ก่อนกดสร้าง</p>
+            <textarea id="cautions" rows="4" class="w-full border-2 border-red-50 p-4 rounded-xl bg-red-50 text-red-800 text-sm font-medium"></textarea>
+        </div>
+
+        <button onclick="generatePrompt()" id="btn-generate" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl shadow-lg transition-all active:scale-95 flex justify-center items-center">
+            <span id="btn-text">🚀 สร้าง Master Prompt (v6.0)</span>
+        </button>
+
+        <div class="mt-12">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <span class="mr-2">📋</span> โครงสร้าง Prompt แบบละเอียด (Master + Pages)
+            </h2>
+            <textarea id="output_prompt" rows="20" class="w-full bg-slate-900 text-green-400 p-6 rounded-2xl font-mono text-sm leading-relaxed border-8 border-slate-800" readonly placeholder="ผลลัพธ์จะปรากฏที่นี่..."></textarea>
+        </div>
+    </div>
+
+    <script>
+        // อย่าลืมใส่ URL จาก GAS ด้านล่างนี้นะครับ
+        const GAS_WEB_APP_URL = "วาง_URL_จาก_GAS_ตรงนี้";
+
+        async function generatePrompt() {
+            const btn = document.getElementById('btn-generate');
+            const btnText = document.getElementById('btn-text');
+            const output = document.getElementById('output_prompt');
+            
+            if (GAS_WEB_APP_URL.includes("วาง_URL")) {
+                alert("กรุณาใส่ URL จาก Google Apps Script ในไฟล์โค้ดก่อนครับ!"); return;
+            }
+
+            btn.disabled = true;
+            btnText.innerHTML = "⏳ AI กำลังวิเคราะห์และจัดโครงสร้างแบบ Master-Controlled...";
+            output.value = "ระบบกำลังประมวลผล...";
+
+            try {
+                const response = await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        subject: document.getElementById('subject').value,
+                        level: document.getElementById('level').value,
+                        content: document.getElementById('raw_content').value,
+                        style: document.getElementById('style_mode').value,
+                        pages: document.getElementById('pages').value,
+                        cautions: document.getElementById('cautions').value,
+                        language: document.getElementById('output_lang').value
+                    })
+                });
+
+                const result = await response.json();
+                output.value = result.aiResponse;
+            } catch (error) {
+                output.value = "❌ เกิดข้อผิดพลาด: " + error;
+            } finally {
+                btn.disabled = false;
+                btnText.innerHTML = "🚀 สร้าง Master Prompt (v6.0)";
+            }
+        }
+
+        // ฐานข้อมูลกฎเฉพาะของแต่ละวิชา (คลุมทั้งเนื้อหาและภาพ)
+        const subjCautions = {
+            "ชีววิทยาและเคมี": "[ความถูกต้องของเนื้อหา]: ระบุชื่อโครงสร้าง/ปฏิกิริยาให้ถูกต้องตามหลักสากล\n[ความถูกต้องของภาพ]: การเรียกชื่ออวัยวะให้ใช้ [] จับกลุ่ม, สีและรูปร่างของเซลล์หรือโมเลกุลต้องตรงตามหลักวิทยาศาสตร์",
+            "ฟิสิกส์": "[ความถูกต้องของเนื้อหา]: อธิบายกฎและสมการอย่างแม่นยำ ไม่กำกวม\n[ความถูกต้องของภาพ]: ทิศทางของเวกเตอร์แรง, แรงเสียดทาน, และการวางตำแหน่ง (Arrows alignment) ต้องถูกต้อง 100%",
+            "โลกศาสตร์ (Earth Science)": "[ความถูกต้องของเนื้อหา]: อธิบายกระบวนการทางธรณีวิทยา/สภาพอากาศอย่างเป็นลำดับขั้น\n[ความถูกต้องของภาพ]: สัญลักษณ์สี (ลมร้อนแดง/เย็นน้ำเงิน) และทิศทางการเคลื่อนที่ของแผ่นเปลือกโลกต้องสมจริง",
+            "ดาราศาสตร์": "[ความถูกต้องของเนื้อหา]: อธิบายปรากฏการณ์และตำแหน่งเชิงพื้นที่อย่างถูกต้อง\n[ความถูกต้องของภาพ]: ทิศทางการโคจร/การหมุนต้องถูกต้อง, ขนาดเปรียบเทียบ (Relative Scale) และแสงเงาจากดวงอาทิตย์ต้องสื่อสารได้ชัดเจน"
+        };
+        
+        function updateCautions() { 
+            document.getElementById('cautions').value = subjCautions[document.getElementById('subject').value]; 
+        }
+        window.onload = updateCautions;
+    </script>
+</body>
+</html>
