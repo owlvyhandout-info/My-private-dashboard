@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แก้ปัญหา Google Classroom — ลิงก์เชิญแต่ระบบถามรหัส</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f4f8;
+    --surface: #ffffff;
+    --surface-alt: #f8fafc;
+    --primary: #1a73e8;
+    --primary-dark: #1557b0;
+    --primary-light: #e8f0fe;
+    --accent: #ea4335;
+    --accent-yellow: #fbbc04;
+    --accent-green: #34a853;
+    --text-main: #1c1e21;
+    --text-muted: #5f6368;
+    --text-light: #80868b;
+    --border: #dadce0;
+    --shadow: 0 1px 3px rgba(60,64,67,.12), 0 2px 8px rgba(60,64,67,.08);
+    --shadow-card: 0 2px 12px rgba(60,64,67,.15), 0 1px 4px rgba(60,64,67,.10);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans Thai', 'Sarabun', sans-serif;
+    background: var(--bg);
+    color: var(--text-main);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ─── Header ─── */
+  header {
+    background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 60%, #1565c0 100%);
+    color: #fff;
+    padding: 56px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 40px;
+    background: var(--bg);
+    clip-path: ellipse(55% 100% at 50% 100%);
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 100px;
+    padding: 6px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(4px);
+  }
+  .header-badge .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #69f0ae;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .5; transform: scale(1.3); }
+  }
+
+  header h1 {
+    font-size: clamp(22px, 5vw, 34px);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  header .subtitle {
+    font-size: 15px;
+    opacity: .85;
+    max-width: 520px;
+    margin: 0 auto;
+    font-weight: 300;
+  }
+
+  /* ─── Layout ─── */
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+  }
+
+  /* ─── Problem Banner ─── */
+  .problem-banner {
+    background: #fff3cd;
+    border: 1.5px solid #ffc107;
+    border-left: 5px solid #ff9800;
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 36px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .problem-banner .icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+  .problem-banner h2 { font-size: 16px; font-weight: 700; color: #7c4700; margin-bottom: 6px; }
+  .problem-banner p { font-size: 14px; color: #7c5b00; line-height: 1.6; }
+
+  /* ─── Section Title ─── */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    margin-top: 44px;
+  }
+  .section-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 15px;
+    flex-shrink: 0;
+  }
+  .section-num.blue { background: var(--primary); color: #fff; }
+  .section-num.green { background: var(--accent-green); color: #fff; }
+  .section-title h2 { font-size: 20px; font-weight: 700; }
+
+  /* ─── Cause Cards ─── */
+  .cause-grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr;
+  }
+
+  .cause-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    border: 1.5px solid var(--border);
+    transition: transform .2s, box-shadow .2s;
+    animation: fadeUp .4s ease both;
+  }
+  .cause-card:nth-child(2) { animation-delay: .08s; }
+  .cause-card:nth-child(3) { animation-delay: .16s; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .cause-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(60,64,67,.18); }
+
+  .cause-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cause-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .cause-icon.red { background: #fce8e6; }
+  .cause-icon.orange { background: #fef3e2; }
+  .cause-icon.purple { background: #f3e8fd; }
+
+  .cause-header h3 { font-size: 15px; font-weight: 700; color: var(--text-main); }
+  .cause-header .tag {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 100px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tag.common { background: #fce8e6; color: #c62828; }
+  .tag.moderate { background: #fff3e0; color: #e65100; }
+  .tag.rare { background: #ede7f6; color: #6a1b9a; }
+
+  .cause-body { padding: 16px 20px; }
+
+  .symptom-row, .reason-row {
+    display: flex;
+    gap: 10px;
+    font-size: 13.5px;
+    margin-bottom: 10px;
+    line-height: 1.6;
+  }
+  .symptom-row:last-child, .reason-row:last-child { margin-bottom: 0; }
+  .row-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .4px;
+    white-space: nowrap;
+    margin-top: 3px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    height: fit-content;
+    flex-shrink: 0;
+  }
+  .row-label.symptom { background: #e8f0fe; color: #1a73e8; }
+  .row-label.reason  { background: #e6f4ea; color: #137333; }
+
+  /* ─── Solution Steps ─── */
+  .solution-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    margin-bottom: 20px;
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+    animation: fadeUp .4s ease both;
+  }
+  .solution-card:nth-child(2) { animation-delay: .06s; }
+  .solution-card:nth-child(3) { animation-delay: .12s; }
+  .solution-card:nth-child(4) { animation-delay: .18s; }
+  .solution-card:nth-child(5) { animation-delay: .24s; }
+
+  .solution-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 22px;
+    background: var(--surface-alt);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    transition: background .2s;
+  }
+  .solution-header:hover { background: #e8f0fe; }
+
+  .sol-num {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    background: var(--primary);
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .solution-header h3 { font-size: 15px; font-weight: 700; flex: 1; }
+  .solution-header .platform-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+  .platform-badge {
+    font-size: 11px; font-weight: 600;
+    padding: 2px 9px; border-radius: 100px;
+    background: var(--primary-light);
+    color: var(--primary);
+  }
+  .chevron { transition: transform .25s; font-style: normal; color: var(--text-muted); }
+  .solution-card.open .chevron { transform: rotate(180deg); }
+
+  .solution-body {
+    display: none;
+    padding: 20px 22px;
+  }
+  .solution-card.open .solution-body { display: block; }
+
+  .step-list { list-style: none; counter-reset: step; }
+  .step-list li {
+    counter-increment: step;
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+    font-size: 14px;
+    line-height: 1.7;
+    align-items: flex-start;
+  }
+  .step-list li:last-child { margin-bottom: 0; }
+  .step-list li::before {
+    content: counter(step);
+    width: 26px; height: 26px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .key-shortcut {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    vertical-align: middle;
+  }
+  kbd {
+    background: #f1f3f4;
+    border: 1.5px solid #dadce0;
+    border-bottom-width: 3px;
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-family: monospace;
+    font-size: 12px;
+    color: var(--text-main);
+    font-weight: 600;
+  }
+
+  code {
+    background: #f1f3f4;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 12.5px;
+    color: #c2185b;
+    word-break: break-all;
+  }
+
+  .highlight-box {
+    background: var(--primary-light);
+    border-left: 4px solid var(--primary);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin-top: 14px;
+    font-size: 13.5px;
+    color: #174ea6;
+  }
+  .highlight-box strong { display: block; margin-bottom: 4px; }
+
+  /* ─── Tip Box ─── */
+  .tip-box {
+    background: linear-gradient(135deg, #e6f4ea, #f1f8f2);
+    border: 1.5px solid #81c995;
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-top: 36px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .tip-box .icon { font-size: 26px; flex-shrink: 0; }
+  .tip-box h3 { font-size: 15px; font-weight: 700; color: #1e7e34; margin-bottom: 8px; }
+  .tip-box ul { list-style: none; padding: 0; }
+  .tip-box ul li {
+    font-size: 13.5px; color: #1b5e20;
+    padding: 5px 0;
+    display: flex; gap: 8px; align-items: flex-start;
+    border-bottom: 1px dashed #a5d6a7;
+    line-height: 1.6;
+  }
+  .tip-box ul li:last-child { border-bottom: none; }
+  .tip-box ul li::before { content: '✓'; color: #34a853; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+  /* ─── Quick Decision Tree ─── */
+  .decision-tree {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-top: 36px;
+  }
+  .decision-tree h3 { font-size: 16px; font-weight: 700; margin-bottom: 18px; display: flex; gap: 8px; align-items: center; }
+  .tree-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+  }
+  .tree-row:last-child { border-bottom: none; }
+  .tree-q { flex: 1; color: var(--text-muted); font-weight: 500; }
+  .tree-arrow { color: var(--primary); font-weight: 700; font-size: 18px; }
+  .tree-a { flex: 1; font-weight: 600; color: var(--text-main); }
+
+  /* ─── Footer ─── */
+  footer {
+    text-align: center;
+    padding: 32px 20px;
+    font-size: 12.5px;
+    color: var(--text-light);
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  footer a { color: var(--primary); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .solution-header { flex-wrap: wrap; }
+    .platform-badges { display: none; }
+    .tree-row { flex-direction: column; gap: 4px; }
+    .tree-arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-badge">
+    <span class="dot"></span>
+    คู่มือแก้ปัญหาทางเทคนิค
+  </div>
+  <h1>กดลิงก์เชิญ Google Classroom<br>แต่ระบบถามหา "รหัสชั้นเรียน"?</h1>
+  <p class="subtitle">วิเคราะห์สาเหตุและวิธีแก้ไขแบบทีละขั้นตอน สำหรับนักเรียนทุกอุปกรณ์</p>
+</header>
+
+<!-- MAIN -->
+<div class="container">
+
+  <!-- Problem Banner -->
+  <div class="problem-banner">
+    <span class="icon">⚠️</span>
+    <div>
+      <h2>ประเด็นปัญหา</h2>
+      <p>นักเรียนได้รับอีเมลเชิญจากครูผ่าน Google Classroom เมื่อกดลิงก์ในอีเมล ระบบไม่พาเข้าห้องเรียนโดยตรง แต่กลับแสดงหน้าขอให้กรอก <strong>"รหัสชั้นเรียน"</strong> ซึ่งนักเรียนไม่ทราบ ทำให้ไม่สามารถเข้าร่วมชั้นเรียนได้</p>
+    </div>
+  </div>
+
+  <!-- PART 1 : Diagnosis -->
+  <div class="section-title">
+    <div class="section-num blue">1</div>
+    <h2>การวินิจฉัยปัญหา (Diagnosis)</h2>
+  </div>
+
+  <div class="cause-grid">
+
+    <!-- Cause 1 -->
+    <div class="cause-card">
+      <div class="cause-header">
+        <div class="cause-icon red">👤</div>
+        <div>
+          <h3>บัญชีทับซ้อน (Multi-Account Conflict)</h3>
+        </div>
+        <span class="tag common">พบบ่อยที่สุด</span>
+      </div>
+      <div class="cause-body">
+        <div class="symptom-row">
+          <span class="row-label symptom">อาการ</span>
+          <span>บราวเซอร์หรือแอป Classroom มีการล็อกอินค้างไว้หลายบัญชี เช่น Gmail ส่วนตัว และอีเมลโรงเรียน</span>
+        </div>
+        <div class="reason-row">
+          <span class="row-label reason">สาเหตุ</span>
+          <span>เมื่อกดลิงก์ ระบบจะเรียกใช้ <strong>บัญชีหลัก (Default Account)</strong> ที่จดจำไว้ในเครื่อง ซึ่งมักเป็นบัญชีส่วนตัวที่ไม่มีสิทธิ์เข้าห้องเรียน ระบบจึงมองว่าเป็น "คนนอก" และร้องขอรหัสเพื่อยืนยันตัวตน</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cause 2 -->
+    <div class="cause-card">
+      <div class="cause-header">
+        <div class="cause-icon orange">🔀</div>
+        <div>
+          <h3>การเปิดผิดแอป (App Redirect Error)</h3>
+        </div>
+        <span class="tag moderate">พบบ่อย</span>
+      </div>
+      <div class="cause-body">
+        <div class="symptom-row">
+          <span class="row-label symptom">อาการ</span>
+          <span>กดลิงก์จากแอป Gmail หรือ LINE แล้วระบบเปิดผ่าน Web Browser แทนที่จะเปิดผ่านแอป Classroom โดยตรง</span>
+        </div>
+        <div class="reason-row">
+          <span class="row-label reason">สาเหตุ</span>
+          <span>บัญชีที่ล็อกอินอยู่ใน Web Browser ไม่ตรงกับบัญชีในแอป ทำให้สิทธิ์การเข้าถึงขัดแย้งกัน ระบบจึงไม่สามารถยืนยันตัวตนได้อัตโนมัติ</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cause 3 -->
+    <div class="cause-card">
+      <div class="cause-header">
+        <div class="cause-icon purple">⏰</div>
+        <div>
+          <h3>ลิงก์หมดอายุหรือถูกรีเซ็ต (Link Invalidation)</h3>
+        </div>
+        <span class="tag rare">พบน้อย</span>
+      </div>
+      <div class="cause-body">
+        <div class="symptom-row">
+          <span class="row-label symptom">อาการ</span>
+          <span>ระบบแจ้งว่าลิงก์ไม่ถูกต้อง หรือหน้าแสดงข้อผิดพลาดและขอรหัสใหม่</span>
+        </div>
+        <div class="reason-row">
+          <span class="row-label reason">สาเหตุ</span>
+          <span>ครูผู้สอนอาจ "รีเซ็ตรหัสชั้นเรียน" หรือ "ปิดการเข้าร่วมผ่านลิงก์" ไปแล้วหลังจากส่งอีเมลเชิญ ทำให้ลิงก์เดิมใช้งานไม่ได้อีกต่อไป</span>
+        </div>
+        <div class="reason-row">
+          <span class="row-label reason">เพิ่มเติม</span>
+          <span>บางครั้งเกิดจากการคัดลอกลิงก์ผิดพลาด เช่น มีช่องว่างหรืออักขระพิเศษปนมา หรือลิงก์ถูกตัดให้สั้นลงโดยแอปรับส่งข้อความ</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /cause-grid -->
+
+  <!-- PART 2 : Solutions -->
+  <div class="section-title">
+    <div class="section-num green">2</div>
+    <h2>วิธีแก้ไขทีละขั้นตอน (Solutions)</h2>
+  </div>
+
+  <!-- Sol 1 -->
+  <div class="solution-card open">
+    <div class="solution-header" onclick="toggleCard(this)">
+      <div class="sol-num">1</div>
+      <h3>สลับบัญชีที่หน้าจอขอรหัส</h3>
+      <div class="platform-badges">
+        <span class="platform-badge">📱 มือถือ</span>
+        <span class="platform-badge">💻 PC</span>
+      </div>
+      <i class="chevron">▾</i>
+    </div>
+    <div class="solution-body">
+      <p style="font-size:13.5px; color:var(--text-muted); margin-bottom:14px;">วิธีนี้แก้ปัญหาได้ตรงจุดที่สุด โดยไม่ต้องปิดหน้าต่างหรือเริ่มใหม่</p>
+      <ol class="step-list">
+        <li>เมื่อหน้าจอแสดงช่องให้กรอกรหัสชั้นเรียน <strong>อย่าเพิ่งกรอกอะไร</strong></li>
+        <li>สังเกตที่ <strong>มุมขวาบนของหน้าจอ</strong> จะเห็นรูปวงกลมโปรไฟล์ (ตัวอักษรหรือรูปภาพ)</li>
+        <li>แตะ/คลิกที่รูปโปรไฟล์นั้น ระบบจะแสดงรายชื่ออีเมลที่ล็อกอินค้างไว้ทั้งหมด</li>
+        <li>ตรวจสอบว่าบัญชีที่ใช้งานอยู่ (ตัวหนาหรืออยู่บนสุด) ใช่ <strong>อีเมลโรงเรียน</strong> หรือไม่</li>
+        <li>หากไม่ใช่ ให้เลือกอีเมลโรงเรียน ระบบจะรีเฟรชและพาเข้าชั้นเรียนทันทีโดยไม่ต้องกรอกรหัส</li>
+      </ol>
+      <div class="highlight-box">
+        <strong>💡 หมายเหตุ</strong>
+        หากยังไม่เห็นอีเมลโรงเรียนในรายการ ให้เลือก "ใช้บัญชีอื่น" (Use another account) แล้วล็อกอินด้วยอีเมลโรงเรียนให้สำเร็จก่อน
+      </div>
+    </div>
+  </div>
+
+  <!-- Sol 2 -->
+  <div class="solution-card">
+    <div class="solution-header" onclick="toggleCard(this)">
+      <div class="sol-num">2</div>
+      <h3>ใช้หน้าต่าง Incognito (Private)</h3>
+      <div class="platform-badges">
+        <span class="platform-badge">💻 PC / Mac</span>
+      </div>
+      <i class="chevron">▾</i>
+    </div>
+    <div class="solution-body">
+      <p style="font-size:13.5px; color:var(--text-muted); margin-bottom:14px;">วิธีนี้ตัดปัญหาบัญชีซ้ำซ้อนได้ 100% เพราะหน้าต่าง Incognito ไม่จดจำบัญชีเดิมใดๆ</p>
+      <ol class="step-list">
+        <li>คลิกขวาที่ลิงก์เชิญในอีเมล → เลือก <strong>"คัดลอกที่อยู่ลิงก์"</strong> (Copy link address)</li>
+        <li>เปิด Chrome ขึ้นมา แล้วกด <span class="key-shortcut"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>N</kbd></span> บน Windows / <span class="key-shortcut"><kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>N</kbd></span> บน Mac เพื่อเปิดหน้าต่าง Incognito (สีเข้ม)</li>
+        <li>วาง URL ลิงก์ในช่องที่อยู่ แล้วกด <kbd>Enter</kbd></li>
+        <li>ระบบจะบังคับให้ล็อกอินใหม่ — ใส่เฉพาะ <strong>อีเมลโรงเรียน</strong> และรหัสผ่านเท่านั้น</li>
+        <li>คุณจะเข้าห้องเรียนได้ทันที</li>
+      </ol>
+      <div class="highlight-box">
+        <strong>สำหรับ Safari (Mac)</strong>
+        กด <span class="key-shortcut"><kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>N</kbd></span> เพื่อเปิด Private Window แล้วทำขั้นตอนเดียวกัน
+      </div>
+    </div>
+  </div>
+
+  <!-- Sol 3 -->
+  <div class="solution-card">
+    <div class="solution-header" onclick="toggleCard(this)">
+      <div class="sol-num">3</div>
+      <h3>เพิ่มบัญชีโรงเรียนในแอป Classroom</h3>
+      <div class="platform-badges">
+        <span class="platform-badge">📱 iPhone / iPad</span>
+        <span class="platform-badge">🤖 Android</span>
+      </div>
+      <i class="chevron">▾</i>
+    </div>
+    <div class="solution-body">
+      <p style="font-size:13.5px; color:var(--text-muted); margin-bottom:14px;">แนะนำเมื่อยังไม่เคยล็อกอินด้วยอีเมลโรงเรียนในแอปมาก่อน</p>
+      <ol class="step-list">
+        <li>เปิดแอป <strong>Google Classroom</strong> บนมือถือ</li>
+        <li>แตะที่รูปโปรไฟล์มุมขวาบน</li>
+        <li>เลือก <strong>"เพิ่มบัญชีอื่น"</strong> (Add another account)</li>
+        <li>ล็อกอินด้วยอีเมลโรงเรียนให้สำเร็จ</li>
+        <li>กลับไปที่อีเมลเชิญแล้วกดลิงก์อีกครั้ง ระบบจะถามว่าต้องการใช้บัญชีใด — เลือก <strong>บัญชีโรงเรียน</strong></li>
+      </ol>
+      <div class="highlight-box">
+        <strong>💡 เคล็ดลับ</strong>
+        สลับบัญชีได้ง่ายๆ โดยแตะที่ชื่อบัญชีในหน้าหลักของแอป Classroom แล้วเลือกบัญชีที่ต้องการ
+      </div>
+    </div>
+  </div>
+
+  <!-- Sol 4 -->
+  <div class="solution-card">
+    <div class="solution-header" onclick="toggleCard(this)">
+      <div class="sol-num">4</div>
+      <h3>แกะรหัสจาก URL แล้วกรอกเอง</h3>
+      <div class="platform-badges">
+        <span class="platform-badge">📱 มือถือ</span>
+        <span class="platform-badge">💻 PC</span>
+      </div>
+      <i class="chevron">▾</i>
+    </div>
+    <div class="solution-body">
+      <p style="font-size:13.5px; color:var(--text-muted); margin-bottom:14px;">ใช้เมื่อลิงก์นำทางไม่ได้ แต่ URL ยังสมบูรณ์ดีอยู่</p>
+      <ol class="step-list">
+        <li>คัดลอก URL ของลิงก์เชิญ เช่น:<br><code>https://classroom.google.com/c/MTIzNDU2?cjc=abc1234</code></li>
+        <li>สังเกตตัวอักษรหลัง <code>cjc=</code> นั่นคือ <strong>รหัสชั้นเรียน</strong> (ในตัวอย่างคือ <code>abc1234</code>)</li>
+        <li>เปิดแอป Classroom → กดเครื่องหมาย <strong>+</strong> มุมขวาบน → เลือก <strong>"เข้าร่วมชั้นเรียน" (Join class)</strong></li>
+        <li>กรอกรหัสที่ได้จาก URL แล้วกด <strong>เข้าร่วม</strong></li>
+      </ol>
+      <div class="highlight-box">
+        <strong>⚠️ ข้อควรระวัง</strong>
+        ต้องแน่ใจว่าล็อกอินด้วยบัญชีโรงเรียนในแอปก่อน มิฉะนั้นจะยังเข้าไม่ได้แม้จะมีรหัสถูกต้อง
+      </div>
+    </div>
+  </div>
+
+  <!-- Sol 5 -->
+  <div class="solution-card">
+    <div class="solution-header" onclick="toggleCard(this)">
+      <div class="sol-num">5</div>
+      <h3>ติดต่อครูเพื่อขอลิงก์หรือรหัสใหม่</h3>
+      <div class="platform-badges">
+        <span class="platform-badge">🔄 กรณีสุดท้าย</span>
+      </div>
+      <i class="chevron">▾</i>
+    </div>
+    <div class="solution-body">
+      <p style="font-size:13.5px; color:var(--text-muted); margin-bottom:14px;">หากลองทุกวิธีข้างต้นแล้วยังเข้าไม่ได้ สาเหตุอาจอยู่ที่ลิงก์ถูกรีเซ็ตจากฝั่งครู</p>
+      <ol class="step-list">
+        <li>แจ้งครูว่ากดลิงก์แล้ว "ระบบถามหารหัสชั้นเรียน" และไม่สามารถเข้าได้</li>
+        <li>ขอให้ครูส่ง <strong>รหัสชั้นเรียน (Class Code)</strong> โดยตรง (ตัวอักษร 5–7 ตัว)</li>
+        <li>หรือขอให้ครูส่ง <strong>ลิงก์เชิญใหม่</strong> (ครูสามารถสร้างลิงก์ใหม่ได้จากเมนูการตั้งค่าชั้นเรียน)</li>
+        <li>นำรหัสที่ได้รับมากรอกในแอป Classroom → <strong>+ → เข้าร่วมชั้นเรียน</strong></li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Quick Decision Tree -->
+  <div class="decision-tree">
+    <h3>🗺️ ตารางตัดสินใจ — ควรใช้วิธีใด?</h3>
+    <div class="tree-row">
+      <span class="tree-q">มีหลายบัญชีในเครื่อง และใช้ PC หรือมือถือ</span>
+      <span class="tree-arrow">→</span>
+      <span class="tree-a">✅ วิธีที่ 1 (สลับบัญชีในหน้าเดิม)</span>
+    </div>
+    <div class="tree-row">
+      <span class="tree-q">ใช้ PC และต้องการวิธีที่แน่นอนที่สุด</span>
+      <span class="tree-arrow">→</span>
+      <span class="tree-a">✅ วิธีที่ 2 (Incognito Mode)</span>
+    </div>
+    <div class="tree-row">
+      <span class="tree-q">ใช้มือถือ และยังไม่เคยล็อกอินด้วยบัญชีโรงเรียนในแอป</span>
+      <span class="tree-arrow">→</span>
+      <span class="tree-a">✅ วิธีที่ 3 (เพิ่มบัญชีในแอป)</span>
+    </div>
+    <div class="tree-row">
+      <span class="tree-q">ลิงก์ไม่นำทาง แต่สามารถคัดลอก URL ได้</span>
+      <span class="tree-arrow">→</span>
+      <span class="tree-a">✅ วิธีที่ 4 (แกะรหัสจาก URL)</span>
+    </div>
+    <div class="tree-row">
+      <span class="tree-q">ลองทุกวิธีแล้วยังไม่ได้</span>
+      <span class="tree-arrow">→</span>
+      <span class="tree-a">✅ วิธีที่ 5 (ติดต่อครู)</span>
+    </div>
+  </div>
+
+  <!-- Tip Box -->
+  <div class="tip-box">
+    <span class="icon">🛡️</span>
+    <div>
+      <h3>คำแนะนำเพื่อป้องกันปัญหาในระยะยาว</h3>
+      <ul>
+        <li>ตั้งค่าให้ <strong>อีเมลโรงเรียน</strong> เป็นบัญชีหลัก (Default) บนอุปกรณ์ที่ใช้เรียน</li>
+        <li>ออกจากระบบบัญชีส่วนตัวชั่วคราวก่อนกดลิงก์เชิญชั้นเรียนใหม่ในครั้งแรก</li>
+        <li>หากใช้มือถือ ให้กดลิงก์จากแอป Gmail (ไม่ใช่แอป LINE หรือ Messages) เพื่อหลีกเลี่ยงปัญหาการเปิดผิดแอป</li>
+        <li>หลังเข้าร่วมชั้นเรียนสำเร็จแล้ว Classroom จะจดจำห้องเรียนไว้โดยอัตโนมัติ ไม่จำเป็นต้องกดลิงก์เชิญซ้ำอีก</li>
+        <li>บันทึก <strong>รหัสชั้นเรียน</strong> เก็บไว้เสมอ เผื่อต้องเข้าร่วมด้วยตนเองในภายหลัง</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  <p>คู่มือนี้จัดทำเพื่อช่วยเหลือนักเรียนในการแก้ปัญหาเบื้องต้น · Google Classroom เป็นเครื่องหมายการค้าของ Google LLC<br>
+  หากปัญหายังคงอยู่ กรุณาติดต่อครูผู้สอนหรือเจ้าหน้าที่ฝ่ายไอทีของสถาบัน</p>
+</footer>
+
+<script>
+  function toggleCard(header) {
+    const card = header.closest('.solution-card');
+    card.classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>
