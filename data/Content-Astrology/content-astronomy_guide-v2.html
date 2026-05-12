@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>การปรากฏของดวงดาวและระบบสุริยะ</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #04060f;
+    --bg2: #080c1a;
+    --card: #0d1228;
+    --card2: #111830;
+    --border: #1e2d5a;
+    --accent1: #4fc3f7;
+    --accent2: #7c4dff;
+    --accent3: #00e5a0;
+    --accent4: #ffd740;
+    --accent5: #ff6e6e;
+    --text: #dce8ff;
+    --muted: #7a90c0;
+    --glow1: rgba(79,195,247,0.15);
+    --glow2: rgba(124,77,255,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* starfield */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 15%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 45%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 20% 85%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 65% 70%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(2px 2px at 40% 30%, rgba(79,195,247,0.4) 0%, transparent 100%),
+      radial-gradient(2px 2px at 80% 10%, rgba(124,77,255,0.4) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    position: relative;
+    text-align: center;
+    padding: 80px 20px 60px;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,77,255,0.25) 0%, transparent 70%);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  header::after {
+    content: '✦';
+    position: absolute;
+    font-size: 600px;
+    color: rgba(79,195,247,0.03);
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    animation: slowspin 80s linear infinite;
+  }
+
+  @keyframes slowspin { to { transform: translateX(-50%) rotate(360deg); } }
+
+  .header-tag {
+    display: inline-block;
+    font-family: 'Kanit', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    color: var(--accent1);
+    border: 1px solid rgba(79,195,247,0.4);
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-family: 'Kanit', sans-serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 700;
+    background: linear-gradient(135deg, #ffffff 0%, var(--accent1) 50%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 64px;
+    animation: fadein 0.7s ease both;
+  }
+  @keyframes fadein { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'Kanit', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  /* Grid cards */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    border-radius: 16px 16px 0 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+    border-color: rgba(79,195,247,0.3);
+  }
+  .card:hover::before { opacity: 1; }
+
+  .card-title {
+    font-family: 'Kanit', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tag {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .tag-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+
+  /* Subsection group */
+  .subsection-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .sub-card {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .sub-card:hover {
+    border-color: rgba(124,77,255,0.4);
+    transform: translateY(-3px);
+  }
+
+  .sub-card-title {
+    font-family: 'Kanit', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Highlight box */
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(79,195,247,0.08) 0%, rgba(124,77,255,0.06) 100%);
+    border: 1px solid rgba(79,195,247,0.2);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+  }
+
+  .highlight-box p {
+    font-size: 14.5px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  /* Color accents per section */
+  .c1 { color: var(--accent1); }
+  .c2 { color: var(--accent2); }
+  .c3 { color: var(--accent3); }
+  .c4 { color: var(--accent4); }
+  .c5 { color: var(--accent5); }
+
+  .bg1 { background: rgba(79,195,247,0.12); color: var(--accent1); }
+  .bg2 { background: rgba(124,77,255,0.15); color: var(--accent2); }
+  .bg3 { background: rgba(0,229,160,0.12); color: var(--accent3); }
+  .bg4 { background: rgba(255,215,64,0.12); color: var(--accent4); }
+  .bg5 { background: rgba(255,110,110,0.12); color: var(--accent5); }
+
+  .dot1 { background: var(--accent1); }
+  .dot2 { background: var(--accent2); }
+  .dot3 { background: var(--accent3); }
+  .dot4 { background: var(--accent4); }
+  .dot5 { background: var(--accent5); }
+
+  .line1::before { background: linear-gradient(90deg, var(--accent1), transparent); }
+  .line2::before { background: linear-gradient(90deg, var(--accent2), transparent); }
+  .line3::before { background: linear-gradient(90deg, var(--accent3), transparent); }
+  .line4::before { background: linear-gradient(90deg, var(--accent4), transparent); }
+  .line5::before { background: linear-gradient(90deg, var(--accent5), transparent); }
+
+  .icon-bg1 { background: rgba(79,195,247,0.12); }
+  .icon-bg2 { background: rgba(124,77,255,0.12); }
+  .icon-bg3 { background: rgba(0,229,160,0.12); }
+  .icon-bg4 { background: rgba(255,215,64,0.12); }
+  .icon-bg5 { background: rgba(255,110,110,0.12); }
+
+  /* Info row */
+  .info-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .info-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media(max-width: 640px) {
+    .two-col { grid-template-columns: 1fr; }
+    .subsection-group { grid-template-columns: 1fr; }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Orbit period table */
+  .orbit-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin-top: 4px;
+  }
+  .orbit-table th {
+    font-family: 'Kanit', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  .orbit-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid rgba(30,45,90,0.5);
+    color: var(--text);
+    vertical-align: middle;
+  }
+  .orbit-table tr:last-child td { border-bottom: none; }
+  .orbit-table tr:hover td { background: rgba(255,255,255,0.03); }
+  .orbit-bar-wrap {
+    width: 120px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .orbit-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent1));
+  }
+  .planet-dot {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    margin-right: 7px;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  /* Misconception cards */
+  .myth-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 18px;
+  }
+  .myth-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .myth-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+  }
+  .myth-header {
+    padding: 14px 20px;
+    font-family: 'Kanit', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .myth-body {
+    padding: 0 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .myth-row {
+    border-radius: 12px;
+    padding: 13px 16px;
+  }
+  .myth-row-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .myth-row-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .myth-wrong { background: rgba(255,80,80,0.08); border: 1px solid rgba(255,80,80,0.2); }
+  .myth-wrong .myth-row-label { color: #ff6060; }
+  .myth-right { background: rgba(0,229,160,0.07); border: 1px solid rgba(0,229,160,0.2); }
+  .myth-right .myth-row-label { color: var(--accent3); }
+  .myth-caption {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    font-size: 12.5px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .myth-caption-icon { font-size: 16px; }
+
+  /* Condition chips */
+  .condition-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .condition-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 16px;
+    background: rgba(0,229,160,0.06);
+    border: 1px solid rgba(0,229,160,0.18);
+    border-radius: 12px;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .condition-num {
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    background: rgba(0,229,160,0.15);
+    color: var(--accent3);
+    font-family: 'Kanit', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* Satellite factor cards */
+  .factor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-top: 4px;
+  }
+  .factor-card {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .factor-card:hover {
+    border-color: rgba(124,77,255,0.35);
+    transform: translateY(-3px);
+  }
+  .factor-icon { font-size: 26px; margin-bottom: 10px; }
+  .factor-title {
+    font-family: 'Kanit', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 7px;
+  }
+  .factor-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* TOC */
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 60px;
+  }
+
+  .toc-title {
+    font-family: 'Kanit', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .toc-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 14px;
+    transition: background 0.2s;
+    border: 1px solid transparent;
+  }
+
+  .toc-item:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: var(--border);
+  }
+
+  .toc-num {
+    font-family: 'Kanit', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">ดาราศาสตร์ขั้นพื้นฐาน</div>
+  <h1>การปรากฏของดวงดาว<br>และระบบสุริยะ</h1>
+  <p>สรุปเนื้อหาครอบคลุมวัตถุท้องฟ้า การเคลื่อนที่ของโลก กลุ่มดาว และการสังเกตดาวเบื้องต้น</p>
+</header>
+
+<div class="container">
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">สารบัญเนื้อหา</div>
+    <div class="toc-list">
+      <a href="#s1" class="toc-item"><span class="toc-num bg1">1</span> วัตถุท้องฟ้า</a>
+      <a href="#s2" class="toc-item"><span class="toc-num bg2">2</span> การเคลื่อนที่ของโลก</a>
+      <a href="#s3" class="toc-item"><span class="toc-num bg3">3</span> กลุ่มดาวและการบอกทิศ</a>
+      <a href="#s4" class="toc-item"><span class="toc-num bg4">4</span> ทรงกลมฟ้าและภูมิศาสตร์</a>
+      <a href="#s5" class="toc-item"><span class="toc-num bg5">5</span> ดาวเคราะห์และการสังเกต</a>
+      <a href="#s6" class="toc-item"><span class="toc-num bg2">6</span> คาบการโคจร</a>
+      <a href="#s7" class="toc-item"><span class="toc-num bg3">7</span> วงโคจรค้างฟ้า — ความเข้าใจที่ถูกต้อง</a>
+    </div>
+  </div>
+
+  <!-- SECTION 1: วัตถุท้องฟ้า -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <div class="section-icon icon-bg1">⭐</div>
+      <div>
+        <div class="section-title">วัตถุท้องฟ้า</div>
+        <div class="section-subtitle">ประเภทและคุณสมบัติของวัตถุที่ปรากฏบนท้องฟ้า</div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <p>วัตถุท้องฟ้าแบ่งออกเป็น 3 กลุ่มหลัก ได้แก่ <strong>ดาวฤกษ์</strong> (มีแสงสว่างในตัวเอง) <strong>ดาวเคราะห์</strong> (ไม่มีแสงสว่างในตัวเอง) และ <strong>วัตถุขนาดเล็ก</strong> ต่าง ๆ เช่น ดวงจันทร์ ดาวหาง และอุกกาบาต</p>
+    </div>
+
+    <div class="card-grid">
+      <!-- ดาวฤกษ์ -->
+      <div class="card line1">
+        <div class="card-title">
+          <span class="c1">✦</span> ดาวฤกษ์
+          <span class="card-badge bg1">Star</span>
+        </div>
+        <div class="tag-list">
+          <div class="tag"><div class="tag-dot dot1"></div> มีแสงสว่างในตัวเอง เกิดจากปฏิกิริยานิวเคลียร์ฟิวชัน</div>
+          <div class="tag"><div class="tag-dot dot1"></div> ปฏิกิริยานิวเคลียร์ฟิวชันภายในแกนกลาง ให้พลังงานมหาศาล</div>
+          <div class="tag"><div class="tag-dot dot1"></div> แสงระยิบระยับ เนื่องจากแสงหักเหผ่านชั้นบรรยากาศโลก</div>
+          <div class="tag"><div class="tag-dot dot1"></div> ตำแหน่งคงที่เทียบกับกลุ่มดาว — ใช้เป็นหลักการนำทาง</div>
+        </div>
+      </div>
+
+      <!-- ดาวเคราะห์ -->
+      <div class="card line2">
+        <div class="card-title">
+          <span class="c2">◉</span> ดาวเคราะห์
+          <span class="card-badge bg2">Planet</span>
+        </div>
+        <div class="tag-list">
+          <div class="tag"><div class="tag-dot dot2"></div> ไม่มีแสงสว่างในตัวเอง สะท้อนแสงอาทิตย์</div>
+          <div class="tag"><div class="tag-dot dot2"></div> แสงนวลไม่กะพริบ ต่างจากดาวฤกษ์</div>
+          <div class="tag"><div class="tag-dot dot2"></div> ตำแหน่งเปลี่ยนไปตามวงโคจรรอบดวงอาทิตย์</div>
+        </div>
+      </div>
+
+      <!-- วัตถุขนาดเล็ก -->
+      <div class="card line3">
+        <div class="card-title">
+          <span class="c3">☄</span> วัตถุขนาดเล็ก
+          <span class="card-badge bg3">Small Bodies</span>
+        </div>
+        <div class="tag-list">
+          <div class="tag"><div class="tag-dot dot3"></div> <strong>ดวงจันทร์</strong> — บริวารของดาวเคราะห์ สะท้อนแสงอาทิตย์</div>
+          <div class="tag"><div class="tag-dot dot3"></div> <strong>ดาวเคราะห์น้อย</strong> — วัตถุขนาดเล็กโคจรรอบดวงอาทิตย์</div>
+          <div class="tag"><div class="tag-dot dot3"></div> <strong>ดาวหาง</strong> — มีหางยาวเกิดจากการระเหยของน้ำแข็งเมื่อใกล้ดวงอาทิตย์</div>
+          <div class="tag"><div class="tag-dot dot3"></div> <strong>อุกกาบาต</strong> — เศษหินที่ตกเข้ามาในชั้นบรรยากาศโลก</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: การเคลื่อนที่ของโลก -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <div class="section-icon icon-bg2">🌍</div>
+      <div>
+        <div class="section-title">การเคลื่อนที่ของโลก</div>
+        <div class="section-subtitle">การหมุนรอบตัวเองและการโคจรรอบดวงอาทิตย์</div>
+      </div>
+    </div>
+
+    <div class="subsection-group">
+      <!-- หมุนรอบตัวเอง -->
+      <div class="sub-card">
+        <div class="sub-card-title c2">🔄 หมุนรอบตัวเอง (Rotation)</div>
+        <div class="tag-list">
+          <div class="tag"><div class="tag-dot dot2"></div> ทิศตะวันออกไปตะวันตก — ทำให้ดาวขึ้น-ตก</div>
+          <div class="tag"><div class="tag-dot dot2"></div> ใช้เวลา <strong>24 ชั่วโมง</strong> ต่อรอบ</div>
+          <div class="tag"><div class="tag-dot dot2"></div> เกิดกลางวัน-กลางคืน</div>
+          <div class="tag"><div class="tag-dot dot2"></div> การขึ้น-ตกของดวงดาว</div>
+          <div class="tag"><div class="tag-dot dot2"></div> ความเร็วที่เส้นศูนย์สูตร ≈ <strong>1,670 กม./ชั่วโมง</strong></div>
+          <div class="tag"><div class="tag-dot dot2"></div> ดาวทั้งท้องฟ้าดูเคลื่อนที่ข้ามฟ้าคืนละ 1 รอบ</div>
+        </div>
+      </div>
+
+      <!-- โคจรรอบดวงอาทิตย์ -->
+      <div class="sub-card">
+        <div class="sub-card-title c1">🌞 โคจรรอบดวงอาทิตย์ (Revolution)</div>
+        <div class="tag-list">
+          <div class="tag"><div class="tag-dot dot1"></div> ใช้เวลา <strong>1 ปี (365.25 วัน)</strong> ต่อรอบ</div>
+          <div class="tag"><div class="tag-dot dot1"></div> เกิดฤดูกาลตามแกนเอียงของโลก (23.5°)</div>
+          <div class="tag"><div class="tag-dot dot1"></div> เห็นกลุ่มดาวต่างกันตามฤดู</div>
+          <div class="tag"><div class="tag-dot dot1"></div> ดาวขึ้นเร็วขึ้น ≈ <strong>4 นาทีต่อวัน</strong> เทียบกับวันก่อน</div>
+          <div class="tag"><div class="tag-dot dot1"></div> ดวงอาทิตย์เคลื่อนตัดผ่านราศีต่าง ๆ ตลอดปี</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: กลุ่มดาวและการบอกทิศ -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <div class="section-icon icon-bg3">🌌</div>
+      <div>
+        <div class="section-title">กลุ่มดาวและการบอกทิศ</div>
+        <div class="section-subtitle">กลุ่มดาวสำคัญ จักรราศี และการหาทิศเหนือด้วยดาว</div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <!-- กลุ่มดาวสำคัญ -->
+      <div class="card line3">
+        <div class="card-title"><span class="c3">★</span> กลุ่มดาวสำคัญ</div>
+        <div class="tag-list">
+          <div class="tag"><div class="tag-dot dot3"></div> จักรราศี <strong>12 กลุ่ม</strong> — แนวที่ดวงอาทิตย์เคลื่อนผ่านตลอดปี</div>
+          <div class="tag"><div class="tag-dot dot3"></div> <strong>กลุ่มดาวหมีใหญ่ (จระเข้)</strong> — สังเกตง่าย ช่วยหาดาวเหนือ</div>
+          <div class="tag"><div class="tag-dot dot3"></div> <strong>กลุ่มดาวค้างคาว</strong> — ปรากฏในช่วงฤดูหนาว</div>
+          <div class="tag"><div class="tag-dot dot3"></div> <strong>กลุ่มดาวนายพราน (เต่าโก้)</strong> — สังเกตเด่นชัดช่วงต้นปี</div>
+        </div>
+      </div>
+
+      <!-- การหาทิศเหนือ -->
+      <div class="card line4">
+        <div class="card-title"><span class="c4">🧭</span> การหาทิศเหนือ</div>
+        <div class="tag-list">
+          <div class="tag"><div class="tag-dot dot4"></div> <strong>ดาวเหนือ (Polaris)</strong> — อยู่เหนือขั้วโลกเหนือ ไม่เคลื่อนที่</div>
+          <div class="tag"><div class="tag-dot dot4"></div> <strong>ไปกลุ่มดาวหมีใหญ่</strong> — ใช้ดาว 2 ดวงปลาย ชี้ไปยังดาวเหนือ</div>
+          <div class="tag"><div class="tag-dot dot4"></div> <strong>ไปกลุ่มดาวค้างคาว</strong> — เส้น W ของกลุ่มค้างคาวอยู่ฝั่งตรงข้ามดาวเหนือ</div>
+          <div class="tag"><div class="tag-dot dot4"></div> มุมเงยของดาวเหนือ = ละติจูดของผู้สังเกต</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: ทรงกลมฟ้าและภูมิศาสตร์ -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <div class="section-icon icon-bg4">🔭</div>
+      <div>
+        <div class="section-title">ทรงกลมฟ้าและภูมิศาสตร์</div>
+        <div class="section-subtitle">ระบบพิกัดท้องฟ้าและอุปกรณ์วัดมุม</div>
+      </div>
+    </div>
+
+    <div class="subsection-group">
+      <!-- ระบบพิกัด -->
+      <div class="sub-card">
+        <div class="sub-card-title c4">📐 ระบบพิกัดท้องฟ้า</div>
+        <div class="info-row">
+          <div class="info-chip" style="border-color:rgba(255,215,64,0.3); color:var(--accent4); background:rgba(255,215,64,0.08);">
+            🧭 อาซิมัท (Azimuth)
+          </div>
+          <div class="info-chip" style="border-color:rgba(255,215,64,0.3); color:var(--accent4); background:rgba(255,215,64,0.08);">
+            📏 ระดับ (Altitude)
+          </div>
+        </div>
+        <div class="tag-list">
+          <div class="tag"><div class="tag-dot dot4"></div> <strong>อาซิมัท (Azimuth)</strong> — มุมทิศวัดตามแนวนอนจากทิศเหนือ (0°–360°)</div>
+          <div class="tag"><div class="tag-dot dot4"></div> <strong>ระดับ (Altitude)</strong> — มุมเงยจากขอบฟ้า (0°–90°)</div>
+          <div class="tag"><div class="tag-dot dot4"></div> <strong>จุดเหนือศีรษะ (Zenith)</strong> — ตำแหน่งตรงศีรษะ = 90°</div>
+        </div>
+      </div>
+
+      <!-- อุปกรณ์ -->
+      <div class="sub-card">
+        <div class="sub-card-title c5">🔧 อุปกรณ์วัดมุมและสังเกต</div>
+        <div class="tag-list">
+          <div class="tag"><div class="tag-dot dot5"></div> <strong>แผนที่ดาว</strong> — ใช้ระบุตำแหน่งและกลุ่มดาว</div>
+          <div class="tag"><div class="tag-dot dot5"></div> <strong>การใช้ชีวิตวัดมุม</strong> — ใช้มือวัดระยะเชิงมุมบนท้องฟ้าเบื้องต้น</div>
+          <div class="tag"><div class="tag-dot dot5"></div> กระจกสะท้อนและกล้องโทรทรรศน์สำหรับการสังเกตจริง</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: ดาวเคราะห์และการสังเกต -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <div class="section-icon icon-bg5">🪐</div>
+      <div>
+        <div class="section-title">ดาวเคราะห์และการสังเกต</div>
+        <div class="section-subtitle">แนวโคจรดาวเคราะห์ในโลก และตำแหน่งสังเกตดาว</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <!-- แปดดาวเคราะห์ -->
+      <div class="card line5">
+        <div class="card-title"><span class="c5">🪐</span> แปดดาวเคราะห์ในระบบสุริยะ</div>
+        <div class="info-row">
+          <div class="info-chip" style="border-color:rgba(255,110,110,0.3); color:var(--accent5); background:rgba(255,110,110,0.08);">
+            วน: พุธ, ศุกร์
+          </div>
+          <div class="info-chip" style="border-color:rgba(255,110,110,0.3); color:var(--accent5); background:rgba(255,110,110,0.08);">
+            วนอก: อังคาร–เนปจูน
+          </div>
+        </div>
+        <div class="tag-list">
+          <div class="tag"><div class="tag-dot dot5"></div> <strong>ดาวใน (พุธ, ศุกร์)</strong> — โคจรใกล้ดวงอาทิตย์กว่าโลก เห็นใกล้ขอบฟ้า</div>
+          <div class="tag"><div class="tag-dot dot5"></div> <strong>ดาวนอก (อังคาร, พฤหัส, เสาร์, ยูเรนัส, เนปจูน)</strong> — โคจรไกลกว่าโลก</div>
+          <div class="tag"><div class="tag-dot dot5"></div> ดาวเคราะห์ทั้งหมดโคจรอยู่ใกล้แนวสุริยวิถี (Ecliptic)</div>
+        </div>
+      </div>
+
+      <!-- ตำแหน่งสังเกต -->
+      <div class="card line1">
+        <div class="card-title"><span class="c1">🌙</span> ตำแหน่งสังเกตดาว</div>
+        <div class="tag-list">
+          <div class="tag"><div class="tag-dot dot1"></div> <strong>ดาวประจำเมือง (ศุกร์-เย็น)</strong> — มองเห็นทางทิศตะวันตกหลังพระอาทิตย์ตก</div>
+          <div class="tag"><div class="tag-dot dot1"></div> <strong>ดาวประกายพรึก (ศุกร์-เช้า)</strong> — มองเห็นทางทิศตะวันออกก่อนพระอาทิตย์ขึ้น</div>
+          <div class="tag"><div class="tag-dot dot1"></div> ดาวเคราะห์ต่างโคจรด้วยความเร็วต่างกัน จึงเปลี่ยนตำแหน่งสังเกตในแต่ละฤดู</div>
+          <div class="tag"><div class="tag-dot dot1"></div> ดาวพฤหัสและดาวเสาร์สังเกตได้ตลอดคืนเมื่ออยู่ฝั่งตรงข้ามดวงอาทิตย์</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- สรุปเปรียบเทียบ -->
+    <div style="margin-top:20px;" class="highlight-box">
+      <p>
+        <strong style="color:var(--accent3)">สรุปความแตกต่างสำคัญ:</strong><br><br>
+        ดาวฤกษ์ — <em>ระยิบระยับ, ตำแหน่งคงที่, มีแสงในตัวเอง</em><br>
+        ดาวเคราะห์ — <em>นวล ไม่กะพริบ, เคลื่อนที่เทียบกลุ่มดาว, สะท้อนแสงอาทิตย์</em><br>
+        ดาวหาง — <em>มีหาง ปรากฏชั่วคราว, เคลื่อนที่ผ่านระบบสุริยะ</em><br>
+        อุกกาบาต — <em>เส้นแสงสั้น ๆ ในชั้นบรรยากาศ</em>
+      </p>
+    </div>
+  </div>
+
+  <!-- SECTION 6: คาบการโคจร -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <div class="section-icon icon-bg2">🛸</div>
+      <div>
+        <div class="section-title">คาบการโคจร</div>
+        <div class="section-subtitle">กฎของเคปเลอร์ คาบโคจรดาวเคราะห์ และปัจจัยที่มีผลต่อดาวเทียม</div>
+      </div>
+    </div>
+
+    <!-- 6A: ดาวเคราะห์รอบดวงอาทิตย์ -->
+    <div class="sub-card" style="margin-bottom:16px;">
+      <div class="sub-card-title c2">🌞 คาบการโคจรของดาวเคราะห์รอบดวงอาทิตย์</div>
+      <div class="highlight-box" style="margin-bottom:16px; margin-top:12px;">
+        <p>
+          <strong style="color:var(--accent2)">กฎข้อที่ 3 ของเคปเลอร์:</strong> ยิ่งดาวเคราะห์อยู่ไกลจากดวงอาทิตย์มากเท่าใด คาบการโคจรก็ยิ่งนานมากขึ้นตามสัดส่วน
+          <strong>T² ∝ a³</strong> (T = คาบ, a = รัศมีวงโคจรเฉลี่ย) เนื่องจากต้องเดินทางระยะทางมากขึ้น และความเร็วในการโคจรลดลงเมื่ออยู่ห่างออกไป
+        </p>
+      </div>
+      <table class="orbit-table">
+        <thead>
+          <tr>
+            <th>ดาวเคราะห์</th>
+            <th>ระยะห่าง (AU)</th>
+            <th>คาบโคจร</th>
+            <th>ความเร็วโคจร (กม./วินาที)</th>
+            <th style="min-width:130px;">สัดส่วนเทียบโลก</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="planet-dot" style="background:#b5b5b5;"></span>พุธ</td>
+            <td>0.39 AU</td>
+            <td>88 วัน</td>
+            <td>47.9</td>
+            <td><div class="orbit-bar-wrap"><div class="orbit-bar" style="width:2%;"></div></div></td>
+          </tr>
+          <tr>
+            <td><span class="planet-dot" style="background:#e8c87a;"></span>ศุกร์</td>
+            <td>0.72 AU</td>
+            <td>225 วัน</td>
+            <td>35.0</td>
+            <td><div class="orbit-bar-wrap"><div class="orbit-bar" style="width:6%;"></div></div></td>
+          </tr>
+          <tr>
+            <td><span class="planet-dot" style="background:#4fc3f7;"></span>โลก</td>
+            <td>1.00 AU</td>
+            <td>365 วัน</td>
+            <td>29.8</td>
+            <td><div class="orbit-bar-wrap"><div class="orbit-bar" style="width:10%;"></div></div></td>
+          </tr>
+          <tr>
+            <td><span class="planet-dot" style="background:#e87a4e;"></span>อังคาร</td>
+            <td>1.52 AU</td>
+            <td>1.9 ปี</td>
+            <td>24.1</td>
+            <td><div class="orbit-bar-wrap"><div class="orbit-bar" style="width:19%;"></div></div></td>
+          </tr>
+          <tr>
+            <td><span class="planet-dot" style="background:#f0c090;"></span>พฤหัสบดี</td>
+            <td>5.20 AU</td>
+            <td>11.9 ปี</td>
+            <td>13.1</td>
+            <td><div class="orbit-bar-wrap"><div class="orbit-bar" style="width:36%;"></div></div></td>
+          </tr>
+          <tr>
+            <td><span class="planet-dot" style="background:#d4b483;"></span>เสาร์</td>
+            <td>9.58 AU</td>
+            <td>29.5 ปี</td>
+            <td>9.7</td>
+            <td><div class="orbit-bar-wrap"><div class="orbit-bar" style="width:59%;"></div></div></td>
+          </tr>
+          <tr>
+            <td><span class="planet-dot" style="background:#7de8e8;"></span>ยูเรนัส</td>
+            <td>19.2 AU</td>
+            <td>84 ปี</td>
+            <td>6.8</td>
+            <td><div class="orbit-bar-wrap"><div class="orbit-bar" style="width:79%;"></div></div></td>
+          </tr>
+          <tr>
+            <td><span class="planet-dot" style="background:#4060e8;"></span>เนปจูน</td>
+            <td>30.1 AU</td>
+            <td>165 ปี</td>
+            <td>5.4</td>
+            <td><div class="orbit-bar-wrap"><div class="orbit-bar" style="width:100%;"></div></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 6B: ปัจจัยดาวเทียม -->
+    <div class="sub-card">
+      <div class="sub-card-title c1">🛰️ ปัจจัยที่มีผลต่อความเร็วของดาวเทียม</div>
+      <p style="font-size:13.5px; color:var(--muted); margin-bottom:16px; margin-top:8px;">
+        ดาวเทียมต้องมีความเร็วแนวสัมผัสพอดี เพื่อให้แรงโน้มถ่วงทำหน้าที่เป็นแรงสู่ศูนย์กลางพอดี — ไม่ตกลงมา และไม่หนีออกไป
+      </p>
+      <div class="factor-grid">
+        <div class="factor-card">
+          <div class="factor-icon">📏</div>
+          <div class="factor-title">ระยะสูงจากพื้นโลก</div>
+          <div class="factor-desc">ยิ่งวงโคจรสูง แรงโน้มถ่วงยิ่งอ่อน → ความเร็วที่ต้องการลดลง แต่คาบโคจรนานขึ้น</div>
+        </div>
+        <div class="factor-card">
+          <div class="factor-icon">🌍</div>
+          <div class="factor-title">มวลของโลก</div>
+          <div class="factor-desc">มวลโลกมากขึ้น → แรงดึงดูดมากขึ้น → ดาวเทียมต้องโคจรเร็วขึ้นในระดับความสูงเดิม</div>
+        </div>
+        <div class="factor-card">
+          <div class="factor-icon">⭕</div>
+          <div class="factor-title">รูปทรงวงโคจร</div>
+          <div class="factor-desc">วงรี: เร็วที่จุดใกล้โลกสุด (Perigee) ช้าที่จุดไกลสุด (Apogee) ตามกฎพื้นที่เท่ากัน</div>
+        </div>
+        <div class="factor-card">
+          <div class="factor-icon">🔢</div>
+          <div class="factor-title">สูตรความเร็ว</div>
+          <div class="factor-desc">v = √(GM/r) — ความเร็วโคจรขึ้นกับมวลโลก (M) และรัศมีวงโคจร (r) เท่านั้น ไม่ขึ้นกับมวลดาวเทียม</div>
+        </div>
+        <div class="factor-card">
+          <div class="factor-icon">🌐</div>
+          <div class="factor-title">LEO vs GEO</div>
+          <div class="factor-desc">LEO (ต่ำ ~400 กม.) ≈ 7.7 กม./วินาที | GEO (ค้างฟ้า ~35,786 กม.) ≈ 3.07 กม./วินาที</div>
+        </div>
+        <div class="factor-card">
+          <div class="factor-icon">💨</div>
+          <div class="factor-title">แรงต้านบรรยากาศ</div>
+          <div class="factor-desc">วงโคจรต่ำมีแรงต้านเล็กน้อย ทำให้ดาวเทียมค่อย ๆ ลดความสูงและเร่งขึ้นจนตกในที่สุด</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 7: วงโคจรค้างฟ้า — ความเข้าใจที่ถูกต้อง -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <div class="section-icon icon-bg3">📡</div>
+      <div>
+        <div class="section-title">ความเข้าใจพื้นฐานเกี่ยวกับวงโคจรค้างฟ้า</div>
+        <div class="section-subtitle">แก้ความเข้าใจผิด — ดาวเทียมค้างฟ้าทำงานอย่างไรที่จริง</div>
+      </div>
+    </div>
+
+    <div class="highlight-box" style="margin-bottom:20px;">
+      <p>
+        <strong style="color:var(--accent3)">วงโคจรค้างฟ้า (Geostationary Orbit — GEO)</strong> คือวงโคจรที่ดาวเทียมดูเหมือน "ลอยนิ่ง" อยู่เหนือพื้นโลกจุดเดิมตลอดเวลา
+        ทำให้จานรับสัญญาณบนโลกไม่ต้องหมุนตาม เหมาะสำหรับโทรทัศน์ดาวเทียม อินเทอร์เน็ต และอุตุนิยมวิทยา
+      </p>
+    </div>
+
+    <div class="myth-grid">
+      <!-- Myth 1 -->
+      <div class="myth-card">
+        <div class="myth-header" style="background:rgba(124,77,255,0.12); color:var(--accent2);">
+          <span>💡</span> ความเข้าใจที่ 1 — การเคลื่อนที่
+        </div>
+        <div class="myth-body">
+          <div class="myth-row myth-wrong">
+            <div class="myth-row-label">❌ ความเข้าใจผิด</div>
+            <div class="myth-row-text">ดาวเทียมค้างฟ้าลอยนิ่งอยู่กับที่ในอวกาศ ไม่มีการเคลื่อนที่ใด ๆ</div>
+          </div>
+          <div class="myth-row myth-right">
+            <div class="myth-row-label">✅ ความจริง</div>
+            <div class="myth-row-text">ดาวเทียมเคลื่อนที่ตลอดเวลาด้วยความเร็ว ≈ 3.07 กม./วินาที แต่เนื่องจากมี <strong>คาบโคจร 24 ชั่วโมง</strong> ตรงกับการหมุนของโลก จึงดูเหมือนอยู่ที่เดิมเมื่อมองจากพื้น</div>
+          </div>
+          <div class="myth-caption">
+            <span class="myth-caption-icon">💬</span>
+            <span>เคลื่อนที่ แต่ดูเหมือนนิ่ง</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Myth 2 -->
+      <div class="myth-card">
+        <div class="myth-header" style="background:rgba(79,195,247,0.10); color:var(--accent1);">
+          <span>💡</span> ความเข้าใจที่ 2 — แรงที่กระทำ
+        </div>
+        <div class="myth-body">
+          <div class="myth-row myth-wrong">
+            <div class="myth-row-label">❌ ความเข้าใจผิด</div>
+            <div class="myth-row-text">ดาวเทียมอยู่ได้เพราะอยู่ไกลพ้นโลกแล้ว จึงไม่มีแรงโน้มถ่วงมากระทำ</div>
+          </div>
+          <div class="myth-row myth-right">
+            <div class="myth-row-label">✅ ความจริง</div>
+            <div class="myth-row-text"><strong>แรงโน้มถ่วงโลกยังคงดึงดาวเทียมตลอดเวลา</strong> แต่ดาวเทียมมีความเร็วแนวสัมผัสพอดีจนทำให้มันตกโค้งวนรอบโลกอย่างต่อเนื่องโดยไม่กระทบพื้น — เรียกว่า "การตกอย่างอิสระ" (Free Fall)</div>
+          </div>
+          <div class="myth-caption">
+            <span class="myth-caption-icon">💬</span>
+            <span>แรงโน้มถ่วง + ความเร็วพอดี</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Myth 3 -->
+      <div class="myth-card">
+        <div class="myth-header" style="background:rgba(0,229,160,0.10); color:var(--accent3);">
+          <span>💡</span> ความเข้าใจที่ 3 — เงื่อนไขค้างฟ้า
+        </div>
+        <div class="myth-body">
+          <div class="myth-row myth-wrong">
+            <div class="myth-row-label">❌ ความเข้าใจผิด</div>
+            <div class="myth-row-text">ดาวเทียมที่มีคาบโคจร 24 ชั่วโมงก็เป็นดาวเทียมค้างฟ้าได้เสมอ</div>
+          </div>
+          <div class="myth-row myth-right">
+            <div class="myth-row-label">✅ ความจริง</div>
+            <div class="myth-row-text">ต้องครบ <strong>3 เงื่อนไขพร้อมกัน</strong> จึงเรียกว่าค้างฟ้า (Geostationary) ได้อย่างแท้จริง</div>
+          </div>
+          <div class="condition-list">
+            <div class="condition-item">
+              <div class="condition-num">1</div>
+              <div>วงโคจรอยู่<strong>เหนือเส้นศูนย์สูตร</strong> (ระดับความสูง ~35,786 กม.)</div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-num">2</div>
+              <div>วงโคจรเป็น<strong>วงกลม</strong> (ไม่ใช่วงรี)</div>
+            </div>
+            <div class="condition-item">
+              <div class="condition-num">3</div>
+              <div>คาบโคจร<strong>24 ชั่วโมง</strong> ในทิศทางเดียวกับโลก (ตะวันตก→ตะวันออก)</div>
+            </div>
+          </div>
+          <div class="myth-caption" style="margin-top:10px;">
+            <span class="myth-caption-icon">💬</span>
+            <span>ต้องครบ 3 เงื่อนไข</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- หมายเหตุ Geosynchronous vs Geostationary -->
+    <div class="highlight-box" style="margin-top:20px;">
+      <p>
+        <strong style="color:var(--accent4)">📌 หมายเหตุ:</strong> ดาวเทียมที่มีคาบ 24 ชั่วโมงแต่วงโคจรเอียงหรือเป็นวงรี เรียกว่า <em>Geosynchronous</em> (สัมพันธ์กับโลก) ไม่ใช่ <em>Geostationary</em> (ค้างฟ้า) เพราะตำแหน่งที่มองจากโลกจะวาดเส้นรูปเลข 8 (Analemma) แทนการอยู่นิ่ง ๆ
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  สรุปเนื้อหาดาราศาสตร์ขั้นพื้นฐาน · อ้างอิงจาก Mind Map &nbsp;|&nbsp; จัดทำด้วย Claude
+</footer>
+
+</body>
+</html>

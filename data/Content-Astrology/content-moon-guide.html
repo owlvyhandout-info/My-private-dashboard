@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คู่มือข้างขึ้นข้างแรม</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Thasadith:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --night: #0a0e1a;
+  --deep: #0d1528;
+  --navy: #111e38;
+  --panel: #162040;
+  --card: #1a2850;
+  --border: #1e3060;
+  --gold: #f0c040;
+  --gold2: #e8a820;
+  --moon: #f5e6b0;
+  --moon2: #ede0a0;
+  --blue: #4a9eff;
+  --blue2: #2d7dd2;
+  --cyan: #40d0e0;
+  --teal: #2ab8c8;
+  --red: #ff6060;
+  --green: #50d890;
+  --purple: #a06eff;
+  --text: #d8e4f8;
+  --muted: #7a9ac8;
+  --dim: #4a6090;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  background: var(--night);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── STARFIELD ─── */
+.stars {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.8) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 45% 8%, rgba(255,255,255,0.9) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 25%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 50%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 88% 12%, rgba(255,255,255,0.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 70%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 35% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 60%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 70% 78%, rgba(255,255,255,0.8) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 65%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 5% 90%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 20% 55%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 80% 35%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 50% 95%, rgba(255,255,255,0.4) 0%, transparent 100%);
+}
+
+/* ─── PROGRESS BAR ─── */
+#progress {
+  position: fixed; top:0; left:0; height:3px; z-index:999;
+  background: linear-gradient(90deg, var(--gold), var(--cyan), var(--purple));
+  transition: width 0.1s;
+  box-shadow: 0 0 8px var(--gold);
+}
+
+/* ─── SIDEBAR NAV ─── */
+.sidebar {
+  position: fixed; left:0; top:0; bottom:0; width:260px;
+  background: linear-gradient(180deg, var(--deep) 0%, var(--night) 100%);
+  border-right: 1px solid var(--border);
+  z-index: 100; overflow-y:auto;
+  padding: 24px 0 40px;
+  transition: transform 0.3s;
+}
+.sidebar-logo {
+  display:flex; align-items:center; gap:10px;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.sidebar-logo .moon-icon {
+  font-size: 28px;
+  filter: drop-shadow(0 0 8px var(--gold));
+}
+.sidebar-logo h2 {
+  font-size: 0.95rem; font-weight: 700; line-height: 1.3;
+  color: var(--gold);
+}
+.nav-section {
+  padding: 6px 20px 4px;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+  color: var(--dim); text-transform: uppercase;
+  margin-top: 8px;
+}
+.nav-item {
+  display: flex; align-items:center; gap:10px;
+  padding: 9px 20px;
+  font-size: 0.88rem; color: var(--muted);
+  cursor: pointer; transition: all 0.2s;
+  border-left: 3px solid transparent;
+  text-decoration: none;
+}
+.nav-item:hover, .nav-item.active {
+  color: var(--text);
+  background: rgba(74,158,255,0.08);
+  border-left-color: var(--gold);
+}
+.nav-item .num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--panel); border: 1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size: 0.72rem; font-weight: 700; flex-shrink:0;
+  color: var(--gold);
+}
+
+/* ─── MAIN ─── */
+.main {
+  margin-left: 260px;
+  min-height: 100vh;
+  position: relative; z-index: 1;
+}
+
+/* ─── HERO ─── */
+.hero {
+  background: linear-gradient(160deg, #070c1a 0%, #0d1830 50%, #070c1a 100%);
+  padding: 80px 60px 60px;
+  position: relative; overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+.hero::before {
+  content:'';
+  position:absolute; top:-80px; right:-80px;
+  width:400px; height:400px; border-radius:50%;
+  background: radial-gradient(circle, rgba(240,192,64,0.12) 0%, transparent 70%);
+}
+.hero-moon {
+  font-size: 5rem;
+  display: block; margin-bottom:16px;
+  filter: drop-shadow(0 0 24px rgba(240,192,64,0.6));
+  animation: glow 4s ease-in-out infinite;
+}
+@keyframes glow {
+  0%,100% { filter: drop-shadow(0 0 20px rgba(240,192,64,0.5)); }
+  50% { filter: drop-shadow(0 0 36px rgba(240,192,64,0.9)); }
+}
+.hero h1 {
+  font-family: 'Thasadith', 'Sarabun', sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  font-weight: 700; color: var(--moon);
+  line-height: 1.2; margin-bottom: 10px;
+}
+.hero p { color: var(--muted); font-size: 1rem; max-width:500px; line-height:1.7; }
+.hero-tags {
+  display:flex; flex-wrap:wrap; gap:8px; margin-top:20px;
+}
+.tag {
+  padding: 4px 12px; border-radius:20px; font-size:0.8rem;
+  border: 1px solid; font-weight: 600;
+}
+.tag-gold { border-color: var(--gold2); color: var(--gold); background: rgba(240,192,64,0.1); }
+.tag-blue { border-color: var(--blue2); color: var(--blue); background: rgba(74,158,255,0.1); }
+.tag-cyan { border-color: var(--teal); color: var(--cyan); background: rgba(64,208,224,0.1); }
+
+/* ─── CONTENT ─── */
+.content { padding: 48px 60px; }
+
+/* ─── SECTION ─── */
+.section {
+  margin-bottom: 56px;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+.section.visible { opacity:1; transform:translateY(0); }
+
+.section-header {
+  display:flex; align-items:flex-start; gap:16px;
+  margin-bottom: 24px;
+}
+.section-num {
+  width:44px; height:44px; border-radius:12px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.1rem; font-weight:800; font-family:'Thasadith',sans-serif;
+  border: 1.5px solid;
+}
+.num-gold { background:rgba(240,192,64,0.12); border-color:var(--gold2); color:var(--gold); }
+.num-blue { background:rgba(74,158,255,0.12); border-color:var(--blue2); color:var(--blue); }
+.num-cyan { background:rgba(64,208,224,0.12); border-color:var(--teal); color:var(--cyan); }
+.num-green { background:rgba(80,216,144,0.12); border-color:#2da870; color:var(--green); }
+.num-red { background:rgba(255,96,96,0.12); border-color:#c04040; color:var(--red); }
+.num-purple { background:rgba(160,110,255,0.12); border-color:#6040c0; color:var(--purple); }
+
+.section-title-wrap h2 {
+  font-family:'Thasadith','Sarabun',sans-serif;
+  font-size:1.35rem; font-weight:700; color:var(--moon);
+  line-height:1.3; margin-bottom:4px;
+}
+.section-title-wrap .subtitle {
+  font-size:0.85rem; color:var(--muted);
+}
+
+/* ─── CARD ─── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px 26px;
+  margin-bottom: 14px;
+  position: relative; overflow:hidden;
+}
+.card::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  border-radius:3px 0 0 3px;
+}
+.card-gold::before { background: linear-gradient(180deg,var(--gold),var(--gold2)); }
+.card-blue::before { background: linear-gradient(180deg,var(--blue),var(--blue2)); }
+.card-cyan::before { background: linear-gradient(180deg,var(--cyan),var(--teal)); }
+.card-green::before { background: linear-gradient(180deg,var(--green),#2da870); }
+.card-red::before { background: linear-gradient(180deg,var(--red),#c04040); }
+.card-purple::before { background: linear-gradient(180deg,var(--purple),#6040c0); }
+
+.card-title {
+  font-size:0.95rem; font-weight:700; color:var(--moon);
+  margin-bottom:10px; display:flex; align-items:center; gap:8px;
+}
+.card p { font-size:0.9rem; line-height:1.8; color:var(--text); }
+.card p + p { margin-top:8px; }
+
+/* ─── HIGHLIGHT BOX ─── */
+.highlight {
+  background: rgba(240,192,64,0.08);
+  border: 1px solid rgba(240,192,64,0.25);
+  border-radius:10px; padding:14px 18px;
+  font-size:0.88rem; line-height:1.7;
+  color: var(--moon2); margin: 12px 0;
+}
+.highlight.blue {
+  background: rgba(74,158,255,0.08);
+  border-color: rgba(74,158,255,0.25);
+  color: #c0d8f8;
+}
+.highlight.cyan {
+  background: rgba(64,208,224,0.08);
+  border-color: rgba(64,208,224,0.25);
+  color: #c0eff8;
+}
+.highlight.red {
+  background: rgba(255,96,96,0.08);
+  border-color: rgba(255,96,96,0.25);
+  color: #f8c0c0;
+}
+.highlight.green {
+  background: rgba(80,216,144,0.08);
+  border-color: rgba(80,216,144,0.25);
+  color: #c0f8d8;
+}
+
+/* ─── TABLE ─── */
+.tbl-wrap { overflow-x:auto; margin:14px 0; border-radius:10px; border:1px solid var(--border); }
+table { width:100%; border-collapse:collapse; font-size:0.86rem; }
+thead { background: var(--panel); }
+thead th {
+  padding:10px 14px; text-align:left;
+  color:var(--gold); font-weight:700; font-size:0.82rem;
+  letter-spacing:0.04em;
+  border-bottom:1px solid var(--border);
+}
+tbody tr { border-bottom:1px solid rgba(30,48,96,0.5); transition:background 0.15s; }
+tbody tr:last-child { border-bottom:none; }
+tbody tr:hover { background:rgba(74,158,255,0.05); }
+tbody td { padding:9px 14px; color:var(--text); vertical-align:top; line-height:1.6; }
+.td-key { color:var(--moon2); font-weight:600; white-space:nowrap; }
+.td-gold { color:var(--gold); font-weight:700; }
+.td-blue { color:var(--blue); font-weight:600; }
+.td-cyan { color:var(--cyan); }
+.td-green { color:var(--green); }
+.td-red { color:var(--red); }
+.td-muted { color:var(--muted); font-size:0.82rem; }
+
+/* ─── FORMULA ─── */
+.formula-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius:10px; padding:16px 20px; margin:14px 0;
+  font-family: monospace;
+}
+.formula-box .formula-label {
+  font-size:0.75rem; color:var(--muted); margin-bottom:8px;
+  font-family:'Sarabun',sans-serif; text-transform:uppercase; letter-spacing:0.08em;
+}
+.formula {
+  font-size:1.05rem; color:var(--cyan);
+  text-align:center; padding:8px 0;
+  letter-spacing:0.04em;
+}
+.formula .f-dim { color:var(--muted); }
+.formula .f-gold { color:var(--gold); }
+.formula .f-result { color:var(--green); font-weight:700; }
+
+/* ─── GRID 2 ─── */
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+
+/* ─── MOON PHASE VISUAL ─── */
+.phase-strip {
+  display:flex; gap:0; overflow-x:auto;
+  background: var(--panel); border-radius:12px;
+  border:1px solid var(--border); padding:20px;
+  margin:14px 0;
+}
+.phase-item {
+  display:flex; flex-direction:column; align-items:center;
+  gap:8px; min-width:70px; padding:0 8px;
+  border-right:1px solid var(--border);
+  cursor:pointer; transition:background 0.2s; border-radius:8px;
+}
+.phase-item:last-child { border-right:none; }
+.phase-item:hover { background:rgba(74,158,255,0.08); }
+.phase-moon { font-size:1.8rem; line-height:1; }
+.phase-day { font-size:0.7rem; font-weight:700; color:var(--gold); }
+.phase-name { font-size:0.68rem; color:var(--muted); text-align:center; }
+.phase-time { font-size:0.68rem; color:var(--cyan); text-align:center; }
+
+/* ─── ORBIT DIAGRAM ─── */
+.orbit-diagram {
+  background: var(--panel); border:1px solid var(--border);
+  border-radius:12px; padding:24px; margin:14px 0;
+  display:flex; flex-direction:column; align-items:center; gap:16px;
+}
+.orbit-svg-wrap { width:100%; max-width:520px; }
+.orbit-legend { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--muted); }
+.legend-dot { width:10px; height:10px; border-radius:50%; }
+
+/* ─── WARNING BOX ─── */
+.warn {
+  display:flex; gap:12px; align-items:flex-start;
+  background:rgba(255,96,96,0.06); border:1px solid rgba(255,96,96,0.2);
+  border-radius:10px; padding:14px 16px; margin:12px 0;
+  font-size:0.88rem; line-height:1.7; color:#f8c0c0;
+}
+.warn-icon { font-size:1.1rem; flex-shrink:0; margin-top:1px; }
+
+/* ─── FLOWCHART ─── */
+.flow {
+  background: var(--panel); border:1px solid var(--border);
+  border-radius:12px; padding:24px; margin:14px 0;
+}
+.flow-title { font-size:0.8rem; font-weight:700; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:16px; }
+.flow-row { display:flex; align-items:center; flex-wrap:wrap; gap:0; }
+.flow-box {
+  background: var(--card); border:1px solid var(--border);
+  border-radius:8px; padding:10px 14px; font-size:0.85rem;
+  color:var(--text); line-height:1.4; min-width:100px; text-align:center;
+}
+.flow-box.gold { border-color:var(--gold2); color:var(--gold); background:rgba(240,192,64,0.08); }
+.flow-box.blue { border-color:var(--blue2); color:var(--blue); background:rgba(74,158,255,0.08); }
+.flow-box.cyan { border-color:var(--teal); color:var(--cyan); background:rgba(64,208,224,0.08); }
+.flow-box.green { border-color:#2da870; color:var(--green); background:rgba(80,216,144,0.08); }
+.flow-arrow { color:var(--dim); font-size:1.1rem; padding:0 6px; }
+
+/* ─── COMPARE BOX ─── */
+.compare {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:0; border:1px solid var(--border); border-radius:12px; overflow:hidden;
+  margin:14px 0;
+}
+.compare-col { padding:18px 20px; }
+.compare-col:first-child { border-right:1px solid var(--border); background:rgba(74,158,255,0.04); }
+.compare-col:last-child { background:rgba(255,96,96,0.04); }
+.compare-head { font-size:0.8rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:12px; }
+.compare-head.blue { color:var(--blue); }
+.compare-head.red { color:var(--red); }
+.compare-item { display:flex; gap:8px; margin-bottom:8px; font-size:0.87rem; line-height:1.6; }
+.compare-bullet { flex-shrink:0; margin-top:3px; }
+
+/* ─── PILL ─── */
+.pill {
+  display:inline-block; padding:2px 10px; border-radius:20px;
+  font-size:0.78rem; font-weight:700; margin:0 3px;
+}
+.pill-gold { background:rgba(240,192,64,0.15); color:var(--gold); border:1px solid rgba(240,192,64,0.3); }
+.pill-blue { background:rgba(74,158,255,0.15); color:var(--blue); border:1px solid rgba(74,158,255,0.3); }
+.pill-cyan { background:rgba(64,208,224,0.15); color:var(--cyan); border:1px solid rgba(64,208,224,0.3); }
+.pill-green { background:rgba(80,216,144,0.15); color:var(--green); border:1px solid rgba(80,216,144,0.3); }
+.pill-red { background:rgba(255,96,96,0.15); color:var(--red); border:1px solid rgba(255,96,96,0.3); }
+.pill-purple { background:rgba(160,110,255,0.15); color:var(--purple); border:1px solid rgba(160,110,255,0.3); }
+
+/* ─── DIVIDER ─── */
+.divider { height:1px; background:linear-gradient(90deg,transparent,var(--border),transparent); margin:32px 0; }
+
+/* ─── MOBILE TOGGLE ─── */
+.sidebar-toggle {
+  display:none; position:fixed; bottom:24px; right:24px; z-index:200;
+  width:50px; height:50px; border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  border:none; cursor:pointer; font-size:1.3rem;
+  box-shadow:0 4px 16px rgba(240,192,64,0.4);
+}
+
+/* ─── SUMMARY BOX ─── */
+.summary-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:12px; margin:14px 0;
+}
+.summary-item {
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:10px; padding:14px 16px;
+  display:flex; flex-direction:column; gap:6px;
+}
+.summary-item .s-icon { font-size:1.4rem; }
+.summary-item .s-label { font-size:0.75rem; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.06em; }
+.summary-item .s-val { font-size:0.95rem; color:var(--moon); font-weight:700; }
+.summary-item .s-note { font-size:0.78rem; color:var(--muted); line-height:1.5; }
+
+@media(max-width:900px){
+  .sidebar { transform:translateX(-100%); }
+  .sidebar.open { transform:translateX(0); }
+  .main { margin-left:0; }
+  .hero { padding:48px 24px 40px; }
+  .content { padding:32px 24px; }
+  .grid2,.grid3,.compare { grid-template-columns:1fr; }
+  .compare-col:first-child { border-right:none; border-bottom:1px solid var(--border); }
+  .sidebar-toggle { display:flex; align-items:center; justify-content:center; }
+  .phase-item { min-width:60px; }
+}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<div id="progress"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <span class="moon-icon">🌙</span>
+    <h2>คู่มือ<br>ข้างขึ้นข้างแรม</h2>
+  </div>
+
+  <div class="nav-section">ความรู้พื้นฐาน</div>
+  <a href="#s1" class="nav-item"><span class="num">1</span>ตำแหน่งบนโลก & เวลา</a>
+  <a href="#s2" class="nav-item"><span class="num">2</span>ทิศทางโคจร & ผังข้างขึ้นข้างแรม</a>
+  <a href="#s3" class="nav-item"><span class="num">3</span>27 วัน vs 29 วัน</a>
+  <a href="#s4" class="nav-item"><span class="num">4</span>รูปร่าง ↔ วัน ↔ ทิศ</a>
+
+  <div class="nav-section">การเคลื่อนที่</div>
+  <a href="#s5" class="nav-item"><span class="num">5</span>เคลื่อนใน 1 วัน (15°/ชม.)</a>
+  <a href="#s6" class="nav-item"><span class="num">6</span>ขึ้นช้า 50 นาที/วัน</a>
+  <a href="#s7" class="nav-item"><span class="num">7</span>สังเกตหลายวัน (13°/วัน)</a>
+
+  <div class="nav-section">ปรากฏการณ์</div>
+  <a href="#s8" class="nav-item"><span class="num">8</span>น้ำเกิด-น้ำตาย & อุปราคา</a>
+
+  <div class="nav-section">เครื่องมือ</div>
+  <a href="#flowchart" class="nav-item"><span class="num">✦</span>แผนผังวิธีทำโจทย์</a>
+  <a href="#cheatsheet" class="nav-item"><span class="num">★</span>สรุปสั้นใช้สอบ</a>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-moon">🌙</span>
+  <h1>ความรู้พื้นฐานสำหรับ<br>โจทย์ข้างขึ้นข้างแรม</h1>
+  <p>รวมหลักการ สูตร และวิธีคิดครบทุกข้อ พร้อมตารางและผังสรุปสำหรับใช้สอบ</p>
+  <div class="hero-tags">
+    <span class="tag tag-gold">🌕 8 หัวข้อหลัก</span>
+    <span class="tag tag-blue">📐 สูตรคำนวณ</span>
+    <span class="tag tag-cyan">🔭 ปรากฏการณ์พิเศษ</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ══════════════════════════════════════════ -->
+<!-- S1 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <div class="section-num num-gold">1</div>
+    <div class="section-title-wrap">
+      <h2>ตำแหน่งบนโลก กับ เวลา ณ ขณะนั้น</h2>
+      <div class="subtitle">เวลาสังเกต ↔ ตำแหน่งบนโลก — ต้องกำหนดให้ชัดก่อนทำโจทย์ทุกข้อ</div>
+    </div>
+  </div>
+
+  <div class="card card-gold">
+    <div class="card-title">⚙️ หลักการ</div>
+    <p>โลกหมุนรอบตัวเอง <strong>360° ใน 24 ชั่วโมง</strong> → <span class="pill pill-gold">15° / ชั่วโมง</span></p>
+    <p>ดังนั้น <strong>ตำแหน่งที่สังเกต</strong> และ <strong>เวลาที่สังเกต</strong> เป็นของคู่กันที่แยกไม่ออก</p>
+  </div>
+
+  <div class="card card-blue">
+    <div class="card-title">📋 สิ่งที่ต้องกำหนดก่อนทำโจทย์ทุกข้อ</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>สิ่งที่ต้องรู้</th><th>ผลที่ได้</th></tr></thead>
+        <tbody>
+          <tr><td class="td-key">ซีกโลกเหนือหรือใต้?</td><td>กำหนดทิศที่ดวงจันทร์โค้งหัวไป และรูป D/C สลับกัน</td></tr>
+          <tr><td class="td-key">ละติจูดเท่าไร?</td><td>กำหนดมุมเงยสูงสุดของดวงจันทร์</td></tr>
+          <tr><td class="td-key">สังเกตเวลากี่โมง?</td><td>กำหนดว่าโลกหมุนไปกี่องศาแล้วจากเที่ยงคืน</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card card-cyan">
+    <div class="card-title">🕐 ตารางเวลา ↔ ทิศดวงอาทิตย์ (ซีกโลกเหนือ)</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>เวลา</th><th>ดวงอาทิตย์อยู่ทิศ</th><th>หมายเหตุ</th></tr></thead>
+        <tbody>
+          <tr><td class="td-gold">06:00</td><td>ตะวันออก</td><td class="td-muted">ขอบฟ้า (ดวงอาทิตย์ขึ้น)</td></tr>
+          <tr><td class="td-gold">12:00</td><td>ใต้</td><td class="td-muted">จุดสูงสุด (ทิศใต้ในซีกโลกเหนือ)</td></tr>
+          <tr><td class="td-gold">18:00</td><td>ตะวันตก</td><td class="td-muted">ขอบฟ้า (ดวงอาทิตย์ตก)</td></tr>
+          <tr><td class="td-gold">00:00</td><td>ใต้ขอบฟ้า</td><td class="td-muted">ท้องฟ้ามืดสนิท</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="highlight blue">💡 <strong>การใช้งาน:</strong> โจทย์บอกว่า "ดวงจันทร์อยู่ทางทิศใต้" → ต้องใช้เวลาร่วมด้วย เพื่อย้อนหาว่าเป็นข้างขึ้นหรือข้างแรมวันที่เท่าไร</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- S2 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <div class="section-num num-blue">2</div>
+    <div class="section-title-wrap">
+      <h2>ทิศทางการโคจร & ตำแหน่งบน-ล่างของผัง</h2>
+      <div class="subtitle">ดวงจันทร์โคจรทวนเข็มนาฬิกา — ทิศแสงอาทิตย์กำหนดด้านสว่าง</div>
+    </div>
+  </div>
+
+  <div class="card card-blue">
+    <div class="card-title">🔁 ทิศทางโคจร</div>
+    <p>ดวงจันทร์โคจรรอบโลกในทิศ <strong>ทวนเข็มนาฬิกา</strong> (มองจากขั้วโลกเหนือลงมา) ซึ่งเป็นทิศเดียวกับที่โลกหมุนรอบตัวเอง และโคจรรอบดวงอาทิตย์</p>
+  </div>
+
+  <!-- Orbit Diagram SVG -->
+  <div class="orbit-diagram">
+    <div style="font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">ผังโคจรดวงจันทร์มาตรฐาน (มองจากขั้วโลกเหนือ)</div>
+    <div class="orbit-svg-wrap">
+      <svg viewBox="0 0 520 320" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+        <!-- Background -->
+        <rect width="520" height="320" fill="#0d1528" rx="10"/>
+        <!-- Stars bg -->
+        <circle cx="30" cy="20" r="1" fill="white" opacity="0.4"/>
+        <circle cx="80" cy="45" r="1.2" fill="white" opacity="0.3"/>
+        <circle cx="490" cy="30" r="1" fill="white" opacity="0.5"/>
+        <circle cx="460" cy="80" r="0.8" fill="white" opacity="0.3"/>
+        <circle cx="50" cy="290" r="1" fill="white" opacity="0.4"/>
+        <circle cx="480" cy="270" r="1.2" fill="white" opacity="0.3"/>
+        <circle cx="260" cy="15" r="0.8" fill="white" opacity="0.5"/>
+        <circle cx="130" cy="300" r="1" fill="white" opacity="0.3"/>
+        <circle cx="390" cy="295" r="0.8" fill="white" opacity="0.4"/>
+
+        <!-- Sun (right side) -->
+        <circle cx="460" cy="160" r="32" fill="#f0c040" opacity="0.15"/>
+        <circle cx="460" cy="160" r="24" fill="#f0c040" opacity="0.25"/>
+        <circle cx="460" cy="160" r="16" fill="#f0c040" opacity="0.9"/>
+        <text x="460" y="164" text-anchor="middle" font-size="10" fill="#0a0e1a" font-weight="bold">☀️</text>
+        <text x="460" y="200" text-anchor="middle" font-size="10" fill="#f0c040" opacity="0.7">ดวงอาทิตย์</text>
+
+        <!-- Sun rays -->
+        <line x1="444" y1="160" x2="300" y2="160" stroke="#f0c040" stroke-width="1" opacity="0.15" stroke-dasharray="4,3"/>
+        <text x="370" y="155" text-anchor="middle" font-size="9" fill="#f0c040" opacity="0.5">แสง →</text>
+
+        <!-- Earth -->
+        <circle cx="200" cy="160" r="18" fill="#1a3a6a"/>
+        <circle cx="200" cy="160" r="18" fill="none" stroke="#4a9eff" stroke-width="1.5"/>
+        <text x="200" y="164" text-anchor="middle" font-size="12">🌍</text>
+        <text x="200" y="190" text-anchor="middle" font-size="9" fill="#4a9eff">โลก</text>
+
+        <!-- Orbit ellipse -->
+        <ellipse cx="200" cy="160" rx="110" ry="90" fill="none" stroke="#1e3060" stroke-width="1.5" stroke-dasharray="5,3"/>
+
+        <!-- Arrow direction (counterclockwise) -->
+        <path d="M 290 100 Q 310 90 305 115" fill="none" stroke="#2ab8c8" stroke-width="1.5"/>
+        <polygon points="305,115 298,106 312,108" fill="#2ab8c8"/>
+        <text x="318" y="98" font-size="9" fill="#2ab8c8">ทวนเข็ม</text>
+
+        <!-- Moon positions -->
+        <!-- Top (ข้างขึ้น วัน 7-8) -->
+        <circle cx="200" cy="70" r="9" fill="#f5e6b0"/>
+        <!-- half lit from right -->
+        <path d="M200,61 A9,9 0 0,1 200,79 Z" fill="#0d1528"/>
+        <text x="200" y="52" text-anchor="middle" font-size="8" fill="#f5e6b0">ข้างขึ้น ค่ำ 7-8</text>
+        <text x="200" y="43" text-anchor="middle" font-size="8" fill="#muted">🌓</text>
+
+        <!-- Right (เดือนดับ วัน 1) -->
+        <circle cx="310" cy="160" r="9" fill="#1a2850" stroke="#4a6090" stroke-width="1"/>
+        <text x="335" y="155" font-size="8" fill="#7a9ac8">เดือนดับ</text>
+        <text x="335" y="166" font-size="8" fill="#7a9ac8">วันที่ 1 🌑</text>
+
+        <!-- Bottom (ข้างแรม วัน 22-23) -->
+        <circle cx="200" cy="250" r="9" fill="#f5e6b0"/>
+        <!-- half lit from left -->
+        <path d="M200,241 A9,9 0 0,0 200,259 Z" fill="#0d1528"/>
+        <text x="200" y="272" text-anchor="middle" font-size="8" fill="#f5e6b0">ข้างแรม ค่ำ 22-23</text>
+        <text x="200" y="281" text-anchor="middle" font-size="8" fill="#7a9ac8">🌗</text>
+
+        <!-- Left (เพ็ญ วัน 15) -->
+        <circle cx="90" cy="160" r="10" fill="#f5e6b0"/>
+        <circle cx="90" cy="160" r="10" fill="none" stroke="#f0c040" stroke-width="1" opacity="0.5"/>
+        <text x="55" y="155" text-anchor="middle" font-size="8" fill="#f0c040">เดือนเพ็ญ</text>
+        <text x="55" y="166" text-anchor="middle" font-size="8" fill="#f0c040">วันที่ 15 🌕</text>
+
+        <!-- Labels top/bottom -->
+        <rect x="10" y="10" width="60" height="20" rx="4" fill="rgba(74,158,255,0.15)" stroke="#2d7dd2" stroke-width="1"/>
+        <text x="40" y="23" text-anchor="middle" font-size="9" fill="#4a9eff" font-weight="bold">ข้างขึ้น ↑</text>
+
+        <rect x="10" y="290" width="60" height="20" rx="4" fill="rgba(255,96,96,0.1)" stroke="#c04040" stroke-width="1"/>
+        <text x="40" y="303" text-anchor="middle" font-size="9" fill="#ff6060" font-weight="bold">ข้างแรม ↓</text>
+      </svg>
+    </div>
+    <div class="orbit-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#f0c040"></div>ดวงอาทิตย์</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4a9eff"></div>โลก</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f5e6b0"></div>ดวงจันทร์</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#2ab8c8"></div>ทิศโคจร (ทวนเข็ม)</div>
+    </div>
+  </div>
+
+  <div class="card card-gold">
+    <div class="card-title">☀️ กฎทิศทางแสง</div>
+    <p>แสงอาทิตย์ส่องมาจาก <strong>ด้านขวาเสมอ</strong> ในผังมาตรฐาน</p>
+    <p>ด้านสว่างของดวงจันทร์ <strong>หันเข้าหาดวงอาทิตย์เสมอ</strong></p>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th></th><th>ข้างขึ้น (บนผัง)</th><th>ข้างแรม (ล่างผัง)</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">วันที่</td><td class="td-blue">1–14</td><td class="td-red">15–29</td></tr>
+        <tr><td class="td-key">ตำแหน่งในผัง</td><td>บนผัง</td><td>ล่างผัง</td></tr>
+        <tr><td class="td-key">มุมห่างดวงอาทิตย์</td><td>0° → 180°</td><td>180° → 360°</td></tr>
+        <tr><td class="td-key">ด้านสว่าง (ซีกโลกเหนือ)</td><td class="td-blue">ขวา (รูป D)</td><td class="td-red">ซ้าย (รูป C)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- S3 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <div class="section-num num-cyan">3</div>
+    <div class="section-title-wrap">
+      <h2>ระยะเวลาโคจร: 27 วัน vs 29 วัน</h2>
+      <div class="subtitle">แหล่งสับสนที่พบบ่อยที่สุด — ต้องแยกให้ชัดตั้งแต่ต้น</div>
+    </div>
+  </div>
+
+  <div class="compare">
+    <div class="compare-col">
+      <div class="compare-head blue">27.3 วัน — Sidereal Period</div>
+      <div class="compare-item"><span class="compare-bullet">🔵</span><span>โคจรรอบโลก <strong>1 รอบจริงๆ</strong> เทียบกับดาวฤกษ์พื้นหลัง</span></div>
+      <div class="compare-item"><span class="compare-bullet">🔵</span><span>ใช้คำนวณตำแหน่งจริงในอวกาศ</span></div>
+      <div class="compare-item"><span class="compare-bullet">⚠️</span><span><strong>ไม่ใช่</strong>รอบที่ใช้นับข้างขึ้นข้างแรม</span></div>
+    </div>
+    <div class="compare-col">
+      <div class="compare-head red">29.5 วัน — Synodic Period</div>
+      <div class="compare-item"><span class="compare-bullet">🔴</span><span>กลับมาอยู่ตำแหน่งเดิมเทียบกับ<strong>ดวงอาทิตย์</strong> (เดือนดับ→เดือนดับ)</span></div>
+      <div class="compare-item"><span class="compare-bullet">🔴</span><span><strong>ใช้นับ</strong>วันข้างขึ้นข้างแรม</span></div>
+      <div class="compare-item"><span class="compare-bullet">✅</span><span>เพราะเราดูดวงจันทร์เทียบกับแสงอาทิตย์</span></div>
+    </div>
+  </div>
+
+  <div class="card card-cyan">
+    <div class="card-title">🤔 ทำไมถึงต่างกัน 2.2 วัน?</div>
+    <p>ระหว่างที่ดวงจันทร์โคจรครบ 27.3 วัน โลกก็เคลื่อนไปตามวงโคจรรอบดวงอาทิตย์แล้ว ~27° ดวงจันทร์จึงต้องโคจรเพิ่มอีก ~2.2 วัน เพื่อให้มุมระหว่างดวงจันทร์-โลก-ดวงอาทิตย์กลับมาเท่าเดิม</p>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>วันที่ข้างขึ้นข้างแรม</th><th>มุมห่างดวงอาทิตย์</th><th>ตำแหน่งในผัง</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">1 (เดือนดับ) 🌑</td><td class="td-gold">0°</td><td>ดวงจันทร์-โลก-อาทิตย์ เกือบเป็นเส้นตรง</td></tr>
+        <tr><td class="td-key">7–8 (ครึ่งดวงแรก) 🌓</td><td class="td-gold">~90°</td><td>บนผัง ห่าง 90°</td></tr>
+        <tr><td class="td-key">15 (เดือนเพ็ญ) 🌕</td><td class="td-gold">180°</td><td>โลกอยู่กลาง อาทิตย์-โลก-ดวงจันทร์ ตรงแนว</td></tr>
+        <tr><td class="td-key">22–23 (ครึ่งดวงหลัง) 🌗</td><td class="td-gold">~270°</td><td>ล่างผัง ห่าง 270°</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- S4 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <div class="section-num num-green">4</div>
+    <div class="section-title-wrap">
+      <h2>ภาพที่ปรากฏ ↔ วันข้างขึ้นข้างแรม ↔ ทิศ</h2>
+      <div class="subtitle">กฎจำรูปร่าง เวลาขึ้น-ตก และทิศสูงสุด</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card card-blue">
+      <div class="card-title">🌓 ข้างขึ้น (วันที่ 1–14)</div>
+      <p>ด้านขวาสว่าง รูปตัว <strong>D</strong></p>
+      <p style="margin-top:8px;font-size:1.6rem;text-align:center;letter-spacing:8px">🌑🌒🌓🌔🌕</p>
+      <div class="highlight blue" style="margin-top:10px;">⚠️ ซีกโลกใต้ตรงข้ามกัน: ข้างขึ้นเป็น C</div>
+    </div>
+    <div class="card card-red">
+      <div class="card-title">🌗 ข้างแรม (วันที่ 15–29)</div>
+      <p>ด้านซ้ายสว่าง รูปตัว <strong>C</strong></p>
+      <p style="margin-top:8px;font-size:1.6rem;text-align:center;letter-spacing:8px">🌕🌖🌗🌘🌑</p>
+      <div class="highlight red" style="margin-top:10px;">⚠️ ซีกโลกใต้ตรงข้ามกัน: ข้างแรมเป็น D</div>
+    </div>
+  </div>
+
+  <!-- Phase strip -->
+  <div class="phase-strip">
+    <div class="phase-item">
+      <div class="phase-moon">🌑</div>
+      <div class="phase-day">วัน 1</div>
+      <div class="phase-name">เดือนดับ</div>
+      <div class="phase-time">ขึ้น 06:00<br>ตก 18:00</div>
+    </div>
+    <div class="phase-item">
+      <div class="phase-moon">🌒</div>
+      <div class="phase-day">วัน 3-4</div>
+      <div class="phase-name">เสี้ยวข้างขึ้น</div>
+      <div class="phase-time">ขึ้น ~08:00<br>ตก ~20:00</div>
+    </div>
+    <div class="phase-item">
+      <div class="phase-moon">🌓</div>
+      <div class="phase-day">วัน 7-8</div>
+      <div class="phase-name">ครึ่งดวงแรก</div>
+      <div class="phase-time">ขึ้น 12:00<br>ตก 00:00</div>
+    </div>
+    <div class="phase-item">
+      <div class="phase-moon">🌔</div>
+      <div class="phase-day">วัน 11-12</div>
+      <div class="phase-name">โกรนข้างขึ้น</div>
+      <div class="phase-time">ขึ้น ~15:00<br>ตก ~03:00</div>
+    </div>
+    <div class="phase-item">
+      <div class="phase-moon">🌕</div>
+      <div class="phase-day">วัน 15</div>
+      <div class="phase-name">เดือนเพ็ญ</div>
+      <div class="phase-time">ขึ้น 18:00<br>ตก 06:00</div>
+    </div>
+    <div class="phase-item">
+      <div class="phase-moon">🌖</div>
+      <div class="phase-day">วัน 18-19</div>
+      <div class="phase-name">โกรนข้างแรม</div>
+      <div class="phase-time">ขึ้น ~21:00<br>ตก ~09:00</div>
+    </div>
+    <div class="phase-item">
+      <div class="phase-moon">🌗</div>
+      <div class="phase-day">วัน 22-23</div>
+      <div class="phase-name">ครึ่งดวงหลัง</div>
+      <div class="phase-time">ขึ้น 00:00<br>ตก 12:00</div>
+    </div>
+    <div class="phase-item">
+      <div class="phase-moon">🌘</div>
+      <div class="phase-day">วัน 26-27</div>
+      <div class="phase-name">เสี้ยวข้างแรม</div>
+      <div class="phase-time">ขึ้น ~03:00<br>ตก ~15:00</div>
+    </div>
+    <div class="phase-item">
+      <div class="phase-moon">🌑</div>
+      <div class="phase-day">วัน 29</div>
+      <div class="phase-name">เดือนดับอีกครั้ง</div>
+      <div class="phase-time">ขึ้น ~06:00<br>ตก ~18:00</div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>วันที่</th><th>รูปร่าง</th><th>ขึ้น</th><th>สูงสุด (ทิศใต้)</th><th>ตก</th><th>เห็นได้ช่วง</th></tr></thead>
+      <tbody>
+        <tr><td class="td-gold">1</td><td>🌑 มืดทั้งดวง</td><td class="td-cyan">06:00</td><td class="td-cyan">12:00</td><td class="td-cyan">18:00</td><td class="td-muted">เช้า (มักไม่เห็น)</td></tr>
+        <tr><td class="td-gold">7–8</td><td>🌓 ครึ่งดวงขวา</td><td class="td-cyan">12:00</td><td class="td-cyan">18:00</td><td class="td-cyan">00:00</td><td class="td-muted">บ่าย–เที่ยงคืน</td></tr>
+        <tr><td class="td-gold">15</td><td>🌕 เต็มดวง</td><td class="td-cyan">18:00</td><td class="td-cyan">00:00</td><td class="td-cyan">06:00</td><td class="td-muted">พลบค่ำ–รุ่งเช้า</td></tr>
+        <tr><td class="td-gold">22–23</td><td>🌗 ครึ่งดวงซ้าย</td><td class="td-cyan">00:00</td><td class="td-cyan">06:00</td><td class="td-cyan">12:00</td><td class="td-muted">เที่ยงคืน–เที่ยงวัน</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight green">
+    <strong>💡 วิธีใช้ตารางนี้ทำโจทย์:</strong><br>
+    • โจทย์บอกรูปร่าง → รู้วันที่ทันที<br>
+    • โจทย์บอกเวลาที่เห็น + ทิศ → คำนวณย้อนหาวันที่<br>
+    • โจทย์บอกวันที่ → ทำนายเวลาขึ้น-ตก และรูปร่าง
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- S5 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section" id="s5">
+  <div class="section-header">
+    <div class="section-num num-gold">5</div>
+    <div class="section-title-wrap">
+      <h2>การเคลื่อนที่ใน 1 วัน: ตะวันออก → ตะวันตก ที่ 15°/ชั่วโมง</h2>
+      <div class="subtitle">เกิดจากโลกหมุน — เป็นการเคลื่อนที่ปรากฏ ไม่ใช่การเคลื่อนที่จริง</div>
+    </div>
+  </div>
+
+  <div class="card card-gold">
+    <div class="card-title">⚙️ สาเหตุ</div>
+    <p>โลกหมุนรอบตัวเองจากตะวันตกไปตะวันออก ทำให้ผู้สังเกตบนโลกมองเห็นดวงจันทร์ (และดาวทุกดวง) เคลื่อนจาก <strong>ตะวันออก → ตะวันตก</strong> ในแต่ละวัน</p>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula-label">อัตราการเคลื่อนที่ปรากฏ</div>
+    <div class="formula">
+      <span class="f-dim">360° ÷ 24 ชั่วโมง = </span><span class="f-result">15° / ชั่วโมง</span>
+    </div>
+  </div>
+
+  <div class="card card-cyan">
+    <div class="card-title">🎯 การใช้งานในโจทย์</div>
+    <p>• ถ้าเห็นดวงจันทร์อยู่ทิศตะวันออก ณ 18:00 → อีก 6 ชั่วโมง (00:00) จะอยู่ที่ทิศใต้ (เคลื่อน 90°)</p>
+    <p>• "ดวงจันทร์จะตกเวลาใด" → นับมุมจากตำแหน่งปัจจุบันถึงขอบฟ้าตะวันตก แล้วหารด้วย 15°</p>
+  </div>
+
+  <div class="warn">
+    <span class="warn-icon">⚠️</span>
+    <span><strong>อย่าสับสนกับข้อ 7:</strong> ข้อ 5 คือการเคลื่อนที่ในระยะ <strong>ชั่วโมง</strong> (เหตุจากโลกหมุน) ส่วนข้อ 7 คือการเคลื่อนที่ในระยะ <strong>หลายวัน</strong> (เหตุจากดวงจันทร์โคจร) และมีทิศตรงข้ามกัน</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- S6 + S7 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section" id="s6">
+  <div class="section-header">
+    <div class="section-num num-purple">6</div>
+    <div class="section-title-wrap">
+      <h2>ดวงจันทร์ขึ้นช้ากว่าวันก่อน ~50 นาที</h2>
+      <div class="subtitle">และ ทำไมดวงจันทร์เลื่อนไปทางตะวันออก ~13°/วัน</div>
+    </div>
+  </div>
+
+  <div class="card card-purple">
+    <div class="card-title">🔁 ภาพรวมก่อน: มี 2 การเคลื่อนที่ซ้อนกัน</div>
+    <div class="grid2" style="margin-top:12px;">
+      <div style="background:rgba(74,158,255,0.08);border:1px solid rgba(74,158,255,0.2);border-radius:10px;padding:14px;">
+        <div style="font-weight:700;color:var(--blue);margin-bottom:6px;">🌍 การเคลื่อนที่ที่ 1</div>
+        <div style="font-size:0.87rem;line-height:1.7;">โลกหมุนรอบตัวเอง → เห็นดวงจันทร์เคลื่อน<br><strong>ตะวันออก → ตะวันตก</strong><br>15°/ชม. ภายในคืนเดียว<br><em style="color:var(--muted);">(การเคลื่อนที่ปรากฏ)</em></div>
+      </div>
+      <div style="background:rgba(160,110,255,0.08);border:1px solid rgba(160,110,255,0.2);border-radius:10px;padding:14px;">
+        <div style="font-weight:700;color:var(--purple);margin-bottom:6px;">🌙 การเคลื่อนที่ที่ 2</div>
+        <div style="font-size:0.87rem;line-height:1.7;">ดวงจันทร์โคจรรอบโลกจริงๆ → เลื่อน<br><strong>ตะวันตก → ตะวันออก</strong><br>~13°/วัน (เทียบกับดาวพื้นหลัง)<br><em style="color:var(--muted);">(การเคลื่อนที่จริง)</em></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-gold">
+    <div class="card-title">📐 ที่มาของ 13°/วัน</div>
+    <div class="formula-box" style="margin-top:8px;">
+      <div class="formula-label">ดวงจันทร์โคจรรอบโลก ~360° ใน ~27 วัน</div>
+      <div class="formula">
+        <span class="f-dim">360° ÷ 27 วัน ≈ </span><span class="f-result">13° / วัน</span>
+      </div>
+    </div>
+    <p style="margin-top:8px;">ดังนั้นทุกวัน ดวงจันทร์จะขยับตำแหน่ง <strong>จริง</strong> ไปทางตะวันออก ~13° เทียบกับดาวพื้นหลัง</p>
+  </div>
+
+  <div class="card card-cyan">
+    <div class="card-title">🧠 แปลความให้เห็นภาพ</div>
+    <div style="background:var(--panel);border-radius:10px;padding:16px;font-size:0.9rem;line-height:1.8;">
+      <div>📍 <strong>วันนี้ 20:00</strong> → ดวงจันทร์อยู่ "ตรงนี้" เทียบกับกลุ่มดาว X</div>
+      <div style="margin:6px 0;color:var(--muted);font-size:0.82rem;">↓ ผ่านไป 24 ชั่วโมง ดวงจันทร์ "แอบวิ่งไปข้างหน้า" ในวงโคจรแล้ว 13°</div>
+      <div>📍 <strong>พรุ่งนี้ 20:00</strong> → ดวงจันทร์ <strong>ไม่อยู่ที่เดิม</strong> แต่เลื่อนไปทาง<span class="pill pill-cyan">ตะวันออก ~13°</span></div>
+    </div>
+  </div>
+
+  <div class="card card-blue">
+    <div class="card-title">⏰ เชื่อมสู่ "ช้าลง ~50 นาที/วัน"</div>
+    <div class="formula-box" style="margin-top:8px;">
+      <div class="formula-label">โลกหมุน 360° ใน 24 ชม. → 15° ≈ 1 ชั่วโมง</div>
+      <div class="formula">
+        <span class="f-dim">13° ÷ 15°/ชม. ≈ </span><span class="f-result">0.87 ชม. ≈ 52 นาที</span><span class="f-dim"> (ปัดเป็น ~50 นาที)</span>
+      </div>
+    </div>
+    <p style="margin-top:8px;"><strong>ความหมาย:</strong> โลกต้องหมุนเพิ่มอีก ~13° ถึงจะพาผู้สังเกตกลับมา "หันหน้า" เจอดวงจันทร์อีกครั้ง → ดวงจันทร์จึงขึ้นช้าลง <strong>~50 นาทีทุกวัน</strong></p>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>วันที่</th><th>เวลาดวงจันทร์ขึ้น</th><th>วิธีคิด</th></tr></thead>
+      <tbody>
+        <tr><td class="td-gold">1 (เดือนดับ)</td><td class="td-cyan">06:00</td><td class="td-muted">ฐานตั้งต้น</td></tr>
+        <tr><td class="td-gold">8</td><td class="td-cyan">~12:00</td><td class="td-muted">06:00 + (7 × 50 นาที) = 06:00 + 350 นาที</td></tr>
+        <tr><td class="td-gold">10</td><td class="td-cyan">~13:30</td><td class="td-muted">06:00 + (9 × 50 นาที) = 06:00 + 450 นาที</td></tr>
+        <tr><td class="td-gold">15 (เพ็ญ)</td><td class="td-cyan">~18:00</td><td class="td-muted">06:00 + (14 × 50 นาที) = 06:00 + 700 นาที</td></tr>
+        <tr><td class="td-gold">22</td><td class="td-cyan">~00:00</td><td class="td-muted">06:00 + (21 × 50 นาที) = 06:00 + 1050 นาที</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section" id="s7" style="margin-top:-20px;">
+  <div class="section-header">
+    <div class="section-num num-cyan">7</div>
+    <div class="section-title-wrap">
+      <h2>สังเกตหลายวัน: ดวงจันทร์เคลื่อนตะวันตก → ตะวันออก</h2>
+      <div class="subtitle">ผลที่มองเห็นได้จากการโคจรจริงของดวงจันทร์</div>
+    </div>
+  </div>
+
+  <div class="card card-cyan">
+    <div class="card-title">🔭 วิธีสังเกตที่ถูกต้อง</div>
+    <p>จดตำแหน่งดวงจันทร์เทียบกับกลุ่มดาวเดิม <strong>ในเวลาเดียวกันทุกคืน</strong></p>
+    <div class="highlight">⚠️ ต้องใช้เวลาเดิมเสมอ — ถ้าใช้เวลาต่างกัน จะสับสนกับการเคลื่อนที่ประจำวันจากข้อ 5</div>
+    <p style="margin-top:8px;">จะเห็นว่าแต่ละคืนดวงจันทร์อยู่ทาง <strong>ตะวันออกมากขึ้น</strong> เรื่อยๆ เทียบกับดาว</p>
+  </div>
+
+  <div class="card card-gold">
+    <div class="card-title">📊 สรุปความต่างระหว่างข้อ 5, 6 และ 7</div>
+    <div class="tbl-wrap" style="margin-top:8px;">
+      <table>
+        <thead><tr><th></th><th>สาเหตุ</th><th>ทิศที่เห็น</th><th>ช่วงเวลา</th><th>อัตรา</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="td-key">ข้อ 5</td>
+            <td>โลกหมุนรอบตัวเอง</td>
+            <td><span class="pill pill-blue">ตอ.→ตต.</span></td>
+            <td>ภายในคืนเดียว</td>
+            <td class="td-gold">15°/ชม.</td>
+          </tr>
+          <tr>
+            <td class="td-key">ข้อ 6</td>
+            <td>ดวงจันทร์โคจร</td>
+            <td><span class="pill pill-purple">—ผล: ขึ้นช้า—</span></td>
+            <td>วันต่อวัน</td>
+            <td class="td-gold">~50 นาที/วัน</td>
+          </tr>
+          <tr>
+            <td class="td-key">ข้อ 7</td>
+            <td>ดวงจันทร์โคจร</td>
+            <td><span class="pill pill-cyan">ตต.→ตอ.</span></td>
+            <td>หลายวัน (เวลาเดิม)</td>
+            <td class="td-gold">~13°/วัน</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="highlight" style="margin-top:12px;">
+      💡 <strong>ข้อ 6 กับ 7 มีสาเหตุเดียวกัน</strong> คือดวงจันทร์โคจร ~13°/วัน<br>
+      แต่มอง <strong>คนละแง่</strong>: ข้อ 6 = มุมมองเวลา (ขึ้นช้าลง) / ข้อ 7 = มุมมองตำแหน่ง (เลื่อนทิศ) — ทั้งสองเป็นเหรียญด้านเดียวกัน
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- S8 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section" id="s8">
+  <div class="section-header">
+    <div class="section-num num-red">8</div>
+    <div class="section-title-wrap">
+      <h2>ปรากฏการณ์อื่นที่โยงกับผังข้างขึ้นข้างแรม</h2>
+      <div class="subtitle">น้ำเกิด-น้ำตาย, สุริยุปราคา, จันทรุปราคา, Supermoon</div>
+    </div>
+  </div>
+
+  <!-- น้ำเกิดน้ำตาย -->
+  <div class="card card-blue">
+    <div class="card-title">🌊 8.1 น้ำเกิด – น้ำตาย (Spring / Neap Tide)</div>
+    <p>เกิดจากแรงโน้มถ่วงของดวงจันทร์ (และดวงอาทิตย์) ดึงน้ำในมหาสมุทร</p>
+    <div class="grid2" style="margin-top:12px;">
+      <div style="background:rgba(74,158,255,0.08);border:1px solid rgba(74,158,255,0.2);border-radius:10px;padding:14px;">
+        <div style="font-weight:700;color:var(--blue);margin-bottom:6px;">🌊 น้ำเกิด (Spring Tide)</div>
+        <div style="font-size:0.87rem;line-height:1.7;">แรงรวมกันมากที่สุด → น้ำขึ้นสูงสุด-ลงต่ำสุด<br>เกิดเมื่อเรียงตรง: โลก-จันทร์-อาทิตย์<br><strong>วันที่ 1 (เดือนดับ) และ วันที่ 15 (เพ็ญ)</strong></div>
+      </div>
+      <div style="background:rgba(64,208,224,0.08);border:1px solid rgba(64,208,224,0.2);border-radius:10px;padding:14px;">
+        <div style="font-weight:700;color:var(--cyan);margin-bottom:6px;">🏖️ น้ำตาย (Neap Tide)</div>
+        <div style="font-size:0.87rem;line-height:1.7;">แรงหักล้างกัน → น้ำขึ้น-ลงน้อย<br>เกิดเมื่อทำมุม 90°<br><strong>วันที่ 7-8 และ วันที่ 22-23</strong></div>
+      </div>
+    </div>
+    <div class="tbl-wrap" style="margin-top:12px;">
+      <table>
+        <thead><tr><th>วันที่</th><th>ตำแหน่งในผัง</th><th>น้ำ</th></tr></thead>
+        <tbody>
+          <tr><td class="td-gold">1 (เดือนดับ)</td><td>ดวงจันทร์-โลก-อาทิตย์ ตรงแนว</td><td class="td-blue"><strong>น้ำเกิด</strong></td></tr>
+          <tr><td class="td-gold">7–8</td><td>มุม 90°</td><td class="td-cyan">น้ำตาย</td></tr>
+          <tr><td class="td-gold">15 (เพ็ญ)</td><td>อาทิตย์-โลก-ดวงจันทร์ ตรงแนว</td><td class="td-blue"><strong>น้ำเกิด</strong></td></tr>
+          <tr><td class="td-gold">22–23</td><td>มุม 90°</td><td class="td-cyan">น้ำตาย</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- สุริยุปราคา -->
+  <div class="card card-gold">
+    <div class="card-title">☀️ 8.2 สุริยุปราคา (Solar Eclipse)</div>
+    <p>เกิดเมื่อ <strong>ดวงจันทร์บังดวงอาทิตย์</strong> → ต้องเป็น <span class="pill pill-gold">วันที่ 1 (เดือนดับ)</span> เท่านั้น</p>
+    <div class="highlight" style="margin-top:10px;">💡 ทำไมไม่เกิดทุกเดือนดับ: วงโคจรดวงจันทร์เอียงทำมุม ~5° กับระนาบวงโคจรโลก สุริยุปราคาเกิดเฉพาะเมื่อเดือนดับตรงกับจุดที่วงโคจรตัดกัน (Node)</div>
+    <div class="tbl-wrap" style="margin-top:10px;">
+      <table>
+        <thead><tr><th>ประเภท</th><th>เงื่อนไข</th></tr></thead>
+        <tbody>
+          <tr><td class="td-key">เต็มดวง (Total)</td><td>ดวงจันทร์ใกล้โลก → ขนาดปรากฏใหญ่กว่าอาทิตย์พอดี</td></tr>
+          <tr><td class="td-key">วงแหวน (Annular)</td><td>ดวงจันทร์ไกลโลก → ขนาดเล็กกว่า เห็นวงแหวนสว่าง</td></tr>
+          <tr><td class="td-key">บางส่วน (Partial)</td><td>เงาบางส่วนพาดผ่าน</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- จันทรุปราคา -->
+  <div class="card card-red">
+    <div class="card-title">🌑 8.3 จันทรุปราคา (Lunar Eclipse)</div>
+    <p>เกิดเมื่อ <strong>โลกบังดวงจันทร์</strong> → ต้องเป็น <span class="pill pill-gold">วันที่ 15 (เพ็ญ)</span> เท่านั้น</p>
+    <p style="margin-top:8px;"><strong>จุดต่างจากสุริยุปราคา:</strong> มองเห็นได้จาก<strong>ซีกโลกทั้งหมดที่เป็นกลางคืน</strong> ในขณะนั้น ต่างจากสุริยุปราคาที่เห็นได้เฉพาะแถบแคบๆ</p>
+    <div class="highlight red" style="margin-top:10px;">⚠️ ทำไมไม่เกิดทุกเพ็ญ: เหตุผลเดียวกับสุริยุปราคา คือวงโคจรเอียง ~5°</div>
+  </div>
+
+  <!-- Supermoon -->
+  <div class="card card-purple">
+    <div class="card-title">🌕 8.4 Supermoon (ดวงจันทร์เต็มดวงใกล้โลก)</div>
+    <p>เกิดเมื่อเพ็ญตรงกับ <strong>จุด Perigee</strong> (ใกล้โลกที่สุดในวงโคจรรูปวงรี) ดวงจันทร์จะดูใหญ่และสว่างกว่าปกติ <span class="pill pill-purple">~14% ใหญ่กว่า</span> และ <span class="pill pill-purple">~30% สว่างกว่า</span></p>
+    <p style="margin-top:8px; color:var(--muted); font-size:0.87rem;">ไม่มีผลต่อการคำนวณข้างขึ้นข้างแรม แต่มักออกโจทย์เชิงอธิบายปรากฏการณ์</p>
+  </div>
+
+  <!-- ตารางรวมปรากฏการณ์ -->
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>ปรากฏการณ์</th><th>วันที่เกิด</th><th>เงื่อนไขเพิ่มเติม</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">น้ำเกิด</td><td class="td-gold">1 และ 15</td><td>ทุกเดือน (ไม่มีเงื่อนไขพิเศษ)</td></tr>
+        <tr><td class="td-key">น้ำตาย</td><td class="td-gold">7-8 และ 22-23</td><td>ทุกเดือน</td></tr>
+        <tr><td class="td-key">สุริยุปราคา</td><td class="td-red">1 (เดือนดับ)</td><td>ต้องตรงกับ Node ของวงโคจร</td></tr>
+        <tr><td class="td-key">จันทรุปราคา</td><td class="td-red">15 (เพ็ญ)</td><td>ต้องตรงกับ Node ของวงโคจร</td></tr>
+        <tr><td class="td-key">Supermoon</td><td class="td-purple">15 (เพ็ญ)</td><td>ต้องตรงกับ Perigee ของวงโคจรรูปวงรี</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- FLOWCHART -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section" id="flowchart">
+  <div class="section-header">
+    <div class="section-num num-gold" style="font-size:1.4rem;">✦</div>
+    <div class="section-title-wrap">
+      <h2>แผนผังวิธีทำโจทย์</h2>
+      <div class="subtitle">ลำดับขั้นตอนการคิดเมื่อเจอโจทย์ข้างขึ้นข้างแรม</div>
+    </div>
+  </div>
+
+  <div class="flow">
+    <div class="flow-title">จุดเริ่มต้น: โจทย์บอกข้อมูลอะไร?</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
+      <div class="flow-box gold">โจทย์บอก<br><strong>รูปร่างดวงจันทร์</strong></div>
+      <div class="flow-box blue">โจทย์บอก<br><strong>เวลา + ทิศที่เห็น</strong></div>
+      <div class="flow-box cyan">โจทย์บอก<br><strong>วันที่ข้างขึ้นข้างแรม</strong></div>
+    </div>
+    <div style="text-align:center;color:var(--dim);margin-bottom:12px;">↓ ทุกเส้นทางนำไปสู่ ↓</div>
+    <div style="display:flex;justify-content:center;margin-bottom:20px;">
+      <div class="flow-box gold" style="width:280px;padding:14px;">
+        🎯 <strong>รู้วันที่ข้างขึ้นข้างแรม</strong><br>
+        <span style="font-size:0.82rem;color:var(--muted);">(ข้อ 4)</span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;margin-bottom:12px;color:var(--dim);">↓</div>
+    <div style="display:flex;justify-content:center;margin-bottom:20px;">
+      <div class="flow-box blue" style="width:280px;padding:14px;">
+        📐 <strong>รู้มุมห่างดวงอาทิตย์</strong><br>
+        <span style="font-size:0.82rem;color:var(--muted);">(ข้อ 3) → ตำแหน่งในผัง (ข้อ 2)</span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:40px;margin-bottom:12px;color:var(--dim);">
+      <span>↙</span><span>↘</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+      <div class="flow-box cyan" style="padding:14px;">
+        ⏰ <strong>คำนวณเวลา</strong><br>
+        ขึ้น-ตก (ข้อ 5,6)<br>
+        <span style="font-size:0.82rem;color:var(--muted);">15°/ชม. / 50 นาที/วัน</span>
+      </div>
+      <div class="flow-box" style="padding:14px;">
+        🧭 <strong>ระบุทิศ</strong><br>
+        จากตำแหน่งผู้สังเกต (ข้อ 1)<br>
+        <span style="font-size:0.82rem;color:var(--muted);">ซีกโลกเหนือ/ใต้</span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;margin-bottom:12px;color:var(--dim);">↓ ถ้าโจทย์ถามเพิ่ม ↓</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="flow-box" style="padding:14px;">
+        📅 <strong>หลายวัน</strong><br>
+        ดวงจันทร์เลื่อนตะวันออก (ข้อ 7)<br>
+        <span style="font-size:0.82rem;color:var(--muted);">~13°/วัน</span>
+      </div>
+      <div class="flow-box" style="padding:14px;">
+        🌊 <strong>ปรากฏการณ์พิเศษ</strong><br>
+        น้ำเกิด-ตาย / อุปราคา (ข้อ 8)<br>
+        <span style="font-size:0.82rem;color:var(--muted);">โยงกับวันที่ + ผังโคจร</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- CHEAT SHEET -->
+<!-- ══════════════════════════════════════════ -->
+<div class="section" id="cheatsheet">
+  <div class="section-header">
+    <div class="section-num num-green" style="font-size:1.4rem;">★</div>
+    <div class="section-title-wrap">
+      <h2>สรุปสั้นแบบใช้สอบ</h2>
+      <div class="subtitle">ตัวเลขและกฎสำคัญที่ต้องจำให้ขึ้นใจ</div>
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-item">
+      <div class="s-icon">⏱️</div>
+      <div class="s-label">รอบโคจรจริง</div>
+      <div class="s-val">27.3 วัน</div>
+      <div class="s-note">เทียบดาวฤกษ์ (Sidereal)</div>
+    </div>
+    <div class="summary-item">
+      <div class="s-icon">🌑→🌑</div>
+      <div class="s-label">รอบข้างขึ้นข้างแรม</div>
+      <div class="s-val">29.5 วัน</div>
+      <div class="s-note">เทียบดวงอาทิตย์ (Synodic)</div>
+    </div>
+    <div class="summary-item">
+      <div class="s-icon">🌍</div>
+      <div class="s-label">โลกหมุน (คืนเดียว)</div>
+      <div class="s-val">15°/ชม.</div>
+      <div class="s-note">ตะวันออก → ตะวันตก</div>
+    </div>
+    <div class="summary-item">
+      <div class="s-icon">🌙</div>
+      <div class="s-label">ดวงจันทร์โคจรจริง</div>
+      <div class="s-val">~13°/วัน</div>
+      <div class="s-note">ตะวันตก → ตะวันออก</div>
+    </div>
+    <div class="summary-item">
+      <div class="s-icon">⏰</div>
+      <div class="s-label">ดวงจันทร์ขึ้นช้าลง</div>
+      <div class="s-val">~50 นาที/วัน</div>
+      <div class="s-note">13° ÷ 15°/ชม. ≈ 52 นาที</div>
+    </div>
+    <div class="summary-item">
+      <div class="s-icon">🌓</div>
+      <div class="s-label">ข้างขึ้น (ซีกโลกเหนือ)</div>
+      <div class="s-val">ขวาสว่าง = D</div>
+      <div class="s-note">วันที่ 1–14</div>
+    </div>
+    <div class="summary-item">
+      <div class="s-icon">🌗</div>
+      <div class="s-label">ข้างแรม (ซีกโลกเหนือ)</div>
+      <div class="s-val">ซ้ายสว่าง = C</div>
+      <div class="s-note">วันที่ 15–29</div>
+    </div>
+    <div class="summary-item">
+      <div class="s-icon">🌊</div>
+      <div class="s-label">น้ำเกิด</div>
+      <div class="s-val">วัน 1 และ 15</div>
+      <div class="s-note">โลก-จันทร์-อาทิตย์ ตรงแนว</div>
+    </div>
+    <div class="summary-item">
+      <div class="s-icon">🏖️</div>
+      <div class="s-label">น้ำตาย</div>
+      <div class="s-val">วัน 7-8 และ 22-23</div>
+      <div class="s-note">มุม 90°</div>
+    </div>
+    <div class="summary-item">
+      <div class="s-icon">☀️🌑</div>
+      <div class="s-label">สุริยุปราคา</div>
+      <div class="s-val">วัน 1 (เดือนดับ)</div>
+      <div class="s-note">+ ต้องตรงกับ Node</div>
+    </div>
+    <div class="summary-item">
+      <div class="s-icon">🌕🌑</div>
+      <div class="s-label">จันทรุปราคา</div>
+      <div class="s-val">วัน 15 (เพ็ญ)</div>
+      <div class="s-note">+ ต้องตรงกับ Node</div>
+    </div>
+    <div class="summary-item">
+      <div class="s-icon">🌕✨</div>
+      <div class="s-label">Supermoon</div>
+      <div class="s-val">เพ็ญ + Perigee</div>
+      <div class="s-note">ใหญ่+สว่างกว่าปกติ</div>
+    </div>
+  </div>
+
+  <div class="highlight green" style="margin-top:20px;">
+    <strong>🎯 สูตรจำรวดเดียว:</strong><br>
+    🌙 ดวงจันทร์โคจร ~13°/วัน → เลื่อนตะวันออก (หลายวัน) + ขึ้นช้า 50 นาที/วัน<br>
+    🌍 โลกหมุน 15°/ชม. → เห็นดวงจันทร์เคลื่อนตะวันออก→ตะวันตก (คืนเดียว)<br>
+    📐 13° ÷ 15°/ชม. = 52 นาที ≈ <strong>50 นาที/วัน</strong> (ที่มาของตัวเลขสำคัญ)
+  </div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /main -->
+
+<button class="sidebar-toggle" id="toggleBtn">☰</button>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const p = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  document.getElementById('progress').style.width = p + '%';
+});
+
+// Sidebar toggle (mobile)
+document.getElementById('toggleBtn').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+// Active nav highlight
+const sections = document.querySelectorAll('.section[id]');
+const navItems = document.querySelectorAll('.nav-item');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navItems.forEach(n => n.classList.remove('active'));
+      const active = document.querySelector(`.nav-item[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+
+// Animate sections on scroll
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.section').forEach(s => revealObs.observe(s));
+
+// Smooth close sidebar on nav click (mobile)
+navItems.forEach(n => {
+  n.addEventListener('click', () => {
+    if (window.innerWidth < 900) {
+      document.getElementById('sidebar').classList.remove('open');
+    }
+  });
+});
+</script>
+</body>
+</html>
