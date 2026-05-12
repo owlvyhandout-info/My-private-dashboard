@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Private Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3348;
+    --accent: #4f8ef7;
+    --accent2: #7c3aed;
+    --text: #e8eaf6;
+    --muted: #6b7280;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 15px;
+    min-height: 100vh;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(79,142,247,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,142,247,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar-logo {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-logo .title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+  .sidebar-logo .sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 3px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .sidebar-section {
+    padding: 12px 12px 4px;
+  }
+  .sidebar-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0 8px;
+    margin-bottom: 4px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 14px;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+    text-decoration: none;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: rgba(79,142,247,0.12); color: var(--accent); border-color: rgba(79,142,247,0.2); }
+  .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+  .nav-item .count {
+    margin-left: auto;
+    background: var(--surface2);
+    color: var(--muted);
+    font-size: 11px;
+    padding: 1px 7px;
+    border-radius: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .nav-item.active .count { background: rgba(79,142,247,0.2); color: var(--accent); }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* Main */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  .topbar {
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(26,29,39,0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .topbar h1 { font-size: 18px; font-weight: 600; flex: 1; }
+  .topbar .repo-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Sarabun', sans-serif;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #3b7de8; color: #fff; }
+
+  /* Search */
+  .search-bar {
+    padding: 16px 28px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .search-wrap {
+    flex: 1;
+    position: relative;
+  }
+  .search-wrap input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 14px 9px 36px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'Sarabun', sans-serif;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .search-wrap input:focus { border-color: var(--accent); }
+  .search-wrap input::placeholder { color: var(--muted); }
+  .search-icon {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 16px;
+  }
+  .filter-tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .tab {
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Sarabun', sans-serif;
+    transition: all 0.15s;
+  }
+  .tab:hover { color: var(--text); background: var(--surface2); }
+  .tab.active { background: var(--surface2); color: var(--text); border-color: var(--accent); }
+
+  /* Stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    padding: 0 28px 20px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .stat-card .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .stat-card .value { font-size: 24px; font-weight: 600; margin-top: 4px; font-family: 'IBM Plex Mono', monospace; }
+  .stat-card .value.blue { color: var(--accent); }
+  .stat-card .value.green { color: var(--success); }
+  .stat-card .value.yellow { color: var(--warning); }
+  .stat-card .value.purple { color: #a78bfa; }
+
+  /* File grid */
+  .content { padding: 0 28px 28px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .section-title { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .section-line { flex: 1; height: 1px; background: var(--border); }
+
+  .file-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .file-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .file-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .file-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .file-card:hover::before { opacity: 1; }
+
+  .file-card .file-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: rgba(79,142,247,0.1);
+    border: 1px solid rgba(79,142,247,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+  .file-card .file-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .file-card .file-meta {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-bottom: 12px;
+  }
+  .file-card .file-actions {
+    display: flex;
+    gap: 6px;
+  }
+  .file-card .file-actions a,
+  .file-card .file-actions button {
+    flex: 1;
+    padding: 6px 0;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: 'Sarabun', sans-serif;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: all 0.15s;
+  }
+  .file-card .file-actions a:hover { background: rgba(79,142,247,0.1); border-color: var(--accent); color: var(--accent); }
+  .file-card .file-actions button:hover { background: rgba(16,185,129,0.1); border-color: var(--success); color: var(--success); }
+
+  /* Category badge */
+  .cat-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .cat-guide { background: rgba(124,58,237,0.15); color: #a78bfa; border: 1px solid rgba(124,58,237,0.3); }
+  .cat-report { background: rgba(79,142,247,0.15); color: var(--accent); border: 1px solid rgba(79,142,247,0.3); }
+  .cat-tool { background: rgba(16,185,129,0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
+  .cat-other { background: rgba(107,114,128,0.15); color: var(--muted); border: 1px solid rgba(107,114,128,0.3); }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-state p { font-size: 14px; line-height: 1.6; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    width: 420px;
+    max-width: 90vw;
+  }
+  .modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 6px; }
+  .form-group input, .form-group select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'Sarabun', sans-serif;
+    outline: none;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+  .form-group select option { background: var(--surface); }
+  .modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+
+  /* Loading */
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Config panel */
+  .config-panel {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 0 28px 20px;
+  }
+  .config-panel h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--accent); }
+  .config-row { display: flex; gap: 10px; align-items: flex-end; }
+  .config-row .form-group { flex: 1; margin-bottom: 0; }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .topbar { padding: 12px 16px; }
+    .search-bar { padding: 12px 16px; flex-wrap: wrap; }
+    .content { padding: 0 16px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="title">📁 My Dashboard</div>
+      <div class="sub" id="repoLabel">owlvyhandout-info</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">หมวดหมู่</div>
+      <div class="nav-item active" onclick="filterCat('all')">
+        <span class="icon">🗂️</span> ทั้งหมด
+        <span class="count" id="countAll">0</span>
+      </div>
+      <div class="nav-item" onclick="filterCat('guide')">
+        <span class="icon">📖</span> คำแนะนำ / Guide
+        <span class="count" id="countGuide">0</span>
+      </div>
+      <div class="nav-item" onclick="filterCat('report')">
+        <span class="icon">📊</span> รายงาน / Report
+        <span class="count" id="countReport">0</span>
+      </div>
+      <div class="nav-item" onclick="filterCat('tool')">
+        <span class="icon">🔧</span> เครื่องมือ / Tool
+        <span class="count" id="countTool">0</span>
+      </div>
+      <div class="nav-item" onclick="filterCat('other')">
+        <span class="icon">📄</span> อื่นๆ
+        <span class="count" id="countOther">0</span>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      กดปุ่ม "ตั้งค่า Repo"<br>เพื่อเชื่อมต่อ GitHub
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <h1>ไฟล์ทั้งหมด</h1>
+      <span class="repo-badge" id="topRepoLabel">ยังไม่ได้ตั้งค่า repo</span>
+      <button class="btn" onclick="openConfig()">⚙️ ตั้งค่า Repo</button>
+      <button class="btn btn-primary" onclick="openAddModal()">+ เพิ่มลิ้งก์</button>
+    </div>
+
+    <!-- Config Panel (แสดงตอนแรก) -->
+    <div class="config-panel" id="configPanel">
+      <h3>⚙️ ตั้งค่า GitHub Repository</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">ใส่ชื่อ GitHub username และชื่อ repo เพื่อโหลดไฟล์อัตโนมัติ</p>
+      <div class="config-row">
+        <div class="form-group">
+          <label>GitHub Username</label>
+          <input type="text" id="cfgUsername" placeholder="เช่น owlvyhandout-info" />
+        </div>
+        <div class="form-group">
+          <label>ชื่อ Repo</label>
+          <input type="text" id="cfgRepo" placeholder="เช่น my-private-dashboard" />
+        </div>
+        <div class="form-group">
+          <label>โฟลเดอร์ (ถ้ามี)</label>
+          <input type="text" id="cfgFolder" placeholder="เช่น pages (ไม่ใส่ก็ได้)" />
+        </div>
+        <button class="btn btn-primary" onclick="saveConfig()" style="white-space:nowrap;padding:9px 16px;">เชื่อมต่อ</button>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="search-bar">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="ค้นหาไฟล์..." oninput="renderFiles()" />
+      </div>
+      <div class="filter-tabs">
+        <button class="tab active" onclick="setView('grid',this)">▦ กริด</button>
+        <button class="tab" onclick="setView('list',this)">☰ ลิสต์</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="label">ไฟล์ทั้งหมด</div>
+        <div class="value blue" id="statTotal">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">คำแนะนำ</div>
+        <div class="value purple" id="statGuide">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">รายงาน</div>
+        <div class="value blue" id="statReport">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">เครื่องมือ</div>
+        <div class="value green" id="statTool">0</div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content" id="contentArea">
+      <div class="empty-state">
+        <div class="icon">⚙️</div>
+        <p>ตั้งค่า GitHub repo ด้านบนก่อนครับ<br>แล้วไฟล์ทั้งหมดจะโหลดขึ้นมาอัตโนมัติ</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Link Modal -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <h3>➕ เพิ่มลิ้งก์ด้วยตัวเอง</h3>
+    <div class="form-group">
+      <label>ชื่อที่แสดง</label>
+      <input type="text" id="addName" placeholder="เช่น คู่มือการใช้งาน AI" />
+    </div>
+    <div class="form-group">
+      <label>URL หรือ path ไฟล์</label>
+      <input type="text" id="addUrl" placeholder="เช่น ./guide.html หรือ https://..." />
+    </div>
+    <div class="form-group">
+      <label>หมวดหมู่</label>
+      <select id="addCat">
+        <option value="guide">📖 คำแนะนำ / Guide</option>
+        <option value="report">📊 รายงาน / Report</option>
+        <option value="tool">🔧 เครื่องมือ / Tool</option>
+        <option value="other">📄 อื่นๆ</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Emoji icon</label>
+      <input type="text" id="addEmoji" placeholder="📄" maxlength="2" value="📄" />
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('addModal')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="addManualLink()">เพิ่ม</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let allFiles = [];
+let currentCat = 'all';
+let currentView = 'grid';
+let config = JSON.parse(localStorage.getItem('dash_config') || '{}');
+let manualLinks = JSON.parse(localStorage.getItem('dash_manual') || '[]');
+
+const catMap = {
+  guide: { label: 'guide', cls: 'cat-guide', icon: '📖', text: 'คำแนะนำ' },
+  report: { label: 'report', cls: 'cat-report', icon: '📊', text: 'รายงาน' },
+  tool: { label: 'tool', cls: 'cat-tool', icon: '🔧', text: 'เครื่องมือ' },
+  other: { label: 'other', cls: 'cat-other', icon: '📄', text: 'อื่นๆ' },
+};
+
+function guessCat(name) {
+  name = name.toLowerCase();
+  if (/guide|how|คำแนะ|วิธี|tutorial|manual/.test(name)) return 'guide';
+  if (/report|รายงาน|สรุป|summary|result/.test(name)) return 'report';
+  if (/tool|เครื่องมือ|calculator|gen|maker/.test(name)) return 'tool';
+  return 'other';
+}
+
+function guessEmoji(name) {
+  name = name.toLowerCase();
+  if (/guide|how|tutorial|manual/.test(name)) return '📖';
+  if (/report|สรุป|summary/.test(name)) return '📊';
+  if (/tool|calculator|gen/.test(name)) return '🔧';
+  if (/map|แผนที่/.test(name)) return '🗺️';
+  if (/ai|claude/.test(name)) return '🤖';
+  return '📄';
+}
+
+// Load config on start
+function init() {
+  if (config.username && config.repo) {
+    document.getElementById('cfgUsername').value = config.username;
+    document.getElementById('cfgRepo').value = config.repo;
+    document.getElementById('cfgFolder').value = config.folder || '';
+    document.getElementById('configPanel').style.display = 'none';
+    updateLabels();
+    loadFromGitHub();
+  }
+}
+
+function updateLabels() {
+  const label = config.username + '/' + config.repo;
+  document.getElementById('repoLabel').textContent = config.username || 'owlvyhandout-info';
+  document.getElementById('topRepoLabel').textContent = label;
+}
+
+function saveConfig() {
+  const username = document.getElementById('cfgUsername').value.trim();
+  const repo = document.getElementById('cfgRepo').value.trim();
+  const folder = document.getElementById('cfgFolder').value.trim();
+  if (!username || !repo) { alert('กรุณาใส่ username และชื่อ repo'); return; }
+  config = { username, repo, folder };
+  localStorage.setItem('dash_config', JSON.stringify(config));
+  document.getElementById('configPanel').style.display = 'none';
+  updateLabels();
+  loadFromGitHub();
+}
+
+async function loadFromGitHub() {
+  const { username, repo, folder } = config;
+  const path = folder ? `/contents/${folder}` : '/contents';
+  const url = `https://api.github.com/repos/${username}/${repo}${path}`;
+
+  document.getElementById('contentArea').innerHTML = '<div class="loading"><div class="spinner"></div> กำลังโหลดไฟล์จาก GitHub...</div>';
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('ไม่พบ repo หรือ folder');
+    const data = await res.json();
+
+    const htmlFiles = data
+      .filter(f => f.type === 'file' && f.name.endsWith('.html') && f.name !== 'index.html')
+      .map(f => ({
+        id: f.sha,
+        name: f.name.replace('.html', ''),
+        filename: f.name,
+        url: f.html_url.replace('/blob/', '/').replace('github.com', 'raw.githubusercontent.com'),
+        pageUrl: `https://${username}.github.io/${repo}/${folder ? folder + '/' : ''}${f.name}`,
+        downloadUrl: f.download_url,
+        cat: guessCat(f.name),
+        emoji: guessEmoji(f.name),
+        source: 'github',
+        size: f.size,
+      }));
+
+    allFiles = [...htmlFiles, ...manualLinks];
+    renderFiles();
+    updateStats();
+    updateCounts();
+  } catch (e) {
+    allFiles = [...manualLinks];
+    renderFiles();
+    updateStats();
+    updateCounts();
+    if (manualLinks.length === 0) {
+      document.getElementById('contentArea').innerHTML = `
+        <div class="empty-state">
+          <div class="icon">⚠️</div>
+          <p>โหลดจาก GitHub ไม่ได้: ${e.message}<br>
+          กรุณาตรวจสอบชื่อ repo หรืออาจต้องเปิด GitHub Pages ก่อนครับ</p>
+        </div>`;
+    }
+  }
+}
+
+function renderFiles() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  let files = allFiles.filter(f => {
+    const matchCat = currentCat === 'all' || f.cat === currentCat;
+    const matchQ = !q || f.name.toLowerCase().includes(q) || f.filename?.toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+
+  if (files.length === 0) {
+    document.getElementById('contentArea').innerHTML = `
+      <div class="empty-state">
+        <div class="icon">🔍</div>
+        <p>ไม่พบไฟล์ที่ตรงกัน</p>
+      </div>`;
+    return;
+  }
+
+  // Group by category
+  const groups = {};
+  files.forEach(f => {
+    if (!groups[f.cat]) groups[f.cat] = [];
+    groups[f.cat].push(f);
+  });
+
+  let html = '';
+  Object.entries(groups).forEach(([cat, items]) => {
+    const c = catMap[cat] || catMap.other;
+    html += `<div class="section-header">
+      <span class="section-title">${c.icon} ${c.text}</span>
+      <div class="section-line"></div>
+    </div>`;
+
+    if (currentView === 'grid') {
+      html += '<div class="file-grid">';
+      items.forEach(f => { html += renderCard(f); });
+      html += '</div>';
+    } else {
+      html += '<div style="margin-bottom:20px">';
+      items.forEach(f => { html += renderListItem(f); });
+      html += '</div>';
+    }
+  });
+
+  document.getElementById('contentArea').innerHTML = html;
+}
+
+function renderCard(f) {
+  const c = catMap[f.cat] || catMap.other;
+  const openUrl = f.pageUrl || f.url;
+  const dlUrl = f.downloadUrl || f.url;
+  return `
+  <div class="file-card">
+    <span class="cat-badge ${c.cls}">${c.text}</span>
+    <div class="file-icon">${f.emoji || '📄'}</div>
+    <div class="file-name" title="${f.name}">${f.name}</div>
+    <div class="file-meta">${f.filename || f.url}</div>
+    <div class="file-actions">
+      <a href="${openUrl}" target="_blank">👁 เปิดอ่าน</a>
+      <button onclick="downloadFile('${dlUrl}','${f.filename || f.name + '.html'}')">⬇ ดาวน์โหลด</button>
+    </div>
+  </div>`;
+}
+
+function renderListItem(f) {
+  const c = catMap[f.cat] || catMap.other;
+  const openUrl = f.pageUrl || f.url;
+  const dlUrl = f.downloadUrl || f.url;
+  return `
+  <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;transition:border-color 0.15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+    <span style="font-size:20px">${f.emoji || '📄'}</span>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:14px;font-weight:500">${f.name}</div>
+      <div style="font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace">${f.filename || f.url}</div>
+    </div>
+    <span class="cat-badge ${c.cls}" style="position:static">${c.text}</span>
+    <a href="${openUrl}" target="_blank" class="btn" style="font-size:12px;padding:5px 10px">👁 เปิด</a>
+    <button class="btn" style="font-size:12px;padding:5px 10px" onclick="downloadFile('${dlUrl}','${f.filename || f.name + '.html'}')">⬇</button>
+  </div>`;
+}
+
+async function downloadFile(url, filename) {
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+  } catch {
+    window.open(url, '_blank');
+  }
+}
+
+function updateStats() {
+  document.getElementById('statTotal').textContent = allFiles.length;
+  document.getElementById('statGuide').textContent = allFiles.filter(f => f.cat === 'guide').length;
+  document.getElementById('statReport').textContent = allFiles.filter(f => f.cat === 'report').length;
+  document.getElementById('statTool').textContent = allFiles.filter(f => f.cat === 'tool').length;
+}
+
+function updateCounts() {
+  document.getElementById('countAll').textContent = allFiles.length;
+  document.getElementById('countGuide').textContent = allFiles.filter(f => f.cat === 'guide').length;
+  document.getElementById('countReport').textContent = allFiles.filter(f => f.cat === 'report').length;
+  document.getElementById('countTool').textContent = allFiles.filter(f => f.cat === 'tool').length;
+  document.getElementById('countOther').textContent = allFiles.filter(f => f.cat === 'other').length;
+}
+
+function filterCat(cat) {
+  currentCat = cat;
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  renderFiles();
+}
+
+function setView(view, el) {
+  currentView = view;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderFiles();
+}
+
+function openConfig() {
+  document.getElementById('configPanel').style.display = 'block';
+  document.getElementById('configPanel').scrollIntoView({ behavior: 'smooth' });
+}
+
+function openAddModal() { document.getElementById('addModal').classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function addManualLink() {
+  const name = document.getElementById('addName').value.trim();
+  const url = document.getElementById('addUrl').value.trim();
+  const cat = document.getElementById('addCat').value;
+  const emoji = document.getElementById('addEmoji').value.trim() || '📄';
+  if (!name || !url) { alert('กรุณาใส่ชื่อและ URL'); return; }
+  const link = { id: Date.now(), name, filename: url, url, pageUrl: url, downloadUrl: url, cat, emoji, source: 'manual' };
+  manualLinks.push(link);
+  allFiles.push(link);
+  localStorage.setItem('dash_manual', JSON.stringify(manualLinks));
+  renderFiles(); updateStats(); updateCounts();
+  closeModal('addModal');
+  document.getElementById('addName').value = '';
+  document.getElementById('addUrl').value = '';
+}
+
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('open'); });
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(el => el.classList.remove('open')); });
+
+init();
+</script>
+</body>
+</html>
