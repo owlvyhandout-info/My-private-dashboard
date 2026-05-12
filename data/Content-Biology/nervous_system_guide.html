@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบประสาท — คู่มือฉบับสมบูรณ์</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0a0e1a;
+  --deep: #0d1528;
+  --card: #111827;
+  --card2: #161e30;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --cyan: #00e5ff;
+  --cyan-dim: rgba(0,229,255,0.12);
+  --cyan-glow: rgba(0,229,255,0.25);
+  --purple: #a78bfa;
+  --purple-dim: rgba(167,139,250,0.12);
+  --green: #34d399;
+  --green-dim: rgba(52,211,153,0.12);
+  --amber: #fbbf24;
+  --amber-dim: rgba(251,191,36,0.12);
+  --coral: #f87171;
+  --coral-dim: rgba(248,113,113,0.12);
+  --pink: #f472b6;
+  --pink-dim: rgba(244,114,182,0.12);
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+  --font-body: 'Sarabun', sans-serif;
+  --font-serif: 'Noto Serif Thai', serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--navy);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* BACKGROUND */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(0,229,255,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(167,139,250,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(52,211,153,0.03) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* LAYOUT */
+.container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 1; }
+
+/* HEADER */
+header {
+  padding: 4rem 0 3rem;
+  text-align: center;
+  position: relative;
+}
+
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cyan-dim);
+  border: 1px solid rgba(0,229,255,0.3);
+  border-radius: 100px;
+  padding: 6px 16px;
+  font-size: 12px;
+  color: var(--cyan);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  font-family: var(--font-mono);
+}
+
+.header-badge::before { content: '⬡'; font-size: 14px; }
+
+h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  background: linear-gradient(135deg, #ffffff 0%, var(--cyan) 50%, var(--purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.header-sub {
+  font-size: 16px;
+  color: var(--text-dim);
+  max-width: 560px;
+  margin: 0 auto 2.5rem;
+}
+
+/* NAV */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,14,26,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: .75rem 0;
+}
+
+.nav-inner {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+
+.nav-btn:hover { background: var(--card); color: var(--text); }
+.nav-btn.active { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(0,229,255,0.25); }
+
+.nav-icon { font-size: 14px; }
+
+/* SECTIONS */
+section { display: none; padding: 3rem 0 4rem; animation: fadeUp .3s ease; }
+section.active { display: block; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* SECTION TITLE */
+.sec-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 2rem;
+}
+
+.sec-icon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.sec-title h2 {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.sec-title p { font-size: 14px; color: var(--text-dim); margin-top: 2px; }
+
+/* CARDS */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: border-color .2s;
+}
+
+.card:hover { border-color: var(--border2); }
+
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+.card-grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+
+.card-accent-cyan { border-left: 3px solid var(--cyan); }
+.card-accent-purple { border-left: 3px solid var(--purple); }
+.card-accent-green { border-left: 3px solid var(--green); }
+.card-accent-amber { border-left: 3px solid var(--amber); }
+.card-accent-coral { border-left: 3px solid var(--coral); }
+.card-accent-pink { border-left: 3px solid var(--pink); }
+
+/* CARD HEADER */
+.card-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: .75rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: .5rem;
+}
+
+/* TABLE */
+.table-wrap { overflow-x: auto; border-radius: 12px; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+thead th {
+  background: rgba(255,255,255,0.04);
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: .04em;
+  border-bottom: 1px solid var(--border2);
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  vertical-align: top;
+  line-height: 1.6;
+}
+
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: rgba(255,255,255,0.02); }
+
+strong { color: var(--text); font-weight: 600; }
+
+/* CHIP / BADGE */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.chip-cyan { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(0,229,255,0.2); }
+.chip-purple { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+.chip-green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(52,211,153,0.2); }
+.chip-amber { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(251,191,36,0.2); }
+.chip-coral { background: var(--coral-dim); color: var(--coral); border: 1px solid rgba(248,113,113,0.2); }
+.chip-pink { background: var(--pink-dim); color: var(--pink); border: 1px solid rgba(244,114,182,0.2); }
+
+/* LIST */
+ul.styled, ol.styled {
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+ul.styled li, ol.styled li { color: var(--text-dim); font-size: 14px; }
+ul.styled li strong, ol.styled li strong { color: var(--text); }
+
+/* STAT CARDS */
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .75rem; margin-bottom: 1.25rem; }
+
+.stat-card {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  text-align: center;
+}
+
+.stat-card .num {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--cyan);
+  line-height: 1;
+  margin-bottom: .25rem;
+}
+
+.stat-card .label { font-size: 12px; color: var(--text-muted); }
+
+/* FLOW DIAGRAM */
+.flow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 1rem;
+  background: var(--card2);
+  border-radius: 12px;
+  margin: .75rem 0;
+}
+
+.flow-step {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.flow-arrow { color: var(--cyan); font-size: 16px; flex-shrink: 0; }
+
+/* HIGHLIGHT BOX */
+.highlight {
+  background: linear-gradient(135deg, rgba(0,229,255,0.05), rgba(167,139,250,0.05));
+  border: 1px solid rgba(0,229,255,0.15);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin: 1rem 0;
+}
+
+.highlight.amber { background: linear-gradient(135deg, rgba(251,191,36,0.05), rgba(248,113,113,0.05)); border-color: rgba(251,191,36,0.2); }
+.highlight.green { background: linear-gradient(135deg, rgba(52,211,153,0.05), rgba(0,229,255,0.05)); border-color: rgba(52,211,153,0.2); }
+.highlight.coral { background: linear-gradient(135deg, rgba(248,113,113,0.07), rgba(244,114,182,0.05)); border-color: rgba(248,113,113,0.25); }
+
+/* CRANIAL NERVE TABLE COLORS */
+.type-s { color: var(--cyan); font-size: 11px; font-weight: 600; }
+.type-m { color: var(--green); font-size: 11px; font-weight: 600; }
+.type-b { color: var(--amber); font-size: 11px; font-weight: 600; }
+
+/* QUIZ */
+.quiz-wrap { max-width: 680px; }
+
+.quiz-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.progress-bar-bg {
+  flex: 1;
+  height: 4px;
+  background: var(--card2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  border-radius: 2px;
+  transition: width .3s;
+}
+
+.progress-label { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+
+.quiz-card {
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  padding: 1.75rem;
+}
+
+.quiz-q-num { font-family: var(--font-mono); font-size: 11px; color: var(--cyan); margin-bottom: .5rem; letter-spacing: .05em; }
+.quiz-q-text { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 1.25rem; line-height: 1.5; }
+
+.quiz-opts { display: flex; flex-direction: column; gap: .5rem; }
+
+.quiz-opt {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border2);
+  background: var(--card2);
+  color: var(--text-dim);
+  font-family: var(--font-body);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all .15s;
+  position: relative;
+}
+
+.quiz-opt:not(:disabled):hover { border-color: rgba(0,229,255,0.35); background: rgba(0,229,255,0.05); color: var(--text); }
+.quiz-opt.correct { border-color: var(--green) !important; background: var(--green-dim) !important; color: var(--green) !important; }
+.quiz-opt.wrong { border-color: var(--coral) !important; background: var(--coral-dim) !important; color: var(--coral) !important; }
+
+.quiz-feedback {
+  margin-top: 1rem;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.quiz-feedback.ok { background: var(--green-dim); border: 1px solid rgba(52,211,153,0.25); color: var(--green); }
+.quiz-feedback.bad { background: var(--coral-dim); border: 1px solid rgba(248,113,113,0.25); color: var(--coral); }
+
+.quiz-nav { display: flex; gap: .75rem; margin-top: 1.5rem; align-items: center; }
+
+.btn {
+  padding: 9px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border2);
+  background: var(--card2);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.btn:hover { background: rgba(255,255,255,0.08); }
+.btn-primary { background: linear-gradient(135deg, rgba(0,229,255,0.15), rgba(167,139,250,0.15)); border-color: rgba(0,229,255,0.3); color: var(--cyan); }
+.btn-primary:hover { background: linear-gradient(135deg, rgba(0,229,255,0.25), rgba(167,139,250,0.25)); }
+
+.score-display {
+  text-align: center;
+  padding: 2.5rem;
+  background: var(--card);
+  border-radius: 20px;
+  border: 1px solid var(--border2);
+}
+
+.score-num { font-family: var(--font-mono); font-size: 3.5rem; font-weight: 700; background: linear-gradient(135deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.score-label { font-size: 15px; color: var(--text-dim); margin: .5rem 0 1.25rem; }
+.score-msg { font-size: 16px; color: var(--text); margin-bottom: 1.5rem; }
+
+/* MEMORY CARDS */
+.memory-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .75rem; }
+
+.memory-card {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.memory-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.mc-cyan::before { background: linear-gradient(90deg, var(--cyan), transparent); }
+.mc-purple::before { background: linear-gradient(90deg, var(--purple), transparent); }
+.mc-green::before { background: linear-gradient(90deg, var(--green), transparent); }
+.mc-amber::before { background: linear-gradient(90deg, var(--amber), transparent); }
+.mc-coral::before { background: linear-gradient(90deg, var(--coral), transparent); }
+
+.memory-card .mc-key { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+.memory-card .mc-val { font-size: 14px; font-weight: 600; color: var(--text); }
+
+/* DIVIDER */
+.divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  h1 { font-size: 1.8rem; }
+  .card { padding: 1.1rem; }
+  .nav-btn { padding: 6px 10px; font-size: 12px; }
+  .flow { gap: 4px; }
+  .flow-step { font-size: 11px; padding: 5px 10px; }
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--navy); }
+::-webkit-scrollbar-thumb { background: #2a3450; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #3a4a70; }
+</style>
+</head>
+<body>
+
+<div style="position:relative;z-index:1">
+
+<!-- HEADER -->
+<header>
+  <div class="container">
+    <div class="header-badge">วิทยาศาสตร์ · ม.ต้น – ม.ปลาย</div>
+    <h1>ระบบประสาทและสมอง</h1>
+    <p class="header-sub">คู่มือการเรียนฉบับสมบูรณ์ ครอบคลุมตั้งแต่เซลล์ประสาทถึงกลไกการส่งสัญญาณ โครงสร้างสมอง และความผิดปกติที่สำคัญ</p>
+    <div class="stat-row" style="max-width:600px;margin:0 auto">
+      <div class="stat-card"><div class="num">86B</div><div class="label">เซลล์ประสาทในสมอง</div></div>
+      <div class="stat-card"><div class="num">120<span style="font-size:.9rem">m/s</span></div><div class="label">ความเร็วสัญญาณประสาท</div></div>
+      <div class="stat-card"><div class="num">43</div><div class="label">คู่เส้นประสาท (CNS+PNS)</div></div>
+      <div class="stat-card"><div class="num">9</div><div class="label">หมวดเนื้อหา</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showSection('overview')"><span class="nav-icon">🧠</span>ภาพรวม</button>
+    <button class="nav-btn" onclick="showSection('neuron')"><span class="nav-icon">🔬</span>เซลล์ประสาท</button>
+    <button class="nav-btn" onclick="showSection('brain')"><span class="nav-icon">🏛️</span>โครงสร้างสมอง</button>
+    <button class="nav-btn" onclick="showSection('pns')"><span class="nav-icon">🕸️</span>ระบบส่วนปลาย</button>
+    <button class="nav-btn" onclick="showSection('signal')"><span class="nav-icon">⚡</span>การส่งสัญญาณ</button>
+    <button class="nav-btn" onclick="showSection('reflex')"><span class="nav-icon">🔁</span>รีเฟลกซ์</button>
+    <button class="nav-btn" onclick="showSection('sense')"><span class="nav-icon">👁️</span>อวัยวะรับสัมผัส</button>
+    <button class="nav-btn" onclick="showSection('disease')"><span class="nav-icon">🩺</span>โรคและยา</button>
+    <button class="nav-btn" onclick="showSection('quiz')"><span class="nav-icon">📝</span>แบบทดสอบ</button>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ===== OVERVIEW ===== -->
+<section id="overview" class="active">
+  <div class="sec-title">
+    <div class="sec-icon" style="background:var(--cyan-dim);border:1px solid rgba(0,229,255,0.2)">🧠</div>
+    <div><h2>ภาพรวมระบบประสาท</h2><p>ศูนย์ควบคุมและประสานงานของร่างกาย</p></div>
+  </div>
+
+  <div class="highlight">
+    <strong style="color:var(--cyan)">หน้าที่หลัก:</strong> <span style="color:var(--text-dim)">รับข้อมูล (Input) → ประมวลผล (Processing) → ตอบสนอง (Output) ทำงานร่วมกับระบบต่อมไร้ท่อ (Endocrine system) เพื่อรักษาสมดุลร่างกาย (Homeostasis)</span>
+  </div>
+
+  <div class="card-grid">
+    <div class="card card-accent-cyan">
+      <div class="card-label">CNS — ระบบประสาทส่วนกลาง</div>
+      <ul class="styled">
+        <li><strong>สมอง (Brain)</strong> — ศูนย์ควบคุมหลัก ประมวลผลข้อมูล</li>
+        <li><strong>ไขสันหลัง (Spinal cord)</strong> — ทางผ่านสัญญาณ + ศูนย์รีเฟลกซ์</li>
+      </ul>
+    </div>
+    <div class="card card-accent-purple">
+      <div class="card-label">PNS — ระบบประสาทส่วนปลาย</div>
+      <ul class="styled">
+        <li><strong>เส้นประสาทสมอง</strong> 12 คู่</li>
+        <li><strong>เส้นประสาทไขสันหลัง</strong> 31 คู่</li>
+        <li>เชื่อม CNS กับอวัยวะทั่วร่างกาย</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">การแบ่งระบบประสาทส่วนปลายตามหน้าที่</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ระบบ</th><th>ควบคุม</th><th>ลักษณะ</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Somatic Nervous System</strong></td><td>กล้ามเนื้อลาย</td><td>สมัครใจ — เราควบคุมได้</td></tr>
+          <tr><td><strong>Autonomic Nervous System</strong></td><td>อวัยวะภายใน หัวใจ ต่อม</td><td>ไม่สมัครใจ — ทำงานอัตโนมัติ</td></tr>
+          <tr><td><span style="padding-left:1rem">↳ Sympathetic</span></td><td>ทุกอวัยวะ</td><td><span class="chip chip-coral">Fight or Flight</span> ตื่นตัว ตอบสนองภัย</td></tr>
+          <tr><td><span style="padding-left:1rem">↳ Parasympathetic</span></td><td>ทุกอวัยวะ</td><td><span class="chip chip-green">Rest and Digest</span> พักผ่อน ย่อยอาหาร</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Sympathetic vs Parasympathetic — ผลต่ออวัยวะ</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>อวัยวะ</th><th style="color:var(--coral)">Sympathetic</th><th style="color:var(--green)">Parasympathetic</th></tr></thead>
+        <tbody>
+          <tr><td>หัวใจ</td><td>เต้นเร็วขึ้น</td><td>เต้นช้าลง</td></tr>
+          <tr><td>รูม่านตา</td><td>ขยาย (มองเห็นมากขึ้น)</td><td>หดตัว</td></tr>
+          <tr><td>หลอดลม</td><td>ขยาย (รับอากาศมากขึ้น)</td><td>หดตัว</td></tr>
+          <tr><td>ระบบย่อยอาหาร</td><td>ทำงานช้าลง</td><td>ทำงานดีขึ้น เพิ่มการบีบตัว</td></tr>
+          <tr><td>ต่อมเหงื่อ</td><td>หลั่งเหงื่อมากขึ้น</td><td>ลดการหลั่ง</td></tr>
+          <tr><td>หลอดเลือด</td><td>หดตัว ความดันสูงขึ้น</td><td>ขยาย ความดันลดลง</td></tr>
+          <tr><td>กระเพาะปัสสาวะ</td><td>หยุดกลั้น</td><td>บีบตัว ขับปัสสาวะ</td></tr>
+          <tr><td><strong>Neurotransmitter</strong></td><td>Norepinephrine</td><td>Acetylcholine</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="highlight amber">
+    <strong style="color:var(--amber)">จุดสำคัญจำก่อนสอบ:</strong>
+    <ul class="styled" style="margin-top:.5rem">
+      <li>CNS = <strong>สมอง + ไขสันหลัง</strong> เท่านั้น</li>
+      <li>หน่วยพื้นฐานของระบบประสาท = <strong>Neuron</strong></li>
+      <li>Cerebrum = ความคิด | Cerebellum = การทรงตัว | Medulla = ควบคุมชีวิต</li>
+      <li>Sympathetic ใช้ <strong>Norepinephrine</strong> | Parasympathetic ใช้ <strong>Acetylcholine</strong></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== NEURON ===== -->
+<section id="neuron">
+  <div class="sec-title">
+    <div class="sec-icon" style="background:var(--purple-dim);border:1px solid rgba(167,139,250,0.2)">🔬</div>
+    <div><h2>เซลล์ประสาท (Neuron)</h2><p>หน่วยพื้นฐานในการส่งสัญญาณของระบบประสาท</p></div>
+  </div>
+
+  <div class="card card-accent-purple">
+    <div class="card-label">โครงสร้างหลักของเซลล์ประสาท</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ส่วนประกอบ</th><th>หน้าที่</th><th>รายละเอียด</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Dendrite</strong></td><td>รับสัญญาณเข้า</td><td>แตกแขนงสั้น จำนวนมาก รับสัญญาณจาก synapse อื่น</td></tr>
+          <tr><td><strong>Cell body (Soma)</strong></td><td>ประมวลผล</td><td>มีนิวเคลียส ผลิตโปรตีน รวมสัญญาณจาก dendrite</td></tr>
+          <tr><td><strong>Axon</strong></td><td>ส่งสัญญาณออก</td><td>ยาวได้ถึง 1 เมตร มักมีเส้นเดียว</td></tr>
+          <tr><td><strong>Myelin sheath</strong></td><td>ฉนวนหุ้ม</td><td>เพิ่มความเร็วสัญญาณ 50–100 เท่า ป้องกันสัญญาณรั่ว</td></tr>
+          <tr><td><strong>Node of Ranvier</strong></td><td>จุดกระโดดสัญญาณ</td><td>ช่องว่างระหว่าง myelin สัญญาณกระโดด (Saltatory conduction)</td></tr>
+          <tr><td><strong>Axon terminal</strong></td><td>ปลายส่งสัญญาณ</td><td>หลั่ง neurotransmitter เข้า synaptic cleft</td></tr>
+          <tr><td><strong>Synapse</strong></td><td>จุดเชื่อมเซลล์</td><td>ช่องว่าง ~20 nm ระหว่างเซลล์ ส่งสัญญาณด้วยสารเคมี</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card card-accent-cyan">
+      <div class="card-label">ชนิดของเซลล์ประสาท</div>
+      <ul class="styled">
+        <li><strong>Sensory neuron (Afferent)</strong> — รับสัมผัส → CNS</li>
+        <li><strong>Motor neuron (Efferent)</strong> — CNS → กล้ามเนื้อ/ต่อม</li>
+        <li><strong>Interneuron</strong> — เชื่อมใน CNS ประมวลผลและตัดสินใจ</li>
+        <li><strong>Bipolar</strong> — 2 ขั้ว พบในตา หูชั้นใน เซลล์รับกลิ่น</li>
+        <li><strong>Multipolar</strong> — dendrite หลายเส้น พบทั่วไปในสมอง</li>
+        <li><strong>Unipolar (Pseudounipolar)</strong> — dendrite+axon ออกด้านเดียว พบใน sensory ganglia</li>
+      </ul>
+    </div>
+    <div class="card card-accent-green">
+      <div class="card-label">เซลล์เกลีย (Glial cells) — เซลล์สนับสนุน</div>
+      <ul class="styled">
+        <li><strong>Astrocyte</strong> — ค้ำจุน สร้าง BBB จัดการสิ่งแวดล้อม</li>
+        <li><strong>Oligodendrocyte</strong> — สร้าง myelin ใน CNS (1 เซลล์ต่อหลาย axon)</li>
+        <li><strong>Schwann cell</strong> — สร้าง myelin ใน PNS ช่วยซ่อมแซม</li>
+        <li><strong>Microglia</strong> — ระบบภูมิคุ้มกัน กำจัดเซลล์ตาย</li>
+        <li><strong>Ependymal cells</strong> — ผลิต CSF บุช่องโพรงสมอง</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="highlight amber">
+    <strong style="color:var(--amber)">ข้อเท็จจริงตัวเลข:</strong>
+    <div class="stat-row" style="margin-top:.75rem">
+      <div class="stat-card"><div class="num">86B</div><div class="label">เซลล์ประสาทในสมอง</div></div>
+      <div class="stat-card"><div class="num">120</div><div class="label">m/s ความเร็ว (มี myelin)</div></div>
+      <div class="stat-card"><div class="num">0.5ms</div><div class="label">เวลาส่งที่ synapse</div></div>
+      <div class="stat-card"><div class="num">1m</div><div class="label">ความยาว axon สูงสุด</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BRAIN ===== -->
+<section id="brain">
+  <div class="sec-title">
+    <div class="sec-icon" style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.2)">🏛️</div>
+    <div><h2>โครงสร้างสมองและหน้าที่</h2><p>แบ่งเป็น 3 ส่วนหลัก: หน้า กลาง หลัง</p></div>
+  </div>
+
+  <div class="card card-accent-cyan">
+    <div class="card-label">สมองส่วนหน้า (Forebrain / Prosencephalon) — Cerebrum</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>กลีบ (Lobe)</th><th>หน้าที่หลัก</th><th>จุดสำคัญ</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Frontal lobe</strong></td><td>คิด วางแผน ตัดสินใจ บุคลิกภาพ ควบคุมการเคลื่อนไหว</td><td>Motor cortex (Precentral gyrus), Broca's area (พูด)</td></tr>
+          <tr><td><strong>Parietal lobe</strong></td><td>รับสัมผัส อุณหภูมิ ความเจ็บปวด ตำแหน่งร่างกาย</td><td>Somatosensory cortex (Postcentral gyrus)</td></tr>
+          <tr><td><strong>Temporal lobe</strong></td><td>การได้ยิน ภาษา ความจำระยะยาว จดจำใบหน้า</td><td>Wernicke's area (เข้าใจภาษา), Primary auditory cortex</td></tr>
+          <tr><td><strong>Occipital lobe</strong></td><td>การมองเห็น แปลผลภาพ สี ความลึก</td><td>Primary visual cortex</td></tr>
+          <tr><td><strong>Insular lobe</strong></td><td>รับรส อารมณ์ ความเจ็บปวดในช่องท้อง</td><td>ซ่อนอยู่ในร่อง lateral sulcus</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13px;color:var(--text-muted);margin-top:.75rem">🔹 สมองซีกซ้าย — ร่างกายซีกขวา ภาษา ตรรกะ | สมองซีกขวา — ร่างกายซีกซ้าย ความคิดสร้างสรรค์ ศิลปะ</p>
+  </div>
+
+  <div class="card-grid">
+    <div class="card card-accent-pink">
+      <div class="card-label">Limbic System — อารมณ์และความจำ</div>
+      <ul class="styled">
+        <li><strong>Hippocampus</strong> — สร้างความจำระยะยาว การเรียนรู้ ทิศทาง</li>
+        <li><strong>Amygdala</strong> — ความกลัว อารมณ์รุนแรง ตอบสนองภัย</li>
+        <li><strong>Cingulate gyrus</strong> — ควบคุมอารมณ์ ความเจ็บปวด</li>
+        <li><strong>Thalamus</strong> — สถานีรีเลย์สัญญาณ (ยกเว้นกลิ่น)</li>
+        <li><strong>Hypothalamus</strong> — Homeostasis อุณหภูมิ หิว กระหาย นาฬิกาชีวภาพ สั่งต่อมใต้สมอง</li>
+      </ul>
+    </div>
+    <div class="card card-accent-amber">
+      <div class="card-label">Basal Ganglia — ควบคุมการเคลื่อนไหว</div>
+      <ul class="styled">
+        <li>ควบคุมการเริ่มต้นและหยุดการเคลื่อนไหว</li>
+        <li>ควบคุมรูปแบบที่เรียนรู้แล้ว (เดิน ขี่จักรยาน)</li>
+        <li>เกี่ยวข้องกับ Parkinson (dopamine ลดลง)</li>
+        <li><strong>Striatum, Globus pallidus, Substantia nigra</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">สมองส่วนกลาง (Midbrain / Mesencephalon)</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>โครงสร้าง</th><th>หน้าที่</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Superior colliculi</strong></td><td>ตอบสนองต่อสิ่งเร้าด้านการมองเห็น การกลอกตา</td></tr>
+          <tr><td><strong>Inferior colliculi</strong></td><td>ตอบสนองเสียง สะดุ้งเมื่อได้ยินเสียงดัง</td></tr>
+          <tr><td><strong>Substantia nigra</strong></td><td>สร้าง dopamine ควบคุมการเคลื่อนไหว เสื่อมใน Parkinson</td></tr>
+          <tr><td><strong>Reticular formation</strong></td><td>ควบคุมการตื่นตัว การนอนหลับ กรองสัญญาณ</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card card-accent-coral">
+    <div class="card-label">สมองส่วนหลัง (Hindbrain / Rhombencephalon)</div>
+    <div class="card-grid" style="margin-top:.5rem">
+      <div>
+        <h3>🔵 Cerebellum (สมองน้อย)</h3>
+        <ul class="styled">
+          <li>การทรงตัวและประสานงานกล้ามเนื้อ</li>
+          <li>ปรับการเคลื่อนไหวให้แม่นยำ</li>
+          <li>เรียนรู้ทักษะการเคลื่อนไหว</li>
+          <li>มีเซลล์ Purkinje ที่ซับซ้อน</li>
+        </ul>
+      </div>
+      <div>
+        <h3>🔴 Brainstem</h3>
+        <ul class="styled">
+          <li><strong>Medulla oblongata</strong> — หายใจ หัวใจ ความดัน ไอ จาม สำรอก</li>
+          <li><strong>Pons</strong> — เชื่อมสมองน้อยกับสมองใหญ่ นอนหลับ REM การหายใจ</li>
+          <li><strong>Reticular formation</strong> — ตื่นตัว สติสัมปชัญญะ</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">การป้องกันสมอง (Brain Protection)</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ชั้นป้องกัน</th><th>รายละเอียด</th></tr></thead>
+        <tbody>
+          <tr><td><strong>กะโหลกศีรษะ</strong></td><td>กระดูกแข็งป้องกันแรงกระแทกจากภายนอก</td></tr>
+          <tr><td><strong>Dura mater</strong></td><td>เยื่อหุ้มสมองชั้นนอกสุด หนาและแข็งแรง</td></tr>
+          <tr><td><strong>Arachnoid mater</strong></td><td>เยื่อชั้นกลาง มีช่อง subarachnoid บรรจุ CSF</td></tr>
+          <tr><td><strong>Pia mater</strong></td><td>เยื่อชั้นในสุด ติดแนบผิวสมองโดยตรง</td></tr>
+          <tr><td><strong>CSF (น้ำหล่อสมอง)</strong></td><td>กันกระแทก ลำเลียงสารอาหาร กำจัดของเสีย ผลิต 500 ml/วัน</td></tr>
+          <tr><td><strong>Blood-Brain Barrier (BBB)</strong></td><td>กรองสารที่จะเข้าสมอง Astrocyte + endothelial cell ป้องกันสารพิษ เชื้อโรค</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PNS ===== -->
+<section id="pns">
+  <div class="sec-title">
+    <div class="sec-icon" style="background:var(--green-dim);border:1px solid rgba(52,211,153,0.2)">🕸️</div>
+    <div><h2>ระบบประสาทส่วนปลาย (PNS)</h2><p>เชื่อม CNS กับอวัยวะทั่วร่างกาย — 12 + 31 คู่</p></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">เส้นประสาทสมอง 12 คู่ (Cranial Nerves)</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>ชื่อ</th><th>ประเภท</th><th>หน้าที่</th></tr></thead>
+        <tbody>
+          <tr><td style="font-family:var(--font-mono);color:var(--text-muted)">I</td><td><strong>Olfactory</strong></td><td><span class="type-s">Sensory</span></td><td>รับกลิ่น → ส่งตรงสมอง (ไม่ผ่าน Thalamus)</td></tr>
+          <tr><td style="font-family:var(--font-mono);color:var(--text-muted)">II</td><td><strong>Optic</strong></td><td><span class="type-s">Sensory</span></td><td>การมองเห็น จากจอตาไป Visual cortex</td></tr>
+          <tr><td style="font-family:var(--font-mono);color:var(--text-muted)">III</td><td><strong>Oculomotor</strong></td><td><span class="type-m">Motor</span></td><td>กลอกตา (4 กล้ามเนื้อ) หดรูม่านตา</td></tr>
+          <tr><td style="font-family:var(--font-mono);color:var(--text-muted)">IV</td><td><strong>Trochlear</strong></td><td><span class="type-m">Motor</span></td><td>กลอกตาลง-ใน (Superior oblique)</td></tr>
+          <tr><td style="font-family:var(--font-mono);color:var(--text-muted)">V</td><td><strong>Trigeminal</strong></td><td><span class="type-b">Both</span></td><td>ความรู้สึกใบหน้า เคี้ยวอาหาร แบ่ง 3 สาขา</td></tr>
+          <tr><td style="font-family:var(--font-mono);color:var(--text-muted)">VI</td><td><strong>Abducens</strong></td><td><span class="type-m">Motor</span></td><td>กลอกตาออกด้านข้าง (Lateral rectus)</td></tr>
+          <tr><td style="font-family:var(--font-mono);color:var(--text-muted)">VII</td><td><strong>Facial</strong></td><td><span class="type-b">Both</span></td><td>แสดงสีหน้า รับรส 2/3 ด้านหน้าลิ้น ต่อมน้ำลาย น้ำตา</td></tr>
+          <tr><td style="font-family:var(--font-mono);color:var(--text-muted)">VIII</td><td><strong>Vestibulocochlear</strong></td><td><span class="type-s">Sensory</span></td><td>การได้ยิน (Cochlear) + การทรงตัว (Vestibular)</td></tr>
+          <tr><td style="font-family:var(--font-mono);color:var(--text-muted)">IX</td><td><strong>Glossopharyngeal</strong></td><td><span class="type-b">Both</span></td><td>กลืน รับรส 1/3 ด้านหลังลิ้น ตรวจความดัน</td></tr>
+          <tr><td style="font-family:var(--font-mono);color:var(--text-muted)">X</td><td><strong>Vagus</strong> ⭐</td><td><span class="type-b">Both</span></td><td>Parasympathetic หลัก — หัวใจ ปอด ลำไส้ พูด กลืน</td></tr>
+          <tr><td style="font-family:var(--font-mono);color:var(--text-muted)">XI</td><td><strong>Accessory</strong></td><td><span class="type-m">Motor</span></td><td>กล้ามเนื้อคอ บ่า (Trapezius, SCM)</td></tr>
+          <tr><td style="font-family:var(--font-mono);color:var(--text-muted)">XII</td><td><strong>Hypoglossal</strong></td><td><span class="type-m">Motor</span></td><td>การเคลื่อนไหวลิ้น พูด กลืนอาหาร</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:.75rem;font-style:italic">⭐ Vagus nerve (X) มีการกระจายครอบคลุมกว้างที่สุด — "Wandering nerve"</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label">เส้นประสาทไขสันหลัง 31 คู่ (Spinal Nerves)</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ระดับ</th><th>จำนวน</th><th>บริเวณที่ควบคุม</th><th>จุดสำคัญ</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Cervical (C1–C8)</strong></td><td>8 คู่</td><td>คอ ไหล่ แขน มือ</td><td>C4 = กะบังลม (หากบาดเจ็บ หายใจลำบาก)</td></tr>
+          <tr><td><strong>Thoracic (T1–T12)</strong></td><td>12 คู่</td><td>ลำตัว กล้ามเนื้อซี่โครง</td><td>ควบคุม Sympathetic ของอวัยวะส่วนใหญ่</td></tr>
+          <tr><td><strong>Lumbar (L1–L5)</strong></td><td>5 คู่</td><td>ต้นขา เข่า ขาหน้า</td><td>Femoral nerve, Obturator nerve</td></tr>
+          <tr><td><strong>Sacral (S1–S5)</strong></td><td>5 คู่</td><td>ขาหลัง เท้า อวัยวะเชิงกราน</td><td>Sciatic nerve (ใหญ่ที่สุดในร่างกาย)</td></tr>
+          <tr><td><strong>Coccygeal</strong></td><td>1 คู่</td><td>บริเวณก้นกบ</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SIGNAL ===== -->
+<section id="signal">
+  <div class="sec-title">
+    <div class="sec-icon" style="background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.2)">⚡</div>
+    <div><h2>การส่งกระแสประสาท</h2><p>Action potential และ Neurotransmitter</p></div>
+  </div>
+
+  <div class="card card-accent-cyan">
+    <div class="card-label">Action Potential — กระแสประสาท</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ขั้นตอน</th><th>สิ่งที่เกิดขึ้น</th><th>ค่าไฟฟ้า</th><th>ไอออน</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Resting state</strong></td><td>เซลล์พัก ภายในมีประจุลบ</td><td>−70 mV</td><td>K⁺ ในเซลล์, Na⁺ นอกเซลล์</td></tr>
+          <tr><td><strong>Threshold</strong></td><td>สัญญาณถึงจุดกระตุ้นขั้นต่ำ</td><td>−55 mV</td><td>Na⁺ channel เริ่มเปิด</td></tr>
+          <tr><td><strong>Depolarization</strong></td><td>Na⁺ ไหลเข้า ประจุเพิ่มขึ้น</td><td>+30 mV</td><td>Na⁺ channel เปิดเต็ม</td></tr>
+          <tr><td><strong>Repolarization</strong></td><td>K⁺ ไหลออก ประจุลดกลับ</td><td>↓ ลดลง</td><td>K⁺ channel เปิด, Na⁺ ปิด</td></tr>
+          <tr><td><strong>Hyperpolarization</strong></td><td>ประจุต่ำกว่าปกติชั่วคราว</td><td>−80 mV</td><td>K⁺ channel ยังเปิดอยู่</td></tr>
+          <tr><td><strong>Refractory period</strong></td><td>ช่วงพัก ไม่รับสัญญาณใหม่ ป้องกันย้อนกลับ</td><td>กลับ −70 mV</td><td>Sodium-potassium pump ทำงาน</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card card-accent-purple">
+      <div class="card-label">กลไก Synapse — การส่งสัญญาณข้ามเซลล์</div>
+      <ol class="styled">
+        <li>Action potential มาถึง axon terminal</li>
+        <li>Ca²⁺ ไหลเข้าเซลล์ผ่าน voltage-gated channel</li>
+        <li>Vesicle รวมตัวกับ presynaptic membrane</li>
+        <li>Neurotransmitter หลั่งเข้า synaptic cleft (~20 nm)</li>
+        <li>NT จับ receptor ของ postsynaptic membrane</li>
+        <li>เกิด EPSP (กระตุ้น) หรือ IPSP (ยับยั้ง)</li>
+        <li>NT ถูกสลาย (enzyme) หรือนำกลับเซลล์ (reuptake)</li>
+      </ol>
+    </div>
+    <div class="card card-accent-green">
+      <div class="card-label">Saltatory Conduction</div>
+      <p style="font-size:14px;color:var(--text-dim);margin-bottom:.75rem">สัญญาณกระโดดจาก Node of Ranvier หนึ่งไปยังอีกอัน ทำให้เร็วกว่าเส้นที่ไม่มี myelin ถึง 50–100 เท่า ประหยัดพลังงานมาก</p>
+      <div class="flow" style="flex-direction:column;align-items:flex-start;gap:4px">
+        <div style="display:flex;gap:6px;align-items:center">
+          <span class="flow-step">Node 1</span><span class="flow-arrow">→</span>
+          <span class="flow-step" style="opacity:.4">myelin</span><span class="flow-arrow">→</span>
+          <span class="flow-step">Node 2</span><span class="flow-arrow">→</span>
+          <span class="flow-step" style="opacity:.4">myelin</span><span class="flow-arrow">→</span>
+          <span class="flow-step">Node 3</span>
+        </div>
+        <p style="font-size:12px;color:var(--text-muted);margin-top:.25rem">กระโดด (ไม่ไหลผ่าน myelin) = เร็ว + ประหยัด ATP</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Neurotransmitter สำคัญ</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>สาร</th><th>ตำแหน่ง</th><th>ผล</th><th>เกี่ยวข้องกับ</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Acetylcholine (ACh)</strong></td><td>NMJ, Parasympathetic, สมอง</td><td>กระตุ้น/ยับยั้ง</td><td>กล้ามเนื้อ ความจำ Parasympathetic</td></tr>
+          <tr><td><strong>Dopamine</strong></td><td>Substantia nigra, VTA</td><td>กระตุ้น</td><td>รางวัล แรงจูงใจ การเคลื่อนไหว (Parkinson)</td></tr>
+          <tr><td><strong>Serotonin (5-HT)</strong></td><td>Raphe nuclei</td><td>กระตุ้น</td><td>อารมณ์ การนอนหลับ ความอยากอาหาร (Depression)</td></tr>
+          <tr><td><strong>Norepinephrine</strong></td><td>Locus coeruleus, Sympathetic</td><td>กระตุ้น</td><td>ความตื่นตัว Sympathetic Fight-or-Flight</td></tr>
+          <tr><td><strong>GABA</strong></td><td>ทั่ว CNS</td><td>ยับยั้ง</td><td>ลดความวิตกกังวล การนอนหลับ (Alcohol กระตุ้น GABA)</td></tr>
+          <tr><td><strong>Glutamate</strong></td><td>ทั่ว CNS</td><td>กระตุ้น</td><td>การเรียนรู้ ความจำ LTP</td></tr>
+          <tr><td><strong>Endorphin</strong></td><td>ทั่วร่างกาย</td><td>ยับยั้ง</td><td>บรรเทาความเจ็บปวด ความรู้สึกดี (Runner's high)</td></tr>
+          <tr><td><strong>Substance P</strong></td><td>ไขสันหลัง</td><td>กระตุ้น</td><td>ส่งสัญญาณความเจ็บปวด</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== REFLEX ===== -->
+<section id="reflex">
+  <div class="sec-title">
+    <div class="sec-icon" style="background:var(--coral-dim);border:1px solid rgba(248,113,113,0.2)">🔁</div>
+    <div><h2>รีเฟลกซ์และการตอบสนอง</h2><p>การตอบสนองเร็วโดยไม่รอสมองใหญ่</p></div>
+  </div>
+
+  <div class="highlight coral">
+    <strong style="color:var(--coral)">Reflex arc — วงจรรีเฟลกซ์:</strong>
+    <div class="flow" style="margin-top:.75rem">
+      <span class="flow-step">1. Receptor<br><small style="opacity:.6">ตัวรับสิ่งเร้า</small></span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">2. Sensory neuron<br><small style="opacity:.6">นำสัญญาณเข้า</small></span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">3. Interneuron<br><small style="opacity:.6">ไขสันหลัง</small></span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">4. Motor neuron<br><small style="opacity:.6">นำสัญญาณออก</small></span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">5. Effector<br><small style="opacity:.6">กล้ามเนื้อ/ต่อม</small></span>
+    </div>
+    <p style="font-size:13px;color:var(--text-muted);margin-top:.5rem">สัญญาณวิ่งถึงไขสันหลังและตอบสนองก่อนที่สมองจะรับรู้ — ทำให้ตอบสนองเร็วมาก</p>
+  </div>
+
+  <div class="card-grid">
+    <div class="card card-accent-coral">
+      <div class="card-label">ประเภทของรีเฟลกซ์</div>
+      <ul class="styled">
+        <li><strong>Monosynaptic</strong> — sensory → motor โดยตรง (Knee-jerk)</li>
+        <li><strong>Polysynaptic</strong> — มี interneuron คั่น (Withdrawal reflex)</li>
+        <li><strong>Somatic reflex</strong> — ตอบสนองกล้ามเนื้อลาย</li>
+        <li><strong>Visceral reflex</strong> — ตอบสนองอวัยวะภายใน</li>
+        <li><strong>Innate reflex</strong> — มีตั้งแต่เกิด เช่น ดูดนม ทารก</li>
+        <li><strong>Conditioned reflex</strong> — เรียนรู้ได้ เช่น Pavlov's dog</li>
+      </ul>
+    </div>
+    <div class="card card-accent-amber">
+      <div class="card-label">ตัวอย่างรีเฟลกซ์สำคัญ</div>
+      <ul class="styled">
+        <li><strong>Patellar reflex</strong> — เคาะเอ็นเข่า → ขาเตะ (ทดสอบ L4)</li>
+        <li><strong>Withdrawal reflex</strong> — สัมผัสของร้อน/แหลม → ชักมือออก</li>
+        <li><strong>Pupillary reflex</strong> — แสงเข้าตา → รูม่านตาหด</li>
+        <li><strong>Gag reflex</strong> — สิ่งแปลกปลอมในคอ → สำรอก</li>
+        <li><strong>Babinski reflex</strong> — เขี่ยฝ่าเท้า → นิ้วงอลง (ปกติผู้ใหญ่)</li>
+        <li><strong>Blink reflex</strong> — สิ่งของเข้าตา → กะพริบตา</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">โครงสร้างไขสันหลัง (Spinal Cord)</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>โครงสร้าง</th><th>ลักษณะ</th><th>หน้าที่</th></tr></thead>
+        <tbody>
+          <tr><td><strong>White matter</strong></td><td>อยู่รอบนอก มี myelin (สีขาว)</td><td>ลำเลียงสัญญาณขึ้น-ลง ระหว่างสมองกับร่างกาย</td></tr>
+          <tr><td><strong>Gray matter</strong></td><td>อยู่ตรงกลาง รูปผีเสื้อ H ไม่มี myelin</td><td>ศูนย์รีเฟลกซ์ มีตัว neuron</td></tr>
+          <tr><td><strong>Dorsal horn</strong></td><td>ขาหลังของ H</td><td>รับสัญญาณ sensory เข้า</td></tr>
+          <tr><td><strong>Ventral horn</strong></td><td>ขาหน้าของ H</td><td>ส่งสัญญาณ motor ออกไปกล้ามเนื้อ</td></tr>
+          <tr><td><strong>Central canal</strong></td><td>ตรงกลาง</td><td>บรรจุ CSF</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SENSE ===== -->
+<section id="sense">
+  <div class="sec-title">
+    <div class="sec-icon" style="background:var(--green-dim);border:1px solid rgba(52,211,153,0.2)">👁️</div>
+    <div><h2>อวัยวะรับสัมผัส</h2><p>ตา หู การรับกลิ่น รส และสัมผัส</p></div>
+  </div>
+
+  <div class="card card-accent-cyan">
+    <div class="card-label">การมองเห็น — ตา (Eye)</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>โครงสร้าง</th><th>หน้าที่</th><th>รายละเอียด</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Cornea</strong></td><td>หักเหแสง ปกป้องตา</td><td>หักเหแสง ~70% ของกำลังหักเห ไม่มีเส้นเลือด</td></tr>
+          <tr><td><strong>Iris / Pupil</strong></td><td>ควบคุมปริมาณแสง</td><td>Sympathetic → ขยาย | Parasympathetic → หด</td></tr>
+          <tr><td><strong>Lens</strong></td><td>ปรับโฟกัส</td><td>Accommodation: ciliary muscle ปรับความโค้งของ lens</td></tr>
+          <tr><td><strong>Retina</strong></td><td>เยื่อรับภาพ</td><td>มี Rod (แสงน้อย ขาวดำ) และ Cone (แสงสว่าง สี 3 ชนิด)</td></tr>
+          <tr><td><strong>Fovea centralis</strong></td><td>จุดโฟกัสชัดสุด</td><td>มี Cone หนาแน่น ไม่มี Rod</td></tr>
+          <tr><td><strong>Blind spot</strong></td><td>จุดตาบอด</td><td>จุดที่ optic nerve ออก ไม่มีเซลล์รับแสง</td></tr>
+          <tr><td><strong>Optic nerve (II)</strong></td><td>ส่งสัญญาณ</td><td>→ Optic chiasm → LGN (Thalamus) → Visual cortex</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card card-accent-green">
+      <div class="card-label">การได้ยินและการทรงตัว — หู (Ear)</div>
+      <h3 style="margin-bottom:.5rem">หูชั้นนอก (Outer ear)</h3>
+      <ul class="styled">
+        <li>Pinna รับคลื่นเสียง → ช่องหู → แก้วหู (Tympanic membrane)</li>
+      </ul>
+      <h3 style="margin:.75rem 0 .5rem">หูชั้นกลาง (Middle ear)</h3>
+      <ul class="styled">
+        <li>กระดูก 3 ชิ้น: <strong>Malleus → Incus → Stapes</strong> ขยายแรงสั่น</li>
+        <li>Eustachian tube ปรับความดัน</li>
+      </ul>
+      <h3 style="margin:.75rem 0 .5rem">หูชั้นใน (Inner ear)</h3>
+      <ul class="styled">
+        <li><strong>Cochlea</strong> — แปลงคลื่นเสียงเป็นสัญญาณไฟฟ้า</li>
+        <li><strong>Organ of Corti</strong> — Hair cells รับเสียงความถี่ต่างกัน</li>
+        <li><strong>Semicircular canals</strong> — 3 คู่ตั้งฉากกัน ตรวจจับการหมุน</li>
+        <li><strong>Utricle/Saccule</strong> — ตรวจจับการเคลื่อนตรง + แรงโน้มถ่วง</li>
+      </ul>
+    </div>
+    <div class="card card-accent-amber">
+      <div class="card-label">ประสาทสัมผัสอื่น</div>
+      <ul class="styled">
+        <li><strong>การรับกลิ่น (Olfaction)</strong> — Olfactory epithelium → Olfactory bulb → สมอง <em>ไม่ผ่าน Thalamus!</em></li>
+        <li><strong>การรับรส (Gustation)</strong> — Taste bud บนลิ้น รับ 5 รส: หวาน เค็ม เปรี้ยว ขม Umami</li>
+        <li><strong>สัมผัสเบา</strong> — Meissner's corpuscle (ผิวบาง)</li>
+        <li><strong>แรงกด/สั่น</strong> — Pacinian corpuscle (ลึก)</li>
+        <li><strong>แรงดันต่อเนื่อง</strong> — Merkel's disc</li>
+        <li><strong>Proprioception</strong> — Muscle spindle + Golgi tendon organ รับรู้ตำแหน่งร่างกาย</li>
+        <li><strong>Nociception</strong> — Free nerve endings รับรู้ความเจ็บปวด</li>
+        <li><strong>Thermoreception</strong> — Free nerve endings รับรู้อุณหภูมิ</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DISEASE ===== -->
+<section id="disease">
+  <div class="sec-title">
+    <div class="sec-icon" style="background:var(--coral-dim);border:1px solid rgba(248,113,113,0.2)">🩺</div>
+    <div><h2>ความผิดปกติของระบบประสาท</h2><p>โรคสำคัญและยาที่ออกฤทธิ์ต่อระบบประสาท</p></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">โรคของระบบประสาท</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>โรค/ภาวะ</th><th>สาเหตุ</th><th>อาการสำคัญ</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Parkinson's disease</strong></td><td>Dopamine ลดลงใน Substantia nigra</td><td>สั่น เคลื่อนไหวช้า กล้ามเนื้อแข็ง ท่าทางก้ม</td></tr>
+          <tr><td><strong>Alzheimer's disease</strong></td><td>Amyloid plaques, Tau tangles ทำลาย neuron</td><td>ความจำเสื่อม สับสน บุคลิกภาพเปลี่ยน</td></tr>
+          <tr><td><strong>Multiple sclerosis (MS)</strong></td><td>ภูมิคุ้มกันทำลาย myelin sheath (CNS)</td><td>กล้ามเนื้ออ่อน ชา มองเห็นผิดปกติ</td></tr>
+          <tr><td><strong>Epilepsy (โรคลมชัก)</strong></td><td>สัญญาณไฟฟ้าผิดปกติในสมอง</td><td>ชัก หมดสติ สับสนหลังชัก</td></tr>
+          <tr><td><strong>Stroke (อัมพาต)</strong></td><td>เลือดไม่เลี้ยงสมอง (Ischemic) หรือเลือดออก (Hemorrhagic)</td><td>อัมพาตครึ่งซีก พูดไม่ได้ ปากเบี้ยว</td></tr>
+          <tr><td><strong>Depression</strong></td><td>Serotonin, Dopamine, Norepinephrine ไม่สมดุล</td><td>อารมณ์เศร้า หมดแรง นอนไม่หลับ</td></tr>
+          <tr><td><strong>Schizophrenia</strong></td><td>Dopamine มากเกินใน mesolimbic pathway</td><td>ประสาทหลอน หลงผิด คิดไม่ตรงความจริง</td></tr>
+          <tr><td><strong>Meningitis</strong></td><td>อักเสบของ meninges (แบคทีเรีย/ไวรัส)</td><td>ปวดศีรษะรุนแรง คอแข็ง ไข้สูง แพ้แสง</td></tr>
+          <tr><td><strong>Myasthenia gravis</strong></td><td>ภูมิคุ้มกันทำลาย ACh receptor</td><td>กล้ามเนื้ออ่อนแรง ยิ่งใช้ยิ่งอ่อน</td></tr>
+          <tr><td><strong>Guillain-Barré syndrome</strong></td><td>ภูมิคุ้มกันทำลาย myelin ใน PNS</td><td>อัมพาตเริ่มจากขาขึ้นบน อาจถึงหยุดหายใจ</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card card-accent-blue">
+    <div class="card-label">ยาและสารที่ออกฤทธิ์ต่อระบบประสาท</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>กลุ่มยา/สาร</th><th>กลไก</th><th>ตัวอย่าง</th><th>ใช้ใน</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Stimulant</strong></td><td>เพิ่ม dopamine/norepinephrine</td><td>Caffeine, Amphetamine, Cocaine</td><td>ADHD, narcolepsy (และการติดสาร)</td></tr>
+          <tr><td><strong>Depressant</strong></td><td>เพิ่ม GABA / ลด glutamate</td><td>Alcohol, Benzodiazepine, Barbiturate</td><td>วิตกกังวล ชัก (และการติดสุรา)</td></tr>
+          <tr><td><strong>Opioid analgesic</strong></td><td>จับ opioid receptor ลดสัญญาณปวด</td><td>Morphine, Codeine, Fentanyl</td><td>ปวดรุนแรง (เสี่ยงติดยา)</td></tr>
+          <tr><td><strong>SSRI</strong></td><td>ยับยั้งการดูด serotonin กลับ</td><td>Fluoxetine, Sertraline</td><td>Depression, OCD, anxiety</td></tr>
+          <tr><td><strong>Antipsychotic</strong></td><td>บล็อก dopamine receptor (D2)</td><td>Haloperidol, Risperidone</td><td>Schizophrenia, bipolar</td></tr>
+          <tr><td><strong>Local anesthetic</strong></td><td>บล็อก Na⁺ channel หยุด action potential</td><td>Lidocaine, Novocaine</td><td>ทำฟัน ผ่าตัดเฉพาะที่</td></tr>
+          <tr><td><strong>AChE inhibitor</strong></td><td>ยับยั้งการสลาย ACh เพิ่มระดับ ACh</td><td>Donepezil, Neostigmine</td><td>Alzheimer, Myasthenia gravis</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== QUIZ ===== -->
+<section id="quiz">
+  <div class="sec-title">
+    <div class="sec-icon" style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.2)">📝</div>
+    <div><h2>แบบทดสอบ</h2><p>ทดสอบความเข้าใจระบบประสาท 12 ข้อ</p></div>
+  </div>
+
+  <div class="quiz-wrap">
+    <div class="quiz-progress">
+      <span class="progress-label" id="q-num">1 / 12</span>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-fill" style="width:8.3%"></div></div>
+      <span class="progress-label" id="q-score" style="color:var(--cyan)">0 คะแนน</span>
+    </div>
+    <div id="quiz-card"></div>
+    <div class="quiz-nav">
+      <button class="btn" onclick="prevQ()">← ก่อนหน้า</button>
+      <button class="btn btn-primary" onclick="nextQ()">ถัดไป →</button>
+    </div>
+    <div id="final-score" style="display:none;margin-top:1.5rem">
+      <div class="score-display">
+        <div class="score-num" id="score-num"></div>
+        <div class="score-label">คะแนนที่ได้จาก 12 ข้อ</div>
+        <div class="score-msg" id="score-msg"></div>
+        <div class="memory-grid" style="margin-bottom:1.5rem;text-align:left">
+          <div class="memory-card mc-cyan"><div class="mc-key">จำไว้</div><div class="mc-val">CNS = สมอง + ไขสันหลัง</div></div>
+          <div class="memory-card mc-purple"><div class="mc-key">จำไว้</div><div class="mc-val">Cerebellum = การทรงตัว</div></div>
+          <div class="memory-card mc-coral"><div class="mc-key">จำไว้</div><div class="mc-val">Reflex arc ที่ไขสันหลัง</div></div>
+          <div class="memory-card mc-green"><div class="mc-key">จำไว้</div><div class="mc-val">Sympathetic = Fight/Flight</div></div>
+        </div>
+        <button class="btn btn-primary" onclick="restartQuiz()">ทำใหม่อีกครั้ง</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- end .container -->
+
+<footer>
+  <div class="container">
+    <p>คู่มือระบบประสาท ฉบับสมบูรณ์ · ม.ต้น – ม.ปลาย</p>
+  </div>
+</footer>
+
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const ids = ['overview','neuron','brain','pns','signal','reflex','sense','disease','quiz'];
+  document.querySelectorAll('.nav-btn')[ids.indexOf(id)].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+const questions = [
+  { q: "CNS (ระบบประสาทส่วนกลาง) ประกอบด้วยส่วนใด?", opts: ["สมอง + ไขสันหลัง", "สมอง + เส้นประสาท", "ไขสันหลัง + เส้นประสาทสมอง", "เส้นประสาทสมอง + เส้นประสาทไขสันหลัง"], ans: 0, exp: "CNS = สมอง (Brain) + ไขสันหลัง (Spinal cord) เท่านั้น ส่วน PNS คือเส้นประสาท" },
+  { q: "เซลล์ประสาทชนิดใดทำหน้าที่นำสัญญาณจากอวัยวะรับสัมผัสเข้าสู่สมอง?", opts: ["Motor neuron (Efferent)", "Interneuron", "Sensory neuron (Afferent)", "Multipolar neuron"], ans: 2, exp: "Sensory neuron / Afferent neuron นำสัญญาณจากอวัยวะรับสัมผัส → CNS" },
+  { q: "Cerebellum (สมองน้อย) ทำหน้าที่ใดเป็นหลัก?", opts: ["ควบคุมการหายใจ", "การทรงตัวและประสานงานกล้ามเนื้อ", "ควบคุมอารมณ์และความจำ", "การมองเห็น"], ans: 1, exp: "Cerebellum ควบคุมการทรงตัว ประสานงานกล้ามเนื้อ และทำให้เคลื่อนไหวแม่นยำ" },
+  { q: "Sympathetic nervous system กระตุ้นให้เกิดการตอบสนองแบบใด?", opts: ["Rest and Digest (พักผ่อน ย่อยอาหาร)", "หัวใจเต้นช้าลง", "Fight or Flight (สู้หรือหนี)", "รูม่านตาหดตัว"], ans: 2, exp: "Sympathetic = Fight or Flight: หัวใจเต้นเร็ว รูม่านตาขยาย หลอดลมขยาย ใช้ Norepinephrine" },
+  { q: "Hypothalamus ทำหน้าที่ใด?", opts: ["การมองเห็น", "ควบคุม Homeostasis และสั่งต่อมใต้สมอง", "การทรงตัว", "การได้ยิน"], ans: 1, exp: "Hypothalamus ควบคุมสมดุลร่างกาย (อุณหภูมิ หิว กระหาย) และควบคุมระบบต่อมไร้ท่อผ่านต่อมใต้สมอง" },
+  { q: "ที่ Synapse สัญญาณส่งต่อโดยใช้อะไร?", opts: ["สัญญาณไฟฟ้าโดยตรง", "Myelin sheath", "Neurotransmitter (สารสื่อประสาท)", "Node of Ranvier"], ans: 2, exp: "ที่ Synapse ใช้ Neurotransmitter เป็นสารเคมีส่งสัญญาณข้ามช่อง synaptic cleft ระหว่างเซลล์" },
+  { q: "Reflex arc ศูนย์กลางอยู่ที่ไหน?", opts: ["สมองใหญ่ (Cerebrum)", "สมองน้อย (Cerebellum)", "ไขสันหลัง (Spinal cord)", "Medulla oblongata"], ans: 2, exp: "Reflex arc ผ่านไขสันหลัง ไม่รอสมองใหญ่ จึงตอบสนองได้เร็วมาก" },
+  { q: "โรค Parkinson เกิดจากสาเหตุใด?", opts: ["Amyloid plaques สะสมในสมอง", "Dopamine ลดลงใน Substantia nigra", "ภูมิคุ้มกันทำลาย myelin", "Serotonin ไม่สมดุล"], ans: 1, exp: "Parkinson เกิดจาก Dopamine ลดลงใน Substantia nigra ของ Midbrain ทำให้เคลื่อนไหวช้า สั่น กล้ามเนื้อแข็ง" },
+  { q: "เซลล์ใดสร้าง Myelin sheath ใน PNS?", opts: ["Astrocyte", "Oligodendrocyte", "Microglia", "Schwann cell"], ans: 3, exp: "Schwann cell สร้าง myelin ใน PNS (1 เซลล์ต่อ 1 ส่วน axon) ส่วน Oligodendrocyte สร้างใน CNS" },
+  { q: "Frontal lobe ของสมองทำหน้าที่ใด?", opts: ["การมองเห็น", "การได้ยินและภาษา", "คิด วางแผน บุคลิกภาพ ควบคุมการเคลื่อนไหว", "รับสัมผัส อุณหภูมิ"], ans: 2, exp: "Frontal lobe = การคิด วางแผน ตัดสินใจ บุคลิกภาพ Motor cortex (ควบคุมการเคลื่อนไหว) และ Broca's area (พูด)" },
+  { q: "GABA เป็น neurotransmitter ที่มีผลอย่างไร?", opts: ["กระตุ้นสัญญาณประสาท", "ยับยั้งสัญญาณประสาท ลดความวิตกกังวล", "เพิ่มความเจ็บปวด", "ควบคุมการเคลื่อนไหวกล้ามเนื้อลาย"], ans: 1, exp: "GABA (Gamma-aminobutyric acid) เป็น inhibitory neurotransmitter หลัก ลดการกระตุ้น ลดวิตกกังวล Alcohol กระตุ้น GABA receptor" },
+  { q: "เส้นประสาทสมองคู่ใดครอบคลุมอวัยวะภายในกว้างที่สุด?", opts: ["Optic nerve (II)", "Facial nerve (VII)", "Vagus nerve (X)", "Trigeminal nerve (V)"], ans: 2, exp: "Vagus nerve (CN X) เป็น Parasympathetic หลักที่เลี้ยงหัวใจ ปอด ลำไส้ — เรียกว่า 'Wandering nerve'" }
+];
+
+let cur = 0, score = 0, answered = [];
+
+function renderQuiz() {
+  if (cur >= questions.length) { showScore(); return; }
+  const q = questions[cur];
+  const pct = ((cur + 1) / questions.length * 100).toFixed(1);
+  document.getElementById('q-num').textContent = `${cur + 1} / ${questions.length}`;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('q-score').textContent = `${score} คะแนน`;
+
+  let opts = q.opts.map((o, i) => {
+    const cls = answered[cur] !== undefined ? (i === q.ans ? 'correct' : (i === answered[cur] ? 'wrong' : '')) : '';
+    const dis = answered[cur] !== undefined ? 'disabled' : '';
+    return `<button class="quiz-opt ${cls}" onclick="answer(${i})" ${dis}>${o}</button>`;
+  }).join('');
+
+  let fb = '';
+  if (answered[cur] !== undefined) {
+    const ok = answered[cur] === q.ans;
+    fb = `<div class="quiz-feedback ${ok ? 'ok' : 'bad'}">${ok ? '✓ ถูกต้อง! ' : '✗ ผิด — '}${q.exp}</div>`;
+  }
+
+  document.getElementById('quiz-card').innerHTML = `
+    <div class="quiz-card">
+      <div class="quiz-q-num">ข้อที่ ${cur + 1}</div>
+      <div class="quiz-q-text">${q.q}</div>
+      <div class="quiz-opts">${opts}</div>
+      ${fb}
+    </div>`;
+}
+
+function answer(i) {
+  if (answered[cur] !== undefined) return;
+  answered[cur] = i;
+  if (i === questions[cur].ans) score++;
+  renderQuiz();
+}
+
+function nextQ() { if (cur < questions.length - 1) { cur++; renderQuiz(); } }
+function prevQ() { if (cur > 0) { cur--; renderQuiz(); } }
+
+function showScore() {
+  document.getElementById('quiz-card').style.display = 'none';
+  document.querySelector('.quiz-nav').style.display = 'none';
+  document.getElementById('final-score').style.display = 'block';
+  const pct = Math.round(score / questions.length * 100);
+  document.getElementById('score-num').textContent = `${score} / ${questions.length}`;
+  const msgs = [
+    [80, '🎉 ยอดเยี่ยม! เข้าใจระบบประสาทได้ดีมาก พร้อมสอบแล้ว'],
+    [60, '👍 ดี! ทบทวนส่วนที่ผิดอีกครั้งก็พร้อมสอบแล้ว'],
+    [0,  '📖 ลองทบทวนเนื้อหาแล้วกลับมาทำใหม่อีกครั้งนะ']
+  ];
+  document.getElementById('score-msg').textContent = msgs.find(([t]) => pct >= t)[1];
+}
+
+function restartQuiz() {
+  cur = 0; score = 0; answered = [];
+  document.getElementById('quiz-card').style.display = 'block';
+  document.querySelector('.quiz-nav').style.display = 'flex';
+  document.getElementById('final-score').style.display = 'none';
+  renderQuiz();
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
