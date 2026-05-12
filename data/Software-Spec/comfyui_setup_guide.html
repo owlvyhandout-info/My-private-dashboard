@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือการติดตั้ง ComfyUI (Local)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap');
+        
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --code-bg: #2b2b2b;
+            --code-text: #f8f8f2;
+        }
+
+        body { 
+            font-family: 'Sarabun', sans-serif; 
+            line-height: 1.6; 
+            color: var(--text-color); 
+            background-color: var(--bg-color); 
+            margin: 0; 
+            padding: 20px; 
+        }
+
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: #ffffff; 
+            padding: 40px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+        }
+
+        h1 { 
+            color: var(--primary-color); 
+            text-align: center; 
+            border-bottom: 3px solid var(--secondary-color); 
+            padding-bottom: 15px; 
+            margin-bottom: 30px; 
+        }
+
+        h2 { 
+            color: var(--primary-color);
+            border-left: 5px solid var(--secondary-color); 
+            padding-left: 15px; 
+            margin-top: 40px; 
+        }
+
+        h3 {
+            color: #2980b9;
+            margin-top: 25px;
+        }
+
+        p { margin-bottom: 15px; }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0; 
+            background-color: #fff;
+        }
+
+        th, td { 
+            border: 1px solid #e2e8f0; 
+            padding: 12px 15px; 
+            text-align: left; 
+        }
+
+        th { 
+            background-color: #f1f5f9; 
+            color: var(--primary-color); 
+            font-weight: 600; 
+        }
+
+        .highlight { 
+            color: #d35400; 
+            font-weight: bold; 
+        }
+
+        .note { 
+            background-color: #fff8e1; 
+            color: #856404; 
+            padding: 15px; 
+            border-left: 5px solid #ffc107; 
+            border-radius: 4px;
+            margin: 20px 0; 
+        }
+
+        .code-block { 
+            background-color: var(--code-bg); 
+            color: var(--code-text); 
+            border-radius: 8px; 
+            padding: 15px; 
+            font-family: 'Courier New', Courier, monospace; 
+            overflow-x: auto; 
+            margin: 15px 0; 
+            border: 1px solid #1a1a1a;
+        }
+
+        ul, ol { 
+            margin-bottom: 20px; 
+            padding-left: 25px; 
+        }
+
+        li { margin-bottom: 10px; }
+
+        a { 
+            color: var(--secondary-color); 
+            text-decoration: none; 
+            font-weight: bold;
+        }
+
+        a:hover { 
+            text-decoration: underline; 
+        }
+
+        .intro {
+            font-size: 1.1em;
+            color: #555;
+            background: #eaf2f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>การติดตั้ง ComfyUI (Local)</h1>
+        
+        <div class="intro">
+            <p>การติดตั้ง <strong>ComfyUI</strong> ไว้ใช้งานเองในเครื่อง (Local) เป็นทางเลือกที่ยอดเยี่ยมสำหรับสาย Prompt Engineer เพราะช่วยให้ควบคุม Workflow ได้ละเอียดและไม่มีค่าใช้จ่ายรายเดือนครับ โดยเฉพาะเมื่อคุณต้องการต่อยอดงานด้านสื่อการสอนหรืองาน Character Design อย่างที่ทำอยู่</p>
+            <p>นี่คือสรุปสเปคเครื่องและขั้นตอนการเตรียมตัวครับ</p>
+        </div>
+
+        <h2>1. สเปคคอมพิวเตอร์ที่แนะนำ (Hardware Requirements)</h2>
+        <p>หัวใจสำคัญของ ComfyUI คือ <strong>การ์ดจอ (GPU)</strong> ครับ เพราะ AI ประมวลผลผ่านหน่วยความจำของการ์ดจอเป็นหลัก</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>อุปกรณ์</th>
+                    <th>ขั้นต่ำ (Minimum)</th>
+                    <th>แนะนำ (Recommended)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>GPU (NVIDIA)</strong></td>
+                    <td>RTX 3060 (VRAM 8GB ขึ้นไป)</td>
+                    <td class="highlight">RTX 3090 / 4080 / 4090 (VRAM 16GB-24GB)</td>
+                </tr>
+                <tr>
+                    <td><strong>CPU</strong></td>
+                    <td>Intel Core i5 / AMD Ryzen 5</td>
+                    <td>Intel Core i7 / AMD Ryzen 7 ขึ้นไป</td>
+                </tr>
+                <tr>
+                    <td><strong>RAM</strong></td>
+                    <td>16GB</td>
+                    <td class="highlight">32GB ขึ้นไป</td>
+                </tr>
+                <tr>
+                    <td><strong>Storage</strong></td>
+                    <td>SSD 50GB (พื้นที่ว่าง)</td>
+                    <td>NVMe SSD 200GB+ (สำหรับเก็บ Model)</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="note">
+            <strong>Note:</strong> หากใช้การ์ดจอค่าย AMD หรือ Mac (M1/M2/M3) ก็สามารถลงได้ แต่ประสิทธิภาพและขั้นตอนการติดตั้งจะซับซ้อนกว่าฝั่ง NVIDIA (CUDA) ครับ
+        </div>
+
+        <h2>2. สิ่งที่ต้องติดตั้งก่อน (Software Prerequisites)</h2>
+        <p>ก่อนจะลง ComfyUI คุณต้องเตรียมสภาพแวดล้อมในเครื่องให้พร้อมก่อน ดังนี้ครับ:</p>
+        <ul>
+            <li><strong>Python:</strong> แนะนำเวอร์ชัน 3.10.x หรือ 3.11.x (ตอนติดตั้งอย่าลืมติ๊กถูกที่ <em>"Add Python to PATH"</em> เด็ดขาด)</li>
+            <li><strong>Git:</strong> สำหรับใช้ Clone โปรเจกต์จาก GitHub และใช้อัปเดต ComfyUI ในอนาคต</li>
+            <li><strong>Drivers:</strong> อัปเดต NVIDIA Driver ให้เป็นเวอร์ชันล่าสุดเสมอ</li>
+        </ul>
+
+        <h2>3. วิธีการติดตั้ง (Installation Methods)</h2>
+        <p>มี 2 วิธีหลักที่นิยมใช้ครับ:</p>
+
+        <h3>วิธีที่ 1: แบบ Portable (ง่ายที่สุดสำหรับ Windows)</h3>
+        <p>เหมาะสำหรับผู้เริ่มต้น เพราะรวมทุกอย่างมาให้ในโฟลเดอร์เดียว ไม่ต้องลง Python แยกในระบบ</p>
+        <ol>
+            <li>ไปที่ <a href="https://github.com/comfyanonymous/ComfyUI/releases" target="_blank">ComfyUI GitHub Releases</a></li>
+            <li>ดาวน์โหลดไฟล์ <code>ComfyUI_windows_portable_nvidia_cu121_or_cpu.7z</code></li>
+            <li>แตกไฟล์ไว้ใน Drive ที่ต้องการ (แนะนำ SSD)</li>
+            <li>กดรันไฟล์ <code>run_nvidia_gpu.bat</code> เพื่อเริ่มใช้งานได้ทันที</li>
+        </ol>
+
+        <h3>วิธีที่ 2: แบบ Manual (สำหรับสาย Dev / Git)</h3>
+        <p>เหมาะสำหรับคนที่ต้องการปรับแต่งหรือใช้ร่วมกับโปรเจกต์อื่น (เช่น n8n หรือ Scripts ต่างๆ)</p>
+        <ol>
+            <li>เปิด Terminal/CMD แล้วพิมพ์:
+                <div class="code-block">git clone https://github.com/comfyanonymous/ComfyUI.git</div>
+            </li>
+            <li>สร้าง Virtual Environment (แนะนำ) และติดตั้ง Requirements:
+                <div class="code-block">pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121<br>pip install -r requirements.txt</div>
+            </li>
+        </ol>
+
+        <h2>4. สิ่งที่ต้องมีหลังจากติดตั้งเสร็จ (Essential Add-ons)</h2>
+        <p>เพื่อให้ ComfyUI ทำงานได้เต็มประสิทธิภาพ คุณควรลงสิ่งเหล่านี้เพิ่มเติมครับ:</p>
+        <ul>
+            <li>
+                <strong>ComfyUI-Manager:</strong> ตัวจัดการ Node และการอัปเดต (ห้ามพลาดเด็ดขาด!)<br>
+                ไปที่โฟลเดอร์ <code>custom_nodes</code> แล้วใช้คำสั่ง:
+                <div class="code-block">git clone https://github.com/ltdrdata/ComfyUI-Manager.git</div>
+            </li>
+            <li><strong>Checkpoint Models:</strong> ไปโหลดไฟล์ Model (เช่น SDXL, Pony, หรือ Realism ต่างๆ) จาก <a href="https://civitai.com" target="_blank">Civitai</a> มาวางไว้ในโฟลเดอร์ <code>models/checkpoints</code></li>
+        </ul>
+    </div>
+</body>
+</html>
