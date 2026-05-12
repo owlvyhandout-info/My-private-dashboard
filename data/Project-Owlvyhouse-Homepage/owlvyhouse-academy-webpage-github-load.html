@@ -1,0 +1,625 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>คู่มือสร้าง Folder assets/ บน GitHub — OwlvyHouse</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:   #1a73e8;
+      --success:   #22c55e;
+      --warning:   #f59e0b;
+      --danger:    #ef4444;
+      --purple:    #7c3aed;
+      --bg:        #f0f6ff;
+      --card:      #ffffff;
+      --text:      #1e293b;
+      --light:     #64748b;
+      --radius:    16px;
+      --shadow:    0 4px 24px rgba(26,115,232,0.10);
+    }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #1a237e, #1565c0, #0288d1);
+      padding: 36px 24px;
+      text-align: center;
+      color: white;
+    }
+    header h1 { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 800; margin-bottom: 8px; }
+    header h1 span { color: #ffd54f; }
+    header p  { font-size: 0.92rem; color: rgba(255,255,255,0.8); font-weight: 600; }
+
+    .header-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 999px;
+      padding: 6px 18px; margin-top: 12px;
+      font-size: 0.82rem; font-weight: 700; color: white;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 36px 20px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    /* ── SECTION CARD ── */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 22px;
+      font-size: 1.05rem; font-weight: 800; color: white;
+    }
+    .card-header .step-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; font-weight: 800; flex-shrink: 0;
+    }
+
+    .bg-blue   { background: linear-gradient(135deg, #1565c0, #1a73e8); }
+    .bg-green  { background: linear-gradient(135deg, #16a34a, #22c55e); }
+    .bg-purple { background: linear-gradient(135deg, #6d28d9, #7c3aed); }
+    .bg-orange { background: linear-gradient(135deg, #d97706, #f59e0b); }
+    .bg-red    { background: linear-gradient(135deg, #dc2626, #ef4444); }
+    .bg-teal   { background: linear-gradient(135deg, #0f766e, #14b8a6); }
+
+    .card-body { padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
+
+    /* ── STEP LIST ── */
+    .step-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .step-list li {
+      display: flex; gap: 12px; align-items: flex-start;
+      background: #f8faff; border-radius: 10px; padding: 12px 14px;
+      font-size: 0.9rem; line-height: 1.6;
+      border-left: 3px solid var(--primary);
+    }
+    .step-list li .num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--primary); color: white;
+      font-size: 0.75rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .step-list li .content { flex: 1; }
+    .step-list li .content strong { color: #1a237e; }
+
+    /* ── CODE BLOCK ── */
+    .code-wrap {
+      background: #0f172a;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .code-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 16px;
+      background: #1e293b;
+      font-size: 0.78rem; color: #94a3b8; font-weight: 700;
+    }
+    .copy-btn {
+      background: #334155; color: #e2e8f0;
+      border: none; border-radius: 6px;
+      padding: 4px 12px; font-size: 0.72rem; font-weight: 700;
+      cursor: pointer; transition: background .2s;
+      font-family: 'Sarabun', sans-serif;
+    }
+    .copy-btn:hover { background: #475569; }
+    .copy-btn.copied { background: #16a34a; color: white; }
+
+    pre {
+      padding: 16px;
+      font-size: 0.82rem;
+      line-height: 1.75;
+      color: #e2e8f0;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      white-space: pre;
+    }
+
+    /* syntax colors */
+    .c-green  { color: #86efac; }
+    .c-yellow { color: #fde68a; }
+    .c-blue   { color: #93c5fd; }
+    .c-red    { color: #fca5a5; }
+    .c-gray   { color: #94a3b8; }
+    .c-orange { color: #fdba74; }
+
+    /* ── INFO BOX ── */
+    .info-box {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 12px 16px; border-radius: 10px; font-size: 0.87rem; line-height: 1.65;
+    }
+    .info-box .ib-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+    .info-box.tip    { background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; }
+    .info-box.warn   { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+    .info-box.danger { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    .info-box.info   { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+
+    /* ── FILE TREE ── */
+    .file-tree {
+      background: #0f172a; border-radius: 12px;
+      padding: 16px 20px; font-family: 'Courier New', monospace;
+      font-size: 0.85rem; line-height: 2;
+    }
+    .ft-folder { color: #fde68a; font-weight: 700; }
+    .ft-file   { color: #86efac; }
+    .ft-note   { color: #94a3b8; font-size: 0.75rem; }
+    .ft-ok     { color: #34d399; }
+    .ft-warn   { color: #f87171; }
+
+    /* ── COMPARE TABLE ── */
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .compare-table th {
+      background: #1e293b; color: white;
+      padding: 10px 14px; text-align: left; font-weight: 700;
+    }
+    .compare-table th:first-child { border-radius: 10px 0 0 0; }
+    .compare-table th:last-child  { border-radius: 0 10px 0 0; }
+    .compare-table td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:nth-child(even) td { background: #f8faff; }
+    .ok   { color: #16a34a; font-weight: 700; }
+    .fail { color: #dc2626; font-weight: 700; }
+
+    /* ── CHECKLIST ── */
+    .checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .checklist li {
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: 0.9rem; padding: 10px 14px;
+      background: #f8faff; border-radius: 10px;
+    }
+    .checklist li .ck { font-size: 1.1rem; flex-shrink: 0; }
+
+    /* ── URL TEST ── */
+    .url-test-list { display: flex; flex-direction: column; gap: 8px; }
+    .url-item {
+      background: #0f172a; border-radius: 10px;
+      padding: 10px 14px; font-family: 'Courier New', monospace;
+      font-size: 0.78rem; color: #93c5fd; word-break: break-all;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .url-item .url-label {
+      background: #1e293b; color: #fde68a;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.68rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 999px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0f172a; color: rgba(255,255,255,0.5);
+      text-align: center; padding: 20px;
+      font-size: 0.78rem;
+    }
+    footer span { color: #f5a623; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .card-body { padding: 16px; }
+      pre { font-size: 0.74rem; }
+      .compare-table { font-size: 0.78rem; }
+      .compare-table td, .compare-table th { padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <h1>🦉 คู่มือสร้าง Folder <span>assets/</span> และอัปโหลดรูปบน GitHub</h1>
+  <p>สำหรับโปรเจกต์ OwlvyHouse Family — GitHub Pages</p>
+  <div class="header-badge">📁 owlvyhouse-academy.github.io</div>
+</header>
+
+<main>
+
+  <!-- ── SECTION 0: โครงสร้างไฟล์เป้าหมาย ── -->
+  <div class="card">
+    <div class="card-header bg-blue">
+      <div class="step-num">🎯</div>
+      โครงสร้างไฟล์ที่ต้องการ (เป้าหมาย)
+    </div>
+    <div class="card-body">
+      <div class="info-box info">
+        <span class="ib-icon">💡</span>
+        <span>ก่อนเริ่ม ทำความเข้าใจโครงสร้างที่ถูกต้องก่อนครับ ทุกอย่างต้องตรงกับโค้ดใน <strong>index.html</strong></span>
+      </div>
+      <div class="file-tree">
+        <div><span class="ft-folder">owlvyhouse-academy.github.io/</span></div>
+        <div>&nbsp;&nbsp;│</div>
+        <div>&nbsp;&nbsp;├── <span class="ft-file">index.html</span> &nbsp;<span class="ft-note">← ไฟล์หน้าเว็บหลัก</span></div>
+        <div>&nbsp;&nbsp;│</div>
+        <div>&nbsp;&nbsp;└── <span class="ft-folder">assets/</span> &nbsp;<span class="ft-note">← Folder รูปภาพ</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="ft-file">tele-bot.png</span> &nbsp;<span class="ft-note">← รูปนกฮูก TeleBot</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="ft-file">quiz-bot.png</span> &nbsp;<span class="ft-note">← รูปนกฮูก QuizBot</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="ft-file">deep-bot.png</span> &nbsp;<span class="ft-note">← รูปนกฮูก DeepBot</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="ft-file">talk-bot.png</span> &nbsp;<span class="ft-note">← รูปนกฮูก TalkBot</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="ft-file">sim-bot.png</span> &nbsp;&nbsp;<span class="ft-note">← รูปนกฮูก SIMBot</span></div>
+      </div>
+      <div class="info-box warn">
+        <span class="ib-icon">⚠️</span>
+        <span><strong>GitHub ไม่มีปุ่ม "สร้าง Folder" โดยตรง!</strong><br>
+        ต้องสร้าง Folder โดยการพิมพ์ชื่อ Folder ตอนสร้างไฟล์ใหม่เท่านั้น</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── SECTION 1: สร้าง Folder ── -->
+  <div class="card">
+    <div class="card-header bg-blue">
+      <div class="step-num">1</div>
+      สร้าง Folder <code style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:6px">assets/</code> บน GitHub
+    </div>
+    <div class="card-body">
+
+      <ol class="step-list">
+        <li>
+          <div class="num">1</div>
+          <div class="content">
+            เข้าไปที่ Repository ของคุณ<br>
+            <strong>https://github.com/owlvyhouse-academy/owlvyhouse-academy.github.io</strong>
+          </div>
+        </li>
+        <li>
+          <div class="num">2</div>
+          <div class="content">
+            กดปุ่ม <strong>"Add file"</strong> (มุมขวาบน)<br>
+            แล้วเลือก <strong>"Create new file"</strong>
+          </div>
+        </li>
+        <li>
+          <div class="num">3</div>
+          <div class="content">
+            ในช่อง <strong>"Name your file..."</strong> ให้พิมพ์:<br>
+            <code style="background:#1e293b;color:#86efac;padding:4px 10px;border-radius:6px;font-size:0.9rem">assets/</code>
+            &nbsp;← พิมพ์ <strong>slash ( / ) ต่อท้ายทันที!</strong><br>
+            GitHub จะสร้าง Folder <strong>assets/</strong> ให้อัตโนมัติ และช่องพิมพ์จะเลื่อนมารอชื่อไฟล์
+          </div>
+        </li>
+        <li>
+          <div class="num">4</div>
+          <div class="content">
+            พิมพ์ต่อเนื่องจาก <code>assets/</code> ว่า:<br>
+            <code style="background:#1e293b;color:#fde68a;padding:4px 10px;border-radius:6px;font-size:0.9rem">assets/.gitkeep</code><br>
+            (ไฟล์ .gitkeep = ไฟล์เปล่า ใช้เพื่อให้ GitHub บันทึก Folder ว่างได้)
+          </div>
+        </li>
+        <li>
+          <div class="num">5</div>
+          <div class="content">
+            เลื่อนลงด้านล่าง → กดปุ่ม <strong style="color:#16a34a">"Commit new file"</strong> (ปุ่มสีเขียว)<br>
+            ✅ Folder <strong>assets/</strong> ถูกสร้างแล้ว!
+          </div>
+        </li>
+      </ol>
+
+      <div class="info-box tip">
+        <span class="ib-icon">✅</span>
+        <span>หลังจากนี้จะเห็น Folder <strong>assets/</strong> ปรากฏใน Repository แล้วครับ</span>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ── SECTION 2: อัปโหลดรูปภาพ ── -->
+  <div class="card">
+    <div class="card-header bg-green">
+      <div class="step-num">2</div>
+      อัปโหลดรูปภาพนกฮูกเข้า Folder assets/
+    </div>
+    <div class="card-body">
+
+      <div class="info-box warn">
+        <span class="ib-icon">⚠️</span>
+        <span>ต้องคลิก <strong>เข้าไปใน Folder assets/ ก่อน</strong> แล้วค่อยอัปโหลด ไม่งั้นรูปจะไปอยู่ Root แทน!</span>
+      </div>
+
+      <ol class="step-list">
+        <li>
+          <div class="num">1</div>
+          <div class="content">
+            ใน Repository คลิกที่ Folder <strong>assets/</strong> เพื่อเข้าไปข้างใน
+          </div>
+        </li>
+        <li>
+          <div class="num">2</div>
+          <div class="content">
+            กดปุ่ม <strong>"Add file"</strong> → เลือก <strong>"Upload files"</strong>
+          </div>
+        </li>
+        <li>
+          <div class="num">3</div>
+          <div class="content">
+            <strong>ลากไฟล์รูปทั้ง 5 ไฟล์วางในกรอบ</strong> หรือกด <strong>"choose your files"</strong><br><br>
+            ไฟล์ที่ต้องอัปโหลด (ชื่อต้องตรงเป๊ะ!):<br>
+            <code style="background:#0f172a;color:#86efac;padding:6px 12px;border-radius:8px;display:inline-block;margin-top:8px;line-height:2;font-size:0.82rem">
+              tele-bot.png<br>
+              quiz-bot.png<br>
+              deep-bot.png<br>
+              talk-bot.png<br>
+              sim-bot.png
+            </code>
+          </div>
+        </li>
+        <li>
+          <div class="num">4</div>
+          <div class="content">
+            เลื่อนลงด้านล่าง<br>
+            ช่อง <strong>Commit message</strong> พิมพ์: <code style="background:#1e293b;color:#fde68a;padding:2px 8px;border-radius:6px">Add bot images</code><br>
+            กด <strong style="color:#16a34a">"Commit changes"</strong> (ปุ่มสีเขียว)
+          </div>
+        </li>
+        <li>
+          <div class="num">5</div>
+          <div class="content">
+            รอประมาณ <strong>1-2 นาที</strong> แล้วตรวจสอบว่าเว็บแสดงรูปถูกต้องหรือยัง
+          </div>
+        </li>
+      </ol>
+
+    </div>
+  </div>
+
+
+  <!-- ── SECTION 3: ข้อควรระวัง ── -->
+  <div class="card">
+    <div class="card-header bg-red">
+      <div class="step-num">⚠️</div>
+      ข้อควรระวัง — จุดที่ผิดบ่อยที่สุด!
+    </div>
+    <div class="card-body">
+
+      <p style="font-weight:700;color:#dc2626;font-size:0.95rem">❌ ความผิดพลาดที่ 1 — ชื่อไฟล์ตัวพิมพ์ผิด</p>
+      <div class="code-wrap">
+        <div class="code-header">
+          <span>📋 ชื่อไฟล์ที่ถูกและผิด</span>
+        </div>
+        <pre><span class="c-green">✅ ถูก:</span>  <span class="c-yellow">tele-bot.png</span>
+<span class="c-green">✅ ถูก:</span>  <span class="c-yellow">quiz-bot.png</span>
+
+<span class="c-red">❌ ผิด:</span>  Tele-Bot.png        <span class="c-gray">← ตัวพิมพ์ใหญ่</span>
+<span class="c-red">❌ ผิด:</span>  TeleBot.png         <span class="c-gray">← ไม่มี dash (-)</span>
+<span class="c-red">❌ ผิด:</span>  tele_bot.png        <span class="c-gray">← underscore (_) แทน dash</span>
+<span class="c-red">❌ ผิด:</span>  telebot.png         <span class="c-gray">← ไม่มี dash (-)</span>
+<span class="c-red">❌ ผิด:</span>  tele-bot.jpg        <span class="c-gray">← นามสกุลผิด</span>
+<span class="c-red">❌ ผิด:</span>  tele-bot.PNG        <span class="c-gray">← นามสกุลตัวพิมพ์ใหญ่</span></pre>
+      </div>
+
+      <p style="font-weight:700;color:#dc2626;font-size:0.95rem">❌ ความผิดพลาดที่ 2 — วางรูปผิด Folder</p>
+      <div class="code-wrap">
+        <div class="code-header">
+          <span>📋 Path ที่ถูกและผิด</span>
+        </div>
+        <pre><span class="c-green">✅ ถูก:</span>  <span class="c-yellow">assets/tele-bot.png</span>     <span class="c-gray">← อยู่ใน Folder assets/</span>
+
+<span class="c-red">❌ ผิด:</span>  tele-bot.png            <span class="c-gray">← วางตรง Root ไม่มี Folder</span>
+<span class="c-red">❌ ผิด:</span>  images/tele-bot.png     <span class="c-gray">← ชื่อ Folder ผิด (images ≠ assets)</span>
+<span class="c-red">❌ ผิด:</span>  Assets/tele-bot.png     <span class="c-gray">← A ตัวใหญ่ (Assets ≠ assets)</span>
+<span class="c-red">❌ ผิด:</span>  ./Assets/tele-bot.png   <span class="c-gray">← A ตัวใหญ่</span></pre>
+      </div>
+
+      <p style="font-weight:700;color:#dc2626;font-size:0.95rem">❌ ความผิดพลาดที่ 3 — ลืมรอ Deploy</p>
+      <div class="info-box warn">
+        <span class="ib-icon">⏳</span>
+        <span>หลัง Commit ทุกครั้ง GitHub Pages ต้องใช้เวลา <strong>1-3 นาที</strong> ในการ Deploy<br>
+        ถ้าเปิดเว็บแล้วยังไม่เห็นรูป ให้รอแล้วกด <strong>Ctrl+F5</strong> (Force Refresh) ครับ</span>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ── SECTION 4: ตาราง ถูก vs ผิด ── -->
+  <div class="card">
+    <div class="card-header bg-purple">
+      <div class="step-num">📊</div>
+      ตารางเปรียบเทียบ ถูก vs ผิด
+    </div>
+    <div class="card-body">
+      <div style="overflow-x:auto">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>สิ่งที่ตรวจสอบ</th>
+              <th>✅ ถูกต้อง</th>
+              <th>❌ ผิด (ตัวอย่าง)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>ชื่อ Folder</strong></td>
+              <td class="ok">assets</td>
+              <td class="fail">Assets / images / img</td>
+            </tr>
+            <tr>
+              <td><strong>ชื่อไฟล์ Bot 1</strong></td>
+              <td class="ok">tele-bot.png</td>
+              <td class="fail">TeleBot.png / tele_bot.png</td>
+            </tr>
+            <tr>
+              <td><strong>ชื่อไฟล์ Bot 2</strong></td>
+              <td class="ok">quiz-bot.png</td>
+              <td class="fail">QuizBot.png / quiz_bot.png</td>
+            </tr>
+            <tr>
+              <td><strong>ชื่อไฟล์ Bot 3</strong></td>
+              <td class="ok">deep-bot.png</td>
+              <td class="fail">DeepBot.png / deep_bot.png</td>
+            </tr>
+            <tr>
+              <td><strong>ชื่อไฟล์ Bot 4</strong></td>
+              <td class="ok">talk-bot.png</td>
+              <td class="fail">TalkBot.png / talk_bot.png</td>
+            </tr>
+            <tr>
+              <td><strong>ชื่อไฟล์ Bot 5</strong></td>
+              <td class="ok">sim-bot.png</td>
+              <td class="fail">SimBot.png / sim_bot.png</td>
+            </tr>
+            <tr>
+              <td><strong>นามสกุลไฟล์</strong></td>
+              <td class="ok">.png (ตัวพิมพ์เล็ก)</td>
+              <td class="fail">.PNG / .jpg / .jpeg</td>
+            </tr>
+            <tr>
+              <td><strong>ตำแหน่งไฟล์</strong></td>
+              <td class="ok">อยู่ใน assets/</td>
+              <td class="fail">อยู่ตรง Root หรือ Folder อื่น</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── SECTION 5: ทดสอบ URL ── -->
+  <div class="card">
+    <div class="card-header bg-teal">
+      <div class="step-num">🔍</div>
+      วิธีทดสอบว่ารูปโหลดได้หรือไม่
+    </div>
+    <div class="card-body">
+
+      <div class="info-box info">
+        <span class="ib-icon">💡</span>
+        <span>เปิด Browser แล้วพิมพ์ URL ด้านล่างตรง ๆ ถ้าเห็นรูป = ✅ ถูกต้อง | ถ้าเห็น 404 = ❌ ชื่อหรือ Path ผิด</span>
+      </div>
+
+      <div class="url-test-list">
+        <div class="url-item">
+          <span class="url-label">Bot 1</span>
+          https://owlvyhouse-academy.github.io/assets/tele-bot.png
+        </div>
+        <div class="url-item">
+          <span class="url-label">Bot 2</span>
+          https://owlvyhouse-academy.github.io/assets/quiz-bot.png
+        </div>
+        <div class="url-item">
+          <span class="url-label">Bot 3</span>
+          https://owlvyhouse-academy.github.io/assets/deep-bot.png
+        </div>
+        <div class="url-item">
+          <span class="url-label">Bot 4</span>
+          https://owlvyhouse-academy.github.io/assets/talk-bot.png
+        </div>
+        <div class="url-item">
+          <span class="url-label">Bot 5</span>
+          https://owlvyhouse-academy.github.io/assets/sim-bot.png
+        </div>
+      </div>
+
+      <div class="info-box tip">
+        <span class="ib-icon">✅</span>
+        <span>ถ้าเปิด URL แล้วเห็นรูปนกฮูก = อัปโหลดสำเร็จแล้วครับ!<br>
+        กลับมาเปิด <strong>https://owlvyhouse-academy.github.io</strong> แล้วกด <strong>Ctrl+F5</strong> เพื่อรีเฟรช</span>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ── SECTION 6: Checklist ── -->
+  <div class="card">
+    <div class="card-header bg-orange">
+      <div class="step-num">✅</div>
+      Checklist สรุป — ทำครบแล้วหรือยัง?
+    </div>
+    <div class="card-body">
+      <ul class="checklist">
+        <li><span class="ck">⬜</span> สร้าง Repository ชื่อ <strong>owlvyhouse-academy.github.io</strong></li>
+        <li><span class="ck">⬜</span> อัปโหลด <strong>index.html</strong> ไว้ที่ Root</li>
+        <li><span class="ck">⬜</span> สร้าง Folder <strong>assets/</strong> (ด้วยไฟล์ .gitkeep)</li>
+        <li><span class="ck">⬜</span> อัปโหลด <strong>tele-bot.png</strong> ใน assets/</li>
+        <li><span class="ck">⬜</span> อัปโหลด <strong>quiz-bot.png</strong> ใน assets/</li>
+        <li><span class="ck">⬜</span> อัปโหลด <strong>deep-bot.png</strong> ใน assets/</li>
+        <li><span class="ck">⬜</span> อัปโหลด <strong>talk-bot.png</strong> ใน assets/</li>
+        <li><span class="ck">⬜</span> อัปโหลด <strong>sim-bot.png</strong> ใน assets/</li>
+        <li><span class="ck">⬜</span> ทดสอบ URL รูปแต่ละอัน → เห็นรูป ✅</li>
+        <li><span class="ck">⬜</span> เปิด <strong>https://owlvyhouse-academy.github.io</strong> → เห็นรูปนกฮูกครบ ✅</li>
+      </ul>
+
+      <div class="info-box tip">
+        <span class="ib-icon">🦉</span>
+        <span><strong>ถ้ายังไม่มีรูปพร้อม ไม่เป็นไรครับ!</strong><br>
+        โค้ดใน index.html มี Fallback แสดง Emoji 🦉 แทนรูปอัตโนมัติ<br>
+        เว็บยังใช้งานได้ปกติ 100% ค่อยใส่รูปทีหลังได้เลย</span>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p>🦉 <span>OwlvyHouse</span> — คู่มือการใช้งาน GitHub Pages &nbsp;·&nbsp; © 2025</p>
+</footer>
+
+<script>
+  // Copy button functionality (สำหรับอนาคตถ้าจะเพิ่ม)
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const pre = this.closest('.code-wrap').querySelector('pre');
+      const text = pre.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        this.textContent = '✅ คัดลอกแล้ว!';
+        this.classList.add('copied');
+        setTimeout(() => {
+          this.textContent = '📋 คัดลอก';
+          this.classList.remove('copied');
+        }, 2000);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
+
+							<script>
+                            	
+							</script>
+                        </body>
+                        </html>
+                    
