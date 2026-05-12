@@ -333,7 +333,8 @@ input, select { font-family: inherit; }
     <button class="add-cat-btn" onclick="openAddCat()">＋ เพิ่มหมวดหมู่ใหม่</button>
     <div class="sidebar-foot">
       <button class="foot-btn" onclick="openSettings()">⚙️ GitHub</button>
-      <button class="foot-btn" onclick="exportJSON()">💾 Export</button>
+      <button class="foot-btn" onclick="exportJSON()">💾 JSON</button>
+      <button class="foot-btn" onclick="exportHTML()">📄 HTML</button>
       <button class="foot-btn" onclick="toggleTheme()" id="themeBtn">🌙 ธีม</button>
     </div>
   </aside>
@@ -975,6 +976,33 @@ function exportJSON() {
   a.download = 'dashboard-config.json';
   a.click();
   toast('💾 Export JSON สำเร็จ', 'ok');
+}
+
+function exportHTML() {
+  const data = {
+    config: { user: STATE.config.user, repo: STATE.config.repo },
+    categories: STATE.categories,
+    manualLinks: STATE.manualLinks,
+    files: STATE.files,
+    view: STATE.view,
+    theme: STATE.theme,
+    synced: STATE.synced
+  };
+  const dataStr = JSON.stringify(data);
+  // Get the current HTML source and inject STATE data into it
+  const html = document.documentElement.outerHTML;
+  // Replace the empty STATE init with pre-filled data
+  const injected = html.replace(
+    /let STATE = \{[\s\S]*?\};/,
+    'let STATE = ' + dataStr + ';'
+  );
+  const blob = new Blob([injected], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'dashboard-export.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('📄 Export HTML สำเร็จ', 'ok');
 }
 
 function setView(v) {
