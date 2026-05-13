@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Workstation Guide 2026</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      line-height: 1.7;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 1200px;
+      margin: auto;
+      padding: 40px 0;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1e293b, #111827);
+      border-radius: 24px;
+      padding: 50px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-bottom: 40px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      color: #f8fafc;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: #cbd5e1;
+      max-width: 850px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-top: 60px;
+      font-size: 2rem;
+      color: #f8fafc;
+      border-left: 6px solid #38bdf8;
+      padding-left: 16px;
+    }
+
+    h3 {
+      color: #7dd3fc;
+      margin-top: 30px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 30px;
+    }
+
+    .card {
+      background: #1e293b;
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #f8fafc;
+    }
+
+    .highlight {
+      color: #38bdf8;
+      font-weight: bold;
+    }
+
+    ul {
+      padding-left: 22px;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 25px;
+      overflow: hidden;
+      border-radius: 18px;
+    }
+
+    th, td {
+      padding: 16px;
+      text-align: left;
+    }
+
+    th {
+      background: #2563eb;
+      color: white;
+    }
+
+    td {
+      background: #1e293b;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .pros {
+      color: #4ade80;
+      font-weight: bold;
+    }
+
+    .cons {
+      color: #f87171;
+      font-weight: bold;
+    }
+
+    .footer {
+      margin-top: 70px;
+      text-align: center;
+      color: #94a3b8;
+      padding-bottom: 40px;
+    }
+
+    .recommend {
+      background: linear-gradient(135deg, #0f766e, #115e59);
+      padding: 24px;
+      border-radius: 20px;
+      margin-top: 30px;
+    }
+
+    .recommend h3 {
+      margin-top: 0;
+      color: white;
+    }
+
+    .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.12);
+      padding: 6px 12px;
+      border-radius: 999px;
+      margin-right: 8px;
+      margin-top: 8px;
+      font-size: 0.85rem;
+    }
+
+    @media(max-width: 768px) {
+      .hero {
+        padding: 32px;
+      }
+
+      .hero h1 {
+        font-size: 2.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <section class="hero">
+      <div class="badge">AI Workstation Guide 2026</div>
+      <h1>คู่มือเลือกคอมสำหรับ AI, Automation และ Content Creator</h1>
+      <p>
+        คู่มือสรุปแนวคิดการเลือกเครื่องสำหรับงาน AI ยุคใหม่ ทั้งภาพ เสียง วิดีโอ Local LLM, ComfyUI,
+        Voice AI, Agent Workflow และ Automation โดยเน้น “ซื้อครั้งเดียว ใช้งานได้ยาว” พร้อมแนวทางเลือก
+        ระหว่าง Mac mini และ PC ให้เหมาะกับลักษณะงานจริง
+      </p>
+    </section>
+
+    <h2>แนวคิดสำคัญก่อนซื้อ</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>อย่าซื้อเพื่อ “งานวันนี้” อย่างเดียว</h3>
+        <p>
+          AI เปลี่ยนเร็วมาก โมเดลใหญ่ขึ้นทุกปี ทั้ง Video AI, Voice AI และ LLM ดังนั้นควรเผื่ออนาคตไว้ 2–4 ปี
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>VRAM สำคัญกว่า CPU</h3>
+        <p>
+          งาน AI ส่วนใหญ่ติดที่ GPU และ VRAM เพราะโมเดลต้องโหลดเข้า VRAM ก่อนใช้งาน
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Automation เปิดหลายอย่างพร้อมกัน</h3>
+        <p>
+          ระบบ AI Workflow มักเปิดทั้ง Browser, Docker, Ollama, TTS, Python, VSCode และ Database พร้อมกัน
+          จึงใช้ RAM สูงมาก
+        </p>
+      </div>
+    </div>
+
+    <h2>Spec ที่ควรโฟกัส</h2>
+
+    <table>
+      <tr>
+        <th>อุปกรณ์</th>
+        <th>เหตุผลสำคัญ</th>
+        <th>แนะนำ</th>
+      </tr>
+
+      <tr>
+        <td>GPU</td>
+        <td>หัวใจหลักของ AI ทุกประเภท</td>
+        <td><span class="highlight">VRAM 16GB+</span></td>
+      </tr>
+
+      <tr>
+        <td>RAM</td>
+        <td>รองรับหลายโปรแกรมและหลายโมเดลพร้อมกัน</td>
+        <td><span class="highlight">64GB</span></td>
+      </tr>
+
+      <tr>
+        <td>SSD</td>
+        <td>AI Model และ Cache ใหญ่มาก</td>
+        <td><span class="highlight">2TB–4TB NVMe</span></td>
+      </tr>
+
+      <tr>
+        <td>CPU</td>
+        <td>ใช้กับระบบโดยรวมและ Multi-task</td>
+        <td>Ryzen 7/9 หรือ Intel i7/i9</td>
+      </tr>
+
+      <tr>
+        <td>Cooling</td>
+        <td>AI Render ต่อเนื่องหลายชั่วโมง</td>
+        <td>Airflow ดี / Liquid Cooling</td>
+      </tr>
+    </table>
+
+    <h2>Mac mini เหมาะกับใคร</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>เหมาะสำหรับ</h3>
+        <ul>
+          <li>งาน Coding</li>
+          <li>Automation</li>
+          <li>TTS และ Voice AI บางประเภท</li>
+          <li>LLM ขนาดกลาง</li>
+          <li>งานเอกสาร / ตัดต่อทั่วไป</li>
+          <li>ผู้ต้องการเครื่องเงียบ ประหยัดไฟ</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 class="pros">ข้อดี</h3>
+        <ul>
+          <li>เสถียรและเงียบมาก</li>
+          <li>กินไฟต่ำ</li>
+          <li>ขนาดเล็ก</li>
+          <li>ใช้งานง่าย</li>
+          <li>เหมาะกับงาน Productivity</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 class="cons">ข้อจำกัด</h3>
+        <ul>
+          <li>ไม่มี CUDA</li>
+          <li>AI บาง Repo รองรับไม่เต็ม</li>
+          <li>Video AI หนัก ๆ ยังสู้ RTX ไม่ได้</li>
+          <li>อัปเกรด GPU ภายหลังไม่ได้</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="recommend">
+      <h3>รุ่น Mac mini ที่แนะนำ</h3>
+      <p><strong>Mac mini M4 Pro</strong></p>
+
+      <div class="tag">RAM 48GB–64GB</div>
+      <div class="tag">SSD 1TB–2TB</div>
+      <div class="tag">AI Automation</div>
+      <div class="tag">Coding</div>
+      <div class="tag">TTS</div>
+
+      <ul>
+        <li>เหมาะกับสาย Automation และ AI Workflow</li>
+        <li>เหมาะกับผู้ต้องการเครื่องนิ่ง ใช้งานยาว</li>
+        <li>รองรับงาน AI ได้กว้าง แม้ไม่แรงสุดด้าน Video AI</li>
+      </ul>
+    </div>
+
+    <h2>PC AI Workstation เหมาะกับใคร</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>เหมาะสำหรับ</h3>
+        <ul>
+          <li>ComfyUI</li>
+          <li>Stable Diffusion</li>
+          <li>Flux</li>
+          <li>Video AI</li>
+          <li>LLM Local</li>
+          <li>Voice Clone</li>
+          <li>Avatar AI</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 class="pros">ข้อดี</h3>
+        <ul>
+          <li>แรงที่สุดด้าน AI</li>
+          <li>รองรับ CUDA</li>
+          <li>อัปเกรดได้ง่าย</li>
+          <li>ใช้กับ AI Open Source ได้เกือบทั้งหมด</li>
+          <li>เหมาะกับ Video AI และ LLM</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 class="cons">ข้อควรระวัง</h3>
+        <ul>
+          <li>กินไฟมากกว่า</li>
+          <li>ร้อนกว่า</li>
+          <li>ต้องดู PSU และ Cooling</li>
+          <li>บางครั้งต้องแก้ Driver / CUDA</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="recommend">
+      <h3>PC AI Spec ที่แนะนำ (Balance ระยะยาว)</h3>
+
+      <table>
+        <tr>
+          <th>ส่วนประกอบ</th>
+          <th>แนะนำ</th>
+        </tr>
+
+        <tr>
+          <td>GPU</td>
+          <td>RTX 4070 Ti SUPER 16GB หรือ RTX 5080 16GB</td>
+        </tr>
+
+        <tr>
+          <td>CPU</td>
+          <td>Ryzen 7 / Ryzen 9</td>
+        </tr>
+
+        <tr>
+          <td>RAM</td>
+          <td>64GB DDR5</td>
+        </tr>
+
+        <tr>
+          <td>SSD</td>
+          <td>NVMe 2TB–4TB</td>
+        </tr>
+
+        <tr>
+          <td>PSU</td>
+          <td>850W Gold ขึ้นไป</td>
+        </tr>
+      </table>
+
+      <ul>
+        <li>เหมาะกับ AI Creator และ Automation ระยะยาว</li>
+        <li>รองรับงานภาพ เสียง วิดีโอ และ LLM</li>
+        <li>ไม่ตันเร็ว และอัปเกรดได้ในอนาคต</li>
+      </ul>
+    </div>
+
+    <h2>สรุปเลือกแบบไหนดี</h2>
+
+    <table>
+      <tr>
+        <th>ลักษณะงาน</th>
+        <th>เหมาะกว่า</th>
+      </tr>
+
+      <tr>
+        <td>Automation / Coding / ใช้งานทั่วไป</td>
+        <td>Mac mini</td>
+      </tr>
+
+      <tr>
+        <td>ComfyUI / Stable Diffusion / Flux</td>
+        <td>PC RTX</td>
+      </tr>
+
+      <tr>
+        <td>Video AI</td>
+        <td>PC RTX</td>
+      </tr>
+
+      <tr>
+        <td>TTS / Voice AI</td>
+        <td>ทั้งสองแบบ</td>
+      </tr>
+
+      <tr>
+        <td>Local LLM จริงจัง</td>
+        <td>PC RTX VRAM สูง</td>
+      </tr>
+
+      <tr>
+        <td>ต้องการเครื่องเงียบ ประหยัดไฟ</td>
+        <td>Mac mini</td>
+      </tr>
+    </table>
+
+    <h2>แนวคิดที่คุ้มที่สุดในระยะยาว</h2>
+
+    <div class="card">
+      <p>
+        แนวทางที่สมดุลที่สุดสำหรับสาย AI ยุคใหม่ คือ
+        <span class="highlight">“เครื่องหลักต้องทำได้เกือบทุกอย่าง”</span>
+        แม้งานหนักอย่าง Video AI อาจไม่ต้องเร็วที่สุด แต่ควรรันได้จริงโดยไม่อืดจนใช้งานไม่ได้
+      </p>
+
+      <p>
+        หากต้องทำงาน AI หลายรูปแบบ เช่น Agent, Workflow, TTS, OCR, Chatbot, ComfyUI และ Local LLM
+        การลงทุนกับ VRAM, RAM และ SSD จะคุ้มกว่าการเน้น CPU อย่างเดียว
+      </p>
+    </div>
+
+    <div class="footer">
+      AI Workstation Buying Guide 2026 • Designed for AI Creator, Automation & Workflow Systems
+    </div>
+
+  </div>
+</body>
+</html>
