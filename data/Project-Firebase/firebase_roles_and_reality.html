@@ -1,0 +1,188 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.wrap { padding: 0 0 24px; font-family: var(--font-sans); }
+.section-title {
+  font-size: 11px; font-weight: 500; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--color-text-tertiary);
+  margin: 20px 0 10px;
+}
+.role-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.role-card {
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 14px 14px 12px;
+  background: var(--color-background-primary);
+}
+.role-head {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+}
+.role-icon {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.icon-pm { background: #EDE9FE; color: #4C1D95; }
+.icon-dev { background: #DBEAFE; color: #1E40AF; }
+.icon-user { background: #D1FAE5; color: #065F46; }
+@media (prefers-color-scheme: dark) {
+  .icon-pm { background: #2e1065; color: #c4b5fd; }
+  .icon-dev { background: #1e3a5f; color: #93c5fd; }
+  .icon-user { background: #064e3b; color: #6ee7b7; }
+}
+.role-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+.role-sub { font-size: 11px; color: var(--color-text-tertiary); }
+.task-list { list-style: none; }
+.task-list li {
+  font-size: 12px; color: var(--color-text-secondary);
+  padding: 3px 0; display: flex; gap: 6px; align-items: flex-start; line-height: 1.4;
+}
+.task-list li::before { content: "·"; opacity: .4; flex-shrink: 0; }
+
+.reality-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  margin-bottom: 20px;
+}
+.reality-card {
+  border-radius: var(--border-radius-lg);
+  padding: 14px 16px;
+}
+.rc-hard { background: #FEF3C7; border: 0.5px solid #FCD34D; }
+.rc-easy { background: #D1FAE5; border: 0.5px solid #6EE7B7; }
+@media (prefers-color-scheme: dark) {
+  .rc-hard { background: #451a03; border-color: #92400e; }
+  .rc-easy { background: #064e3b; border-color: #065f46; }
+}
+.rc-title { font-size: 13px; font-weight: 500; margin-bottom: 8px; color: var(--color-text-primary); }
+.rc-list { list-style: none; }
+.rc-list li { font-size: 12px; color: var(--color-text-secondary); padding: 2px 0; line-height: 1.4; display: flex; gap: 6px; }
+.rc-list li i { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+.hard-i { color: #B45309; }
+.easy-i { color: #065F46; }
+@media (prefers-color-scheme: dark) {
+  .hard-i { color: #FCD34D; }
+  .easy-i { color: #6EE7B7; }
+}
+
+.alt-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.alt-card {
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 12px 14px;
+}
+.alt-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.alt-desc { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+.badge-sm {
+  display: inline-block; font-size: 10px; padding: 1px 7px;
+  border-radius: 20px; font-weight: 500; margin-bottom: 6px;
+}
+.b-no-code { background: #EDE9FE; color: #4C1D95; }
+.b-ai { background: #DBEAFE; color: #1E40AF; }
+.b-team { background: #FEF3C7; color: #78350F; }
+@media (prefers-color-scheme: dark) {
+  .b-no-code { background: #2e1065; color: #c4b5fd; }
+  .b-ai { background: #1e3a5f; color: #93c5fd; }
+  .b-team { background: #451a03; color: #fcd34d; }
+}
+</style>
+
+<div class="wrap">
+
+<div class="section-title">บทบาทในทีมจริง — ใครทำอะไร</div>
+<div class="role-grid">
+  <div class="role-card">
+    <div class="role-head">
+      <div class="role-icon icon-pm"><i class="ti ti-user" aria-hidden="true"></i></div>
+      <div>
+        <div class="role-name">เจ้าของโปรเจกต์ / PM</div>
+        <div class="role-sub">ไม่ต้องเขียนโค้ด</div>
+      </div>
+    </div>
+    <ul class="task-list">
+      <li>กำหนดว่าต้องเก็บข้อมูลอะไรบ้าง</li>
+      <li>บอก flow การทำงาน เช่น ลงทะเบียน → อนุมัติ → แจ้งผล</li>
+      <li>ตัดสินใจเรื่อง security policy ใครเห็นข้อมูลได้บ้าง</li>
+      <li>ดูข้อมูลผ่าน Firebase Console หรือ dashboard</li>
+    </ul>
+  </div>
+  <div class="role-card">
+    <div class="role-head">
+      <div class="role-icon icon-dev"><i class="ti ti-code" aria-hidden="true"></i></div>
+      <div>
+        <div class="role-name">Developer</div>
+        <div class="role-sub">ต้องรู้ Firebase SDK</div>
+      </div>
+    </div>
+    <ul class="task-list">
+      <li>ออกแบบ Collection structure ตาม requirement</li>
+      <li>เชื่อม App กับ Firestore ผ่านโค้ด</li>
+      <li>เขียน Security Rules ให้ถูกต้อง</li>
+      <li>ตั้ง Index สำหรับ query ที่ซับซ้อน</li>
+    </ul>
+  </div>
+  <div class="role-card">
+    <div class="role-head">
+      <div class="role-icon icon-user"><i class="ti ti-users" aria-hidden="true"></i></div>
+      <div>
+        <div class="role-name">Admin / ทีมงาน</div>
+        <div class="role-sub">ใช้งานผ่านหน้า UI</div>
+      </div>
+    </div>
+    <ul class="task-list">
+      <li>ใช้งานผ่าน App ที่ Dev สร้างให้ ไม่ต้องแตะ Console</li>
+      <li>ดูรายงาน อนุมัติ หรือส่งออกข้อมูลตามที่ออกแบบไว้</li>
+      <li>ถ้า Dev ทำ Admin Panel ให้ — ง่ายเหมือน Spreadsheet</li>
+    </ul>
+  </div>
+</div>
+
+<div class="section-title">ส่วนไหนยาก — ส่วนไหนพอทำได้เอง</div>
+<div class="reality-grid">
+  <div class="reality-card rc-hard">
+    <div class="rc-title"><i class="ti ti-alert-triangle hard-i" aria-hidden="true"></i> ต้องการ Dev</div>
+    <ul class="rc-list">
+      <li><i class="ti ti-x hard-i"></i>ออกแบบ data model (Collection / Document)</li>
+      <li><i class="ti ti-x hard-i"></i>เขียน Security Rules ให้ปลอดภัย</li>
+      <li><i class="ti ti-x hard-i"></i>เขียนโค้ด read/write ใน App</li>
+      <li><i class="ti ti-x hard-i"></i>ตั้ง Cloud Functions สำหรับ automation</li>
+      <li><i class="ti ti-x hard-i"></i>เชื่อม Authentication กับ database</li>
+    </ul>
+  </div>
+  <div class="reality-card rc-easy">
+    <div class="rc-title"><i class="ti ti-check easy-i" aria-hidden="true"></i> คนทั่วไปทำได้</div>
+    <ul class="rc-list">
+      <li><i class="ti ti-check easy-i"></i>สร้าง Firebase Project ใน Console</li>
+      <li><i class="ti ti-check easy-i"></i>เปิด Firestore และเลือก Region</li>
+      <li><i class="ti ti-check easy-i"></i>ดูและแก้ข้อมูลใน Console (manual)</li>
+      <li><i class="ti ti-check easy-i"></i>ดู Usage / Analytics dashboard</li>
+      <li><i class="ti ti-check easy-i"></i>ใช้งาน App ที่ Dev สร้างให้แล้ว</li>
+    </ul>
+  </div>
+</div>
+
+<div class="section-title">ทางเลือกถ้าไม่มี Dev — หรือต้องการเร็ว</div>
+<div class="alt-grid">
+  <div class="alt-card">
+    <span class="badge-sm b-no-code">No-code</span>
+    <div class="alt-title">FlutterFlow / Softr</div>
+    <div class="alt-desc">ลาก-วางสร้าง App ที่ต่อ Firebase ได้โดยไม่เขียนโค้ด เหมาะโปรเจกต์ขนาดกลาง</div>
+  </div>
+  <div class="alt-card">
+    <span class="badge-sm b-ai">AI ช่วยเขียน</span>
+    <div class="alt-title">AI + Firebase</div>
+    <div class="alt-desc">ใช้ Claude / Cursor ช่วยเขียน Security Rules และโค้ด SDK ได้เร็วมาก แต่ยังต้องเข้าใจ concept</div>
+  </div>
+  <div class="alt-card">
+    <span class="badge-sm b-team">จ้าง Dev</span>
+    <div class="alt-title">ทำครั้งเดียว ใช้นาน</div>
+    <div class="alt-desc">จ้าง Dev วาง structure และ security ให้ถูกต้องตั้งแต่แรก แล้วทีมใช้งาน App ที่สร้างให้</div>
+  </div>
+</div>
+
+</div>
