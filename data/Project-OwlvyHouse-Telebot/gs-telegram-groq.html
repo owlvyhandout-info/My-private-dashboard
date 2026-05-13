@@ -1,0 +1,1076 @@
+// ============================================================
+//  ครูวิทย์ — Telegram × Groq  |  Google Apps Script
+//  VERSION: 3.1 (17 Apr 2026)
+//  ─────────────────────────────────────────────────────────
+//  Features (v3.0):
+//    ✅ Auto-register + role system (visitor/student/parent)
+//    ✅ Daily quota per role + Admin bypass
+//    ✅ Grade level /p1-/p6, /m1-/m6 (ปรับภาษาตามวัย)
+//    ✅ Auto mode detection: easy / hard / exam / classify / chat
+//    ✅ Academic accuracy — ห้ามเดา, อ้างอิงมาตรฐาน SI/IUPAC ฯลฯ
+//    ✅ Classification → อ้างอิงมาตรฐานสากล (Woese, IUPAC, IMA ฯลฯ)
+//    ✅ Exam mode → Bloom's Taxonomy ≥ 3 ระดับ
+//    ✅ Follow-up Inline Keyboard: อธิบายเพิ่ม / เชิงลึก / ตัวอย่าง / พร้อมท์ภาพ
+//    ✅ Context memory per user (PropertiesService)
+//    ✅ Long message auto-split (≤4000 chars/chunk)
+//    ✅ answerCallbackQuery() ป้องกัน UI ค้าง
+//  เพิ่มใหม่ (v3.1):
+//    ✅ sanitizeAnswer() — ตรวจจับตัวอักษรภาษาอื่นปนในคำตอบ
+//    ✅ System prompt บังคับภาษาไทย + ศัพท์วิทย์ใส่วงเล็บอังกฤษ
+//    ✅ == การช่วยแก้ความเข้าใจผิด == ใน system prompt
+//    ✅ ปุ่มที่ 5: ประเด็นควรรู้/ประเด็นสับสน (AI สร้างเอง)
+//    ✅ callGroq() เรียก detectMode() ครั้งเดียว
+// ============================================================
+
+// ─── 🔑 CREDENTIALS ────────────────────────────────────────
+var TELEGRAM_TOKEN = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";   // ← ใส่ Token จาก @BotFather
+var GROQ_API_KEY   = "gsk_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";   // ← ใส่ Groq API Key
+var SHEET_ID       = "1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";   // ← ใส่ Google Sheet ID
+
+// 👑 ADMIN — ใส่ Telegram userId (string) ของผู้ดูแล
+var ADMIN_IDS = ["8768293237"];
+
+// ─── 📋 SHEET NAMES ─────────────────────────────────────────
+var SHEET_USERS   = "Users";
+var SHEET_DAILY   = "DailyLog";
+var SHEET_MONTHLY = "MonthlyStats";
+
+// ─── 🎭 QUOTA (คำถาม/วัน) ──────────────────────────────────
+var QUOTA = {
+  student : 30,
+  parent  : 15,
+  visitor : 5,
+  blocked : 0
+};
+
+// ─── 🤖 GROQ MODEL ─────────────────────────────────────────
+var GROQ_MODEL = "llama-3.3-70b-versatile";
+
+// ─── 🏫 GRADE PREFIX (PropertiesService key) ───────────────
+var GRADE_PROP_PREFIX = "grade_";
+
+// ─── 💾 CONTEXT PREFIX (PropertiesService key) ─────────────
+var CTX_Q_PREFIX = "ctx_q_";
+var CTX_A_PREFIX = "ctx_a_";
+
+// ============================================================
+//  WEBHOOK ENTRY POINT
+// ============================================================
+function doPost(e) {
+  try {
+    var body = JSON.parse(e.postData.contents);
+
+    // ── [A] จัดการ Inline Keyboard callback ──────────────────
+    if (body.callback_query) {
+      var cq       = body.callback_query;
+      var cqChatId = cq.message.chat.id.toString();
+      var cqUserId = cq.from.id.toString();
+      var cqData   = cq.data || "";
+
+      answerCallbackQuery(cq.id); // ต้องเรียกก่อน ไม่งั้น UI ค้าง
+
+      if (cqData.indexOf("followup_") === 0) {
+        handleFollowUp(cqChatId, cqUserId, cqData);
+      }
+      return;
+    }
+
+    // ── [B] จัดการข้อความปกติ ────────────────────────────────
+    var msg  = body.message || body.edited_message || null;
+    if (!msg) return;
+
+    var from     = msg.from;
+    var chatId   = msg.chat.id.toString();
+    var userId   = from.id.toString();
+    var username = from.username || "";
+    var fullName = ((from.first_name || "") + " " + (from.last_name || "")).trim();
+
+    if (!msg.text) {
+      sendTelegram(chatId, "ขออภัยครับ รองรับเฉพาะข้อความตัวอักษร 🙏");
+      return;
+    }
+
+    var text = msg.text.trim();
+
+    // ── Auto-Register ──
+    var user = getUser(userId);
+    if (!user) {
+      user = registerUser(userId, username, fullName, chatId);
+      sendTelegram(chatId, welcomeMessage(user));
+      return;
+    }
+
+    // ── Sync ──
+    updateUserChatId(userId, chatId);
+    updateLastSeen(user.row);
+
+    // ── Commands ──
+    if (text === "/start")  { sendTelegram(chatId, welcomeMessage(user)); return; }
+    if (text === "/status") { sendTelegram(chatId, statusMessage(user, userId)); return; }
+    if (text === "/myid")   { sendTelegram(chatId, "🆔 Telegram ID ของคุณ: " + userId); return; }
+    if (text === "/help")   { sendTelegram(chatId, helpMessage()); return; }
+    if (text === "/grade")  { sendTelegram(chatId, gradeMessage()); return; }
+
+    // ── /p1–/p6 และ /m1–/m6 ──
+    if (/^\/(p[1-6]|m[1-6])$/i.test(text)) {
+      var gradeCode  = text.replace("/", "").toLowerCase();
+      PropertiesService.getScriptProperties().setProperty(GRADE_PROP_PREFIX + userId, gradeCode);
+      var gradeLabel = gradeCode.startsWith("p")
+        ? "ประถมศึกษาปีที่ " + gradeCode[1]
+        : "มัธยมศึกษาปีที่ " + gradeCode[1];
+      sendTelegram(chatId,
+        "✅ ตั้งระดับชั้น: " + gradeLabel + " เรียบร้อยแล้วครับ\n" +
+        "ครูวิทย์จะปรับภาษาและเนื้อหาให้เหมาะสมนะครับ 📚"
+      );
+      return;
+    }
+
+    if (text === "/admin" && isAdmin(userId)) {
+      sendTelegram(chatId, "👑 ADMIN MODE — Quota: UNLIMITED");
+      return;
+    }
+
+    // ── Block check ──
+    if (user.status === "blocked" || user.role === "blocked") {
+      sendTelegram(chatId, "⛔ บัญชีถูกระงับการใช้งาน\nกรุณาติดต่อผู้ดูแลระบบ");
+      return;
+    }
+
+    // ── Quota check (Admin bypass) ──
+    var used  = getDailyCount(userId);
+    var limit = QUOTA[user.role] !== undefined ? QUOTA[user.role] : QUOTA.visitor;
+
+    if (!isAdmin(userId) && used >= limit) {
+      sendTelegram(chatId,
+        "⚠️ วันนี้ใช้ครบ " + limit + " คำถามแล้วครับ\n" +
+        "กลับมาถามใหม่ได้พรุ่งนี้นะครับ 😊\n\n" +
+        "📊 สิทธิ์: " + getRoleLabel(user.role) + " (" + limit + " คำถาม/วัน)"
+      );
+      return;
+    }
+
+    // ── นับและเรียก AI ──
+    if (!isAdmin(userId)) {
+      addDailyCount(userId, user.role, chatId, text);
+      updateMonthlyStats(userId, user.role);
+    }
+
+    callGroq(chatId, userId, text);
+
+  } catch (err) {
+    console.error("doPost error: " + err.toString());
+  }
+}
+
+// ============================================================
+//  ADMIN CHECK
+// ============================================================
+function isAdmin(userId) {
+  return ADMIN_IDS.indexOf(userId) !== -1;
+}
+
+// ============================================================
+//  USERS  (Sheet: Users)
+//  Col: A=userId B=username C=fullName D=role E=status
+//       F=registeredAt G=lastSeenAt H=totalMessages I=note J=chatId
+// ============================================================
+function getUser(userId) {
+  var sheet = getSheet(SHEET_USERS);
+  var data  = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0].toString() === userId) {
+      return {
+        userId  : data[i][0].toString(),
+        username: data[i][1],
+        fullName: data[i][2],
+        role    : data[i][3] || "visitor",
+        status  : data[i][4] || "active",
+        row     : i + 1
+      };
+    }
+  }
+  return null;
+}
+
+function registerUser(userId, username, fullName, chatId) {
+  var sheet = getSheet(SHEET_USERS);
+  var now   = new Date();
+  sheet.appendRow([userId, username, fullName, "visitor", "active", now, now, 0, "auto", chatId]);
+  return { userId: userId, fullName: fullName, role: "visitor", status: "active" };
+}
+
+function updateUserChatId(userId, chatId) {
+  var sheet = getSheet(SHEET_USERS);
+  var data  = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0].toString() === userId) {
+      if (data[i][9] != chatId) sheet.getRange(i + 1, 10).setValue(chatId);
+      return;
+    }
+  }
+}
+
+function updateLastSeen(row) {
+  getSheet(SHEET_USERS).getRange(row, 7).setValue(new Date());
+}
+
+function incrementUserTotal(userId) {
+  var sheet = getSheet(SHEET_USERS);
+  var data  = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0].toString() === userId) {
+      sheet.getRange(i + 1, 8).setValue((parseInt(data[i][7]) || 0) + 1);
+      break;
+    }
+  }
+}
+
+// ============================================================
+//  DAILY QUOTA  (Sheet: DailyLog)
+//  Col: A=date B=userId C=role D=count E=chatId F=lastQuestion
+// ============================================================
+function getDailyCount(userId) {
+  var sheet = getSheet(SHEET_DAILY);
+  var data  = sheet.getDataRange().getValues();
+  var today = getToday();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0].toString() === today && data[i][1].toString() === userId) {
+      return parseInt(data[i][3]) || 0;
+    }
+  }
+  return 0;
+}
+
+function addDailyCount(userId, role, chatId, q) {
+  var sheet = getSheet(SHEET_DAILY);
+  var data  = sheet.getDataRange().getValues();
+  var today = getToday();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0].toString() === today && data[i][1].toString() === userId) {
+      sheet.getRange(i + 1, 4).setValue((parseInt(data[i][3]) || 0) + 1);
+      sheet.getRange(i + 1, 6).setValue(q.substring(0, 200));
+      incrementUserTotal(userId);
+      return;
+    }
+  }
+  sheet.appendRow([today, userId, role, 1, chatId, q.substring(0, 200)]);
+  incrementUserTotal(userId);
+}
+
+// ============================================================
+//  MONTHLY STATS  (Sheet: MonthlyStats)
+//  Col: A=yearMonth B=role C=totalMessages D=uniqueUsers
+// ============================================================
+function updateMonthlyStats(userId, role) {
+  var sheet = getSheet(SHEET_MONTHLY);
+  var data  = sheet.getDataRange().getValues();
+  var ym    = getYearMonth();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0].toString() === ym && data[i][1].toString() === role) {
+      sheet.getRange(i + 1, 3).setValue((parseInt(data[i][2]) || 0) + 1);
+      sheet.getRange(i + 1, 4).setValue(countUniqueUsersThisMonth(ym, role));
+      return;
+    }
+  }
+  sheet.appendRow([ym, role, 1, 1]);
+}
+
+function countUniqueUsersThisMonth(ym, role) {
+  var sheet = getSheet(SHEET_DAILY);
+  var data  = sheet.getDataRange().getValues();
+  var users = {};
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0].toString().substring(0, 6) === ym && data[i][2].toString() === role) {
+      users[data[i][1]] = true;
+    }
+  }
+  return Object.keys(users).length;
+}
+
+// ============================================================
+//  CONTEXT MEMORY (PropertiesService)
+//  เก็บคำถาม + คำตอบล่าสุดของแต่ละ user สำหรับ follow-up
+// ============================================================
+function saveLastContext(userId, question, answer) {
+  var props = PropertiesService.getScriptProperties();
+  props.setProperty(CTX_Q_PREFIX + userId, question.substring(0, 500));
+  props.setProperty(CTX_A_PREFIX + userId, answer.substring(0, 2000));
+}
+
+function getLastContext(userId) {
+  var props = PropertiesService.getScriptProperties();
+  return {
+    question: props.getProperty(CTX_Q_PREFIX + userId) || "",
+    answer  : props.getProperty(CTX_A_PREFIX + userId) || ""
+  };
+}
+
+// ============================================================
+//  MODE DETECTION
+//  classify / exam / hard / easy / chat
+// ============================================================
+function detectMode(text) {
+  var t = text.toLowerCase();
+
+  var classifyKW = ["จัดประเภท","จำแนก","แบ่งประเภท","จัดกลุ่ม","ประเภทของ",
+                    "ชนิดของ","หมวดหมู่","taxonomy","classification","classify"];
+  var examKW     = ["ข้อสอบ","สอบ","เลือกตอบ","อธิบายละเอียด","ติวสอบ","โจทย์"];
+  var hardKW     = ["ทำไม","อธิบาย","วิเคราะห์","เปรียบเทียบ","อย่างไร","เหตุใด","กลไก"];
+  var easyKW     = ["คืออะไร","อะไรคือ","สั้นๆ","นิยาม","หมายความว่า","ความหมาย"];
+
+  if (classifyKW.some(function(k){ return t.indexOf(k) !== -1; })) return "classify";
+  if (examKW.some(function(k){     return t.indexOf(k) !== -1; })) return "exam";
+  if (hardKW.some(function(k){     return t.indexOf(k) !== -1; })) return "hard";
+  if (easyKW.some(function(k){     return t.indexOf(k) !== -1; })) return "easy";
+  return "chat";
+}
+
+// ============================================================
+//  SANITIZE ANSWER — ✅ v3.1
+//  ตรวจจับตัวอักษรภาษาอื่น (จีน/รัสเซีย ฯลฯ) ปนในคำตอบ
+// ============================================================
+function sanitizeAnswer(text) {
+  var hasNonThai = /[\u4e00-\u9fff\u0400-\u04ff]/g.test(text);
+  if (hasNonThai) {
+    console.warn("⚠️ พบตัวอักษรภาษาอื่นในคำตอบ");
+  }
+  return text;
+}
+
+// ============================================================
+//  GROQ API — คำถามหลัก  ✅ v3.1: detectMode ครั้งเดียว
+// ============================================================
+function callGroq(chatId, userId, userMessage) {
+  var mode         = detectMode(userMessage);  // ✅ เรียกครั้งเดียว
+  var systemPrompt = buildSystemPrompt(userId, mode);
+
+  var payload = JSON.stringify({
+    model      : GROQ_MODEL,
+    messages   : [
+      { role: "system", content: systemPrompt },
+      { role: "user",   content: userMessage  }
+    ],
+    temperature: (mode === "easy" || mode === "classify") ? 0.3 : 0.5,
+    max_tokens : (mode === "easy") ? 800 : 2000
+  });
+
+  var res = UrlFetchApp.fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method            : "post",
+    contentType       : "application/json",
+    headers           : { Authorization: "Bearer " + GROQ_API_KEY },
+    payload           : payload,
+    muteHttpExceptions: true
+  });
+
+  if (res.getResponseCode() !== 200) {
+    console.error("Groq error " + res.getResponseCode() + ": " + res.getContentText());
+    sendTelegram(chatId, "ขออภัยครับ ระบบขัดข้องชั่วคราว\nกรุณาลองใหม่อีกครั้งนะครับ 🙏");
+    return;
+  }
+
+  var data   = JSON.parse(res.getContentText());
+  var answer = sanitizeAnswer(data.choices[0].message.content);  // ✅ v3.1
+  saveLastContext(userId, userMessage, answer);
+  sendAnswerWithFollowUp(chatId, answer);
+}
+
+// ============================================================
+//  SYSTEM PROMPT BUILDER  ✅ v3.1
+// ============================================================
+function buildSystemPrompt(userId, mode) {
+  var gradeCode = PropertiesService.getScriptProperties().getProperty(GRADE_PROP_PREFIX + userId) || "";
+  var gradeHint = "";
+  if (gradeCode) {
+    var gNum  = gradeCode[1];
+    gradeHint = gradeCode.startsWith("p")
+      ? "ผู้เรียนอยู่ระดับประถมศึกษาปีที่ " + gNum +
+        " (อายุประมาณ " + (5 + parseInt(gNum)) + " ปี)" +
+        " — ใช้ภาษาง่าย ตัวอย่างใกล้ชิดชีวิต หลีกเลี่ยงศัพท์เทคนิคที่ซับซ้อน"
+      : "ผู้เรียนอยู่ระดับมัธยมศึกษาปีที่ " + gNum +
+        " — ใช้ศัพท์วิชาการที่เหมาะสม สามารถมีสมการเบื้องต้นได้";
+  }
+
+  var modeLabel = {
+    easy    : "EASY — ตอบกระชับ เข้าใจง่าย ไม่เกิน 6 บรรทัด",
+    hard    : "HARD — อธิบายเชิงลึก มีเหตุผลทางวิทยาศาสตร์ ยกตัวอย่างชีวิตจริง",
+    exam    : "EXAM — ตอบแบบติวสอบ แยกหัวข้อชัดเจน",
+    classify: "CLASSIFY — จัดประเภทพร้อมมาตรฐานอ้างอิง",
+    chat    : "CHAT — อธิบายเหมือนครูสอนในห้องเรียน กระชับ เป็นกันเอง"
+  }[mode];
+
+  // Bloom's Taxonomy instruction (exam + hard)
+  var bloomBlock = (mode === "exam" || mode === "hard")
+    ? "\n\nตัวอย่างข้อสอบ — ใช้ Bloom's Taxonomy อย่างน้อย 3 ระดับ:\n" +
+      "ระดับ 1 จำ (Remember)     : ข้อเท็จจริง นิยาม สูตรที่ต้องจำ\n" +
+      "ระดับ 2 เข้าใจ (Understand): อธิบายด้วยคำพูดตนเอง หรือยกตัวอย่าง\n" +
+      "ระดับ 3 ประยุกต์ (Apply)   : โจทย์สถานการณ์ใหม่ที่ต้องใช้ความรู้นี้\n" +
+      "ระดับ 4 วิเคราะห์ (Analyze): เปรียบเทียบ หาความสัมพันธ์ หาสาเหตุ\n" +
+      "(เพิ่มระดับ 5-6 ถ้าหัวข้อเหมาะสม)\n" +
+      "แต่ละข้อ: คำถาม + เฉลย + เหตุผลสั้น ๆ"
+    : "";
+
+  // Classification standard references
+  var classifyBlock = (mode === "classify")
+    ? "\n\nมาตรฐานที่ควรอ้างอิง (ใช้ตามความเกี่ยวข้อง):\n" +
+      "- สิ่งมีชีวิต       : ระบบ 3 โดเมน (Woese & Fox, 1990) / 6 อาณาจักร (Whittaker, 1969)\n" +
+      "- ธาตุ/สารเคมี    : IUPAC Nomenclature (ฉบับล่าสุด)\n" +
+      "- แร่/หิน          : IMA (International Mineralogical Association)\n" +
+      "- คลื่น EM         : มาตรฐาน ITU-R / IEEE\n" +
+      "- หน่วย/แรง/พลังงาน: ระบบ SI (BIPM)\n" +
+      "- สภาพอากาศ      : WMO (World Meteorological Organization)\n" +
+      "ระบุ: ชื่อมาตรฐาน + ปีที่ประกาศ + เกณฑ์การจัดประเภท"
+    : "";
+
+  // Response format
+  var formatBlock =
+    "\n\nรูปแบบคำตอบ:\n" +
+    "🔬 หลักการ/แนวคิดหลัก\n" +
+    "🔹 สรุปสั้น (1-2 บรรทัด)\n" +
+    "📘 อธิบาย (ตามระดับโหมด)\n" +
+    "💡 ตัวอย่างชีวิตจริง\n" +
+    (mode === "classify" ? "📋 การจัดประเภท + มาตรฐานอ้างอิง\n" : "") +
+    (mode === "exam" || mode === "hard" ? "📝 ตัวอย่างข้อสอบ (Bloom's Taxonomy)\n" : "") +
+    "⚠️ ข้อควรระวัง/ความเข้าใจผิดที่พบบ่อย (ถ้ามี)\n" +
+    "📚 แหล่งอ้างอิง (ชื่อองค์กร/ตำราเท่านั้น ห้ามแต่ง URL)";
+
+  return (
+    "คุณคือ 'ครูวิทย์' ผู้ช่วยสอนวิทยาศาสตร์สำหรับนักเรียนไทย\n\n" +
+
+    "== ความถูกต้องทางวิชาการ (สำคัญที่สุด) ==\n" +
+    "1. ตอบเฉพาะสิ่งที่มั่นใจว่าถูกต้องตามหลักวิทยาศาสตร์เท่านั้น\n" +
+    "2. ห้ามเดา — ถ้าไม่แน่ใจให้บอกตรง ๆ ว่า 'ไม่แน่ใจ ควรตรวจสอบจากแหล่งที่เชื่อถือได้'\n" +
+    "3. ใช้ค่าตัวเลข สูตร และหน่วยมาตรฐานสากล (SI) เสมอ\n" +
+    "4. ถ้าหัวข้อมีหลายทฤษฎีหรือยังถกเถียง ให้ระบุว่าเป็น 'ทฤษฎี' หรือ 'สมมติฐาน'\n" +
+    "5. ห้ามแต่ง URL — อ้างอิงเฉพาะชื่อองค์กร ชื่อตำรา หรือมาตรฐานเท่านั้น\n\n" +
+
+    // ✅ v3.1: แก้ความเข้าใจผิด
+    "== การช่วยแก้ความเข้าใจผิด ==\n" +
+    "- ในทุกคำตอบ ถ้ามีความเข้าใจผิดที่พบบ่อยในหัวข้อนั้น ให้ระบุในหัวข้อ ⚠️ เสมอ\n" +
+    "- ถ้าคำถามของผู้เรียนสะท้อนความเข้าใจผิด ให้แก้ไขก่อนอธิบาย\n" +
+    "- ระบุว่า 'นักเรียนมักเข้าใจผิดว่า... แต่ที่ถูกต้องคือ...'\n\n" +
+
+    "โหมด: " + modeLabel + "\n" +
+    (gradeHint ? "ระดับผู้เรียน: " + gradeHint + "\n" : "") +
+    bloomBlock +
+    classifyBlock +
+    formatBlock + "\n\n" +
+
+    // ✅ v3.1: บังคับภาษาไทย
+    "== ข้อห้ามเด็ดขาด ==\n" +
+    "- ห้ามใช้ตาราง (Telegram แสดงผลไม่ได้)\n" +
+    "- ห้ามใช้ Markdown เช่น **bold** ## หรือ ---\n" +
+    "- ถ้าถามนอกเรื่องวิทยาศาสตร์ให้ปฏิเสธสุภาพและแนะนำให้ถามวิทยาศาสตร์แทน\n" +
+    "- ใช้ภาษาไทยเท่านั้น ห้ามใช้คำภาษาอื่น (อังกฤษ จีน เวียดนาม ฯลฯ) ปนในคำตอบ\n" +
+    "- คำศัพท์วิทยาศาสตร์ให้ใช้ภาษาไทยก่อน และใส่ภาษาอังกฤษในวงเล็บได้ เช่น 'ปากใบ (stomata)'\n" +
+    "- ห้ามสร้างคำที่ไม่มีในภาษาไทย"
+  );
+}
+
+// ============================================================
+//  FOLLOW-UP HANDLER (Inline Keyboard)
+// ============================================================
+function handleFollowUp(chatId, userId, callbackData) {
+  var ctx = getLastContext(userId);
+
+  if (!ctx.answer) {
+    sendTelegram(chatId,
+      "ขออภัยครับ ไม่พบข้อมูลคำถามล่าสุด\n" +
+      "กรุณาถามคำถามใหม่ก่อนนะครับ 🙏"
+    );
+    return;
+  }
+
+  // ✅ v3.1: ปุ่มที่ 5 — ประเด็นควรรู้/ประเด็นสับสน
+  if (callbackData === "followup_hints") {
+    callGroqHints(chatId, userId, ctx.question);
+    return;
+  }
+
+  var prompt = buildFollowUpPrompt(callbackData, ctx.question, ctx.answer);
+  if (!prompt) {
+    sendTelegram(chatId, "ขออภัยครับ ไม่รู้จักประเภทคำขอนี้");
+    return;
+  }
+
+  var systemPrompt =
+    "คุณคือ 'ครูวิทย์' ผู้ช่วยสอนวิทยาศาสตร์สำหรับนักเรียนไทย\n" +
+    "ตอบเฉพาะสิ่งที่มั่นใจว่าถูกต้องตามหลักวิทยาศาสตร์\n" +
+    "ห้ามใช้ Markdown (**bold** ## ---) ห้ามใช้ตาราง ห้ามแต่ง URL\n" +
+    "ใช้ภาษาไทยเท่านั้น คำศัพท์วิทยาศาสตร์ใส่ภาษาอังกฤษในวงเล็บได้ เช่น 'ปากใบ (stomata)'";
+
+  var payload = JSON.stringify({
+    model      : GROQ_MODEL,
+    messages   : [
+      { role: "system", content: systemPrompt },
+      { role: "user",   content: prompt        }
+    ],
+    temperature: 0.4,
+    max_tokens : 2000
+  });
+
+  var res = UrlFetchApp.fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method            : "post",
+    contentType       : "application/json",
+    headers           : { Authorization: "Bearer " + GROQ_API_KEY },
+    payload           : payload,
+    muteHttpExceptions: true
+  });
+
+  if (res.getResponseCode() !== 200) {
+    console.error("Follow-up Groq error: " + res.getContentText());
+    sendTelegram(chatId, "ขออภัยครับ ระบบขัดข้องชั่วคราว กรุณาลองใหม่ 🙏");
+    return;
+  }
+
+  var data   = JSON.parse(res.getContentText());
+  var answer = sanitizeAnswer(data.choices[0].message.content);
+
+  saveLastContext(userId, ctx.question, answer);
+  sendAnswerWithFollowUp(chatId, answer);
+}
+
+// ============================================================
+//  ✅ v3.1: HINTS — ประเด็นควรรู้/ประเด็นสับสน (AI สร้างเอง)
+// ============================================================
+function callGroqHints(chatId, userId, question) {
+  if (!question) {
+    sendTelegram(chatId, "ขออภัยครับ ไม่พบคำถามล่าสุด กรุณาถามคำถามใหม่ก่อนนะครับ 🙏");
+    return;
+  }
+
+  var systemPrompt =
+    "คุณคือ 'ครูวิทย์' ผู้ช่วยสอนวิทยาศาสตร์สำหรับนักเรียนไทย\n" +
+    "ตอบเฉพาะสิ่งที่มั่นใจว่าถูกต้องตามหลักวิทยาศาสตร์เท่านั้น\n" +
+    "ถ้าไม่มีประเด็นที่แน่ใจ ให้บอกว่า 'ไม่มีประเด็นเพิ่มเติมสำหรับหัวข้อนี้'\n" +
+    "ห้ามสร้างประเด็นที่ไม่มีหลักฐานทางวิทยาศาสตร์รองรับ\n" +
+    "ห้ามใช้ Markdown (**bold** ## ---) ห้ามใช้ตาราง ห้ามแต่ง URL\n" +
+    "ใช้ภาษาไทยเท่านั้น คำศัพท์วิทยาศาสตร์ใส่ภาษาอังกฤษในวงเล็บได้ เช่น 'ปากใบ (stomata)'";
+
+  var userPrompt =
+    "จากหัวข้อ: \"" + question + "\"\n\n" +
+    "สร้างประเด็นที่นักเรียนไทยมักสับสนหรือควรรู้ 3-5 ประเด็น\n" +
+    "รูปแบบ:\n" +
+    "ประเด็นที่ 1: ...\n" +
+    "ประเด็นที่ 2: ...\n" +
+    "ประเด็นที่ 3: ...\n\n" +
+    "เน้น: ความเข้าใจผิดที่พบบ่อย, จุดที่สับสน, ข้อควรระวัง\n" +
+    "ใช้เฉพาะความรู้ที่มั่นใจว่าถูกต้องตามหลักวิทยาศาสตร์เท่านั้น";
+
+  var payload = JSON.stringify({
+    model      : GROQ_MODEL,
+    messages   : [
+      { role: "system", content: systemPrompt },
+      { role: "user",   content: userPrompt   }
+    ],
+    temperature: 0.3,
+    max_tokens : 1500
+  });
+
+  var res = UrlFetchApp.fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method            : "post",
+    contentType       : "application/json",
+    headers           : { Authorization: "Bearer " + GROQ_API_KEY },
+    payload           : payload,
+    muteHttpExceptions: true
+  });
+
+  if (res.getResponseCode() !== 200) {
+    console.error("Hints Groq error: " + res.getContentText());
+    sendTelegram(chatId, "ขออภัยครับ ระบบขัดข้องชั่วคราว กรุณาลองใหม่ 🙏");
+    return;
+  }
+
+  var data   = JSON.parse(res.getContentText());
+  var answer = sanitizeAnswer(data.choices[0].message.content);
+
+  sendAnswerWithFollowUp(chatId, answer);
+}
+
+// ============================================================
+//  FOLLOW-UP PROMPT BUILDER
+// ============================================================
+function buildFollowUpPrompt(type, question, prevAnswer) {
+  var base =
+    "คำถามเดิม: \"" + question + "\"\n\n" +
+    "คำตอบที่ให้ไปแล้ว:\n" + prevAnswer + "\n\n" +
+    "=== คำขอเพิ่มเติม ===\n";
+
+  switch (type) {
+
+    // 🔍 อธิบายเพิ่ม
+    case "followup_explain":
+      return base +
+        "ขยายความเพิ่มเติมในส่วนที่อาจเข้าใจยาก โดย:\n" +
+        "1. ใช้คำอุปมาอุปไมย (analogy) ที่เข้าใจง่าย 1-2 ข้อ\n" +
+        "2. อธิบายคำศัพท์เทคนิคในคำตอบเดิมให้ชัดขึ้น\n" +
+        "3. เชื่อมโยงกับสิ่งที่พบในชีวิตประจำวันของนักเรียนไทย\n" +
+        "ห้ามซ้ำเนื้อหาเดิมโดยไม่เพิ่มคุณค่าใหม่";
+
+    // 🧠 เชิงลึก
+    case "followup_deep":
+      return base +
+        "อธิบายในระดับที่ลึกขึ้น โดย:\n" +
+        "1. กลไกระดับโมเลกุล/อะตอม/อนุภาค (ถ้าเกี่ยวข้อง)\n" +
+        "2. สมการ ความสัมพันธ์เชิงคณิตศาสตร์ หรือหลักการเชิงปริมาณ\n" +
+        "3. ข้อยกเว้น กรณีพิเศษ หรือเงื่อนไขที่หลักการนี้ไม่ถูกต้อง\n" +
+        "4. การค้นพบหรืองานวิจัยล่าสุดที่เกี่ยวข้อง (ถ้ามี)\n" +
+        "ใช้ความเข้มงวดทางวิชาการสูงสุด อ้างอิงทฤษฎีหรือมาตรฐานที่เกี่ยวข้อง";
+
+    // 🎯 ตัวอย่างเพิ่ม
+    case "followup_example":
+      return base +
+        "สร้างตัวอย่างและข้อสอบเพิ่มเติม แบ่งตาม Bloom's Taxonomy 4 ระดับ:\n\n" +
+        "ระดับ 1 จำ (Remember):\n" +
+        "- คำถาม (ข้อเท็จจริง นิยาม สูตร)\n" +
+        "- เฉลย + เหตุผล\n\n" +
+        "ระดับ 2 เข้าใจ (Understand):\n" +
+        "- คำถาม (อธิบายด้วยคำพูดตนเอง หรือยกตัวอย่าง)\n" +
+        "- เฉลย + เหตุผล\n\n" +
+        "ระดับ 3 ประยุกต์ (Apply):\n" +
+        "- โจทย์สถานการณ์ใหม่ที่ต้องใช้ความรู้นี้แก้ปัญหา\n" +
+        "- เฉลย + เหตุผล\n\n" +
+        "ระดับ 4 วิเคราะห์ (Analyze):\n" +
+        "- คำถาม (เปรียบเทียบ หาความสัมพันธ์ หาสาเหตุ)\n" +
+        "- เฉลย + เหตุผล\n\n" +
+        "ตัวอย่างในชีวิตจริง 2 ข้อ ที่นักเรียนไทยเห็นได้ในชีวิตประจำวัน";
+
+    // 🖼️ พร้อมท์สร้างภาพอินโฟกราฟิก
+    case "followup_image":
+      return base +
+        "สร้าง prompt ภาษาอังกฤษสำหรับ AI สร้างภาพ (Midjourney/DALL-E/Stable Diffusion)\n" +
+        "เพื่อทำอินโฟกราฟิกอธิบายเรื่องนี้ ส่งมา 2 แบบ:\n\n" +
+        "แบบที่ 1 — Simple Diagram Prompt (สำหรับประถม-ต้นมัธยม):\n" +
+        "อธิบายภาพ: สไตล์การ์ตูน สีสดใส label ภาษาไทย เข้าใจง่าย\n" +
+        "Prompt: [เขียน prompt ภาษาอังกฤษที่ใช้ได้จริง]\n\n" +
+        "แบบที่ 2 — Detailed Infographic Prompt (สำหรับปลายมัธยม-นักศึกษา):\n" +
+        "อธิบายภาพ: สไตล์ textbook cross-section label ทั้งไทย-อังกฤษ scientific accuracy\n" +
+        "Prompt: [เขียน prompt ภาษาอังกฤษที่ใช้ได้จริง]\n\n" +
+        "จากนั้นอธิบายสั้น ๆ ว่าภาพควรแสดงองค์ประกอบอะไรบ้างเพื่อให้เข้าใจเรื่องนี้ได้ดีที่สุด\n" +
+        "ห้ามแต่ง URL ห้ามระบุ website ที่ไม่มีจริง";
+
+    default:
+      return null;
+  }
+}
+
+// ============================================================
+//  TELEGRAM SENDERS
+// ============================================================
+
+// ส่งคำตอบ + ปุ่ม follow-up (แบ่ง chunk ถ้ายาว)
+function sendAnswerWithFollowUp(chatId, answer) {
+  var MAX_LEN = 4000;
+
+// ── Disclaimer (ต้องเพิ่มก่อน split) ──────────────
+  answer += "\n\n─────────────────────\n" +
+            "🤖 OwlvyHouseTele Bot อาจมีข้อผิดพลาด" +
+            " ควรตรวจสอบข้อมูลสำคัญ";
+  // ───────────────
+
+  var parts   = splitMessage(answer, MAX_LEN);
+
+  // chunk กลาง (ถ้ามีหลาย chunk) ส่งแบบปกติ
+  for (var i = 0; i < parts.length - 1; i++) {
+    sendTelegram(chatId, parts[i]);
+    Utilities.sleep(300);
+  }
+
+  // chunk สุดท้าย + Inline Keyboard
+  sendTelegramWithButtons(chatId, parts[parts.length - 1]);
+}
+
+// ✅ v3.1: ส่งข้อความพร้อม Inline Keyboard 2×2 + ปุ่มที่ 5
+function sendTelegramWithButtons(chatId, text) {
+  var keyboard = {
+    inline_keyboard: [
+      [
+        { text: "🔍 อธิบายเพิ่ม",               callback_data: "followup_explain" },
+        { text: "🧠 เชิงลึก",                   callback_data: "followup_deep"    }
+      ],
+      [
+        { text: "🎯 ตัวอย่างเพิ่ม",             callback_data: "followup_example" },
+        { text: "🖼️ พร้อมท์ภาพ",               callback_data: "followup_image"   }
+      ],
+      [
+        { text: "💡 ประเด็นควรรู้/ประเด็นสับสน", callback_data: "followup_hints"   }
+      ]
+    ]
+  };
+
+  UrlFetchApp.fetch(
+    "https://api.telegram.org/bot" + TELEGRAM_TOKEN + "/sendMessage",
+    {
+      method            : "post",
+      contentType       : "application/json",
+      payload           : JSON.stringify({
+        chat_id     : chatId,
+        text        : text,
+        parse_mode  : "",
+        reply_markup: keyboard
+      }),
+      muteHttpExceptions: true
+    }
+  );
+}
+
+// ส่งข้อความปกติ (ไม่มีปุ่ม)
+function sendTelegram(chatId, text, parseMode) {
+  UrlFetchApp.fetch(
+    "https://api.telegram.org/bot" + TELEGRAM_TOKEN + "/sendMessage",
+    {
+      method            : "post",
+      contentType       : "application/json",
+      payload           : JSON.stringify({
+        chat_id   : chatId,
+        text      : text,
+        parse_mode: parseMode || ""
+      }),
+      muteHttpExceptions: true
+    }
+  );
+}
+
+// ส่งข้อความยาว — แบ่ง chunk อัตโนมัติ
+function sendTelegramSafe(chatId, text) {
+  var parts = splitMessage(text, 4096);
+  for (var i = 0; i < parts.length; i++) {
+    sendTelegram(chatId, parts[i]);
+    if (i < parts.length - 1) Utilities.sleep(300);
+  }
+}
+
+// ตอบ callback_query — ป้องกัน UI ค้าง
+function answerCallbackQuery(callbackQueryId, text) {
+  UrlFetchApp.fetch(
+    "https://api.telegram.org/bot" + TELEGRAM_TOKEN + "/answerCallbackQuery",
+    {
+      method            : "post",
+      contentType       : "application/json",
+      payload           : JSON.stringify({
+        callback_query_id: callbackQueryId,
+        text             : text || ""
+      }),
+      muteHttpExceptions: true
+    }
+  );
+}
+
+// ============================================================
+//  UTILITIES
+// ============================================================
+
+// แบ่งข้อความยาวตาม newline ที่ใกล้ maxLen
+function splitMessage(text, maxLen) {
+  var parts = [];
+  while (text.length > 0) {
+    if (text.length <= maxLen) {
+      parts.push(text);
+      break;
+    }
+    var chunk  = text.substring(0, maxLen);
+    var lastNL = chunk.lastIndexOf("\n");
+    if (lastNL > maxLen * 0.7) chunk = text.substring(0, lastNL);
+    parts.push(chunk);
+    text = text.substring(chunk.length).trimStart();
+  }
+  return parts;
+}
+
+function getSheet(name) {
+  var ss    = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = ss.getSheetByName(name);
+  if (!sheet) {
+    sheet = ss.insertSheet(name);
+    if (name === SHEET_USERS)
+      sheet.appendRow(["userId","username","fullName","role","status",
+                       "registeredAt","lastSeenAt","totalMessages","note","chatId"]);
+    if (name === SHEET_DAILY)
+      sheet.appendRow(["date","userId","role","count","chatId","lastQuestion"]);
+    if (name === SHEET_MONTHLY)
+      sheet.appendRow(["yearMonth","role","totalMessages","uniqueUsers"]);
+  }
+  return sheet;
+}
+
+function getToday() {
+  return Utilities.formatDate(new Date(), "Asia/Bangkok", "yyyyMMdd");
+}
+
+function getYearMonth() {
+  return Utilities.formatDate(new Date(), "Asia/Bangkok", "yyyyMM");
+}
+
+// ============================================================
+//  MESSAGE TEMPLATES
+// ============================================================
+function welcomeMessage(user) {
+  return (
+    "สวัสดีครับ " + (user.fullName || "คุณ") + " 👋\n\n" +
+    "ผมคือ 🤖 ครูวิทย์ ผู้ช่วยสอนวิทยาศาสตร์\n" +
+    "ตอบถูกต้องตามหลักวิชาการ อ้างอิงมาตรฐานสากล 🔬\n\n" +
+    "🎭 สิทธิ์  : " + getRoleLabel(user.role) + "\n" +
+    "📊 โควตา : " + (QUOTA[user.role] || 0) + " คำถาม/วัน\n\n" +
+    "💬 พิมพ์คำถามได้เลย เช่น:\n" +
+    "  - แรงคืออะไร\n" +
+    "  - ทำไมเครื่องบินบินได้\n" +
+    "  - จัดประเภทสิ่งมีชีวิต\n" +
+    "  - ออกข้อสอบเรื่องคลื่น\n\n" +
+    "📌 คำสั่ง:\n" +
+    "  /grade  — ตั้งระดับชั้นเรียน (แนะนำทำก่อน!)\n" +
+    "  /status — โควตาวันนี้\n" +
+    "  /myid   — Telegram ID\n" +
+    "  /help   — วิธีใช้ทั้งหมด"
+  );
+}
+
+function statusMessage(user, userId) {
+  var used  = getDailyCount(userId);
+  var limit = QUOTA[user.role] !== undefined ? QUOTA[user.role] : 0;
+  var left  = Math.max(0, limit - used);
+  var gc    = PropertiesService.getScriptProperties().getProperty(GRADE_PROP_PREFIX + userId) || "";
+  var gLabel = gc === ""  ? "ยังไม่ได้ตั้ง (พิมพ์ /grade)"
+             : gc.startsWith("p") ? "ประถมศึกษาปีที่ " + gc[1]
+             : "มัธยมศึกษาปีที่ " + gc[1];
+  return (
+    "📊 สถานะของคุณวันนี้\n" +
+    "━━━━━━━━━━━━━━━━\n" +
+    "👤 ชื่อ        : " + (user.fullName || "-") + "\n" +
+    "🎭 บทบาท    : " + getRoleLabel(user.role) + "\n" +
+    "📚 ระดับชั้น : " + gLabel + "\n" +
+    "✅ ใช้แล้ว   : " + used  + " คำถาม\n" +
+    "🔢 โควตา    : " + limit + " คำถาม\n" +
+    "⏳ คงเหลือ  : " + left  + " คำถาม\n" +
+    "🔄 รีเซ็ตทุกเที่ยงคืน (เวลาไทย)"
+  );
+}
+
+function helpMessage() {
+  return (
+    "📖 วิธีใช้ ครูวิทย์\n" +
+    "━━━━━━━━━━━━━━━━\n" +
+    "ถามวิทยาศาสตร์ได้เลย เช่น:\n" +
+    "  - แรงคืออะไร\n" +
+    "  - ทำไมเครื่องบินบินได้\n" +
+    "  - จัดประเภทคลื่นแม่เหล็กไฟฟ้า\n" +
+    "  - ออกข้อสอบเรื่องแรงโน้มถ่วง\n\n" +
+
+    "โหมดอัตโนมัติ:\n" +
+    "  - ถามนิยาม/สั้น ๆ      → ตอบกระชับ\n" +
+    "  - ถาม 'ทำไม/อธิบาย'  → ตอบละเอียด\n" +
+    "  - ถาม 'จัดประเภท'     → ตอบ + มาตรฐานอ้างอิง\n" +
+    "  - ถาม 'ข้อสอบ/ติวสอบ' → ตอบ Bloom's Taxonomy\n\n" +
+
+    "ปุ่ม Follow-up (ใต้คำตอบ):\n" +
+    "  🔍 อธิบายเพิ่ม              — analogy + ขยายคำศัพท์\n" +
+    "  🧠 เชิงลึก                  — กลไกระดับโมเลกุล + สมการ\n" +
+    "  🎯 ตัวอย่างเพิ่ม            — Bloom's 4 ระดับ + เฉลย\n" +
+    "  🖼️ พร้อมท์ภาพ              — prompt สำหรับ AI สร้างภาพ\n" +
+    "  💡 ประเด็นควรรู้/สับสน     — ประเด็นที่นักเรียนมักเข้าใจผิด\n\n" +
+
+    "📌 คำสั่ง:\n" +
+    "  /start  — เริ่มต้น\n" +
+    "  /grade  — ตั้งระดับชั้น (สำคัญ!)\n" +
+    "  /status — โควตาวันนี้\n" +
+    "  /myid   — Telegram ID\n" +
+    "  /help   — วิธีใช้\n\n" +
+
+    "🎭 โควตาต่อวัน:\n" +
+    "  นักเรียน    : " + QUOTA.student  + " คำถาม\n" +
+    "  ผู้ปกครอง  : " + QUOTA.parent   + " คำถาม\n" +
+    "  ผู้เยี่ยมชม : " + QUOTA.visitor  + " คำถาม"
+  );
+}
+
+function gradeMessage() {
+  return (
+    "📚 ตั้งระดับชั้นของคุณ\n" +
+    "━━━━━━━━━━━━━━━━\n" +
+    "ระดับประถมศึกษา:\n" +
+    "  /p1  /p2  /p3  /p4  /p5  /p6\n\n" +
+    "ระดับมัธยมศึกษา:\n" +
+    "  /m1  /m2  /m3  /m4  /m5  /m6\n\n" +
+    "เมื่อตั้งแล้ว ครูวิทย์จะปรับภาษาและเนื้อหา\n" +
+    "ให้เหมาะสมกับระดับของคุณครับ 🎯"
+  );
+}
+
+function getRoleLabel(role) {
+  var labels = {
+    student: "นักเรียน 🎒",
+    parent : "ผู้ปกครอง 👨‍👩‍👧",
+    visitor: "ผู้เยี่ยมชม 🚶",
+    blocked: "ถูกระงับ ⛔"
+  };
+  return labels[role] || role;
+}
+
+// ============================================================
+//  ADMIN: เปลี่ยน Role จาก Script Editor
+//  ตัวอย่าง: setUserRole("123456789", "student")
+// ============================================================
+function setUserRole(userId, newRole) {
+  var sheet = getSheet(SHEET_USERS);
+  var data  = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0].toString() === userId) {
+      sheet.getRange(i + 1, 4).setValue(newRole);
+      sheet.getRange(i + 1, 5).setValue(newRole === "blocked" ? "blocked" : "active");
+      console.log("✅ setUserRole: " + userId + " → " + newRole);
+      return;
+    }
+  }
+  console.log("❌ ไม่พบ userId: " + userId);
+}
+
+// ============================================================
+//  WEBHOOK SETUP
+// ============================================================
+function setWebhook() {
+  var webhookUrl = "https://script.google.com/macros/s/AKfycbzvfJFksb75mvTaSvKWxwF7uGWFfaGCV6EWMhYoNCJaJADOaMF5QmTG3Adf_UE_FJYV/exec"; // ← ใส่ URL ของ Apps Script Web App
+  var url = "https://api.telegram.org/bot" + TELEGRAM_TOKEN +
+            "/setWebhook?url=" + encodeURIComponent(webhookUrl);
+  console.log(UrlFetchApp.fetch(url).getContentText());
+}
+
+function deleteWebhook() {
+  console.log(UrlFetchApp.fetch(
+    "https://api.telegram.org/bot" + TELEGRAM_TOKEN + "/deleteWebhook"
+  ).getContentText());
+}
+
+function checkWebhook() {
+  console.log(UrlFetchApp.fetch(
+    "https://api.telegram.org/bot" + TELEGRAM_TOKEN + "/getWebhookInfo"
+  ).getContentText());
+}
+
+// ============================================================
+//  TEST FUNCTIONS
+// ============================================================
+function testGroq() {
+  var res = UrlFetchApp.fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method     : "post",
+    contentType: "application/json",
+    headers    : { Authorization: "Bearer " + GROQ_API_KEY },
+    payload    : JSON.stringify({
+      model    : GROQ_MODEL,
+      messages : [{ role: "user", content: "แรงคืออะไร (ตอบสั้นๆ)" }],
+      max_tokens: 200
+    }),
+    muteHttpExceptions: true
+  });
+  console.log("Status: " + res.getResponseCode());
+  if (res.getResponseCode() === 200) {
+    console.log(JSON.parse(res.getContentText()).choices[0].message.content);
+  } else {
+    console.log(res.getContentText());
+  }
+}
+
+function testWebhook() {
+  var fakeEvent = {
+    postData: {
+      contents: JSON.stringify({
+        message: {
+          chat: { id: "8768293237" },
+          from: { id: "8768293237", username: "tester", first_name: "ทดสอบ", last_name: "" },
+          text: "แรงคืออะไร"
+        }
+      })
+    }
+  };
+  doPost(fakeEvent);
+  console.log("✅ testWebhook done");
+}
+
+function testClassifyMode() {
+  var fakeEvent = {
+    postData: {
+      contents: JSON.stringify({
+        message: {
+          chat: { id: "8768293237" },
+          from: { id: "8768293237", username: "tester", first_name: "ทดสอบ", last_name: "" },
+          text: "จัดประเภทคลื่นแม่เหล็กไฟฟ้า"
+        }
+      })
+    }
+  };
+  doPost(fakeEvent);
+  console.log("✅ testClassifyMode done");
+}
+
+function testBloomsExam() {
+  var fakeEvent = {
+    postData: {
+      contents: JSON.stringify({
+        message: {
+          chat: { id: "8768293237" },
+          from: { id: "8768293237", username: "tester", first_name: "ทดสอบ", last_name: "" },
+          text: "ออกข้อสอบเรื่องแรงและการเคลื่อนที่"
+        }
+      })
+    }
+  };
+  doPost(fakeEvent);
+  console.log("✅ testBloomsExam done");
+}
+
+function testFollowUpExplain() {
+  var testUserId = "8768293237";
+  var testChatId = "8768293237";
+  saveLastContext(testUserId,
+    "แรงคืออะไร",
+    "แรง (Force) คือการกระทำที่ทำให้วัตถุเกิดการเปลี่ยนแปลงการเคลื่อนที่ " +
+    "มีหน่วยเป็นนิวตัน (N) ตาม F = ma ของ Newton"
+  );
+  handleFollowUp(testChatId, testUserId, "followup_explain");
+  console.log("✅ testFollowUpExplain done");
+}
+
+function testFollowUpDeep() {
+  var testUserId = "8768293237";
+  var testChatId = "8768293237";
+  saveLastContext(testUserId,
+    "วัฏจักรน้ำคืออะไร",
+    "วัฏจักรน้ำ (Water Cycle) คือกระบวนการหมุนเวียนของน้ำในธรรมชาติ " +
+    "ประกอบด้วย การระเหย การควบแน่น และการตกตะกอน"
+  );
+  handleFollowUp(testChatId, testUserId, "followup_deep");
+  console.log("✅ testFollowUpDeep done");
+}
+
+function testFollowUpExample() {
+  var testUserId = "8768293237";
+  var testChatId = "8768293237";
+  saveLastContext(testUserId,
+    "แสงคืออะไร",
+    "แสงคือคลื่นแม่เหล็กไฟฟ้าที่ตามองเห็น มีความยาวคลื่น 380-700 นาโนเมตร ความเร็ว 3×10^8 m/s"
+  );
+  handleFollowUp(testChatId, testUserId, "followup_example");
+  console.log("✅ testFollowUpExample done");
+}
+
+function testFollowUpImage() {
+  var testUserId = "8768293237";
+  var testChatId = "8768293237";
+  saveLastContext(testUserId,
+    "วัฏจักรน้ำคืออะไร",
+    "วัฏจักรน้ำ (Water Cycle) คือกระบวนการหมุนเวียนของน้ำในธรรมชาติ " +
+    "ประกอบด้วย การระเหย การควบแน่น และการตกตะกอน"
+  );
+  handleFollowUp(testChatId, testUserId, "followup_image");
+  console.log("✅ testFollowUpImage done");
+}
+
+// ✅ v3.1: ทดสอบปุ่มที่ 5
+function testFollowUpHints() {
+  var testUserId = "8768293237";
+  var testChatId = "8768293237";
+  saveLastContext(testUserId,
+    "การคายน้ำของพืชคืออะไร",
+    "การคายน้ำ (Transpiration) คือกระบวนการที่พืชปล่อยน้ำออกในรูปไอน้ำ " +
+    "ผ่านปากใบ (stomata) เป็นหลัก"
+  );
+  handleFollowUp(testChatId, testUserId, "followup_hints");
+  console.log("✅ testFollowUpHints done");
+}
