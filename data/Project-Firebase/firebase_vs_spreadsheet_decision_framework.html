@@ -1,0 +1,379 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.wrap { padding: 16px 0 24px; }
+.section-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  margin: 20px 0 8px;
+}
+.decision-bar {
+  display: flex;
+  gap: 0;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border-tertiary);
+  margin-bottom: 20px;
+}
+.decision-col {
+  flex: 1;
+  padding: 14px 16px;
+}
+.col-firebase { background: #FFF5E6; border-right: 1px solid var(--color-border-tertiary); }
+.col-sheet { background: #E8F5E9; }
+@media (prefers-color-scheme: dark) {
+  .col-firebase { background: #2a1f0a; }
+  .col-sheet { background: #0d2110; }
+}
+.col-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.col-firebase .col-header { color: #B45309; }
+.col-sheet .col-header { color: #166534; }
+@media (prefers-color-scheme: dark) {
+  .col-firebase .col-header { color: #FCD34D; }
+  .col-sheet .col-header { color: #86EFAC; }
+}
+.signal-list { list-style: none; }
+.signal-list li {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  padding: 2px 0;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+.signal-list li::before { content: "→"; opacity: .5; flex-shrink: 0; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead th {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--color-text-tertiary);
+  padding: 6px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border-tertiary);
+}
+thead th:not(:first-child) { text-align: center; width: 130px; }
+tbody tr { border-bottom: 1px solid var(--color-border-tertiary); }
+tbody tr:last-child { border-bottom: none; }
+td {
+  padding: 10px 10px;
+  vertical-align: top;
+}
+td:first-child {
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--color-text-primary);
+  width: 160px;
+}
+td:not(:first-child) { text-align: left; }
+.sub { font-size: 11px; color: var(--color-text-tertiary); font-weight: 400; margin-top: 2px; display: block; }
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.b-green { background: #D1FAE5; color: #065F46; }
+.b-amber { background: #FEF3C7; color: #92400E; }
+.b-blue  { background: #DBEAFE; color: #1E40AF; }
+.b-red   { background: #FEE2E2; color: #991B1B; }
+.b-gray  { background: var(--color-background-secondary); color: var(--color-text-secondary); }
+@media (prefers-color-scheme: dark) {
+  .b-green { background: #064E3B; color: #6EE7B7; }
+  .b-amber { background: #451A03; color: #FCD34D; }
+  .b-blue  { background: #1E3A5F; color: #93C5FD; }
+  .b-red   { background: #450A0A; color: #FCA5A5; }
+}
+.note {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+.highlight-row { background: rgba(245,158,11,0.06); }
+.star { color: #F59E0B; font-size: 12px; }
+
+.rule-box {
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 14px 16px;
+  margin-top: 20px;
+}
+.rule-box h3 {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+}
+.rule-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.rule-card {
+  border-radius: var(--border-radius-md);
+  padding: 10px 12px;
+  font-size: 12px;
+}
+.rule-card-f { background: #FFFBEB; border-left: 3px solid #F59E0B; }
+.rule-card-s { background: #F0FDF4; border-left: 3px solid #22C55E; }
+@media (prefers-color-scheme: dark) {
+  .rule-card-f { background: #1c1200; border-color: #D97706; }
+  .rule-card-s { background: #071510; border-color: #16A34A; }
+}
+.rule-card .r-title {
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--color-text-primary);
+}
+.rule-card .r-body { color: var(--color-text-secondary); line-height: 1.5; }
+</style>
+
+<div class="wrap">
+
+<div class="section-label">เลือก Firebase เมื่อ... / เลือก Spreadsheet เมื่อ...</div>
+<div class="decision-bar">
+  <div class="decision-col col-firebase">
+    <div class="col-header">
+      <i class="ti ti-flame" aria-hidden="true"></i> Firebase
+    </div>
+    <ul class="signal-list">
+      <li>ระบบใหม่ที่สร้างเอง ไม่ได้อยู่ใน Google Ecosystem</li>
+      <li>ต้องการ Authentication (Google Login, Email)</li>
+      <li>มีผู้ใช้หลายคนพร้อมกัน (realtime/concurrent)</li>
+      <li>โค้ดต้องอ่าน/เขียน DB บ่อยและซับซ้อน</li>
+      <li>ข้อมูลต้องปลอดภัยสูง / มี role-based access</li>
+      <li>ระบบจะขยาย (scale) ในอนาคต</li>
+    </ul>
+  </div>
+  <div class="decision-col col-sheet">
+    <div class="col-header">
+      <i class="ti ti-table" aria-hidden="true"></i> Google Spreadsheet
+    </div>
+    <ul class="signal-list">
+      <li>ต่อยอดจาก Google Form / Workspace ที่มีอยู่</li>
+      <li>ไม่ต้องการ Auth / ใคร ๆ ก็ดูได้</li>
+      <li>ทีมต้องการดูแก้ไขข้อมูลเองโดยไม่ผ่าน Dev</li>
+      <li>ข้อมูลไม่ซับซ้อน ไม่มี relation หลายชั้น</li>
+      <li>ต้องการ export / pivot / วิเคราะห์ด้วย Excel/Sheets</li>
+      <li>โปรเจกต์เล็ก ทีมเล็ก ไม่ต้องการ infra</li>
+    </ul>
+  </div>
+</div>
+
+<div class="section-label">เปรียบเทียบตามเกณฑ์</div>
+<table>
+  <thead>
+    <tr>
+      <th>เกณฑ์</th>
+      <th><i class="ti ti-flame" aria-hidden="true"></i> Firebase</th>
+      <th><i class="ti ti-table" aria-hidden="true"></i> Spreadsheet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="highlight-row">
+      <td>
+        ลักษณะระบบ
+        <span class="sub star">★ เกณฑ์หลัก</span>
+      </td>
+      <td>
+        <span class="badge b-amber">ระบบใหม่ / Standalone App</span>
+        <div class="note">Bot, Web App, Mobile App, Dashboard ที่สร้างเอง</div>
+      </td>
+      <td>
+        <span class="badge b-green">อยู่ใน Google Ecosystem แล้ว</span>
+        <div class="note">Form → Sheet, Apps Script, Workspace workflow</div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Authentication
+        <span class="sub">การล็อกอิน</span>
+      </td>
+      <td>
+        <span class="badge b-green">รองรับดีมาก</span>
+        <div class="note">Google Login, Email, Phone, Anonymous ในตัว</div>
+      </td>
+      <td>
+        <span class="badge b-red">จำกัดมาก</span>
+        <div class="note">เปิดให้ทุกคนหรือล็อกด้วย Google Account เท่านั้น ไม่มี user management</div>
+      </td>
+    </tr>
+    <tr class="highlight-row">
+      <td>
+        ความยาก (โค้ด)
+        <span class="sub">เชื่อม App กับ DB</span>
+      </td>
+      <td>
+        <span class="badge b-amber">ปานกลาง</span>
+        <div class="note">Firebase SDK ชัดเจน แต่ต้องตั้ง Rules, Index, Project</div>
+      </td>
+      <td>
+        <span class="badge b-blue">ง่ายกว่า (ถ้าอยู่ใน Google)</span>
+        <div class="note">Apps Script / Sheets API ใช้ได้เลย แต่ quota จำกัดและ API ซับซ้อนถ้าใช้จากภายนอก</div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        การดูข้อมูล
+        <span class="sub">โดยทีม / non-Dev</span>
+      </td>
+      <td>
+        <span class="badge b-amber">ต้องผ่าน Console หรือ Admin UI</span>
+        <div class="note">Firestore Console ดูได้ แต่ไม่สะดวกสำหรับ non-Dev</div>
+      </td>
+      <td>
+        <span class="badge b-green">ดีมาก</span>
+        <div class="note">เปิด Sheets เห็นข้อมูลได้ทันที ทีมแก้ไขเองได้</div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        นำข้อมูลมาใช้
+        <span class="sub">วิเคราะห์ / Export</span>
+      </td>
+      <td>
+        <span class="badge b-amber">ต้องเขียน Query / Export เอง</span>
+        <div class="note">Firestore ไม่มี SQL, ต้อง index เอง, export ยุ่งยาก</div>
+      </td>
+      <td>
+        <span class="badge b-green">ง่ายมาก</span>
+        <div class="note">Pivot, Chart, Filter, VLOOKUP ทำได้ทันที ต่อ Looker Studio ได้เลย</div>
+      </td>
+    </tr>
+    <tr class="highlight-row">
+      <td>
+        ความปลอดภัย
+        <span class="sub">Security / Access Control</span>
+      </td>
+      <td>
+        <span class="badge b-green">สูง</span>
+        <div class="note">Firestore Security Rules, per-user access, encrypted at rest</div>
+      </td>
+      <td>
+        <span class="badge b-red">ต่ำ–ปานกลาง</span>
+        <div class="note">ไม่มี row-level security ถ้าแชร์ Sheet = เห็นทุก row ใช้ Service Account ระวัง credential หลุด</div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Concurrent Users
+        <span class="sub">ผู้ใช้พร้อมกัน</span>
+      </td>
+      <td>
+        <span class="badge b-green">Realtime / สูงมาก</span>
+        <div class="note">onSnapshot, transactions รองรับได้ดี</div>
+      </td>
+      <td>
+        <span class="badge b-red">มีปัญหา</span>
+        <div class="note">Race condition ถ้าเขียนพร้อมกัน, Sheets API quota 300 req/min</div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Maintenance / Schema
+        <span class="sub">แก้โครงสร้างในอนาคต</span>
+      </td>
+      <td>
+        <span class="badge b-blue">Flexible (NoSQL)</span>
+        <div class="note">เพิ่ม field ได้เลย แต่ต้องเขียน migration script ถ้าเปลี่ยน structure ใหญ่</div>
+      </td>
+      <td>
+        <span class="badge b-amber">ง่ายแต่เสี่ยง</span>
+        <div class="note">เพิ่มคอลัมน์ได้ทันที แต่ถ้าโค้ดอ้าง column index จะพัง ต้องระวังเรื่อง human error</div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Data Complexity
+        <span class="sub">โครงสร้างข้อมูล</span>
+      </td>
+      <td>
+        <span class="badge b-green">รองรับ Relation / Nested</span>
+        <div class="note">Sub-collection, document references, complex queries</div>
+      </td>
+      <td>
+        <span class="badge b-red">Flat Table เท่านั้น</span>
+        <div class="note">ไม่เหมาะถ้าข้อมูล relation ซับซ้อน หรือ 1-to-many หลายชั้น</div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Cost / Infra
+        <span class="sub">ค่าใช้จ่าย / ภาระทีม</span>
+      </td>
+      <td>
+        <span class="badge b-amber">Free tier กว้าง แต่มี Billing</span>
+        <div class="note">ถ้า traffic สูงมีค่าใช้จ่าย ต้องมอนิเตอร์ usage</div>
+      </td>
+      <td>
+        <span class="badge b-green">ฟรีในส่วนใหญ่</span>
+        <div class="note">Google Workspace มักมีอยู่แล้ว ไม่ต้องตั้ง infra</div>
+      </td>
+    </tr>
+    <tr class="highlight-row">
+      <td>
+        Offline / Mobile
+        <span class="sub">ใช้งาน offline ได้</span>
+      </td>
+      <td>
+        <span class="badge b-green">รองรับ</span>
+        <div class="note">Firebase SDK มี offline persistence built-in</div>
+      </td>
+      <td>
+        <span class="badge b-red">ไม่รองรับ</span>
+        <div class="note">ต้องออนไลน์เสมอ</div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="rule-box">
+  <h3>ประเด็นสำคัญที่มักตกหล่น</h3>
+  <div class="rule-grid">
+    <div class="rule-card rule-card-f">
+      <div class="r-title">Vendor Lock-in (Firebase)</div>
+      <div class="r-body">Firestore ใช้ SDK เฉพาะของ Google — ถ้าจะย้าย platform ในอนาคตจะยาก ควรออกแบบ abstraction layer ไว้ล่วงหน้า</div>
+    </div>
+    <div class="rule-card rule-card-s">
+      <div class="r-title">Human Error Risk (Sheets)</div>
+      <div class="r-body">ทีมสามารถลบ/แก้ข้อมูล production ได้โดยตรง ควรตั้ง Protected Range และมี backup sheet เสมอ</div>
+    </div>
+    <div class="rule-card rule-card-f">
+      <div class="r-title">Webhook / Trigger (Firebase)</div>
+      <div class="r-body">Cloud Functions on Firestore trigger ทำ automation ได้ดีมาก เช่น ส่ง notification เมื่อข้อมูลเปลี่ยน — Sheets ทำได้แต่ซับซ้อนกว่า</div>
+    </div>
+    <div class="rule-card rule-card-s">
+      <div class="r-title">Sheets เหมาะกับ "Log only"</div>
+      <div class="r-body">ถ้า App เขียนข้อมูลทิศทางเดียว (append-only log) และทีมแค่ "อ่าน" Sheets เป็นตัวเลือกที่ดีมาก ต้นทุนต่ำ ใช้งานง่าย</div>
+    </div>
+    <div class="rule-card rule-card-f">
+      <div class="r-title">PDPA / Data Residency</div>
+      <div class="r-body">ถ้าข้อมูลส่วนบุคคลต้องอยู่ใน region ไทย — Firebase มี region เลือกได้ชัดเจนกว่า Sheets ที่ไม่การันตี region</div>
+    </div>
+    <div class="rule-card rule-card-s">
+      <div class="r-title">Hybrid Architecture</div>
+      <div class="r-body">ใช้ทั้งคู่ได้ — Firebase เป็น DB หลัก แล้ว sync ข้อมูลสรุป/report ไปยัง Sheets เพื่อให้ทีมดูได้ง่าย เป็น pattern ที่ใช้บ่อยมาก</div>
+    </div>
+  </div>
+</div>
+
+</div>
