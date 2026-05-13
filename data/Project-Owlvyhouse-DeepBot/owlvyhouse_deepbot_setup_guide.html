@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦉 คู่มือติดตั้ง OwlvyHouseDeep Bot</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --owl: #6C63FF;
+  --owl-light: #E8E6FF;
+  --owl-dark: #4B44CC;
+  --firebase: #FF6D00;
+  --firebase-light: #FFF0E0;
+  --openrouter: #10B981;
+  --openrouter-light: #D1FAE5;
+  --code-bg: #1A1D2E;
+  --code-text: #E2E8F0;
+  --warn: #F59E0B;
+  --warn-light: #FEF3C7;
+  --danger: #EF4444;
+  --danger-light: #FEE2E2;
+  --success: #10B981;
+  --bg: #F4F3FF;
+  --card: #FFFFFF;
+  --text: #1E1B4B;
+  --text-2: #6B7280;
+  --border: #E5E3F5;
+  --radius: 14px;
+  --shadow: 0 2px 16px rgba(108,99,255,0.10);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, #2D1B69 0%, #11998e 100%);
+  padding: 52px 24px 44px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-owl { font-size: 72px; display: block; margin-bottom: 12px; filter: drop-shadow(0 4px 20px rgba(0,0,0,0.3)); animation: bob 3s ease-in-out infinite; }
+@keyframes bob { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+.hero h1 { font-family: 'Prompt', sans-serif; font-size: 30px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.hero p { font-size: 15px; color: rgba(255,255,255,0.75); max-width: 520px; margin: 0 auto 20px; }
+.hero-badges { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.hero-badge {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 5px 14px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ── LAYOUT ── */
+.container { max-width: 860px; margin: 0 auto; padding: 32px 20px 60px; }
+
+/* ── TOC ── */
+.toc {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow);
+}
+.toc-title { font-family: 'Prompt', sans-serif; font-size: 14px; font-weight: 600; color: var(--owl); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 20px; }
+.toc-link {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 0;
+  text-decoration: none;
+  color: var(--text-2);
+  font-size: 13px;
+  border-bottom: 1px dashed var(--border);
+  transition: color 0.2s;
+}
+.toc-link:hover { color: var(--owl); }
+.toc-num {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--owl-light); color: var(--owl);
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── SECTION ── */
+.section { margin-bottom: 40px; scroll-margin-top: 20px; }
+.section-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+}
+.section-num {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Prompt', sans-serif; font-size: 15px; font-weight: 700;
+  flex-shrink: 0;
+}
+.num-owl   { background: var(--owl); color: #fff; }
+.num-fb    { background: var(--firebase); color: #fff; }
+.num-or    { background: var(--openrouter); color: #fff; }
+.num-code  { background: #1A1D2E; color: #fff; }
+.num-test  { background: var(--warn); color: #fff; }
+
+.section-header h2 { font-family: 'Prompt', sans-serif; font-size: 19px; font-weight: 600; }
+.section-emoji { font-size: 22px; }
+
+/* ── CARD ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+.card-title {
+  font-family: 'Prompt', sans-serif;
+  font-size: 14px; font-weight: 600;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+  color: var(--text);
+}
+.tag {
+  font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 50px;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.tag-do { background: #D1FAE5; color: #065F46; }
+.tag-note { background: #FEF3C7; color: #92400E; }
+.tag-warn { background: #FEE2E2; color: #991B1B; }
+.tag-code { background: #EDE9FE; color: #4C1D95; }
+.tag-key  { background: #DBEAFE; color: #1E40AF; }
+.tag-fallback { background: #FFF0E0; color: #C2410C; }
+
+/* ── STEPS ── */
+.steps { list-style: none; counter-reset: step; }
+.steps li {
+  counter-increment: step;
+  display: flex; gap: 12px;
+  padding: 8px 0;
+  font-size: 14px;
+  border-bottom: 1px dashed var(--border);
+  align-items: flex-start;
+}
+.steps li:last-child { border-bottom: none; }
+.steps li::before {
+  content: counter(step);
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--owl-light); color: var(--owl);
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+}
+
+.steps.firebase li::before { background: var(--firebase-light); color: var(--firebase); }
+.steps.green li::before { background: var(--openrouter-light); color: var(--openrouter); }
+
+/* ── CODE ── */
+.code-block {
+  background: var(--code-bg);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin: 10px 0;
+  overflow-x: auto;
+  position: relative;
+}
+.code-label {
+  position: absolute; top: 8px; right: 12px;
+  font-size: 10px; color: #718096;
+  font-family: 'JetBrains Mono', monospace;
+}
+.code-block pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  color: var(--code-text);
+  line-height: 1.7;
+  white-space: pre;
+}
+.c-key   { color: #7C73FF; }
+.c-str   { color: #43E97B; }
+.c-cmt   { color: #718096; font-style: italic; }
+.c-fn    { color: #FF9F43; }
+.c-val   { color: #FF6B6B; }
+.c-path  { color: #54A0FF; }
+
+/* ── ALERTS ── */
+.alert {
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 13.5px;
+  display: flex; gap: 10px; align-items: flex-start;
+  line-height: 1.6;
+}
+.alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.alert-warn { background: var(--warn-light); border-left: 4px solid var(--warn); }
+.alert-danger { background: var(--danger-light); border-left: 4px solid var(--danger); }
+.alert-ok { background: var(--openrouter-light); border-left: 4px solid var(--openrouter); }
+.alert-info { background: var(--owl-light); border-left: 4px solid var(--owl); }
+
+/* ── FIRESTORE PATH ── */
+.db-path {
+  display: flex; align-items: center; gap: 6px;
+  background: #F0FDF4; border: 1px solid #86EFAC;
+  border-radius: 8px; padding: 8px 14px;
+  font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  margin: 8px 0; flex-wrap: wrap;
+}
+.db-part { color: #065F46; font-weight: 600; }
+.db-sep { color: #9CA3AF; }
+
+/* ── MODELS TABLE ── */
+.model-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0; }
+.model-table th {
+  background: var(--code-bg); color: #A0AEC0;
+  padding: 8px 12px; text-align: left;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  font-weight: 400;
+}
+.model-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.model-table tr:last-child td { border-bottom: none; }
+.model-order {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--owl); color: #fff;
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.model-name { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--owl-dark); font-weight: 500; }
+.model-badge {
+  font-size: 10px; padding: 1px 7px; border-radius: 50px; font-weight: 600;
+}
+.mb-free { background: #D1FAE5; color: #065F46; }
+.mb-paid { background: #FEE2E2; color: #991B1B; }
+.mb-fast { background: #DBEAFE; color: #1E40AF; }
+.mb-fallback { background: #FEF3C7; color: #78350F; }
+
+/* ── HIGHLIGHT BOX ── */
+.highlight-box {
+  background: linear-gradient(135deg, var(--owl-light), #F0FDF4);
+  border: 1px solid var(--owl);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin: 14px 0;
+}
+.highlight-box h4 { font-family: 'Prompt', sans-serif; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--owl-dark); }
+
+/* ── CHECKLIST ── */
+.checklist { list-style: none; }
+.checklist li {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 5px 0; font-size: 13.5px;
+  border-bottom: 1px dashed var(--border);
+}
+.checklist li:last-child { border-bottom: none; }
+.check-icon { font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+
+/* ── CHAPTER LABEL ── */
+.chapter-label {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+  padding: 4px 12px; border-radius: 50px; margin-bottom: 14px;
+}
+.ch-owl { background: var(--owl-light); color: var(--owl-dark); }
+.ch-fb  { background: var(--firebase-light); color: #7C2D12; }
+.ch-or  { background: var(--openrouter-light); color: #065F46; }
+.ch-code { background: #EDE9FE; color: #4C1D95; }
+.ch-test { background: var(--warn-light); color: #78350F; }
+
+/* ── DIVIDER ── */
+.divider { border: none; border-top: 2px dashed var(--border); margin: 32px 0; }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center; padding: 24px;
+  font-size: 12px; color: var(--text-2);
+  border-top: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-owl">🦉</span>
+  <h1>คู่มือติดตั้ง OwlvyHouseDeep Bot</h1>
+  <p>ขั้นตอนปฏิบัติจริง ตั้งแต่ต้นจนใช้งานได้ — ครอบคลุม Firebase, Google Login, Firestore, OpenRouter และ AI Fallback</p>
+  <div class="hero-badges">
+    <span class="hero-badge">🔥 Firebase v10</span>
+    <span class="hero-badge">🔐 Google Auth</span>
+    <span class="hero-badge">🗄️ Firestore</span>
+    <span class="hero-badge">🤖 OpenRouter API</span>
+    <span class="hero-badge">🔄 AI Fallback</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">📋 สารบัญขั้นตอน</div>
+    <div class="toc-grid">
+      <a class="toc-link" href="#s1"><span class="toc-num">1</span>ภาพรวมระบบ</a>
+      <a class="toc-link" href="#s2"><span class="toc-num">2</span>สร้าง Firebase Project</a>
+      <a class="toc-link" href="#s3"><span class="toc-num">3</span>เปิด Google Authentication</a>
+      <a class="toc-link" href="#s4"><span class="toc-num">4</span>ตั้งค่า Firestore Database</a>
+      <a class="toc-link" href="#s5"><span class="toc-num">5</span>ได้ API Key จาก OpenRouter</a>
+      <a class="toc-link" href="#s6"><span class="toc-num">6</span>เก็บ API Key ใน Firestore</a>
+      <a class="toc-link" href="#s7"><span class="toc-num">7</span>ใส่ Firebase Config ใน HTML</a>
+      <a class="toc-link" href="#s8"><span class="toc-num">8</span>AI Fallback & Free Models</a>
+      <a class="toc-link" href="#s9"><span class="toc-num">9</span>ทดสอบระบบ</a>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ S1 ═══════════════════════════════ -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <div class="section-num num-owl">1</div>
+      <span class="section-emoji">🗺️</span>
+      <h2>ภาพรวมระบบ — ชิ้นส่วนทั้งหมด</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ระบบประกอบด้วย 3 ส่วนหลัก</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:4px;">
+        <div style="background:var(--owl-light); border-radius:10px; padding:14px; text-align:center;">
+          <div style="font-size:28px; margin-bottom:6px;">📄</div>
+          <div style="font-family:'Prompt',sans-serif; font-size:13px; font-weight:600; color:var(--owl-dark);">Web App (HTML)</div>
+          <div style="font-size:12px; color:var(--text-2); margin-top:4px;">ไฟล์ HTML ไฟล์เดียว<br>รัน local หรือ deploy ได้</div>
+        </div>
+        <div style="background:var(--firebase-light); border-radius:10px; padding:14px; text-align:center;">
+          <div style="font-size:28px; margin-bottom:6px;">🔥</div>
+          <div style="font-family:'Prompt',sans-serif; font-size:13px; font-weight:600; color:#7C2D12;">Firebase</div>
+          <div style="font-size:12px; color:var(--text-2); margin-top:4px;">Google Login<br>+ เก็บ API Key ปลอดภัย</div>
+        </div>
+        <div style="background:var(--openrouter-light); border-radius:10px; padding:14px; text-align:center;">
+          <div style="font-size:28px; margin-bottom:6px;">🤖</div>
+          <div style="font-family:'Prompt',sans-serif; font-size:13px; font-weight:600; color:#065F46;">OpenRouter</div>
+          <div style="font-size:12px; color:var(--text-2); margin-top:4px;">เรียกใช้ AI หลายตัว<br>ผ่าน API เดียว</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔄 Flow การทำงาน</div>
+      <div style="font-size:13.5px; color:var(--text-2); line-height:2;">
+        <strong style="color:var(--text);">1.</strong> ผู้ใช้เปิด HTML → เห็นหน้า Login<br>
+        <strong style="color:var(--text);">2.</strong> กด "เข้าสู่ระบบด้วย Google" → Firebase Auth ตรวจสอบ<br>
+        <strong style="color:var(--text);">3.</strong> Login สำเร็จ → App ดึง <code style="background:var(--owl-light);padding:1px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;">apiKey</code> จาก Firestore (Collection: <code style="background:var(--owl-light);padding:1px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;">config/openrouter</code>)<br>
+        <strong style="color:var(--text);">4.</strong> ผู้ใช้เลือกหัวข้อ → กด "สร้างคำถาม"<br>
+        <strong style="color:var(--text);">5.</strong> App ส่ง Prompt ไปที่ OpenRouter ด้วย AI ตัวแรกใน MODELS<br>
+        <strong style="color:var(--text);">6.</strong> ถ้า AI ล้มเหลว → Fallback ไป AI ถัดไปอัตโนมัติ
+      </div>
+    </div>
+
+    <div class="alert alert-info">
+      <span class="alert-icon">💡</span>
+      <div><strong>API Key ไม่ได้อยู่ใน HTML</strong> — ระบบออกแบบให้เก็บ Key ใน Firestore และดึงมาตอน Login เท่านั้น ทำให้ Key ไม่หลุดไปกับ source code</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ S2 ═══════════════════════════════ -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <div class="section-num num-fb">2</div>
+      <span class="section-emoji">🔥</span>
+      <h2>สร้าง Firebase Project</h2>
+    </div>
+    <span class="chapter-label ch-fb">Firebase Console</span>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-do">ทำตามลำดับ</span> ขั้นตอนสร้าง Project</div>
+      <ol class="steps firebase">
+        <li>ไปที่ <strong>console.firebase.google.com</strong> → Login ด้วย Google Account</li>
+        <li>กด <strong>"Add project"</strong> (หรือ "Create a project")</li>
+        <li>ตั้งชื่อ project เช่น <code style="font-family:'JetBrains Mono',monospace;">owlvyhousedeep-bot</code> → กด Continue</li>
+        <li>เลือกว่าจะเปิด Google Analytics หรือไม่ (ไม่บังคับ) → กด <strong>"Create project"</strong></li>
+        <li>รอสักครู่จนหน้า Dashboard ขึ้น → Project พร้อมใช้งาน</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-key">ได้ firebaseConfig</span> เพิ่ม Web App เพื่อรับ Config</div>
+      <ol class="steps firebase">
+        <li>ในหน้า Project Overview → กดไอคอน <strong>"&lt;/&gt;"</strong> (Web)</li>
+        <li>ตั้งชื่อ App เช่น <code style="font-family:'JetBrains Mono',monospace;">owlvy-web</code> → กด <strong>"Register app"</strong></li>
+        <li>Firebase จะแสดง <code style="font-family:'JetBrains Mono',monospace;">firebaseConfig</code> — <strong>Copy เก็บไว้ทั้งหมด</strong></li>
+        <li>กด "Continue to console"</li>
+      </ol>
+      <div class="code-block">
+        <span class="code-label">firebaseConfig (ตัวอย่าง)</span>
+        <pre><span class="c-key">const</span> firebaseConfig = {
+  apiKey:            <span class="c-str">"AIzaSyXXXXXXXXXXXXXXXXXX"</span>,
+  authDomain:        <span class="c-str">"owlvyhousedeep-bot.firebaseapp.com"</span>,
+  projectId:         <span class="c-str">"owlvyhousedeep-bot"</span>,
+  storageBucket:     <span class="c-str">"owlvyhousedeep-bot.firebasestorage.app"</span>,
+  messagingSenderId: <span class="c-str">"712345678901"</span>,
+  appId:             <span class="c-str">"1:712345678901:web:0abc1234def56789"</span>
+};</pre>
+      </div>
+      <div class="alert alert-warn">
+        <span class="alert-icon">⚠️</span>
+        <div><strong>ห้าม commit ไฟล์ที่มี apiKey ขึ้น GitHub แบบ public</strong> — ถ้า deploy บน GitHub Pages ค่าเหล่านี้จะเปิดเผยสู่สาธารณะ แต่สำหรับโปรเจกต์นี้ถือว่ารับได้เพราะ Security Rules จะป้องกันการอ่านข้อมูลโดยไม่ผ่าน Login</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ S3 ═══════════════════════════════ -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <div class="section-num num-fb">3</div>
+      <span class="section-emoji">🔐</span>
+      <h2>เปิด Google Authentication</h2>
+    </div>
+    <span class="chapter-label ch-fb">Firebase → Authentication</span>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-do">ทำตามลำดับ</span> ตั้งค่า Sign-in Method</div>
+      <ol class="steps firebase">
+        <li>Sidebar ซ้าย → กด <strong>"Authentication"</strong></li>
+        <li>กดแท็บ <strong>"Sign-in method"</strong></li>
+        <li>กดที่ <strong>"Google"</strong> ในรายการ Sign-in providers</li>
+        <li>Toggle <strong>"Enable"</strong> เปิดใช้งาน</li>
+        <li>ตั้ง <strong>Project support email</strong> เป็นอีเมลของคุณ</li>
+        <li>กด <strong>"Save"</strong></li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-note">สำคัญ</span> เพิ่ม Authorized Domain</div>
+      <ol class="steps firebase">
+        <li>ยังอยู่ในหน้า Sign-in method → เลื่อนลงหา <strong>"Authorized domains"</strong></li>
+        <li>
+          ถ้ารัน local: <code style="font-family:'JetBrains Mono',monospace;">localhost</code> มีอยู่แล้วอัตโนมัติ<br>
+          ถ้า deploy บน GitHub Pages: กด <strong>"Add domain"</strong> → ใส่ domain เช่น <code style="font-family:'JetBrains Mono',monospace;">owlvyhandout-info.github.io</code>
+        </li>
+      </ol>
+      <div class="alert alert-danger">
+        <span class="alert-icon">🚫</span>
+        <div><strong>ถ้าไม่เพิ่ม domain จะ Login ไม่ได้</strong> — Firebase จะ block popup และแสดง error "auth/unauthorized-domain"</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ S4 ═══════════════════════════════ -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <div class="section-num num-fb">4</div>
+      <span class="section-emoji">🗄️</span>
+      <h2>ตั้งค่า Firestore Database</h2>
+    </div>
+    <span class="chapter-label ch-fb">Firebase → Firestore Database</span>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-do">ทำตามลำดับ</span> สร้าง Database</div>
+      <ol class="steps firebase">
+        <li>Sidebar ซ้าย → กด <strong>"Firestore Database"</strong></li>
+        <li>กด <strong>"Create database"</strong></li>
+        <li>เลือก <strong>"Production mode"</strong> (ล็อกทุกอย่างก่อน)</li>
+        <li>เลือก Location: <strong><code style="font-family:'JetBrains Mono',monospace;">asia-southeast1</code></strong> (สิงคโปร์ — ใกล้ไทย)</li>
+        <li>กด <strong>"Done"</strong> → รอ Firestore พร้อมใช้งาน</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-key">สร้าง Document</span> เก็บ OpenRouter API Key</div>
+      <p style="font-size:13.5px; color:var(--text-2); margin-bottom:10px;">ระบบดึง Key จาก path นี้ตอน Login:</p>
+      <div class="db-path">
+        <span class="db-part">config</span>
+        <span class="db-sep">/</span>
+        <span class="db-part">openrouter</span>
+        <span class="db-sep">→ field:</span>
+        <span class="db-part">apiKey</span>
+        <span style="color:var(--text-2); font-size:12px;">= "sk-or-v1-XXXXXX"</span>
+      </div>
+      <ol class="steps firebase" style="margin-top:12px;">
+        <li>ในหน้า Firestore → กด <strong>"+ Start collection"</strong></li>
+        <li>Collection ID: <code style="font-family:'JetBrains Mono',monospace;"><strong>config</strong></code> → กด Next</li>
+        <li>Document ID: <code style="font-family:'JetBrains Mono',monospace;"><strong>openrouter</strong></code> (พิมพ์เอง)</li>
+        <li>กด <strong>"+ Add field"</strong> → Field name: <code style="font-family:'JetBrains Mono',monospace;">apiKey</code> → Type: <strong>string</strong></li>
+        <li>Value: ใส่ OpenRouter API Key ของคุณ (เริ่มด้วย <code style="font-family:'JetBrains Mono',monospace;">sk-or-v1-</code>)</li>
+        <li>กด <strong>"Save"</strong></li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-warn">ความปลอดภัย</span> ตั้ง Security Rules</div>
+      <p style="font-size:13px; color:var(--text-2); margin-bottom:10px;">Sidebar → Firestore → แท็บ <strong>"Rules"</strong> → แทนที่ด้วย:</p>
+      <div class="code-block">
+        <span class="code-label">firestore.rules</span>
+        <pre>rules_version = <span class="c-str">'2'</span>;
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    <span class="c-cmt">// collection "config" — อ่านได้เฉพาะ login แล้ว, เขียนไม่ได้จาก client</span>
+    match /config/{docId} {
+      allow read:  if request.auth != <span class="c-val">null</span>;
+      allow write: if <span class="c-val">false</span>;
+    }
+
+    <span class="c-cmt">// ทุกอย่างอื่น — ปิดทั้งหมด</span>
+    match /{document=**} {
+      allow read, write: if <span class="c-val">false</span>;
+    }
+  }
+}</pre>
+      </div>
+      <ol class="steps firebase">
+        <li>วาง Rules ด้านบนแทนที่ข้อความเดิม</li>
+        <li>กด <strong>"Publish"</strong> (สำคัญ — ถ้าไม่ Publish Rules ไม่มีผล)</li>
+      </ol>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ S5 ═══════════════════════════════ -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <div class="section-num num-or">5</div>
+      <span class="section-emoji">🤖</span>
+      <h2>ได้ OpenRouter API Key</h2>
+    </div>
+    <span class="chapter-label ch-or">OpenRouter.ai</span>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-do">ทำตามลำดับ</span> สมัครและได้ Key</div>
+      <ol class="steps green">
+        <li>ไปที่ <strong>openrouter.ai</strong> → กด <strong>"Sign In"</strong></li>
+        <li>Login ด้วย Google / Email</li>
+        <li>เมนูบน → <strong>"Keys"</strong> → กด <strong>"Create Key"</strong></li>
+        <li>ตั้งชื่อ Key เช่น <code style="font-family:'JetBrains Mono',monospace;">owlvy-bot</code> → กด <strong>"Create"</strong></li>
+        <li>Copy Key ที่ขึ้นต้นด้วย <code style="font-family:'JetBrains Mono',monospace;">sk-or-v1-XXXXXX</code> → เก็บไว้ (เห็นครั้งเดียว!)</li>
+        <li>เติมเครดิต: เมนู <strong>"Credits"</strong> → เติมขั้นต่ำ $5 ด้วยบัตรเครดิต</li>
+      </ol>
+      <div class="alert alert-ok">
+        <span class="alert-icon">✅</span>
+        <div>Key นี้นำไปใส่ใน Firestore ตามขั้นตอน 4 → ระบบจะดึงมาใช้อัตโนมัติตอน Login</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ S6 ═══════════════════════════════ -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <div class="section-num num-or">6</div>
+      <span class="section-emoji">🔑</span>
+      <h2>ตรวจสอบ — Key ถูกดึงอัตโนมัติ</h2>
+    </div>
+    <span class="chapter-label ch-or">โค้ดใน HTML</span>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-code">โค้ดอ้างอิง</span> การดึง Key จาก Firestore (มีในไฟล์แล้ว)</div>
+      <p style="font-size:13px; color:var(--text-2); margin-bottom:8px;">ส่วนนี้ทำงานอัตโนมัติหลัง Login — ไม่ต้องแก้ไข แค่ให้เข้าใจ:</p>
+      <div class="code-block">
+        <span class="code-label">firebase script (มีอยู่แล้วในไฟล์)</span>
+        <pre><span class="c-fn">onAuthStateChanged</span>(auth, <span class="c-key">async</span> (user) => {
+  <span class="c-key">if</span> (user) {
+    <span class="c-cmt">// ดึง API Key จาก Firestore path: config/openrouter</span>
+    <span class="c-key">const</span> snap = <span class="c-key">await</span> <span class="c-fn">getDoc</span>(<span class="c-fn">doc</span>(db, <span class="c-str">'config'</span>, <span class="c-str">'openrouter'</span>));
+    <span class="c-key">if</span> (snap.<span class="c-fn">exists</span>()) {
+      window.OPENROUTER_API_KEY = snap.<span class="c-fn">data</span>().apiKey;
+    } <span class="c-key">else</span> {
+      <span class="c-fn">showError</span>(<span class="c-str">'ไม่พบ API Key ใน Firestore'</span>);
+    }
+  }
+});</pre>
+      </div>
+      <div class="alert alert-info">
+        <span class="alert-icon">ℹ️</span>
+        <div>ถ้า Document หรือ Field ชื่อผิด (เช่น <code style="font-family:'JetBrains Mono',monospace;">Config</code> ตัวใหญ่ หรือ <code style="font-family:'JetBrains Mono',monospace;">api_key</code>) จะ error "ไม่พบ API Key" — ต้องตรงกันทุกตัวอักษร</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ S7 ═══════════════════════════════ -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <div class="section-num num-code">7</div>
+      <span class="section-emoji">✏️</span>
+      <h2>ใส่ Firebase Config ใน HTML</h2>
+    </div>
+    <span class="chapter-label ch-code">แก้ไขไฟล์ HTML</span>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-do">แก้ไขไฟล์</span> เปิดไฟล์ HTML แล้วหา Firebase script</div>
+      <ol class="steps">
+        <li>เปิดไฟล์ <code style="font-family:'JetBrains Mono',monospace;">owlvyhouse_deep_bot.html</code> ด้วย Text Editor (VS Code แนะนำ)</li>
+        <li>กด <strong>Ctrl+F</strong> ค้นหา <code style="font-family:'JetBrains Mono',monospace;">AIxxxxxxxxxxxx</code> หรือ <code style="font-family:'JetBrains Mono',monospace;">firebaseConfig</code></li>
+        <li>แทนที่ค่า placeholder ทั้งหมดด้วยค่าจริงที่ได้จาก Firebase Console</li>
+      </ol>
+      <div class="code-block">
+        <span class="code-label">แก้ตรงนี้ในไฟล์ HTML (บรรทัดประมาณ 267–273)</span>
+        <pre><span class="c-cmt">// 🔧 แทนที่ด้วยค่าจาก Firebase Console → Project Settings → Your apps</span>
+<span class="c-key">const</span> firebaseConfig = {
+  apiKey:            <span class="c-str">"AIzaSy<span style="color:#FF6B6B;">แทนที่ด้วยค่าจริง</span>"</span>,
+  authDomain:        <span class="c-str">"<span style="color:#FF6B6B;">your-project-id</span>.firebaseapp.com"</span>,
+  projectId:         <span class="c-str">"<span style="color:#FF6B6B;">your-project-id</span>"</span>,
+  storageBucket:     <span class="c-str">"<span style="color:#FF6B6B;">your-project-id</span>.firebasestorage.app"</span>,
+  messagingSenderId: <span class="c-str">"<span style="color:#FF6B6B;">ตัวเลข 12 หลัก</span>"</span>,
+  appId:             <span class="c-str">"1:<span style="color:#FF6B6B;">messagingSenderId</span>:web:<span style="color:#FF6B6B;">ตัวเลขและตัวอักษร</span>"</span>
+};</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-note">ทดสอบ local</span> รัน HTML บนเครื่อง</div>
+      <ol class="steps">
+        <li>ถ้าใช้ VS Code → ติดตั้ง Extension <strong>"Live Server"</strong></li>
+        <li>คลิกขวาที่ไฟล์ → <strong>"Open with Live Server"</strong></li>
+        <li>Browser จะเปิด <code style="font-family:'JetBrains Mono',monospace;">http://127.0.0.1:5500/...</code> → ทดสอบ Login ได้เลย</li>
+      </ol>
+      <div class="alert alert-warn">
+        <span class="alert-icon">⚠️</span>
+        <div>ห้ามเปิดไฟล์ด้วย <code style="font-family:'JetBrains Mono',monospace;">file://</code> ตรง ๆ (ดับเบิ้ลคลิก) — Firebase Auth ไม่รองรับ protocol นี้ ต้องเปิดผ่าน <code style="font-family:'JetBrains Mono',monospace;">http://localhost</code></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ S8 ═══════════════════════════════ -->
+  <div class="section" id="s8">
+    <div class="section-header">
+      <div class="section-num num-code">8</div>
+      <span class="section-emoji">🔄</span>
+      <h2>AI Fallback System และ Free Models</h2>
+    </div>
+    <span class="chapter-label ch-code">โค้ด generateQuestions()</span>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-fallback">Fallback Logic</span> ระบบลองไป AI ถัดไปอัตโนมัติ</div>
+      <p style="font-size:13.5px; color:var(--text-2); margin-bottom:10px;">เมื่อกด "สร้างคำถาม" ระบบจะลอง AI ตาม MODELS array ตามลำดับ — ถ้าตัวไหน error จะข้ามไปตัวถัดไปทันที:</p>
+      <div class="code-block">
+        <span class="code-label">generateQuestions() — Fallback loop</span>
+        <pre><span class="c-key">const</span> MODELS = [
+  <span class="c-str">"google/gemini-flash-1.5"</span>,        <span class="c-cmt">← ลองตัวนี้ก่อน (เร็ว + ถูก)</span>
+  <span class="c-str">"deepseek/deepseek-chat"</span>,          <span class="c-cmt">← Fallback 2</span>
+  <span class="c-str">"anthropic/claude-3-haiku"</span>,       <span class="c-cmt">← Fallback 3</span>
+  <span class="c-str">"meta-llama/llama-3.3-70b-versatile"</span>, <span class="c-cmt">← Fallback 4</span>
+  <span class="c-str">"anthropic/claude-3.5-sonnet"</span>    <span class="c-cmt">← Fallback สุดท้าย (แพงสุด)</span>
+];
+
+<span class="c-key">for</span> (<span class="c-key">let</span> i = 0; i < MODELS.length; i++) {
+  <span class="c-key">try</span> {
+    res = <span class="c-key">await</span> <span class="c-fn">callOpenRouter</span>(prompt, MODELS[i]);
+    usedModel = MODELS[i];
+    <span class="c-key">break</span>;              <span class="c-cmt">← สำเร็จ → หยุด loop</span>
+  } <span class="c-key">catch</span> (e) {
+    <span class="c-key">if</span> (i === MODELS.length - 1) {
+      <span class="c-fn">showError</span>(<span class="c-str">'ไม่สามารถเชื่อมต่อ AI ได้'</span>);
+    }
+    <span class="c-cmt">// ถ้าไม่ใช่ตัวสุดท้าย → วน loop ต่อไปตัวถัดไป</span>
+  }
+}</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-note">เครดิตหมด</span> เพิ่ม Free Models รับมือเครดิต OpenRouter หมด</div>
+      <p style="font-size:13px; color:var(--text-2); margin-bottom:10px;">OpenRouter มี model บางตัวที่ใช้ฟรีได้ (ต่อท้าย <code style="font-family:'JetBrains Mono',monospace;">:free</code>) เพิ่มเข้าไปใน MODELS เพื่อให้ fallback ได้แม้เครดิตหมด:</p>
+      <div class="code-block">
+        <span class="code-label">แก้ไข MODELS array ในไฟล์ HTML (ประมาณบรรทัด 293)</span>
+        <pre><span class="c-key">const</span> MODELS = [
+  <span class="c-cmt">// === เสียเงิน (ลองก่อน) ===</span>
+  <span class="c-str">"google/gemini-flash-1.5"</span>,
+  <span class="c-str">"deepseek/deepseek-chat"</span>,
+  <span class="c-str">"anthropic/claude-3-haiku"</span>,
+  <span class="c-str">"meta-llama/llama-3.3-70b-versatile"</span>,
+  <span class="c-str">"anthropic/claude-3.5-sonnet"</span>,
+  <span class="c-cmt">// === ฟรี — fallback เมื่อเครดิตหมด ===</span>
+  <span class="c-str">"google/gemini-2.0-flash-exp:free"</span>,
+  <span class="c-str">"deepseek/deepseek-chat:free"</span>,
+  <span class="c-str">"meta-llama/llama-3.3-70b-instruct:free"</span>,
+  <span class="c-str">"mistralai/mistral-7b-instruct:free"</span>
+];</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ตารางสรุป AI Models ในระบบ</div>
+      <table class="model-table">
+        <tr>
+          <th>ลำดับ</th>
+          <th>Model</th>
+          <th>ค่าใช้จ่าย</th>
+          <th>ความเร็ว</th>
+          <th>เหมาะสำหรับ</th>
+        </tr>
+        <tr>
+          <td><div class="model-order">1</div></td>
+          <td><div class="model-name">gemini-flash-1.5</div></td>
+          <td><span class="model-badge mb-paid">เสียเงิน</span></td>
+          <td><span class="model-badge mb-fast">เร็วมาก</span></td>
+          <td style="font-size:12px; color:var(--text-2);">ใช้งานประจำ ราคาถูก</td>
+        </tr>
+        <tr>
+          <td><div class="model-order">2</div></td>
+          <td><div class="model-name">deepseek-chat</div></td>
+          <td><span class="model-badge mb-paid">เสียเงิน</span></td>
+          <td><span class="model-badge mb-fast">เร็ว</span></td>
+          <td style="font-size:12px; color:var(--text-2);">ภาษาไทยดี ราคาถูกมาก</td>
+        </tr>
+        <tr>
+          <td><div class="model-order">3</div></td>
+          <td><div class="model-name">claude-3-haiku</div></td>
+          <td><span class="model-badge mb-paid">เสียเงิน</span></td>
+          <td><span class="model-badge mb-fast">เร็ว</span></td>
+          <td style="font-size:12px; color:var(--text-2);">ความแม่นยำสูง</td>
+        </tr>
+        <tr>
+          <td><div class="model-order">4</div></td>
+          <td><div class="model-name">llama-3.3-70b</div></td>
+          <td><span class="model-badge mb-paid">เสียเงิน</span></td>
+          <td><span class="model-badge mb-fallback">ปานกลาง</span></td>
+          <td style="font-size:12px; color:var(--text-2);">Open source ดี</td>
+        </tr>
+        <tr>
+          <td><div class="model-order">5</div></td>
+          <td><div class="model-name">claude-3.5-sonnet</div></td>
+          <td><span class="model-badge mb-paid">เสียเงิน</span></td>
+          <td><span class="model-badge mb-fallback">ช้ากว่า</span></td>
+          <td style="font-size:12px; color:var(--text-2);">คุณภาพสูงสุด</td>
+        </tr>
+        <tr style="background:#F0FDF4;">
+          <td><div class="model-order" style="background:var(--openrouter);">6</div></td>
+          <td><div class="model-name">gemini-2.0-flash:free</div></td>
+          <td><span class="model-badge mb-free">ฟรี</span></td>
+          <td><span class="model-badge mb-fast">เร็ว</span></td>
+          <td style="font-size:12px; color:var(--text-2);">Fallback เมื่อเครดิตหมด</td>
+        </tr>
+        <tr style="background:#F0FDF4;">
+          <td><div class="model-order" style="background:var(--openrouter);">7</div></td>
+          <td><div class="model-name">deepseek-chat:free</div></td>
+          <td><span class="model-badge mb-free">ฟรี</span></td>
+          <td><span class="model-badge mb-fallback">ปานกลาง</span></td>
+          <td style="font-size:12px; color:var(--text-2);">Fallback เมื่อเครดิตหมด</td>
+        </tr>
+        <tr style="background:#F0FDF4;">
+          <td><div class="model-order" style="background:var(--openrouter);">8</div></td>
+          <td><div class="model-name">llama-3.3-70b:free</div></td>
+          <td><span class="model-badge mb-free">ฟรี</span></td>
+          <td><span class="model-badge mb-fallback">ปานกลาง</span></td>
+          <td style="font-size:12px; color:var(--text-2);">Fallback เมื่อเครดิตหมด</td>
+        </tr>
+      </table>
+      <div class="alert alert-warn" style="margin-top:10px;">
+        <span class="alert-icon">⚠️</span>
+        <div><strong>Free models มี rate limit</strong> — อาจช้าหรือ error ในชั่วโมงที่คนใช้เยอะ แต่ดีกว่าระบบหยุดทำงานทั้งหมดเมื่อเครดิตหมด</div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <h4>📝 วิธีตรวจสอบว่า Model ไหนฟรีบน OpenRouter</h4>
+      <ul class="checklist">
+        <li><span class="check-icon">1️⃣</span> ไปที่ <strong>openrouter.ai/models</strong></li>
+        <li><span class="check-icon">2️⃣</span> กรอง Filter → เลือก <strong>"Free"</strong></li>
+        <li><span class="check-icon">3️⃣</span> ดู Model ID → copy มาใส่ใน MODELS array พร้อม <code style="font-family:'JetBrains Mono',monospace;">:free</code> ต่อท้าย</li>
+        <li><span class="check-icon">4️⃣</span> ทดสอบว่ารองรับ <code style="font-family:'JetBrains Mono',monospace;">response_format: json_object</code> ด้วย</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ═══════════════════════════════ S9 ═══════════════════════════════ -->
+  <div class="section" id="s9">
+    <div class="section-header">
+      <div class="section-num num-test">9</div>
+      <span class="section-emoji">🧪</span>
+      <h2>ทดสอบระบบ — Checklist</h2>
+    </div>
+    <span class="chapter-label ch-test">ก่อน Deploy จริง</span>
+
+    <div class="card">
+      <div class="card-title">✅ Checklist ตรวจสอบทุกจุด</div>
+      <ul class="checklist">
+        <li><span class="check-icon">🔥</span> Firebase Project สร้างแล้ว และ ได้ firebaseConfig</li>
+        <li><span class="check-icon">🔐</span> Google Authentication เปิดใช้งานแล้ว + เพิ่ม Authorized Domain แล้ว</li>
+        <li><span class="check-icon">🗄️</span> Firestore สร้างแล้ว + มี Document <code style="font-family:'JetBrains Mono',monospace;">config/openrouter</code> พร้อม field <code style="font-family:'JetBrains Mono',monospace;">apiKey</code></li>
+        <li><span class="check-icon">🔒</span> Security Rules ตั้งแล้วและกด <strong>Publish</strong> แล้ว</li>
+        <li><span class="check-icon">✏️</span> ใส่ firebaseConfig จริงลงในไฟล์ HTML แล้ว</li>
+        <li><span class="check-icon">🤖</span> OpenRouter API Key ใส่ใน Firestore แล้ว</li>
+        <li><span class="check-icon">🔄</span> เพิ่ม Free Models ใน MODELS array แล้ว (ถ้าต้องการ)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🐛 ปัญหาที่พบบ่อยและวิธีแก้</div>
+      <table class="model-table">
+        <tr>
+          <th>Error / อาการ</th>
+          <th>สาเหตุ</th>
+          <th>วิธีแก้</th>
+        </tr>
+        <tr>
+          <td style="font-size:12px; font-family:'JetBrains Mono',monospace; color:#991B1B;">auth/unauthorized-domain</td>
+          <td style="font-size:12px; color:var(--text-2);">Domain ไม่อยู่ใน Authorized list</td>
+          <td style="font-size:12px;">Firebase Auth → Sign-in method → เพิ่ม domain</td>
+        </tr>
+        <tr>
+          <td style="font-size:12px; font-family:'JetBrains Mono',monospace; color:#991B1B;">ไม่พบ API Key ใน Firestore</td>
+          <td style="font-size:12px; color:var(--text-2);">ชื่อ Collection/Document/Field ผิด</td>
+          <td style="font-size:12px;">ตรวจสอบว่าเป็น <code style="font-family:'JetBrains Mono',monospace;">config/openrouter/apiKey</code> ตรงทุกตัวอักษร</td>
+        </tr>
+        <tr>
+          <td style="font-size:12px; font-family:'JetBrains Mono',monospace; color:#991B1B;">Permission denied</td>
+          <td style="font-size:12px; color:var(--text-2);">Security Rules ไม่ได้ Publish</td>
+          <td style="font-size:12px;">Firestore → Rules → กด Publish</td>
+        </tr>
+        <tr>
+          <td style="font-size:12px; font-family:'JetBrains Mono',monospace; color:#991B1B;">ไม่สามารถเชื่อมต่อ AI</td>
+          <td style="font-size:12px; color:var(--text-2);">OpenRouter Key หมด / ผิด</td>
+          <td style="font-size:12px;">เติมเครดิต หรือเพิ่ม free models ใน MODELS</td>
+        </tr>
+        <tr>
+          <td style="font-size:12px; font-family:'JetBrains Mono',monospace; color:#991B1B;">Popup ถูก block</td>
+          <td style="font-size:12px; color:var(--text-2);">Browser block popup</td>
+          <td style="font-size:12px;">อนุญาต popup สำหรับ domain นี้ใน Browser</td>
+        </tr>
+        <tr>
+          <td style="font-size:12px; color:#7C2D12;">Login ด้วย file:// ไม่ได้</td>
+          <td style="font-size:12px; color:var(--text-2);">Firebase ไม่รองรับ file protocol</td>
+          <td style="font-size:12px;">ใช้ Live Server หรือ deploy บน hosting</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- QUICK REF -->
+  <div class="card" style="background:linear-gradient(135deg,#1A1D2E,#2D1B69); color:#fff;">
+    <div class="card-title" style="color:#fff;">⚡ Quick Reference — ค่าที่ต้องแก้ในไฟล์ HTML</div>
+    <div class="code-block" style="margin-top:8px; background:#0D0F1A;">
+      <pre><span class="c-cmt">// ═══ บรรทัดที่ต้องแก้ทั้งหมด ═══</span>
+
+<span class="c-cmt">// 1) firebaseConfig (~บรรทัด 267–273)</span>
+apiKey:            <span class="c-str">"← จาก Firebase Console"</span>
+authDomain:        <span class="c-str">"← project-id.firebaseapp.com"</span>
+projectId:         <span class="c-str">"← project-id"</span>
+storageBucket:     <span class="c-str">"← project-id.firebasestorage.app"</span>
+messagingSenderId: <span class="c-str">"← ตัวเลข"</span>
+appId:             <span class="c-str">"← 1:xxx:web:xxx"</span>
+
+<span class="c-cmt">// 2) MODELS array (~บรรทัด 293) — เพิ่ม :free models ต่อท้าย</span>
+<span class="c-key">const</span> MODELS = [
+  <span class="c-str">"google/gemini-flash-1.5"</span>,
+  <span class="c-str">"deepseek/deepseek-chat"</span>,
+  <span class="c-str">"anthropic/claude-3-haiku"</span>,
+  <span class="c-str">"meta-llama/llama-3.3-70b-versatile"</span>,
+  <span class="c-str">"anthropic/claude-3.5-sonnet"</span>,
+  <span class="c-str">"google/gemini-2.0-flash-exp:free"</span>,  <span class="c-cmt">← เพิ่มใหม่</span>
+  <span class="c-str">"deepseek/deepseek-chat:free"</span>,        <span class="c-cmt">← เพิ่มใหม่</span>
+];</pre>
+    </div>
+    <div style="margin-top:12px; font-size:13px; color:rgba(255,255,255,0.65);">
+      💡 OpenRouter API Key — ไม่ใส่ในไฟล์ HTML โดยตรง ใส่ใน Firestore path: <code style="font-family:'JetBrains Mono',monospace; color:#43E97B;">config / openrouter / apiKey</code>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  🦉 OwlvyHouseDeep Bot — Installation Guide &nbsp;·&nbsp; สร้างด้วย Firebase v10 + OpenRouter API<br>
+  <span style="opacity:0.6;">มีข้อสงสัยเพิ่มเติม? ถามใน Chat ได้เลย</span>
+</div>
+
+</body>
+</html>
