@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>การตั้งค่าความละเอียดภาพสำหรับ Google Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Prompt:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #161922;
+    --surface2: #1e2330;
+    --accent: #4fc3f7;
+    --accent2: #81c784;
+    --accent3: #ffb74d;
+    --accent4: #f48fb1;
+    --text: #e8eaf0;
+    --text-muted: #7c8499;
+    --border: rgba(79, 195, 247, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 16px;
+    line-height: 1.8;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(79,195,247,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,195,247,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glowing orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; right: -100px; }
+  .orb-2 { width: 400px; height: 400px; background: var(--accent2); bottom: 100px; left: -100px; }
+  .orb-3 { width: 300px; height: 300px; background: var(--accent3); top: 50%; left: 40%; }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 72px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: 'Prompt', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(79,195,247,0.1);
+    border: 1px solid rgba(79,195,247,0.25);
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+
+  h1 {
+    font-family: 'Prompt', sans-serif;
+    font-size: clamp(26px, 5vw, 40px);
+    font-weight: 700;
+    line-height: 1.3;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 15px;
+    max-width: 520px;
+    margin: 0 auto;
+    font-weight: 300;
+  }
+
+  /* Section heading */
+  .section-label {
+    font-family: 'Prompt', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    padding-left: 4px;
+  }
+
+  /* Cards grid */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+
+  @media (max-width: 600px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(79,195,247,0.35);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(79,195,247,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .card-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .card-title {
+    font-family: 'Prompt', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+
+  .card-body {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .resolution-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(79,195,247,0.1);
+    border: 1px solid rgba(79,195,247,0.2);
+    color: var(--accent);
+    font-family: 'Prompt', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 6px;
+    margin: 4px 4px 0 0;
+    white-space: nowrap;
+  }
+
+  .badges-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 14px;
+  }
+
+  /* Tips section */
+  .tips-grid {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .tip-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 20px;
+    align-items: start;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .tip-card:hover {
+    transform: translateX(4px);
+    border-color: rgba(79,195,247,0.3);
+  }
+
+  .tip-number {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Prompt', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .tip-1 .tip-number { background: rgba(79,195,247,0.15); color: var(--accent); }
+  .tip-2 .tip-number { background: rgba(129,199,132,0.15); color: var(--accent2); }
+  .tip-3 .tip-number { background: rgba(255,183,77,0.15); color: var(--accent3); }
+  .tip-4 .tip-number { background: rgba(244,143,177,0.15); color: var(--accent4); }
+
+  .tip-title {
+    font-family: 'Prompt', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .tip-body {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  /* File format table */
+  .format-table {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin: 16px 0;
+  }
+
+  .format-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .format-row:last-child { border-bottom: none; }
+
+  .format-name {
+    padding: 14px 18px;
+    font-family: 'Prompt', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid var(--border);
+  }
+
+  .format-png .format-name { color: var(--accent); background: rgba(79,195,247,0.05); }
+  .format-jpg .format-name { color: var(--accent3); background: rgba(255,183,77,0.05); }
+
+  .format-desc {
+    padding: 14px 18px;
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  /* Size indicator */
+  .size-bar-wrap {
+    margin-top: 12px;
+  }
+
+  .size-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .size-bar {
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .size-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  /* Tools chips */
+  .tools-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .tool-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .tool-chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Summary box */
+  .summary-box {
+    background: linear-gradient(135deg, rgba(79,195,247,0.08) 0%, rgba(129,199,132,0.05) 100%);
+    border: 1px solid rgba(79,195,247,0.2);
+    border-radius: 16px;
+    padding: 32px;
+    margin-top: 12px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .summary-box h3 {
+    font-family: 'Prompt', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .summary-list {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+
+  .summary-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .summary-list li span.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding-top: 48px;
+    color: var(--text-muted);
+    font-size: 13px;
+    opacity: 0.5;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card:nth-child(1) { animation-delay: 0.1s; }
+  .card:nth-child(2) { animation-delay: 0.2s; }
+  .tip-card:nth-child(1) { animation-delay: 0.1s; }
+  .tip-card:nth-child(2) { animation-delay: 0.2s; }
+  .tip-card:nth-child(3) { animation-delay: 0.3s; }
+  .tip-card:nth-child(4) { animation-delay: 0.4s; }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 48px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <div class="tag">📋 คู่มือสำหรับครูและผู้ออกแบบฟอร์ม</div>
+    <h1>การตั้งค่าความละเอียดภาพ<br>สำหรับ Google Form</h1>
+    <p class="subtitle">จุดสมดุลระหว่างความคมชัดและขนาดไฟล์ เพื่อให้โหลดได้รวดเร็วบนทุกอุปกรณ์ รองรับภาษาไทยอย่างสมบูรณ์</p>
+  </header>
+
+  <!-- Resolution Cards -->
+  <p class="section-label">📐 ความละเอียดที่แนะนำ</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <span class="card-icon">🖼️</span>
+      <div class="card-title">ภาพแนวนอน (Landscape)</div>
+      <div class="card-body">
+        ความกว้าง 1080px เป็นมาตรฐานที่ให้ความคมชัดเพียงพอสำหรับหน้าจอมือถือและแท็บเล็ต ตัวอักษรไทยจะไม่แตก สระและวรรณยุกต์อ่านได้ชัดเจน
+      </div>
+      <div class="badges-row">
+        <span class="resolution-badge">1080 × 608 px</span>
+        <span class="resolution-badge">อัตราส่วน 16:9</span>
+      </div>
+      <div class="badges-row">
+        <span class="resolution-badge">1080 × 810 px</span>
+        <span class="resolution-badge">อัตราส่วน 4:3</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="card-icon">📱</span>
+      <div class="card-title">ภาพแนวตั้ง (Portrait)</div>
+      <div class="card-body">
+        ใช้ความกว้าง 720–800px เพื่อควบคุมขนาดไฟล์ Google Form จำกัดความกว้างภาพอยู่แล้ว ผู้ตอบฟอร์มไม่ต้องเลื่อนหน้าจอยาวเกินไป
+      </div>
+      <div class="badges-row">
+        <span class="resolution-badge">720 × 1280 px</span>
+        <span class="resolution-badge">อัตราส่วน 9:16</span>
+      </div>
+      <div class="badges-row">
+        <span class="resolution-badge">สูงสุด 800 × 1200 px</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Tips -->
+  <p class="section-label">💡 เทคนิคเพิ่มเติม</p>
+
+  <div class="tips-grid">
+
+    <!-- Tip 1 -->
+    <div class="tip-card tip-1">
+      <div class="tip-number">1</div>
+      <div>
+        <div class="tip-title">ขนาดไฟล์เป้าหมาย (File Size)</div>
+        <div class="tip-body">
+          ควบคุมขนาดไฟล์ให้อยู่ระหว่าง <strong style="color: var(--accent);">100 KB – 300 KB</strong> ต่อภาพ โดยเฉพาะฟอร์มที่มีหลายภาพ เช่น ชุดคำถามหรือแบบทดสอบ จะช่วยลดปัญหาฟอร์มโหลดช้าหรือโหลดไม่ขึ้นเมื่ออินเทอร์เน็ตไม่เสถียร
+        </div>
+        <div class="size-bar-wrap">
+          <div class="size-bar-label"><span>0 KB</span><span>100–300 KB ✓</span><span>1 MB</span></div>
+          <div class="size-bar"><div class="size-bar-fill" style="width: 30%;"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tip 2 -->
+    <div class="tip-card tip-2">
+      <div class="tip-number">2</div>
+      <div>
+        <div class="tip-title">นามสกุลไฟล์ที่เหมาะสม</div>
+        <div class="tip-body">เลือกนามสกุลไฟล์ให้เหมาะกับประเภทของภาพ</div>
+        <div class="format-table" style="margin-top: 14px;">
+          <div class="format-row format-png">
+            <div class="format-name">PNG</div>
+            <div class="format-desc">เหมาะกับภาพกราฟิก สีเรียบ มีตัวอักษรเยอะ ขอบตัวอักษรคมชัดที่สุด แต่ระวังขนาดไฟล์อาจใหญ่</div>
+          </div>
+          <div class="format-row format-jpg">
+            <div class="format-name">JPG</div>
+            <div class="format-desc">เหมาะกับภาพถ่ายหรือ 3D ที่มีรายละเอียดสีเยอะ ตั้งค่า Quality ที่ <strong style="color: var(--accent3);">70–80%</strong> ได้ไฟล์เล็กและยังคมชัด</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tip 3 -->
+    <div class="tip-card tip-3">
+      <div class="tip-number">3</div>
+      <div>
+        <div class="tip-title">การบีบอัดไฟล์ (Compression)</div>
+        <div class="tip-body">
+          ก่อนอัปโหลดขึ้น Google Form ให้นำภาพไปผ่านเครื่องมือบีบอัด ช่วยลดขนาดไฟล์ได้ <strong style="color: var(--accent3);">50–70%</strong> โดยที่ตาเปล่าแทบมองไม่เห็นความแตกต่างของตัวอักษร
+        </div>
+        <div class="tools-row">
+          <a href="https://tinypng.com" target="_blank" class="tool-chip">🐼 TinyPNG</a>
+          <a href="https://squoosh.app" target="_blank" class="tool-chip">🔧 Squoosh.app</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tip 4 -->
+    <div class="tip-card tip-4">
+      <div class="tip-number">4</div>
+      <div>
+        <div class="tip-title">การออกแบบกราฟิก (Design Tips)</div>
+        <div class="tip-body">
+          ผู้ใช้ส่วนใหญ่เปิดฟอร์มผ่านมือถือ ควรออกแบบให้เหมาะสม
+        </div>
+        <div style="margin-top: 12px; display: grid; gap: 8px;">
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <span style="color: var(--accent4); font-size:18px; flex-shrink:0;">Aa</span>
+            <span style="font-size:13px; color: var(--text-muted);">ตั้งขนาดฟอนต์ให้ใหญ่กว่าปกติเล็กน้อย เนื่องจากหน้าจอมือถือมีพื้นที่จำกัด</span>
+          </div>
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <span style="font-size:18px; flex-shrink:0;">🎨</span>
+            <span style="font-size:13px; color: var(--text-muted);">ใช้ความเปรียบต่าง (Contrast) สูง เช่น ตัวอักษรเข้มบนพื้นอ่อน หรือสีอ่อนบนพื้นเข้ม ช่วยให้อ่านง่ายโดยไม่ต้องพึ่งพาความละเอียดสูง</span>
+          </div>
+        </div>
+
+        <!-- Contrast demo -->
+        <div style="display:flex; gap:10px; margin-top:14px;">
+          <div style="flex:1; background:#fff; color:#1a1a1a; padding:10px 14px; border-radius:8px; font-size:13px; font-weight:600; text-align:center;">ตัวอย่างสีเข้ม<br>บนพื้นอ่อน ✓</div>
+          <div style="flex:1; background:#1a1a2e; color:#e0e0ff; padding:10px 14px; border-radius:8px; font-size:13px; font-weight:600; text-align:center; border:1px solid rgba(255,255,255,0.1);">ตัวอย่างสีอ่อน<br>บนพื้นเข้ม ✓</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Summary -->
+  <p class="section-label">✅ สรุปสั้น ๆ</p>
+  <div class="summary-box">
+    <h3>Checklist ก่อนอัปโหลดภาพขึ้น Google Form</h3>
+    <ul class="summary-list">
+      <li><span class="dot"></span><span>ภาพแนวนอน: ความกว้าง <strong style="color:var(--text);">1080px</strong> (16:9 หรือ 4:3)</span></li>
+      <li><span class="dot"></span><span>ภาพแนวตั้ง: ความกว้าง <strong style="color:var(--text);">720–800px</strong> (9:16)</span></li>
+      <li><span class="dot"></span><span>ขนาดไฟล์ควรอยู่ระหว่าง <strong style="color:var(--text);">100–300 KB</strong> ต่อภาพ</span></li>
+      <li><span class="dot"></span><span>ภาพกราฟิก/ตัวหนังสือ → ใช้ <strong style="color:var(--text);">PNG</strong> | ภาพถ่าย → ใช้ <strong style="color:var(--text);">JPG (70–80%)</strong></span></li>
+      <li><span class="dot"></span><span>บีบอัดผ่าน <strong style="color:var(--text);">TinyPNG</strong> หรือ <strong style="color:var(--text);">Squoosh.app</strong> ก่อนอัปโหลดทุกครั้ง</span></li>
+      <li><span class="dot"></span><span>ฟอนต์ใหญ่พอ + Contrast สูง = อ่านง่ายบนมือถือโดยไม่ต้องพึ่งความละเอียดสูง</span></li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  <p>คู่มือการตั้งค่าภาพสำหรับ Google Form · ออกแบบสำหรับครูและผู้ปกครอง</p>
+</footer>
+
+</body>
+</html>
