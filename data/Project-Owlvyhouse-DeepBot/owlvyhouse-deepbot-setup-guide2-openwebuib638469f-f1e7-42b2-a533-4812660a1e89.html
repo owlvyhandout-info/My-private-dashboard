@@ -1,0 +1,1156 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OwlvyHouseDeep_Bot — คู่มือการสร้างระบบ</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #6C63FF;
+  --primary-light: #8B85FF;
+  --secondary: #FF6584;
+  --accent: #43E97B;
+  --warning: #FF9F43;
+  --danger: #FF6B6B;
+  --dark: #1A1D27;
+  --darker: #13151F;
+  --card: #1E2130;
+  --card2: #252840;
+  --border: #2D3561;
+  --text: #E2E8F0;
+  --text-muted: #8892B0;
+  --text-dim: #606880;
+  --step1: #FF6B6B;
+  --step2: #FF9F43;
+  --step3: #FECA57;
+  --step4: #54A0FF;
+  --step5: #5F27CD;
+  --step6: #43E97B;
+  --step7: #FF6584;
+  --step8: #6C63FF;
+  --step9: #00D2D3;
+}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Sarabun',sans-serif;
+  background:var(--dark);
+  color:var(--text);
+  line-height:1.7;
+  overflow-x:hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--darker); }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--primary); }
+
+/* ── HERO ── */
+.hero {
+  background:linear-gradient(135deg,#0F0C29,#302B63,#24243E);
+  padding:60px 24px 80px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before {
+  content:'';
+  position:absolute;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(108,99,255,0.15),transparent 70%);
+  top:-200px;left:50%;transform:translateX(-50%);
+  border-radius:50%;
+}
+.hero-owl {
+  font-size:80px;
+  display:block;
+  margin-bottom:16px;
+  animation:float 4s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
+}
+.hero-title {
+  font-family:'Prompt',sans-serif;
+  font-size:36px;
+  font-weight:700;
+  background:linear-gradient(135deg,#fff,#8B85FF);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:8px;
+}
+.hero-sub {
+  font-size:16px;
+  color:var(--text-muted);
+  margin-bottom:24px;
+}
+.hero-badges {
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.badge {
+  padding:5px 16px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+  border:1px solid;
+}
+.badge-purple { background:rgba(108,99,255,0.15);border-color:rgba(108,99,255,0.4);color:#8B85FF; }
+.badge-green  { background:rgba(67,233,123,0.15);border-color:rgba(67,233,123,0.4);color:#43E97B; }
+.badge-orange { background:rgba(255,159,67,0.15);border-color:rgba(255,159,67,0.4);color:#FF9F43; }
+.badge-pink   { background:rgba(255,101,132,0.15);border-color:rgba(255,101,132,0.4);color:#FF6584; }
+
+/* ── CONTAINER ── */
+.container { max-width:960px; margin:0 auto; padding:0 24px; }
+
+/* ── SECTION ── */
+.section { padding:48px 0; }
+.section-title {
+  font-family:'Prompt',sans-serif;
+  font-size:22px;
+  font-weight:700;
+  color:#fff;
+  margin-bottom:24px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.section-title::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg,var(--border),transparent);
+}
+
+/* ── OVERVIEW GRID ── */
+.overview-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-bottom:40px;
+}
+.overview-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px;
+  text-align:center;
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.overview-card:hover {
+  transform:translateY(-4px);
+  box-shadow:0 8px 30px rgba(108,99,255,0.2);
+}
+.overview-num {
+  font-family:'Prompt',sans-serif;
+  font-size:40px;
+  font-weight:700;
+  color:var(--primary-light);
+  line-height:1;
+  margin-bottom:6px;
+}
+.overview-label { font-size:13px; color:var(--text-muted); }
+
+/* ── TIMELINE ── */
+.timeline { position:relative; padding-left:40px; }
+.timeline::before {
+  content:'';
+  position:absolute;
+  left:16px;top:0;bottom:0;
+  width:2px;
+  background:linear-gradient(180deg,var(--primary),var(--secondary),var(--accent));
+  opacity:0.4;
+}
+
+/* ── STEP CARD ── */
+.step {
+  position:relative;
+  margin-bottom:32px;
+}
+.step-dot {
+  position:absolute;
+  left:-32px;
+  top:20px;
+  width:32px;height:32px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'Prompt',sans-serif;
+  font-size:13px;
+  font-weight:700;
+  color:#fff;
+  border:2px solid var(--darker);
+  z-index:1;
+}
+.step-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  transition:box-shadow 0.2s;
+}
+.step-card:hover { box-shadow:0 4px 24px rgba(0,0,0,0.3); }
+.step-header {
+  padding:16px 20px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  cursor:pointer;
+  user-select:none;
+}
+.step-icon { font-size:24px; flex-shrink:0; }
+.step-info { flex:1; }
+.step-title {
+  font-family:'Prompt',sans-serif;
+  font-size:16px;
+  font-weight:600;
+  color:#fff;
+  margin-bottom:2px;
+}
+.step-desc { font-size:12px; color:var(--text-muted); }
+.step-time {
+  padding:4px 12px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:600;
+  background:rgba(255,255,255,0.08);
+  color:var(--text-muted);
+  white-space:nowrap;
+}
+.step-body {
+  padding:0 20px 20px;
+  border-top:1px solid var(--border);
+}
+
+/* ── TASK LIST ── */
+.task-list { list-style:none; margin:16px 0; }
+.task-list li {
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  font-size:14px;
+  color:var(--text);
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+}
+.task-list li:last-child { border-bottom:none; }
+.task-num {
+  width:22px;height:22px;
+  border-radius:50%;
+  background:var(--card2);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;
+  color:var(--text-muted);
+  flex-shrink:0;
+  margin-top:1px;
+}
+
+/* ── CODE BLOCK ── */
+.code-block {
+  background:#0D1117;
+  border:1px solid #30363D;
+  border-radius:10px;
+  margin:12px 0;
+  overflow:hidden;
+}
+.code-header {
+  background:#161B22;
+  padding:8px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid #30363D;
+}
+.code-lang {
+  font-size:11px;
+  color:#8B949E;
+  font-family:'Fira Code',monospace;
+}
+.code-dots { display:flex; gap:6px; }
+.code-dot {
+  width:10px;height:10px;border-radius:50%;
+}
+.dot-red{background:#FF5F56;}
+.dot-yellow{background:#FFBD2E;}
+.dot-green{background:#27C93F;}
+.code-content {
+  padding:16px;
+  font-family:'Fira Code',monospace;
+  font-size:13px;
+  line-height:1.7;
+  color:#E6EDF3;
+  overflow-x:auto;
+  white-space:pre;
+}
+.c-comment { color:#8B949E; }
+.c-key     { color:#79C0FF; }
+.c-val     { color:#A5D6FF; }
+.c-str     { color:#A8FF78; }
+.c-num     { color:#F2CC60; }
+.c-purple  { color:#D2A8FF; }
+.c-orange  { color:#FFA657; }
+
+/* ── INFO BOX ── */
+.info-box {
+  border-radius:10px;
+  padding:14px 18px;
+  margin:12px 0;
+  font-size:13px;
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+}
+.info-box-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+.info-warn  { background:rgba(255,159,67,0.1); border:1px solid rgba(255,159,67,0.3); color:#FFD59E; }
+.info-tip   { background:rgba(67,233,123,0.1); border:1px solid rgba(67,233,123,0.3); color:#A8FFD1; }
+.info-info  { background:rgba(84,160,255,0.1); border:1px solid rgba(84,160,255,0.3); color:#BAD7FF; }
+.info-danger{ background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.3);color:#FFB3B3; }
+
+/* ── SETTINGS TABLE ── */
+.settings-table {
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+  margin:12px 0;
+}
+.settings-table th {
+  background:var(--card2);
+  padding:10px 14px;
+  text-align:left;
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:var(--text-muted);
+  border-bottom:1px solid var(--border);
+}
+.settings-table td {
+  padding:10px 14px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  color:var(--text);
+  vertical-align:top;
+}
+.settings-table tr:hover td { background:rgba(255,255,255,0.02); }
+.td-key {
+  font-family:'Fira Code',monospace;
+  font-size:12px;
+  color:#79C0FF;
+  white-space:nowrap;
+}
+.td-val {
+  font-family:'Fira Code',monospace;
+  font-size:12px;
+  color:#A5D6FF;
+}
+.td-note { color:var(--text-muted); font-size:12px; }
+
+/* ── FILE TREE ── */
+.file-tree {
+  background:#0D1117;
+  border:1px solid #30363D;
+  border-radius:10px;
+  padding:16px 20px;
+  font-family:'Fira Code',monospace;
+  font-size:13px;
+  line-height:2;
+}
+.ft-folder { color:#F2CC60; }
+.ft-file   { color:#79C0FF; }
+.ft-note   { color:#8B949E; font-size:11px; }
+
+/* ── SUMMARY TABLE ── */
+.summary-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+  margin-top:24px;
+}
+.summary-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+}
+.summary-card-title {
+  font-size:13px;
+  font-weight:700;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-bottom:14px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.summary-item {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 0;
+  font-size:13px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.summary-item:last-child { border-bottom:none; }
+.s-check { color:var(--accent); font-size:14px; }
+.s-cross { color:var(--danger); font-size:14px; }
+
+/* ── TIMELINE SUMMARY ── */
+.time-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:20px;
+}
+.time-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px;
+  text-align:center;
+}
+.time-step { font-size:11px; color:var(--text-muted); margin-bottom:4px; }
+.time-label { font-size:13px; font-weight:600; color:#fff; margin-bottom:4px; }
+.time-min {
+  font-family:'Prompt',sans-serif;
+  font-size:22px;
+  font-weight:700;
+  color:var(--primary-light);
+}
+.time-min span { font-size:12px; color:var(--text-muted); }
+.time-total {
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  border-radius:12px;
+  padding:20px;
+  text-align:center;
+  margin-top:16px;
+}
+.time-total-label { font-size:14px; color:rgba(255,255,255,0.8); margin-bottom:6px; }
+.time-total-num {
+  font-family:'Prompt',sans-serif;
+  font-size:48px;
+  font-weight:700;
+  color:#fff;
+  line-height:1;
+}
+.time-total-unit { font-size:16px; color:rgba(255,255,255,0.7); }
+
+/* ── URL CARD ── */
+.url-card {
+  background:linear-gradient(135deg,rgba(108,99,255,0.15),rgba(67,233,123,0.1));
+  border:1px solid rgba(108,99,255,0.3);
+  border-radius:14px;
+  padding:24px;
+  text-align:center;
+  margin:24px 0;
+}
+.url-label { font-size:13px; color:var(--text-muted); margin-bottom:8px; }
+.url-link {
+  font-family:'Fira Code',monospace;
+  font-size:16px;
+  color:#8B85FF;
+  font-weight:600;
+  word-break:break-all;
+}
+.url-desc { font-size:12px; color:var(--text-muted); margin-top:8px; }
+
+/* ── FOOTER ── */
+.footer {
+  background:var(--darker);
+  border-top:1px solid var(--border);
+  padding:32px 24px;
+  text-align:center;
+}
+.footer-owl { font-size:40px; display:block; margin-bottom:10px; }
+.footer-title {
+  font-family:'Prompt',sans-serif;
+  font-size:18px;
+  font-weight:700;
+  color:#fff;
+  margin-bottom:6px;
+}
+.footer-sub { font-size:13px; color:var(--text-muted); }
+
+/* ── QUESTION BOX ── */
+.question-box {
+  background:linear-gradient(135deg,rgba(255,159,67,0.1),rgba(255,101,132,0.1));
+  border:1px solid rgba(255,159,67,0.3);
+  border-radius:14px;
+  padding:24px;
+  margin-bottom:40px;
+}
+.question-title {
+  font-family:'Prompt',sans-serif;
+  font-size:18px;
+  font-weight:700;
+  color:#FF9F43;
+  margin-bottom:16px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.question-item {
+  background:rgba(0,0,0,0.2);
+  border-radius:10px;
+  padding:14px 18px;
+  margin-bottom:10px;
+  font-size:14px;
+  color:var(--text);
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+}
+.question-item:last-child { margin-bottom:0; }
+.q-num {
+  background:#FF9F43;
+  color:#fff;
+  width:22px;height:22px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;
+  flex-shrink:0;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px) {
+  .overview-grid { grid-template-columns:repeat(2,1fr); }
+  .summary-grid  { grid-template-columns:1fr; }
+  .time-grid     { grid-template-columns:repeat(2,1fr); }
+  .hero-title    { font-size:26px; }
+}
+@media(max-width:480px) {
+  .overview-grid { grid-template-columns:1fr; }
+  .time-grid     { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-owl">🦉</span>
+  <h1 class="hero-title">OwlvyHouseDeep_Bot</h1>
+  <p class="hero-sub">คู่มือการสร้างระบบ — ตั้งแต่ต้นจนนำขึ้น GitHub</p>
+  <div class="hero-badges">
+    <span class="badge badge-purple">9 ขั้นตอน</span>
+    <span class="badge badge-green">~30 นาที</span>
+    <span class="badge badge-orange">1 ไฟล์</span>
+    <span class="badge badge-pink">Firebase + GitHub Pages</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- OVERVIEW -->
+  <div class="section">
+    <h2 class="section-title">📊 ภาพรวมระบบ</h2>
+    <div class="overview-grid">
+      <div class="overview-card">
+        <div class="overview-num">9</div>
+        <div class="overview-label">ขั้นตอนทั้งหมด</div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-num">1</div>
+        <div class="overview-label">ไฟล์ที่ต้องสร้าง</div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-num">30'</div>
+        <div class="overview-label">เวลาโดยประมาณ</div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-num">0฿</div>
+        <div class="overview-label">ค่าใช้จ่าย Hosting</div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-num">5</div>
+        <div class="overview-label">AI Models (Fallback)</div>
+      </div>
+      <div class="overview-card">
+        <div class="overview-num">∞</div>
+        <div class="overview-label">ใช้งานได้ไม่จำกัด</div>
+      </div>
+    </div>
+
+    <!-- URL -->
+    <div class="url-card">
+      <div class="url-label">🌐 URL ที่นักเรียนจะใช้งาน</div>
+      <div class="url-link">https://owlvyhandout-info.github.io/OwlvyHouseDeep_Bot</div>
+      <div class="url-desc">เปิดได้จากทุกอุปกรณ์ ไม่ต้องติดตั้ง</div>
+    </div>
+
+    <!-- File Tree -->
+    <div class="file-tree">
+      <span class="ft-folder">📁 OwlvyHouseDeep_Bot/</span>
+      <br>
+      <span style="margin-left:20px">├── </span><span class="ft-file">index.html</span><span class="ft-note">  ← ไฟล์เดียวที่ต้องสร้าง (CSS + HTML + JS + Firebase)</span>
+      <br>
+      <span style="margin-left:20px">└── </span><span class="ft-file">README.md</span><span class="ft-note">   ← สร้างอัตโนมัติตอน New Repository</span>
+    </div>
+  </div>
+
+  <!-- QUESTIONS BEFORE START -->
+  <div class="question-box">
+    <div class="question-title">❓ ถามก่อนเริ่มทำ</div>
+    <div class="question-item">
+      <div class="q-num">1</div>
+      <div>Github Account ที่ใช้คืออะไร? <br><span style="color:var(--text-muted);font-size:12px">(ยืนยันแล้ว: owlvyhandout-info)</span></div>
+    </div>
+    <div class="question-item">
+      <div class="q-num">2</div>
+      <div>สร้าง Firebase Project ไว้แล้วหรือยัง? <br><span style="color:var(--text-muted);font-size:12px">(ถ้ามีแล้ว ข้ามขั้นตอนที่ 3 ได้)</span></div>
+    </div>
+    <div class="question-item">
+      <div class="q-num">3</div>
+      <div>มี OpenRouter API Key แล้วหรือยัง? <br><span style="color:var(--text-muted);font-size:12px">(ถ้ายังต้องสมัครที่ openrouter.ai ก่อน)</span></div>
+    </div>
+    <div class="question-item">
+      <div class="q-num">4</div>
+      <div>Email ที่จะใช้เป็น Admin คืออะไร? <br><span style="color:var(--text-muted);font-size:12px">(ใช้ตั้งค่าใน Firestore → users collection)</span></div>
+    </div>
+  </div>
+
+  <!-- STEPS -->
+  <div class="section">
+    <h2 class="section-title">🚀 ขั้นตอนทั้งหมด</h2>
+
+    <div class="timeline">
+
+      <!-- STEP 1 -->
+      <div class="step">
+        <div class="step-dot" style="background:var(--step1)">1</div>
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-icon">🔑</span>
+            <div class="step-info">
+              <div class="step-title">สมัคร OpenRouter และรับ API Key</div>
+              <div class="step-desc">สมัครบัญชีและรับ Key สำหรับเรียกใช้ AI Models</div>
+            </div>
+            <span class="step-time">⏱ 5 นาที</span>
+          </div>
+          <div class="step-body">
+            <ul class="task-list">
+              <li><div class="task-num">1</div>เปิด <strong>https://openrouter.ai</strong></li>
+              <li><div class="task-num">2</div>คลิก Sign Up → สมัครด้วย Google Account</li>
+              <li><div class="task-num">3</div>เติมเครดิต (ขั้นต่ำ $5) ที่เมนู Credits</li>
+              <li><div class="task-num">4</div>ไปที่เมนู <strong>Keys</strong> → Create Key</li>
+              <li><div class="task-num">5</div>ตั้งชื่อ: OwlvyHouseDeep_Bot → Copy Key เก็บไว้</li>
+            </ul>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div>
+                <span class="code-lang">OpenRouter API Key Format</span>
+              </div>
+              <div class="code-content"><span class="c-comment"># ตัวอย่าง Key ที่ได้รับ</span>
+<span class="c-str">sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+
+<span class="c-comment"># ⚠️ Key นี้จะนำไปเก็บใน Firestore เท่านั้น
+# ห้ามใส่ใน index.html โดยตรง</span></div>
+            </div>
+            <div class="info-box info-warn">
+              <span class="info-box-icon">⚠️</span>
+              <div>Key นี้ต้องเก็บเป็นความลับ ห้าม Copy ลงในไฟล์ที่ Upload ขึ้น GitHub โดยตรง จะนำไปเก็บใน Firestore ในขั้นตอนที่ 5</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step">
+        <div class="step-dot" style="background:var(--step2)">2</div>
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-icon">🐙</span>
+            <div class="step-info">
+              <div class="step-title">สร้าง GitHub Repository</div>
+              <div class="step-desc">สร้างที่เก็บโค้ดบน GitHub สำหรับ Hosting เว็บไซต์</div>
+            </div>
+            <span class="step-time">⏱ 3 นาที</span>
+          </div>
+          <div class="step-body">
+            <ul class="task-list">
+              <li><div class="task-num">1</div>เปิด <strong>https://github.com</strong> → Login</li>
+              <li><div class="task-num">2</div>คลิก <strong>New Repository</strong> (ปุ่มสีเขียว)</li>
+              <li><div class="task-num">3</div>ตั้งค่าตามตารางด้านล่าง</li>
+              <li><div class="task-num">4</div>คลิก <strong>Create Repository</strong></li>
+            </ul>
+            <table class="settings-table">
+              <tr><th>Field</th><th>Value</th><th>หมายเหตุ</th></tr>
+              <tr>
+                <td class="td-key">Repository name</td>
+                <td class="td-val">OwlvyHouseDeep_Bot</td>
+                <td class="td-note">ต้องตรงนี้เท่านั้น (URL จะถูกต้อง)</td>
+              </tr>
+              <tr>
+                <td class="td-key">Visibility</td>
+                <td class="td-val">Public</td>
+                <td class="td-note">ต้อง Public ถึงใช้ Pages ฟรีได้</td>
+              </tr>
+              <tr>
+                <td class="td-key">Add README</td>
+                <td class="td-val">✅ Check</td>
+                <td class="td-note">เพื่อให้ Branch main ถูกสร้าง</td>
+              </tr>
+            </table>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div>
+                <span class="code-lang">Repository URL</span>
+              </div>
+              <div class="code-content"><span class="c-comment"># URL ที่ได้หลังสร้าง</span>
+https://github.com/owlvyhandout-info/OwlvyHouseDeep_Bot</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step">
+        <div class="step-dot" style="background:var(--step3)">3</div>
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-icon">🔥</span>
+            <div class="step-info">
+              <div class="step-title">สร้าง Firebase Project</div>
+              <div class="step-desc">สร้างโปรเจคสำหรับระบบ Login และฐานข้อมูล</div>
+            </div>
+            <span class="step-time">⏱ 3 นาที</span>
+          </div>
+          <div class="step-body">
+            <ul class="task-list">
+              <li><div class="task-num">1</div>เปิด <strong>https://console.firebase.google.com</strong></li>
+              <li><div class="task-num">2</div>คลิก <strong>Add Project</strong></li>
+              <li><div class="task-num">3</div>ตั้งชื่อ Project ตามตารางด้านล่าง</li>
+              <li><div class="task-num">4</div>คลิก Continue → ปิด Google Analytics → Create Project</li>
+              <li><div class="task-num">5</div>รอ 30 วินาที → คลิก Continue</li>
+            </ul>
+            <table class="settings-table">
+              <tr><th>Field</th><th>Value</th></tr>
+              <tr>
+                <td class="td-key">Project Name</td>
+                <td class="td-val">OwlvyHouseDeep</td>
+              </tr>
+              <tr>
+                <td class="td-key">Project ID</td>
+                <td class="td-val">owlvyhousedeep-bot</td>
+              </tr>
+              <tr>
+                <td class="td-key">Google Analytics</td>
+                <td class="td-val">ปิด (ไม่จำเป็น)</td>
+              </tr>
+            </table>
+            <div class="info-box info-tip">
+              <span class="info-box-icon">💡</span>
+              <div>Firebase Project นี้ใช้ได้กับทุก Project ในอนาคต สร้างครั้งเดียวใช้ได้ตลอด</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step">
+        <div class="step-dot" style="background:var(--step4)">4</div>
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-icon">🔐</span>
+            <div class="step-info">
+              <div class="step-title">ตั้งค่า Firebase Authentication</div>
+              <div class="step-desc">เปิดระบบ Login ด้วย Google Account และตั้งค่า Domain</div>
+            </div>
+            <span class="step-time">⏱ 3 นาที</span>
+          </div>
+          <div class="step-body">
+            <ul class="task-list">
+              <li><div class="task-num">1</div>Firebase Console → เมนูซ้าย <strong>Authentication</strong> → Get Started</li>
+              <li><div class="task-num">2</div>แท็บ <strong>Sign-in method</strong> → คลิก Google</li>
+              <li><div class="task-num">3</div>Toggle <strong>Enable</strong> → ใส่ Project Support Email → Save</li>
+              <li><div class="task-num">4</div>ไปที่ <strong>Settings</strong> → <strong>Authorized Domains</strong></li>
+              <li><div class="task-num">5</div>คลิก Add Domain → พิมพ์ Domain → คลิก Add</li>
+            </ul>
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div>
+                <span class="code-lang">Authorized Domain ที่ต้องเพิ่ม</span>
+              </div>
+              <div class="code-content">owlvyhandout-info.github.io</div>
+            </div>
+            <div class="info-box info-warn">
+              <span class="info-box-icon">⚠️</span>
+              <div>ถ้าไม่เพิ่ม Domain นี้ นักเรียนจะ Login ไม่ได้ เพราะ Firebase จะปฏิเสธ Request จาก GitHub Pages</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step">
+        <div class="step-dot" style="background:var(--step5)">5</div>
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-icon">🗄️</span>
+            <div class="step-info">
+              <div class="step-title">ตั้งค่า Firestore Database</div>
+              <div class="step-desc">สร้างฐานข้อมูลและเก็บ API Key + ข้อมูล Admin</div>
+            </div>
+            <span class="step-time">⏱ 5 นาที</span>
+          </div>
+          <div class="step-body">
+            <ul class="task-list">
+              <li><div class="task-num">1</div>Firebase Console → <strong>Firestore Database</strong> → Create Database</li>
+              <li><div class="task-num">2</div>เลือก <strong>Start in Production Mode</strong> → Next</li>
+              <li><div class="task-num">3</div>เลือก Region: <strong>asia-southeast1 (Singapore)</strong> → Done</li>
+              <li><div class="task-num">4</div>สร้าง Collection <strong>config</strong> → Document <strong>openrouter</strong></li>
+              <li><div class="task-num">5</div>สร้าง Collection <strong>users</strong> → Document <strong>[Admin Email]</strong></li>
+            </ul>
+
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div>
+                <span class="code-lang">Collection: config / Document: openrouter</span>
+              </div>
+              <div class="code-content"><span class="c-key">Field</span>  : <span class="c-str">apiKey</span>
+<span class="c-key">Type</span>   : <span class="c-str">string</span>
+<span class="c-key">Value</span>  : <span class="c-str">sk-or-v1-xxxxxxxxxxxxxxxxxxxx</span>
+              <span class="c-comment">(Key จากขั้นตอนที่ 1)</span></div>
+            </div>
+
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div>
+                <span class="code-lang">Collection: users / Document: [your-email@gmail.com]</span>
+              </div>
+              <div class="code-content"><span class="c-key">Field</span>  : <span class="c-str">role</span>
+<span class="c-key">Type</span>   : <span class="c-str">string</span>
+<span class="c-key">Value</span>  : <span class="c-str">admin</span></div>
+            </div>
+
+            <div class="info-box info-info">
+              <span class="info-box-icon">ℹ️</span>
+              <div>Document ID ของ users ต้องเป็น Email จริงของ Admin เช่น <strong>example@gmail.com</strong> ตรงตัวพิมพ์เล็กพิมพ์ใหญ่</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="step">
+        <div class="step-dot" style="background:var(--step6)">6</div>
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-icon">🛡️</span>
+            <div class="step-info">
+              <div class="step-title">ตั้งค่า Firestore Security Rules</div>
+              <div class="step-desc">กำหนดสิทธิ์การเข้าถึงข้อมูลในฐานข้อมูล</div>
+            </div>
+            <span class="step-time">⏱ 2 นาที</span>
+          </div>
+          <div class="step-body">
+            <ul class="task-list">
+              <li><div class="task-num">1</div>Firestore Database → แท็บ <strong>Rules</strong></li>
+              <li><div class="task-num">2</div>ลบ Rules เดิมทั้งหมด แทนที่ด้วย Rules ด้านล่าง</li>
+              <li><div class="task-num">3</div>คลิก <strong>Publish</strong></li>
+              <li><div class="task-num">4</div>ทดสอบด้วย <strong>Rules Playground</strong></li>
+            </ul>
+
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div>
+                <span class="code-lang">Firestore Security Rules</span>
+              </div>
+              <div class="code-content"><span class="c-purple">rules_version</span> = <span class="c-str">'2'</span>;
+<span class="c-key">service</span> cloud.firestore {
+  <span class="c-key">match</span> /databases/{database}/documents {
+
+    <span class="c-comment">// OpenRouter API Key
+    // อ่านได้เฉพาะ Login แล้ว / ห้าม Write</span>
+    <span class="c-key">match</span> /config/{doc} {
+      <span class="c-orange">allow</span> read:  <span class="c-key">if</span> request.auth != <span class="c-num">null</span>;
+      <span class="c-orange">allow</span> write: <span class="c-key">if</span> <span class="c-num">false</span>;
+    }
+
+    <span class="c-comment">// Users และ Role Admin
+    // อ่านได้เฉพาะเจ้าของ Email / ห้าม Write</span>
+    <span class="c-key">match</span> /users/{email} {
+      <span class="c-orange">allow</span> read:  <span class="c-key">if</span> request.auth != <span class="c-num">null</span>
+                   && request.auth.token.email == email;
+      <span class="c-orange">allow</span> write: <span class="c-key">if</span> <span class="c-num">false</span>;
+    }
+
+    <span class="c-comment">// Questions (สำหรับอนาคต)</span>
+    <span class="c-key">match</span> /questions/{docId} {
+      <span class="c-orange">allow</span> read, write: <span class="c-key">if</span> request.auth != <span class="c-num">null</span>;
+    }
+
+    <span class="c-comment">// ปิดกั้นทุกอย่างที่เหลือ</span>
+    <span class="c-key">match</span> /{document=<span class="c-purple">**</span>} {
+      <span class="c-orange">allow</span> read, write: <span class="c-key">if</span> <span class="c-num">false</span>;
+    }
+  }
+}</div>
+            </div>
+
+            <div class="info-box info-tip">
+              <span class="info-box-icon">✅</span>
+              <div>ทดสอบ Rules ด้วย Playground: ไม่ Login → อ่าน config → ต้องได้ ❌ DENIED เสมอ</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 7 -->
+      <div class="step">
+        <div class="step-dot" style="background:var(--step7)">7</div>
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-icon">📝</span>
+            <div class="step-info">
+              <div class="step-title">สร้างและตั้งค่าไฟล์ index.html</div>
+              <div class="step-desc">ใส่ Firebase Config จากขั้นตอนที่ 3 ลงในโค้ด</div>
+            </div>
+            <span class="step-time">⏱ 3 นาที</span>
+          </div>
+          <div class="step-body">
+            <ul class="task-list">
+              <li><div class="task-num">1</div>Firebase Console → Project Overview → คลิกไอคอน <strong>Web (&lt;/&gt;)</strong></li>
+              <li><div class="task-num">2</div>App Nickname: <strong>OwlvyBot</strong> → Register App</li>
+              <li><div class="task-num">3</div>Copy ค่า <strong>firebaseConfig</strong> ทั้งหมด</li>
+              <li><div class="task-num">4</div>เปิดไฟล์ <strong>index.html</strong> ที่ได้รับ</li>
+              <li><div class="task-num">5</div>หาส่วน <strong>firebaseConfig</strong> แทนที่ด้วยค่าที่ Copy มา</li>
+            </ul>
+
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div>
+                <span class="code-lang">index.html — ส่วนที่ต้องแทนที่</span>
+              </div>
+              <div class="code-content"><span class="c-comment">// 🔧 แทนที่ด้วยค่าจาก Firebase Console</span>
+<span class="c-key">const</span> firebaseConfig = {
+  <span class="c-str">apiKey</span>            : <span class="c-val">"AIzaXXXXXXXXXXXXXXXXXXXX"</span>,
+  <span class="c-str">authDomain</span>        : <span class="c-val">"owlvyhousedeep-bot.firebaseapp.com"</span>,
+  <span class="c-str">projectId</span>         : <span class="c-val">"owlvyhousedeep-bot"</span>,
+  <span class="c-str">storageBucket</span>     : <span class="c-val">"owlvyhousedeep-bot.appspot.com"</span>,
+  <span class="c-str">messagingSenderId</span> : <span class="c-val">"XXXXXXXXXXXX"</span>,
+  <span class="c-str">appId</span>             : <span class="c-val">"1:XXXXXXXXXXXX:web:XXXXXXXXXXXXXXXX"</span>
+};</div>
+            </div>
+
+            <div class="info-box info-info">
+              <span class="info-box-icon">ℹ️</span>
+              <div>Firebase Config ใน index.html ปลอดภัย เพราะเป็น Client-side Config ออกแบบมาให้เปิดเผยได้ ความปลอดภัยอยู่ที่ Security Rules</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 8 -->
+      <div class="step">
+        <div class="step-dot" style="background:var(--step8)">8</div>
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-icon">⬆️</span>
+            <div class="step-info">
+              <div class="step-title">Upload ไฟล์ขึ้น GitHub</div>
+              <div class="step-desc">อัพโหลด index.html ขึ้น Repository ที่สร้างไว้</div>
+            </div>
+            <span class="step-time">⏱ 2 นาที</span>
+          </div>
+          <div class="step-body">
+            <ul class="task-list">
+              <li><div class="task-num">1</div>เปิด <strong>github.com/owlvyhandout-info/OwlvyHouseDeep_Bot</strong></li>
+              <li><div class="task-num">2</div>คลิก <strong>Add File</strong> → Upload Files</li>
+              <li><div class="task-num">3</div>ลาก <strong>index.html</strong> มาวางในพื้นที่ Upload</li>
+              <li><div class="task-num">4</div>ใส่ Commit Message แล้วคลิก Commit</li>
+            </ul>
+
+            <div class="code-block">
+              <div class="code-header">
+                <div class="code-dots"><div class="code-dot dot-red"></div><div class="code-dot dot-yellow"></div><div class="code-dot dot-green"></div></div>
+                <span class="code-lang">วิธีที่ 2: Git Command (ถ้ามี Git ติดตั้งแล้ว)</span>
+              </div>
+              <div class="code-content"><span class="c-comment"># Clone Repository</span>
+git clone https://github.com/owlvyhandout-info/OwlvyHouseDeep_Bot.git
+
+<span class="c-comment"># เข้าโฟลเดอร์</span>
+cd OwlvyHouseDeep_Bot
+
+<span class="c-comment"># วางไฟล์ index.html ลงในโฟลเดอร์นี้ก่อน แล้วรัน</span>
+git add index.html
+git commit -m <span class="c-str">"Initial commit - OwlvyHouseDeep_Bot"</span>
+git push origin main</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 9 -->
+      <div class="step">
+        <div class="step-dot" style="background:var(--step9)">9</div>
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-icon">🌐</span>
+            <div class="step-info">
+              <div class="step-title">เปิด GitHub Pages</div>
+              <div class="step-desc">เปิดเว็บไซต์ให้นักเรียนเข้าใช้งานได้ผ่าน URL</div>
+            </div>
+            <span class="step-time">⏱ 3 นาที</span>
+          </div>
+          <div class="step-body">
+            <ul class="task-list">
+              <li><div class="task-num">1</div>GitHub Repository → แท็บ <strong>Settings</strong></li>
+              <li><div class="task-num">2</div>เมนูซ้าย → <strong>Pages</strong></li>
+              <li><div class="task-num">3</div>Source → <strong>Deploy from a branch</strong></li>
+              <li><div class="task-num">4</div>Branch → <strong>main</strong> → <strong>/ (root)</strong> → Save</li>
+              <li><div class="task-num">5</div>รอ 2-3 นาที → Refresh หน้า → URL จะปรากฏ</li>
+            </ul>
+            <div class="url-card" style="margin-top:16px">
+              <div class="url-label">✅ URL ที่ได้หลังเปิด GitHub Pages</div>
+              <div class="url-link">https://owlvyhandout-info.github.io/OwlvyHouseDeep_Bot</div>
+              <div class="url-desc">แจก Link นี้ให้นักเรียนได้เลย 🎉</div>
+            </div>
+            <div class="info-box info-tip">
+              <span class="info-box-icon">💡</span>
+              <div>เมื่อแก้ไข index.html และ Upload ขึ้น GitHub ใหม่ เว็บจะอัพเดทอัตโนมัติภายใน 1-2 นาที ไม่ต้องทำอะไรเพิ่ม</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end timeline -->
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="section">
+    <h2 class="section-title">📋 สรุปการเซ็ตค่าทั้งหมด</h2>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-card-title">🔥 Firebase Console</div>
+        <div class="summary-item"><span class="s-check">✅</span>Authentication → Google → Enable</div>
+        <div class="summary-item"><span class="s-check">✅</span>Authorized Domain → owlvyhandout-info.github.io</div>
+        <div class="summary-item"><span class="s-check">✅</span>Firestore → config/openrouter → apiKey</div>
+        <div class="summary-item"><span class="s-check">✅</span>Firestore → users/[email] → role: admin</div>
+        <div class="summary-item"><span class="s-check">✅</span>Security Rules → Publish</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card-title">📝 index.html</div>
+        <div class="summary-item"><span class="s-check">✅</span>แทนที่ firebaseConfig ด้วยค่าจริง</div>
+        <div class="summary-item"><span class="s-check">✅</span>ตรวจสอบ HTTP-Referer URL ถูกต้อง</div>
+        <div class="summary-item"><span class="s-cross">❌</span>ห้ามใส่ OpenRouter Key ในไฟล์</div>
+        <div class="summary-item"><span class="s-cross">❌</span>ห้ามใส่ Secret ใดๆ ในไฟล์</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card-title">🐙 GitHub</div>
+        <div class="summary-item"><span class="s-check">✅</span>Repository: OwlvyHouseDeep_Bot (Public)</div>
+        <div class="summary-item"><span class="s-check">✅</span>Upload index.html</div>
+        <div class="summary-item"><span class="s-check">✅</span>Settings → Pages → Enable</div>
+        <div class="summary-item"><span class="s-check">✅</span>ปิด Secret Alert (False Positive)</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card-title">🔑 OpenRouter</div>
+        <div class="summary-item"><span class="s-check">✅</span>สมัครบัญชีที่ openrouter.ai</div>
+        <div class="summary-item"><span class="s-check">✅</span>เติมเครดิต (ขั้นต่ำ $5)</div>
+        <div class="summary-item"><span class="s-check">✅</span>สร้าง API Key</div>
+        <div class="summary-item"><span class="s-check">✅</span>เก็บ Key ใน Firestore เท่านั้น</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="section">
+    <h2 class="section-title">⏱ เวลาที่ใช้ทั้งหมด</h2>
+    <div class="time-grid">
+      <div class="time-card">
+        <div class="time-step">ขั้นตอนที่ 1</div>
+        <div class="time-label">สมัคร OpenRouter</div>
+        <div class="time-min">5<span> นาที</span></div>
+      </div>
+      <div class="time-card">
+        <div class="time-step">ขั้นตอนที่ 2</div>
+        <div class="time-label">สร้าง GitHub Repo</div>
+        <div class="time-min">3<span> นาที</span></div>
+      </div>
+      <div class="time-card">
+        <div class="time-step">ขั้นตอนที่ 3</div>
+        <div class="time-label">สร้าง Firebase Project</div>
+        <div class="time-min">3<span> นาที</span></div>
+      </div>
+      <div class="time-card">
+        <div class="time-step">ขั้นตอนที่ 4</div>
+        <div class="time-label">ตั้งค่า Authentication</div>
+        <div class="time-min">3<span> นาที</span></div>
+      </div>
+      <div class="time-card">
+        <div class="time-step">ขั้นตอนที่ 5</div>
+        <div class="time-label">ตั้งค่า Firestore</div>
+        <div class="time-min">5<span> นาที</span></div>
+      </div>
+      <div class="time-card">
+        <div class="time-step">ขั้นตอนที่ 6</div>
+        <div class="time-label">ตั้งค่า Rules</div>
+        <div class="time-min">2<span> นาที</span></div>
+      </div>
+      <div class="time-card">
+        <div class="time-step">ขั้นตอนที่ 7</div>
+        <div class="time-label">ใส่ Config ใน HTML</div>
+        <div class="time-min">3<span> นาที</span></div>
+      </div>
+      <div class="time-card">
+        <div class="time-step">ขั้นตอนที่ 8</div>
+        <div class="time-label">Upload GitHub</div>
+        <div class="time-min">2<span> นาที</span></div>
+      </div>
+      <div class="time-card">
+        <div class="time-step">ขั้นตอนที่ 9</div>
+        <div class="time-label">เปิด GitHub Pages</div>
+        <div class="time-min">3<span> นาที</span></div>
+      </div>
+    </div>
+    <div class="time-total">
+      <div class="time-total-label">⏱ เวลารวมทั้งหมด</div>
+      <div class="time-total-num">~30 <span class="time-total-unit">นาที</span></div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.7);margin-top:8px">
+        ทำครั้งเดียว ใช้ได้ตลอดไป 🎉
+      </div>
+    </div>
+  </div>
+
+</div><!-- end container -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <span class="footer-owl">🦉</span>
+  <div class="footer-title">OwlvyHouseDeep_Bot</div>
+  <div class="footer-sub">
+    ระบบสร้างคำถามอัจฉริยะ อิงตาม Bloom's Taxonomy<br>
+    หลักสูตร สสวท. พ.ศ. 2567 · มาตรฐาน O-NET & TEDET
+  </div>
+</div>
+
+</body>
+</html>
+
+							<script>
+                            	
+							</script>
+                        </body>
+                        </html>
+                    
