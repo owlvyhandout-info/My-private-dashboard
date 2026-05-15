@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือการจัดการสิทธิ์: Google Drive & Gemini Gems</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap');
+
+        :root {
+            --primary: #1a73e8;
+            --secondary: #34a853;
+            --accent: #fbbc04;
+            --danger: #ea4335;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #202124;
+            --text-light: #5f6368;
+        }
+
+        body {
+            font-family: 'Sarabun', Tahoma, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4285f4, #34a853);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 { margin: 0; font-size: 2.2rem; }
+        h2 { color: var(--primary); border-left: 5px solid var(--primary); padding-left: 15px; margin-top: 40px; }
+        h3 { color: var(--secondary); margin-top: 25px; }
+
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:nth-child(even) { background-color: #f1f3f4; }
+
+        .status-yes { color: var(--secondary); font-weight: bold; }
+        .status-no { color: var(--danger); font-weight: bold; }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .badge-viewer { background: #e8f0fe; color: #1967d2; }
+        .badge-editor { background: #e6f4ea; color: #1e8e3e; }
+        .badge-gemini { background: #fef7e0; color: #ea8600; }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .checklist-item:before {
+            content: '✓';
+            color: var(--secondary);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .privacy-box {
+            background: #fdf2f2;
+            border-left: 5px solid var(--danger);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            padding-bottom: 30px;
+        }
+
+        .highlight-text {
+            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>คู่มือการจัดการสิทธิ์ดิจิทัล</h1>
+        <p>Google Drive & Gemini Gems Ultimate Guide (V4.0)</p>
+    </header>
+
+    <div class="card">
+        <h2>1. การจัดการสิทธิ์ในระบบ Google Files</h2>
+        <p>เปรียบเทียบสิทธิ์การใช้งานเบื้องต้นใน Google Docs, Sheets และ Slides</p>
+        
+        <div class="grid">
+            <div style="border-top: 4px solid var(--primary); padding-top: 10px;">
+                <span class="badge badge-viewer">ผู้มีสิทธิอ่าน (Viewer)</span>
+                <ul>
+                    <li>เหมาะสำหรับให้ดูข้อมูลอย่างเดียว</li>
+                    <li><strong>จุดเด่น:</strong> ป้องกันการแก้ไขหรือลบเนื้อหาโดยไม่ตั้งใจ</li>
+                    <li><strong>การแชร์ต่อ:</strong> ปกติจะแชร์ต่อไม่ได้ และเจ้าของสามารถสั่ง "ปิดการดาวน์โหลด/คัดลอก" ได้ในค่าขั้นสูง</li>
+                </ul>
+            </div>
+            <div style="border-top: 4px solid var(--secondary); padding-top: 10px;">
+                <span class="badge badge-editor">ผู้มีสิทธิแก้ไข (Editor)</span>
+                <ul>
+                    <li>ระดับสูงสุดรองจากเจ้าของ (Owner)</li>
+                    <li><strong>จุดเด่น:</strong> แก้ไข ปรับโครงสร้าง และจัดการความคิดเห็นได้อิสระ</li>
+                    <li><strong>ข้อจำกัด:</strong> ไม่สามารถโอนความเป็นเจ้าของ หรือลบไฟล์ถาวรได้ (เจ้าของเท่านั้นที่กู้คืนได้)</li>
+                </ul>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>สิทธิ์ / การกระทำ</th>
+                    <th>ดู/ดาวน์โหลด</th>
+                    <th>แก้ไข/ลบ</th>
+                    <th>แสดงความเห็น</th>
+                    <th>แชร์ต่อ</th>
+                    <th>ลบถาวร</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Viewer</strong></td>
+                    <td class="status-yes">ทำได้</td>
+                    <td class="status-no">ไม่ได้</td>
+                    <td class="status-no">ไม่ได้</td>
+                    <td class="status-no">ไม่ได้</td>
+                    <td class="status-no">ไม่ได้</td>
+                </tr>
+                <tr>
+                    <td><strong>Editor</strong></td>
+                    <td class="status-yes">ทำได้</td>
+                    <td class="status-yes">ทำได้</td>
+                    <td class="status-yes">ทำได้</td>
+                    <td class="status-yes">ทำได้*</td>
+                    <td class="status-no">ไม่ได้</td>
+                </tr>
+            </tbody>
+        </table>
+        <small>* ยกเว้นเจ้าของไฟล์จะตั้งค่าล็อกไม่ให้ Editor แชร์ต่อ</small>
+    </div>
+
+    <div class="card">
+        <h2>2. เจาะลึกการแชร์ Gemini Gems (Custom AI)</h2>
+        <p>การแชร์ Gems มีลักษณะเฉพาะที่เน้นการปกป้อง <span class="highlight-text">"โครงสร้างเบื้องหลัง"</span> ของผู้สร้าง</p>
+
+        <h3>สิทธิ์การเข้าถึง Instructions (คำสั่งต้นทาง)</h3>
+        <ul>
+            <li><strong>ผู้รับแชร์จะไม่เห็นคำสั่ง:</strong> ระบบจะซ่อน Instructions หรือ System Prompt ไว้ เพื่อป้องกันการคัดลอกเทคนิค</li>
+            <li><strong>การแก้ไข:</strong> ผู้รับไม่สามารถแก้ต้นฉบับได้ หากต้องการแก้ต้องทำการ "Copy" เป็นของตัวเองก่อน</li>
+        </ul>
+
+        <h3>ความลับของ Knowledge Base (ฐานความรู้)</h3>
+        <ul>
+            <li><strong>เห็นแค่ชื่อไฟล์:</strong> ผู้รับที่เป็น Viewer จะเห็นเพียงรายชื่อไฟล์ที่แนบไว้</li>
+            <li><strong>อ่านเนื้อหาตรงๆ ไม่ได้:</strong> ต้องถามผ่านแชทเท่านั้น AI ถึงจะดึงข้อมูลมาตอบ</li>
+            <li><strong>การป้องกัน:</strong> เจ้าของสามารถสั่งปิด "ดาวน์โหลด/พิมพ์/คัดลอก" เพื่อไม่ให้ไฟล์หลุดออกไปได้</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>3. ความเป็นส่วนตัวของบทสนทนา (Privacy First)</h2>
+        <div class="privacy-box">
+            <strong>กฎเหล็ก:</strong> แชทของคุณคือความลับของคุณ ลิงก์เดียวแต่ใช้งานแยกกัน 100%
+        </div>
+        
+        <div class="grid">
+            <div>
+                <h3>การคุยของผู้รับแชร์</h3>
+                <p>ทุกคนใช้งานแยกจากกัน (Individual Sessions) ผู้รับ A ไม่เห็นของ B และเจ้าของ Gems ก็ไม่เห็นแชทของผู้รับแชร์เช่นกัน</p>
+            </div>
+            <div>
+                <h3>ประวัติก่อนส่งลิงก์</h3>
+                <p>แชทที่เจ้าของคุยกับ Gems ไว้ก่อนจะส่งลิงก์ จะ <strong>ไม่ถูกส่งไปด้วย</strong> ผู้รับจะเจอ "หน้าว่าง" เสมอ</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>4. Checklist ขั้นตอนการแชร์อย่างปลอดภัย</h2>
+        <p>เพื่อให้แน่ใจว่าผู้รับจะ "พิมพ์แชทได้อย่างเดียว" และ "ไม่เห็นคำสั่ง/แชร์ต่อไม่ได้" ให้ทำตามนี้:</p>
+        
+        <div class="checklist-item">ระบุอีเมลผู้รับโดยตรง (เลือกโหมด <strong>Restricted</strong> ไม่ใช้ลิงก์สาธารณะ)</div>
+        <div class="checklist-item">กำหนดระดับสิทธิ์เป็น <strong>Viewer (ผู้มีสิทธิอ่าน)</strong></div>
+        <div class="checklist-item">คลิกไอคอน <strong>ฟันเฟือง (Settings)</strong> ในหน้าแชร์</div>
+        <div class="checklist-item">ปิดสิทธิ์ <strong>"Editors can change permissions and share"</strong></div>
+        <div class="checklist-item">ปิดสิทธิ์ <strong>"Viewers... can see the option to download, print, and copy"</strong></div>
+    </div>
+
+    <footer>
+        <p>จัดทำโดย Owlvy House & Kru Owlvy | คู่มือฉบับสมบูรณ์เพื่อการใช้งาน AI อย่างปลอดภัย</p>
+    </footer>
+</div>
+
+</body>
+</html>

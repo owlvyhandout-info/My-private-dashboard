@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คู่มือสิทธิ์การแชร์ไฟล์ & Gemini Gems</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Kanit:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #FF4D8D;
+    --purple: #7C3AED;
+    --blue: #3B82F6;
+    --cyan: #06B6D4;
+    --green: #10B981;
+    --orange: #F59E0B;
+    --red: #EF4444;
+    --dark: #0F172A;
+    --card-bg: #1E293B;
+    --text: #E2E8F0;
+    --subtle: #94A3B8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 40%, #0F172A 100%);
+    padding: 60px 20px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,58,237,0.25) 0%, transparent 70%);
+    top: -200px; left: 50%; transform: translateX(-50%);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,77,141,0.2) 0%, transparent 70%);
+    bottom: -150px; right: -100px;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--pink), var(--purple));
+    color: white;
+    padding: 6px 20px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    font-family: 'Kanit', sans-serif;
+  }
+  .hero h1 {
+    font-family: 'Kanit', sans-serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff 0%, var(--cyan) 50%, var(--purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero p {
+    color: var(--subtle);
+    font-size: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* MAIN */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'Kanit', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 50px 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title .icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .icon-pink { background: linear-gradient(135deg, var(--pink), #FF8CB4); }
+  .icon-purple { background: linear-gradient(135deg, var(--purple), #A78BFA); }
+  .icon-cyan { background: linear-gradient(135deg, var(--cyan), #67E8F9); }
+  .icon-green { background: linear-gradient(135deg, var(--green), #6EE7B7); }
+  .icon-orange { background: linear-gradient(135deg, var(--orange), #FCD34D); }
+
+  /* CARDS */
+  .card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .card-header {
+    font-family: 'Kanit', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .tag {
+    display: inline-block;
+    padding: 2px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Kanit', sans-serif;
+    letter-spacing: 0.5px;
+  }
+  .tag-viewer { background: rgba(6,182,212,0.2); color: var(--cyan); border: 1px solid rgba(6,182,212,0.4); }
+  .tag-editor { background: rgba(16,185,129,0.2); color: var(--green); border: 1px solid rgba(16,185,129,0.4); }
+  .tag-can { background: rgba(16,185,129,0.15); color: #6EE7B7; }
+  .tag-cannot { background: rgba(239,68,68,0.15); color: #FCA5A5; }
+
+  /* PERMISSION ROWS */
+  .perm-list { display: flex; flex-direction: column; gap: 10px; }
+  .perm-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.03);
+  }
+  .perm-icon {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .can { background: rgba(16,185,129,0.25); }
+  .cannot { background: rgba(239,68,68,0.25); }
+  .perm-row p { font-size: 15px; line-height: 1.5; }
+  .perm-row p strong { color: #fff; }
+
+  /* TWO COL */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media(max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* COMPARISON TABLE */
+  .compare-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-top: 24px;
+    font-size: 14px;
+  }
+  .compare-table thead tr {
+    background: linear-gradient(90deg, rgba(124,58,237,0.6), rgba(6,182,212,0.4));
+  }
+  .compare-table th {
+    padding: 14px 18px;
+    text-align: left;
+    font-family: 'Kanit', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    color: #fff;
+  }
+  .compare-table td {
+    padding: 13px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .compare-table tbody tr { background: var(--card-bg); }
+  .compare-table tbody tr:hover { background: rgba(255,255,255,0.04); }
+  .compare-table tbody tr:last-child td { border-bottom: none; }
+  .yes { color: #6EE7B7; font-weight: 700; }
+  .no { color: #FCA5A5; font-weight: 700; }
+  .partial { color: #FCD34D; font-weight: 700; }
+
+  /* STEP BOX */
+  .steps { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 18px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    border-left: 3px solid var(--purple);
+  }
+  .step-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Kanit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .step p { font-size: 15px; line-height: 1.6; }
+  .step p strong { color: #fff; }
+  .step p code {
+    background: rgba(124,58,237,0.3);
+    color: #C4B5FD;
+    padding: 1px 8px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-family: monospace;
+  }
+
+  /* HIGHLIGHT BOX */
+  .highlight {
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    border: 1px solid;
+  }
+  .highlight-purple {
+    background: rgba(124,58,237,0.12);
+    border-color: rgba(124,58,237,0.35);
+  }
+  .highlight-cyan {
+    background: rgba(6,182,212,0.1);
+    border-color: rgba(6,182,212,0.3);
+  }
+  .highlight-orange {
+    background: rgba(245,158,11,0.1);
+    border-color: rgba(245,158,11,0.3);
+  }
+  .highlight-green {
+    background: rgba(16,185,129,0.1);
+    border-color: rgba(16,185,129,0.3);
+  }
+  .highlight-title {
+    font-family: 'Kanit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .highlight p, .highlight li { font-size: 15px; line-height: 1.7; }
+  .highlight ul { padding-left: 20px; }
+  .highlight li { margin-bottom: 4px; }
+
+  /* METAPHOR */
+  .metaphor {
+    background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(6,182,212,0.15));
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin: 16px 0;
+    border: 1px solid rgba(124,58,237,0.3);
+    text-align: center;
+  }
+  .metaphor .emoji { font-size: 40px; margin-bottom: 12px; }
+  .metaphor h3 { font-family: 'Kanit', sans-serif; font-weight: 700; font-size: 18px; margin-bottom: 10px; color: #C4B5FD; }
+  .metaphor p { font-size: 15px; color: var(--subtle); max-width: 500px; margin: 0 auto; }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(124,58,237,0.5), rgba(6,182,212,0.5), transparent);
+    margin: 40px 0;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 30px;
+    color: var(--subtle);
+    font-size: 13px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">📖 คู่มือฉบับสมบูรณ์</div>
+  <h1>สิทธิ์การแชร์ไฟล์<br>& Gemini Gems</h1>
+  <p>ทุกสิ่งที่ต้องรู้เรื่องสิทธิ์ Viewer vs Editor และความเป็นส่วนตัวของ Custom AI</p>
+</div>
+
+<div class="container">
+
+  <!-- PART 1 -->
+  <div class="section-title">
+    <span class="icon icon-pink">📁</span>
+    ส่วนที่ 1: สิทธิ์การแชร์ไฟล์ทั่วไป (Google Drive)
+  </div>
+
+  <div class="two-col">
+    <!-- VIEWER -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-viewer">Viewer</span>
+        ผู้มีสิทธิ์อ่าน
+      </div>
+      <p style="font-size:14px; color:var(--subtle); margin-bottom:14px;">สำหรับคนที่ต้องการให้ "ดูได้อย่างเดียว" ป้องกันการแก้ไขโดยไม่ตั้งใจ</p>
+      <div class="perm-list">
+        <div class="perm-row">
+          <div class="perm-icon can">✓</div>
+          <p><strong>เปิดดูและอ่าน</strong>เนื้อหาได้ทั้งหมด</p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon can">✓</div>
+          <p><strong>ดาวน์โหลด / พิมพ์ / คัดลอก</strong>ได้ (ค่าเริ่มต้น)</p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon cannot">✗</div>
+          <p>ไม่สามารถ<strong>แก้ไขหรือลบ</strong>เนื้อหาได้</p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon cannot">✗</div>
+          <p>ไม่สามารถ<strong>แสดงความคิดเห็น</strong>(Comment)ได้</p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon cannot">✗</div>
+          <p>ไม่สามารถ<strong>แชร์ต่อหรือปรับสิทธิ์</strong>ของคนอื่นได้</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDITOR -->
+    <div class="card">
+      <div class="card-header">
+        <span class="tag tag-editor">Editor</span>
+        ผู้มีสิทธิ์แก้ไข
+      </div>
+      <p style="font-size:14px; color:var(--subtle); margin-bottom:14px;">ระดับสูงสุดรองจากเจ้าของ เหมาะกับผู้ร่วมงานที่ต้องอัปเดตข้อมูล</p>
+      <div class="perm-list">
+        <div class="perm-row">
+          <div class="perm-icon can">✓</div>
+          <p>ทำทุกอย่างที่ Viewer ทำได้</p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon can">✓</div>
+          <p><strong>เพิ่ม แก้ไข ลบ</strong>เนื้อหาได้อย่างอิสระ</p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon can">✓</div>
+          <p><strong>Comment</strong> ตอบกลับ และรับ/ปฏิเสธข้อเสนอแนะได้</p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon can">✓</div>
+          <p><strong>แชร์ต่อ</strong>และปรับสิทธิ์ผู้อื่นได้ (ถ้าไม่ถูกล็อก)</p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon cannot">✗</div>
+          <p>ไม่สามารถ<strong>โอนความเป็นเจ้าของ</strong>ได้</p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon cannot">✗</div>
+          <p>ไม่สามารถ<strong>ลบไฟล์ถาวร</strong>ได้ (เฉพาะเจ้าของ)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>การกระทำ</th>
+        <th>Viewer</th>
+        <th>Editor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ดูเนื้อหา / ดาวน์โหลด</td>
+        <td class="yes">✓ ทำได้</td>
+        <td class="yes">✓ ทำได้</td>
+      </tr>
+      <tr>
+        <td>แก้ไข / ลบเนื้อหาในไฟล์</td>
+        <td class="no">✗ ทำไม่ได้</td>
+        <td class="yes">✓ ทำได้</td>
+      </tr>
+      <tr>
+        <td>แสดงความคิดเห็น (Comment)</td>
+        <td class="no">✗ ทำไม่ได้</td>
+        <td class="yes">✓ ทำได้</td>
+      </tr>
+      <tr>
+        <td>แชร์ไฟล์ให้คนอื่นต่อ</td>
+        <td class="no">✗ ทำไม่ได้</td>
+        <td class="partial">⚠ ทำได้ (ถ้าไม่ถูกล็อก)</td>
+      </tr>
+      <tr>
+        <td>ลบไฟล์ถาวร</td>
+        <td class="no">✗ ทำไม่ได้</td>
+        <td class="no">✗ ทำไม่ได้</td>
+      </tr>
+      <tr>
+        <td>โอนสิทธิ์ความเป็นเจ้าของ</td>
+        <td class="no">✗ ทำไม่ได้</td>
+        <td class="no">✗ ทำไม่ได้</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- PART 2 -->
+  <div class="section-title">
+    <span class="icon icon-purple">💎</span>
+    ส่วนที่ 2: การแชร์ Gemini Gems (Custom AI)
+  </div>
+
+  <div class="highlight highlight-purple">
+    <div class="highlight-title">💡 Gems คืออะไร?</div>
+    <p>Gems คือ Custom AI ที่ผู้ใช้สร้างขึ้นใน Gemini โดยกำหนด Instructions (คำสั่งเบื้องหลัง) และแนบไฟล์ความรู้ (Knowledge Base) ไว้ มีลักษณะการแชร์ที่ต่างจากเอกสารทั่วไปเล็กน้อย</p>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header">👁️ ผู้รับแชร์เห็นอะไรได้บ้าง?</div>
+      <div class="perm-list">
+        <div class="perm-row">
+          <div class="perm-icon can">✓</div>
+          <p><strong>เห็นชื่อ</strong>และคำอธิบายสั้นๆ ของ Gems</p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon can">✓</div>
+          <p><strong>พิมพ์แชทโต้ตอบ</strong>กับ AI ได้ทันที</p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon cannot">✗</div>
+          <p><strong>ไม่เห็น Instructions</strong> (System Prompt) เบื้องหลัง</p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon cannot">✗</div>
+          <p><strong>ไม่สามารถแก้ไข</strong>ตัว Gems ต้นฉบับได้</p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon cannot">✗</div>
+          <p><strong>ไม่สามารถแชร์ต่อ</strong>หรือส่งลิงก์ใหม่ได้</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">🔒 ความเป็นส่วนตัว</div>
+      <div class="perm-list">
+        <div class="perm-row">
+          <div class="perm-icon can">✓</div>
+          <p><strong>แชทเป็นส่วนตัว</strong> — เก็บไว้ในบัญชีของผู้รับเท่านั้น</p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon can">✓</div>
+          <p>เจ้าของ<strong>ไม่เห็น</strong>ว่าผู้รับคุยอะไร</p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon can">✓</div>
+          <p>ผู้รับแต่ละคน<strong>ไม่เห็นแชทกัน</strong></p>
+        </div>
+        <div class="perm-row">
+          <div class="perm-icon cannot">✗</div>
+          <p>หากเจ้าของ<strong>ยกเลิกแชร์หรือลบ</strong> ลิงก์ใช้งานไม่ได้อีก</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- METAPHOR -->
+  <div class="metaphor">
+    <div class="emoji">🖨️</div>
+    <h3>เปรียบเหมือน "แม่พิมพ์"</h3>
+    <p>ลิงก์ Gems คือแม่พิมพ์ที่ทุกคนได้รับเหมือนกัน แต่เมื่อแต่ละคนเริ่มแชท เหมือนการนำแม่พิมพ์ไปหล่อชิ้นงานในบ้านตัวเอง — ชิ้นงานของแต่ละบ้านแยกจากกันสิ้นเชิง ไม่มีใครเห็นของอีกคน</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PART 3 -->
+  <div class="section-title">
+    <span class="icon icon-cyan">🗂️</span>
+    ส่วนที่ 3: ไฟล์แนบ (Knowledge Base) ใน Gems
+  </div>
+
+  <div class="card">
+    <div class="card-header">📂 สิทธิ์การเข้าถึงไฟล์แนบสำหรับผู้รับ (Viewer)</div>
+    <div class="perm-list">
+      <div class="perm-row">
+        <div class="perm-icon can">✓</div>
+        <p>อาจ<strong>เห็นชื่อไฟล์</strong>ที่แนบอยู่ในข้อมูลเบื้องต้น</p>
+      </div>
+      <div class="perm-row">
+        <div class="perm-icon can">✓</div>
+        <p><strong>รับรู้ข้อมูลในไฟล์</strong>ผ่านการถาม AI — AI จะนำข้อมูลมาตอบให้</p>
+      </div>
+      <div class="perm-row">
+        <div class="perm-icon cannot">✗</div>
+        <p><strong>ไม่สามารถเปิดอ่านเนื้อหาดิบ</strong>ในไฟล์ต้นฉบับได้โดยตรง</p>
+      </div>
+      <div class="perm-row">
+        <div class="perm-icon cannot">✗</div>
+        <p><strong>ไม่สามารถดาวน์โหลดไฟล์</strong>ได้ หากเจ้าของปิดสิทธิ์นี้แล้ว</p>
+      </div>
+      <div class="perm-row">
+        <div class="perm-icon cannot">✗</div>
+        <p><strong>ไม่สามารถเพิ่ม/ลบ/แก้ไข</strong>ไฟล์ใน Knowledge Base ได้</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PART 4 -->
+  <div class="section-title">
+    <span class="icon icon-green">⚙️</span>
+    ส่วนที่ 4: วิธีตั้งค่าแชร์ Gems แบบปลอดภัย
+  </div>
+
+  <div class="highlight highlight-orange">
+    <div class="highlight-title">🎯 เป้าหมาย: ใช้งานได้ + ไม่เห็น Instructions + แชร์ต่อไม่ได้</div>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <p>ไปที่ <strong>Gemini &gt; Explore Gems</strong> แล้วกดปุ่ม <code>Share</code> ที่ Gems ของคุณ</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <p>ใส่ <strong>Email</strong> ผู้รับโดยตรง — <strong>อย่าใช้</strong> "Anyone with the link" เด็ดขาด ให้เป็น <code>Restricted</code> เท่านั้น</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <p>เลือกระดับสิทธิ์เป็น <strong>Viewer (ผู้มีสิทธิ์อ่าน)</strong> เท่านั้น — ห้ามเลือก Editor</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <p>คลิกที่ไอคอน <strong>⚙️ ฟันเฟือง (Settings)</strong> มุมขวาบนของหน้าต่างแชร์</p>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <p>ยกเลิกการเลือก (Uncheck) ที่ <code>"Editors can change permissions and share"</code> และ <code>"Viewers and commenters can see the option to download, print, and copy"</code></p>
+    </div>
+  </div>
+
+  <table class="compare-table" style="margin-top:24px;">
+    <thead>
+      <tr>
+        <th>ขั้นตอน</th>
+        <th>การกระทำที่ต้องทำ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>เลือกผู้รับ</td>
+        <td>ใส่ Email ผู้รับโดยตรง (ไม่ใช้ลิงก์สาธารณะ)</td>
+      </tr>
+      <tr>
+        <td>ระดับสิทธิ์</td>
+        <td>เลือก <span class="tag tag-viewer">Viewer</span> เท่านั้น</td>
+      </tr>
+      <tr>
+        <td>ความปลอดภัย</td>
+        <td>เข้า Settings (⚙️) แล้วปิดสิทธิ์ "Editors can change..."</td>
+      </tr>
+      <tr>
+        <td>การตรวจสอบ</td>
+        <td>ตรวจว่าไม่ได้เปิด "Anyone with the link" (ต้องเป็น Restricted)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- PART 5 -->
+  <div class="section-title">
+    <span class="icon icon-orange">🔐</span>
+    ส่วนที่ 5: ความเป็นส่วนตัวของแชท — สรุปทุกคำถาม
+  </div>
+
+  <div class="two-col">
+    <div class="highlight highlight-cyan" style="margin:0;">
+      <div class="highlight-title">👥 100 คนใช้ลิงก์เดียวกัน มองเห็นกันไหม?</div>
+      <p><strong style="color:#67E8F9;">ไม่เห็นครับ</strong> — ทุกคนแชทในเซสชันแยกในบัญชีตัวเอง ผู้รับ A ไม่เห็นแชทของผู้รับ B และเจ้าของก็ไม่เห็นแชทของทั้งคู่</p>
+    </div>
+
+    <div class="highlight highlight-green" style="margin:0;">
+      <div class="highlight-title">📜 ผู้รับเห็นแชทที่เจ้าของคุยไว้ก่อนส่งลิงก์ไหม?</div>
+      <p><strong style="color:#6EE7B7;">ไม่เห็นครับ</strong> — ส่ง "สถาปัตยกรรม AI" ไป ไม่ใช่ "ประวัติแชท" หน้าจอผู้รับจะเป็นหน้าว่าง (Fresh Start) เสมอ</p>
+    </div>
+  </div>
+
+  <div class="highlight highlight-purple" style="margin-top:16px;">
+    <div class="highlight-title">🛡️ สรุปชั้นความเป็นส่วนตัว (Privacy Layers)</div>
+    <ul>
+      <li>ผู้รับ <strong>ไม่เห็น</strong> Instructions (System Prompt) ของเจ้าของ</li>
+      <li>ผู้รับ <strong>ไม่เห็น</strong> ประวัติแชทที่เจ้าของคุยไว้ก่อน</li>
+      <li>เจ้าของ <strong>ไม่เห็น</strong> ว่าผู้รับคุยอะไรกับ Gems</li>
+      <li>ผู้รับแต่ละคน <strong>ไม่เห็นแชทของกันและกัน</strong></li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  <p>📘 คู่มือสิทธิ์การแชร์ไฟล์ & Gemini Gems | ข้อมูลอัปเดตปี 2026</p>
+  <p style="margin-top:6px; font-size:12px; color:#475569;">ข้อมูลอ้างอิงจากระบบ Google Drive และ Gemini โดย Google</p>
+</footer>
+
+</body>
+</html>
