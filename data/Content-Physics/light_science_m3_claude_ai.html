@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บทที่ 2 แสง | วิทยาศาสตร์ ม.ต้น</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Itim&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sun: #FFD600;
+    --orange: #FF6D00;
+    --pink: #FF4081;
+    --purple: #7C4DFF;
+    --blue: #2979FF;
+    --cyan: #00B0FF;
+    --green: #00E676;
+    --teal: #1DE9B6;
+    --dark: #0D0D1A;
+    --card-bg: rgba(255,255,255,0.06);
+    --radius: 18px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--dark);
+    color: #F0F0FF;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== STAR BACKGROUND ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(124,77,255,0.18) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 70%, rgba(41,121,255,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 10%, rgba(255,214,0,0.1) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    position: relative;
+    text-align: center;
+    padding: 60px 20px 40px;
+    overflow: hidden;
+    z-index: 1;
+  }
+  .header-glow {
+    position: absolute;
+    top: -60px; left: 50%; transform: translateX(-50%);
+    width: 500px; height: 300px;
+    background: radial-gradient(ellipse, rgba(255,214,0,0.35) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-icon {
+    font-size: 5rem;
+    display: block;
+    animation: pulse-glow 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(255,214,0,0.8));
+  }
+  @keyframes pulse-glow {
+    0%,100% { filter: drop-shadow(0 0 20px rgba(255,214,0,0.7)); transform: scale(1); }
+    50% { filter: drop-shadow(0 0 50px rgba(255,214,0,1)); transform: scale(1.08); }
+  }
+  header h1 {
+    font-family: 'Itim', cursive;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    background: linear-gradient(135deg, #FFD600, #FF6D00, #FF4081);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 10px 0 6px;
+    letter-spacing: 2px;
+  }
+  header p {
+    color: rgba(255,255,255,0.6);
+    font-size: 1.05rem;
+  }
+
+  /* ===== RAINBOW DIVIDER ===== */
+  .rainbow-bar {
+    height: 4px;
+    background: linear-gradient(90deg, #FF4081, #FF6D00, #FFD600, #00E676, #00B0FF, #7C4DFF);
+    border-radius: 2px;
+    margin: 0 20px 30px;
+    animation: shift-hue 6s linear infinite;
+  }
+  @keyframes shift-hue {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+
+  /* ===== NAV TABS ===== */
+  .nav-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13,13,26,0.92);
+    backdrop-filter: blur(16px);
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .nav-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .nav-tab {
+    padding: 7px 14px;
+    border-radius: 30px;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    background: transparent;
+    color: rgba(255,255,255,0.65);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    white-space: nowrap;
+  }
+  .nav-tab:hover, .nav-tab.active {
+    color: #fff;
+    border-color: transparent;
+    transform: translateY(-1px);
+  }
+  .nav-tab[data-color="orange"]:hover, .nav-tab[data-color="orange"].active { background: var(--orange); box-shadow: 0 4px 16px rgba(255,109,0,0.5); }
+  .nav-tab[data-color="pink"]:hover, .nav-tab[data-color="pink"].active { background: var(--pink); box-shadow: 0 4px 16px rgba(255,64,129,0.5); }
+  .nav-tab[data-color="purple"]:hover, .nav-tab[data-color="purple"].active { background: var(--purple); box-shadow: 0 4px 16px rgba(124,77,255,0.5); }
+  .nav-tab[data-color="blue"]:hover, .nav-tab[data-color="blue"].active { background: var(--blue); box-shadow: 0 4px 16px rgba(41,121,255,0.5); }
+  .nav-tab[data-color="cyan"]:hover, .nav-tab[data-color="cyan"].active { background: var(--cyan); box-shadow: 0 4px 16px rgba(0,176,255,0.5); }
+  .nav-tab[data-color="green"]:hover, .nav-tab[data-color="green"].active { background: #00c853; box-shadow: 0 4px 16px rgba(0,200,83,0.5); }
+  .nav-tab[data-color="teal"]:hover, .nav-tab[data-color="teal"].active { background: var(--teal); color: #000; box-shadow: 0 4px 16px rgba(29,233,182,0.5); }
+  .nav-tab[data-color="sun"]:hover, .nav-tab[data-color="sun"].active { background: var(--sun); color: #000; box-shadow: 0 4px 16px rgba(255,214,0,0.5); }
+  .nav-tab[data-color="magenta"]:hover, .nav-tab[data-color="magenta"].active { background: #e040fb; box-shadow: 0 4px 16px rgba(224,64,251,0.5); }
+
+  /* ===== MAIN CONTAINER ===== */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 16px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== SECTIONS ===== */
+  .section {
+    display: none;
+    animation: fadeUp 0.45s ease;
+  }
+  .section.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== SECTION HEADER ===== */
+  .section-hero {
+    border-radius: var(--radius);
+    padding: 32px 28px 24px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .section-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: inherit;
+    opacity: 0.12;
+    border-radius: inherit;
+  }
+  .section-hero .hero-emoji { font-size: 3rem; display: block; margin-bottom: 8px; }
+  .section-hero h2 {
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .section-hero .duration {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.15);
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+  }
+  .section-hero p { font-size: 1rem; line-height: 1.7; opacity: 0.9; }
+
+  /* ===== CARDS GRID ===== */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    padding: 22px;
+    transition: transform 0.25s, box-shadow 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+  .card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card p, .card li {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    opacity: 0.85;
+  }
+  .card ul { padding-left: 18px; }
+  .card li { margin-bottom: 4px; }
+
+  /* Card color accents */
+  .c-orange::before { background: var(--orange); }
+  .c-pink::before { background: var(--pink); }
+  .c-purple::before { background: var(--purple); }
+  .c-blue::before { background: var(--blue); }
+  .c-cyan::before { background: var(--cyan); }
+  .c-green::before { background: var(--green); }
+  .c-teal::before { background: var(--teal); }
+  .c-sun::before { background: var(--sun); }
+  .c-magenta::before { background: #e040fb; }
+
+  /* ===== HIGHLIGHT BOX ===== */
+  .highlight {
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    margin: 16px 0;
+    border-left: 5px solid;
+    background: rgba(255,255,255,0.04);
+  }
+  .highlight.law { border-color: #FFD600; }
+  .highlight.tip { border-color: #00E676; }
+  .highlight.warn { border-color: #FF4081; }
+  .highlight.info { border-color: #00B0FF; }
+  .highlight h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+  .highlight p, .highlight li { font-size: 0.88rem; line-height: 1.7; }
+  .highlight ul { padding-left: 18px; }
+
+  /* ===== FORMULA BOX ===== */
+  .formula-box {
+    background: rgba(255,214,0,0.08);
+    border: 2px solid rgba(255,214,0,0.4);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    text-align: center;
+  }
+  .formula-box .formula {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #FFD600;
+    letter-spacing: 1px;
+  }
+  .formula-box p { font-size: 0.85rem; opacity: 0.75; margin-top: 6px; }
+
+  /* ===== TABLE ===== */
+  .styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.88rem;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .styled-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 700;
+    background: rgba(255,255,255,0.1);
+  }
+  .styled-table td {
+    padding: 10px 16px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .styled-table tr:hover td { background: rgba(255,255,255,0.04); }
+
+  /* ===== EXPERIMENT BOX ===== */
+  .experiment {
+    background: rgba(0,200,83,0.08);
+    border: 1.5px dashed rgba(0,230,118,0.4);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 16px 0;
+  }
+  .experiment h4 { color: #00E676; font-size: 1rem; margin-bottom: 10px; }
+  .experiment ol { padding-left: 20px; }
+  .experiment li { font-size: 0.88rem; line-height: 1.75; margin-bottom: 4px; }
+
+  /* ===== CONFUSION BOX ===== */
+  .confusion {
+    background: rgba(255,64,129,0.08);
+    border: 1.5px solid rgba(255,64,129,0.3);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 16px 0;
+  }
+  .confusion h4 { color: #FF4081; font-size: 1rem; margin-bottom: 10px; }
+  .confusion p, .confusion li { font-size: 0.88rem; line-height: 1.75; }
+  .confusion ul { padding-left: 18px; }
+
+  /* ===== IMAGE CASE TABLE ===== */
+  .image-cases {
+    display: grid;
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .image-case {
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 16px 18px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .image-case .case-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    color: #FFD600;
+  }
+  .image-case .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .tag {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+  .tag.real { background: rgba(0,176,255,0.2); color: #00B0FF; border: 1px solid rgba(0,176,255,0.4); }
+  .tag.virtual { background: rgba(124,77,255,0.2); color: #B388FF; border: 1px solid rgba(124,77,255,0.4); }
+  .tag.upright { background: rgba(0,230,118,0.2); color: #69F0AE; border: 1px solid rgba(0,230,118,0.4); }
+  .tag.inverted { background: rgba(255,109,0,0.2); color: #FFAB40; border: 1px solid rgba(255,109,0,0.4); }
+  .tag.enlarged { background: rgba(255,214,0,0.2); color: #FFD600; border: 1px solid rgba(255,214,0,0.4); }
+  .tag.same { background: rgba(255,255,255,0.1); color: #EEE; border: 1px solid rgba(255,255,255,0.2); }
+  .tag.reduced { background: rgba(224,64,251,0.2); color: #EA80FC; border: 1px solid rgba(224,64,251,0.4); }
+
+  /* ===== LIFE EXAMPLE ===== */
+  .life-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .life-chip {
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: transform 0.2s;
+    cursor: default;
+  }
+  .life-chip:hover { transform: scale(1.05); }
+
+  /* ===== SVG DIAGRAMS ===== */
+  .diagram-wrap {
+    background: rgba(255,255,255,0.04);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 16px 0;
+    text-align: center;
+    overflow: hidden;
+  }
+  .diagram-wrap svg { max-width: 100%; height: auto; }
+  .diagram-wrap .caption { font-size: 0.8rem; opacity: 0.6; margin-top: 8px; }
+
+  /* ===== MUST KNOW ===== */
+  .must-know {
+    background: rgba(41,121,255,0.1);
+    border: 1.5px solid rgba(41,121,255,0.35);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin: 16px 0;
+  }
+  .must-know h4 { color: #82B1FF; font-size: 0.95rem; margin-bottom: 10px; }
+  .must-know ul { padding-left: 18px; }
+  .must-know li { font-size: 0.88rem; line-height: 1.75; margin-bottom: 5px; }
+
+  /* ===== SPECTRUM ===== */
+  .spectrum-bar {
+    height: 32px;
+    border-radius: 16px;
+    background: linear-gradient(90deg, #7C4DFF, #2979FF, #00B0FF, #00E676, #FFD600, #FF6D00, #FF4081);
+    margin: 12px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(0,0,0,0.7);
+    padding: 0 10px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== BRIGHTNESS SECTION ===== */
+  .brightness-visual {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .b-bar {
+    flex: 1;
+    min-width: 60px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    transition: height 0.5s ease;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    .section-hero { padding: 22px 18px; }
+    header { padding: 40px 16px 30px; }
+  }
+
+  /* ===== BACK TO TOP ===== */
+  .back-top {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FF6D00, #FF4081);
+    border: none;
+    color: #fff;
+    font-size: 1.3rem;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(255,109,0,0.5);
+    z-index: 200;
+    transition: transform 0.2s;
+  }
+  .back-top:hover { transform: scale(1.1) translateY(-2px); }
+
+  /* ===== SECTION COLOR THEMES ===== */
+  [data-section="1"] .section-hero { background: linear-gradient(135deg, rgba(255,109,0,0.35), rgba(255,214,0,0.15)); }
+  [data-section="2"] .section-hero { background: linear-gradient(135deg, rgba(255,64,129,0.35), rgba(124,77,255,0.15)); }
+  [data-section="3"] .section-hero { background: linear-gradient(135deg, rgba(124,77,255,0.35), rgba(41,121,255,0.15)); }
+  [data-section="4"] .section-hero { background: linear-gradient(135deg, rgba(41,121,255,0.35), rgba(0,176,255,0.15)); }
+  [data-section="5"] .section-hero { background: linear-gradient(135deg, rgba(0,176,255,0.35), rgba(29,233,182,0.15)); }
+  [data-section="6"] .section-hero { background: linear-gradient(135deg, rgba(0,230,118,0.35), rgba(0,176,255,0.15)); }
+  [data-section="7"] .section-hero { background: linear-gradient(135deg, rgba(29,233,182,0.35), rgba(0,230,118,0.15)); }
+  [data-section="8"] .section-hero { background: linear-gradient(135deg, rgba(255,214,0,0.35), rgba(255,109,0,0.15)); }
+  [data-section="9"] .section-hero { background: linear-gradient(135deg, rgba(224,64,251,0.35), rgba(124,77,255,0.15)); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-glow"></div>
+  <span class="header-icon">💡</span>
+  <h1>บทที่ 2 : แสง</h1>
+  <p>วิทยาศาสตร์ ม.ต้น · ครอบคลุม 9 หัวข้อ · เนื้อหาครบถ้วน พร้อมตัวอย่างและการทดลอง</p>
+</header>
+
+<div class="rainbow-bar"></div>
+
+<nav class="nav-wrapper">
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-color="orange" onclick="showSection(1, this)">1. สะท้อน</button>
+    <button class="nav-tab" data-color="pink" onclick="showSection(2, this)">2. กระจกราบ</button>
+    <button class="nav-tab" data-color="purple" onclick="showSection(3, this)">3. กระจกโค้ง</button>
+    <button class="nav-tab" data-color="blue" onclick="showSection(4, this)">4. ภาพกระจกโค้ง</button>
+    <button class="nav-tab" data-color="cyan" onclick="showSection(5, this)">5. หักเห</button>
+    <button class="nav-tab" data-color="green" onclick="showSection(6, this)">6. สะท้อนกลับหมด</button>
+    <button class="nav-tab" data-color="teal" onclick="showSection(7, this)">7. กระจายแสง</button>
+    <button class="nav-tab" data-color="sun" onclick="showSection(8, this)">8. เลนส์</button>
+    <button class="nav-tab" data-color="magenta" onclick="showSection(9, this)">9. ความสว่าง</button>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ===================== SECTION 1 ===================== -->
+<div class="section active" id="s1" data-section="1">
+  <div class="section-hero">
+    <span class="hero-emoji">🪞</span>
+    <h2>กฎการสะท้อนของแสง</h2>
+    <span class="duration">⏱ 25 นาที</span>
+    <p>แสงเคลื่อนที่เป็นเส้นตรง เมื่อกระทบผิวสะท้อนจะเบนทิศทางตามกฎที่แน่นอน ซึ่งเป็นพื้นฐานสำคัญของแสงทั้งหมด</p>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula">มุมตกกระทบ = มุมสะท้อน ( θᵢ = θᵣ )</div>
+    <p>วัดจากเส้นปกติ (เส้นตั้งฉากกับผิวสะท้อน) ไม่ใช่จากผิวสะท้อน</p>
+  </div>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 500 280" xmlns="http://www.w3.org/2000/svg" font-family="Sarabun, sans-serif">
+      <!-- Mirror surface -->
+      <rect x="60" y="200" width="380" height="10" rx="3" fill="#90CAF9"/>
+      <text x="240" y="230" text-anchor="middle" fill="#90CAF9" font-size="13">ผิวกระจก (Mirror Surface)</text>
+      <!-- Normal line -->
+      <line x1="240" y1="60" x2="240" y2="200" stroke="rgba(255,255,255,0.3)" stroke-dasharray="6,4" stroke-width="2"/>
+      <text x="260" y="90" fill="rgba(255,255,255,0.5)" font-size="12">เส้นปกติ</text>
+      <!-- Incident ray -->
+      <line x1="100" y1="80" x2="240" y2="200" stroke="#FFD600" stroke-width="3" marker-end="url(#arr1)"/>
+      <text x="120" y="110" fill="#FFD600" font-size="13" font-weight="bold">รังสีตกกระทบ</text>
+      <!-- Reflected ray -->
+      <line x1="240" y1="200" x2="380" y2="80" stroke="#FF6D00" stroke-width="3" marker-end="url(#arr2)"/>
+      <text x="310" y="110" fill="#FF6D00" font-size="13" font-weight="bold">รังสีสะท้อน</text>
+      <!-- Angle arcs -->
+      <path d="M 210 170 A 40 40 0 0 1 240 165" stroke="#FFD600" stroke-width="2" fill="none"/>
+      <text x="192" y="162" fill="#FFD600" font-size="13" font-weight="bold">θᵢ</text>
+      <path d="M 240 165 A 40 40 0 0 1 270 170" stroke="#FF6D00" stroke-width="2" fill="none"/>
+      <text x="270" y="162" fill="#FF6D00" font-size="13" font-weight="bold">θᵣ</text>
+      <!-- Point O -->
+      <circle cx="240" cy="200" r="5" fill="#fff"/>
+      <text x="246" y="196" fill="#fff" font-size="12">O</text>
+      <!-- Arrowhead markers -->
+      <defs>
+        <marker id="arr1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#FFD600"/>
+        </marker>
+        <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#FF6D00"/>
+        </marker>
+      </defs>
+    </svg>
+    <div class="caption">แผนภาพกฎการสะท้อนของแสง</div>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card c-orange">
+      <h3>📋 หลักการสำคัญ</h3>
+      <ul>
+        <li>รังสีตกกระทบ เส้นปกติ และรังสีสะท้อน <strong>อยู่ในระนาบเดียวกัน</strong></li>
+        <li>มุมตกกระทบ = มุมสะท้อน (วัดจากเส้นปกติ)</li>
+        <li>กฎนี้ใช้ได้กับทุกผิว ทั้งราบและโค้ง</li>
+        <li>แสงเคลื่อนที่ได้ทั้ง 2 ทิศทาง (Reversibility)</li>
+      </ul>
+    </div>
+    <div class="card c-sun">
+      <h3>🔬 การทดลองที่ควรรู้</h3>
+      <ul>
+        <li>ใช้กระดาษขาว กระจก และเลเซอร์หรือเทียน</li>
+        <li>ยิงแสงทำมุมต่างๆ กับผิวกระจก</li>
+        <li>วัดมุมด้วยโปรแทรกเตอร์</li>
+        <li>สังเกตว่ามุมตกกระทบ = มุมสะท้อนเสมอ</li>
+      </ul>
+    </div>
+    <div class="card c-orange">
+      <h3>🌏 ตัวอย่างในชีวิตประจำวัน</h3>
+      <div class="life-examples">
+        <span class="life-chip">🪞 กระจกส่องหน้า</span>
+        <span class="life-chip">🚗 กระจกมองหลัง</span>
+        <span class="life-chip">🌊 ภาพสะท้อนในน้ำ</span>
+        <span class="life-chip">🔦 ไฟฉาย (reflector)</span>
+        <span class="life-chip">🛰 กล้องโทรทรรศน์</span>
+        <span class="life-chip">💎 ประกายเพชร</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight law">
+    <h4>📌 ประเภทการสะท้อน</h4>
+    <p><strong>การสะท้อนแบบสม่ำเสมอ (Regular/Specular Reflection)</strong> — ผิวเรียบ เช่น กระจก ภาพชัดเจน<br>
+    <strong>การสะท้อนแบบกระจาย (Diffuse Reflection)</strong> — ผิวขรุขระ เช่น กระดาษ ผนัง แสงสะท้อนหลายทิศ ทำให้เรามองเห็นวัตถุได้จากทุกมุม</p>
+  </div>
+
+  <div class="confusion">
+    <h4>⚠️ จุดที่มักสับสน</h4>
+    <ul>
+      <li><strong>มุมสะท้อนวัดจากเส้นปกติ</strong> ไม่ใช่จากผิวกระจก หากผิวกระจกเป็นแนวนอน มุมตกกระทบ 30° จากเส้นปกติ คือ 60° จากผิวกระจก</li>
+      <li>แสงที่ตกกระทบตั้งฉากกับผิว (θᵢ = 0°) จะสะท้อนกลับมาตามทางเดิม</li>
+      <li>การสะท้อนแบบกระจายไม่ใช่แสงหักเห เป็นคนละเรื่องกัน</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===================== SECTION 2 ===================== -->
+<div class="section" id="s2" data-section="2">
+  <div class="section-hero">
+    <span class="hero-emoji">🖼️</span>
+    <h2>ภาพที่เกิดจากกระจกเงาราบ</h2>
+    <span class="duration">⏱ 17 นาที</span>
+    <p>กระจกเงาราบให้ภาพเสมือน ตั้งตรง ขนาดเท่าวัตถุ และอยู่ลึกเข้าไปในกระจกเท่ากับระยะวัตถุ</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card c-pink">
+      <h3>🔑 คุณสมบัติภาพจากกระจกราบ</h3>
+      <ul>
+        <li>เป็น<strong>ภาพเสมือน</strong> (Virtual Image) — มองเห็นได้แต่รับบนฉากไม่ได้</li>
+        <li>ภาพ<strong>ตั้งตรง</strong> (Upright)</li>
+        <li>ขนาด<strong>เท่าวัตถุ</strong></li>
+        <li>ภาพอยู่<strong>หลังกระจก</strong> ระยะเท่ากับวัตถุ</li>
+        <li>ภาพ<strong>กลับซ้าย-ขวา</strong> (Laterally Inverted)</li>
+      </ul>
+    </div>
+    <div class="card c-pink">
+      <h3>📐 ความสัมพันธ์ระยะทาง</h3>
+      <p>ถ้าวัตถุอยู่ห่างกระจก <strong>d</strong> เมตร<br>
+      ภาพจะอยู่ห่างกระจกอีกด้าน <strong>d</strong> เมตร<br>
+      ระยะจากวัตถุถึงภาพ = <strong>2d</strong> เมตร</p>
+      <div style="margin-top:12px;padding:10px;background:rgba(255,64,129,0.1);border-radius:10px;font-size:0.88rem;">
+        🧪 ลองยืนห่างกระจก 1 เมตร → ภาพอยู่ลึก 1 เมตรในกระจก → คุณกับภาพห่างกัน 2 เมตร
+      </div>
+    </div>
+  </div>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 500 220" xmlns="http://www.w3.org/2000/svg" font-family="Sarabun, sans-serif">
+      <!-- Mirror -->
+      <rect x="240" y="20" width="8" height="180" fill="#90CAF9" rx="2"/>
+      <text x="260" y="115" fill="#90CAF9" font-size="12">กระจกราบ</text>
+      <!-- Object (person) -->
+      <circle cx="120" cy="80" r="14" fill="none" stroke="#FFD600" stroke-width="2.5"/>
+      <line x1="120" y1="94" x2="120" y2="140" stroke="#FFD600" stroke-width="2.5"/>
+      <line x1="120" y1="110" x2="100" y2="130" stroke="#FFD600" stroke-width="2.5"/>
+      <line x1="120" y1="110" x2="140" y2="130" stroke="#FFD600" stroke-width="2.5"/>
+      <line x1="120" y1="140" x2="100" y2="165" stroke="#FFD600" stroke-width="2.5"/>
+      <line x1="120" y1="140" x2="140" y2="165" stroke="#FFD600" stroke-width="2.5"/>
+      <text x="100" y="185" fill="#FFD600" font-size="13">วัตถุ</text>
+      <!-- Image (dashed) -->
+      <circle cx="370" cy="80" r="14" fill="none" stroke="rgba(255,64,129,0.6)" stroke-width="2" stroke-dasharray="5,3"/>
+      <line x1="370" y1="94" x2="370" y2="140" stroke="rgba(255,64,129,0.6)" stroke-width="2" stroke-dasharray="5,3"/>
+      <line x1="370" y1="110" x2="350" y2="130" stroke="rgba(255,64,129,0.6)" stroke-width="2" stroke-dasharray="5,3"/>
+      <line x1="370" y1="110" x2="390" y2="130" stroke="rgba(255,64,129,0.6)" stroke-width="2" stroke-dasharray="5,3"/>
+      <line x1="370" y1="140" x2="350" y2="165" stroke="rgba(255,64,129,0.6)" stroke-width="2" stroke-dasharray="5,3"/>
+      <line x1="370" y1="140" x2="390" y2="165" stroke="rgba(255,64,129,0.6)" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="350" y="185" fill="rgba(255,64,129,0.9)" font-size="13">ภาพ</text>
+      <!-- Distance arrows -->
+      <line x1="120" y1="200" x2="244" y2="200" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" marker-end="url(#arr3)" marker-start="url(#arrS)"/>
+      <line x1="248" y1="200" x2="370" y2="200" stroke="rgba(255,64,129,0.6)" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <text x="150" y="216" fill="rgba(255,255,255,0.6)" font-size="11">ระยะวัตถุ (d)</text>
+      <text x="265" y="216" fill="rgba(255,64,129,0.8)" font-size="11">ระยะภาพ (d)</text>
+      <defs>
+        <marker id="arr3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="rgba(255,255,255,0.5)"/>
+        </marker>
+        <marker id="arrS" markerWidth="8" markerHeight="8" refX="2" refY="3" orient="auto-start-reverse">
+          <path d="M0,0 L0,6 L8,3 z" fill="rgba(255,255,255,0.5)"/>
+        </marker>
+      </defs>
+    </svg>
+    <div class="caption">ภาพในกระจกเงาราบ — อยู่ลึกเข้าไปเท่ากับระยะวัตถุ</div>
+  </div>
+
+  <div class="highlight warn">
+    <h4>🔄 การกลับซ้าย-ขวา</h4>
+    <p>เมื่อยกมือขวา ภาพในกระจกยกมือ<strong>"ด้านเดียวกัน"</strong>แต่<strong>สลับซ้าย-ขวา</strong> ตัวอักษรในกระจกจึงอ่านกลับด้าน เช่น ข้อความบนรถพยาบาลเขียนสลับเพื่อให้คนขับเห็นในกระจกมองหลังได้ถูกต้อง</p>
+  </div>
+
+  <div class="experiment">
+    <h4>🔬 การทดลอง: หาตำแหน่งภาพในกระจกราบ</h4>
+    <ol>
+      <li>วางกระจกตั้งบนโต๊ะ วางเทียนด้านหน้ากระจก</li>
+      <li>มองจากด้านหน้า สังเกตภาพของเทียนในกระจก</li>
+      <li>วางวัตถุอื่นด้านหลังกระจก ขยับให้ตรงกับภาพเทียน</li>
+      <li>วัดระยะ: วัตถุหน้ากระจก = วัตถุหลังกระจก</li>
+    </ol>
+  </div>
+
+  <div class="must-know">
+    <h4>⭐ สิ่งที่ควรรู้</h4>
+    <ul>
+      <li>กระจกราบ 2 บาน ทำมุม θ จะเกิดภาพ = (360°/θ) - 1 ภาพ</li>
+      <li>เช่น ทำมุม 60° → (360/60) - 1 = 5 ภาพ</li>
+      <li>กระจก 2 บานตั้งฉากกัน (90°) → เกิด 3 ภาพ → ใช้ในห้องลองเสื้อ</li>
+      <li>กระจกคาไลโดสโคป (กล้องส่องสี) ใช้หลักนี้</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===================== SECTION 3 ===================== -->
+<div class="section" id="s3" data-section="3">
+  <div class="section-hero">
+    <span class="hero-emoji">🔭</span>
+    <h2>กระจกเงาโค้ง</h2>
+    <span class="duration">⏱ 15 นาที</span>
+    <p>กระจกโค้งมี 2 ชนิด — กระจกเว้า (Concave) ที่รวมแสง และกระจกนูน (Convex) ที่กระจายแสง แต่ละชนิดมีประโยชน์ต่างกัน</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card c-purple">
+      <h3>🔴 กระจกเว้า (Concave Mirror)</h3>
+      <ul>
+        <li>ผิวสะท้อนอยู่<strong>ด้านใน</strong>ของทรงกลม</li>
+        <li><strong>รวมแสง</strong> — รังสีขนานกันมาหักที่จุดโฟกัส</li>
+        <li>เรียกว่า Converging Mirror</li>
+        <li>f = R/2 (โฟกัสอยู่กึ่งกลางระหว่างกระจกและจุดศูนย์กลาง)</li>
+      </ul>
+    </div>
+    <div class="card c-blue">
+      <h3>🔵 กระจกนูน (Convex Mirror)</h3>
+      <ul>
+        <li>ผิวสะท้อนอยู่<strong>ด้านนอก</strong>ของทรงกลม</li>
+        <li><strong>กระจายแสง</strong> — รังสีขนานกันสะท้อนออกทุกทิศ</li>
+        <li>เรียกว่า Diverging Mirror</li>
+        <li>จุดโฟกัสเป็น<strong>โฟกัสเสมือน</strong> อยู่หลังกระจก</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="highlight law">
+    <h4>📐 ค่าสำคัญในกระจกโค้ง</h4>
+    <p>
+      <strong>C (Centre of Curvature)</strong> = จุดศูนย์กลางของทรงกลม<br>
+      <strong>R (Radius of Curvature)</strong> = รัศมีความโค้ง<br>
+      <strong>F (Focal Point)</strong> = จุดโฟกัส อยู่กึ่งกลาง CF<br>
+      <strong>f (Focal Length)</strong> = ระยะโฟกัส = R/2<br>
+      <strong>P (Pole)</strong> = จุดกึ่งกลางของกระจก
+    </p>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula">1/f = 1/u + 1/v</div>
+    <p>f = ระยะโฟกัส, u = ระยะวัตถุ, v = ระยะภาพ (Mirror Formula)</p>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula" style="color:#00E676">m = -v/u = h'/h</div>
+    <p>m = กำลังขยาย, h' = ขนาดภาพ, h = ขนาดวัตถุ | m+ = ตั้งตรง, m- = หัวกลับ</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card c-purple">
+      <h3>🌟 ตัวอย่างกระจกเว้า</h3>
+      <div class="life-examples">
+        <span class="life-chip">🪥 กระจกแต่งหน้า</span>
+        <span class="life-chip">🔭 กล้องโทรทรรศน์</span>
+        <span class="life-chip">🦷 กระจกทันตแพทย์</span>
+        <span class="life-chip">🚿 ไฟหน้ารถ</span>
+        <span class="life-chip">☀️ เตาพลังงานแสงอาทิตย์</span>
+      </div>
+    </div>
+    <div class="card c-blue">
+      <h3>🌟 ตัวอย่างกระจกนูน</h3>
+      <div class="life-examples">
+        <span class="life-chip">🚗 กระจกมองข้าง</span>
+        <span class="life-chip">🏪 กระจกนิรภัยร้านค้า</span>
+        <span class="life-chip">🔄 กระจกหัวโค้งถนน</span>
+        <span class="life-chip">🎠 ลูกบอลมันวาว</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="confusion">
+    <h4>⚠️ จุดที่มักสับสน</h4>
+    <ul>
+      <li><strong>กระจกเว้า</strong> ≠ ขยายเสมอ — ขึ้นอยู่กับระยะวัตถุ บางตำแหน่งก็ให้ภาพเล็กลง</li>
+      <li><strong>กระจกนูน</strong> ให้ภาพเสมือนเสมอ เห็นได้넓กว่าแต่เล็กกว่า</li>
+      <li>เครื่องหมาย: ในกระจกเว้า f เป็นบวก, กระจกนูน f เป็นลบ (Sign Convention)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===================== SECTION 4 ===================== -->
+<div class="section" id="s4" data-section="4">
+  <div class="section-hero">
+    <span class="hero-emoji">📸</span>
+    <h2>ภาพที่เกิดจากกระจกเงาโค้ง</h2>
+    <span class="duration">⏱ 19 นาที</span>
+    <p>ตำแหน่งของวัตถุกำหนดลักษณะภาพที่ได้จากกระจกโค้ง เข้าใจแผนที่ตำแหน่งนี้ได้เลย</p>
+  </div>
+
+  <h3 style="margin-bottom:14px;color:#82B1FF;">🔴 กระจกเว้า — ตำแหน่งวัตถุและภาพ</h3>
+  <div class="image-cases">
+    <div class="image-case">
+      <div class="case-title">📍 u > 2f (วัตถุอยู่นอก C)</div>
+      <p style="font-size:0.88rem;">ภาพจริง หัวกลับ อยู่ระหว่าง F กับ C ขนาดเล็กกว่าวัตถุ</p>
+      <div class="tags">
+        <span class="tag real">ภาพจริง</span>
+        <span class="tag inverted">หัวกลับ</span>
+        <span class="tag reduced">เล็กกว่า</span>
+      </div>
+      <p style="font-size:0.82rem;margin-top:8px;opacity:0.7;">ตัวอย่าง: กล้องถ่ายรูป, ตา</p>
+    </div>
+    <div class="image-case">
+      <div class="case-title">📍 u = 2f (วัตถุอยู่ที่ C)</div>
+      <p style="font-size:0.88rem;">ภาพจริง หัวกลับ อยู่ที่ C ขนาดเท่ากัน</p>
+      <div class="tags">
+        <span class="tag real">ภาพจริง</span>
+        <span class="tag inverted">หัวกลับ</span>
+        <span class="tag same">ขนาดเท่ากัน</span>
+      </div>
+    </div>
+    <div class="image-case">
+      <div class="case-title">📍 f &lt; u &lt; 2f (วัตถุอยู่ระหว่าง F และ C)</div>
+      <p style="font-size:0.88rem;">ภาพจริง หัวกลับ อยู่นอก C ขนาดใหญ่กว่าวัตถุ</p>
+      <div class="tags">
+        <span class="tag real">ภาพจริง</span>
+        <span class="tag inverted">หัวกลับ</span>
+        <span class="tag enlarged">ใหญ่กว่า</span>
+      </div>
+      <p style="font-size:0.82rem;margin-top:8px;opacity:0.7;">ตัวอย่าง: เครื่องฉายภาพ, Projector</p>
+    </div>
+    <div class="image-case">
+      <div class="case-title">📍 u = f (วัตถุอยู่ที่ F)</div>
+      <p style="font-size:0.88rem;">ไม่เกิดภาพ — รังสีสะท้อนออกขนานกัน ไม่พบกัน</p>
+      <div class="tags">
+        <span class="tag" style="background:rgba(255,255,255,0.1)">ไม่เกิดภาพ</span>
+      </div>
+      <p style="font-size:0.82rem;margin-top:8px;opacity:0.7;">ใช้: ไฟหน้ารถ ไฟฉาย (แสงขนาน)</p>
+    </div>
+    <div class="image-case">
+      <div class="case-title">📍 u &lt; f (วัตถุอยู่ระหว่าง F กับกระจก)</div>
+      <p style="font-size:0.88rem;">ภาพเสมือน ตั้งตรง ขยายใหญ่ อยู่หลังกระจก</p>
+      <div class="tags">
+        <span class="tag virtual">ภาพเสมือน</span>
+        <span class="tag upright">ตั้งตรง</span>
+        <span class="tag enlarged">ใหญ่กว่า</span>
+      </div>
+      <p style="font-size:0.82rem;margin-top:8px;opacity:0.7;">ตัวอย่าง: กระจกส่องหน้าแต่งตัว, กระจกทันตแพทย์</p>
+    </div>
+  </div>
+
+  <h3 style="margin:20px 0 14px;color:#82B1FF;">🔵 กระจกนูน — ทุกตำแหน่ง</h3>
+  <div class="image-cases">
+    <div class="image-case">
+      <div class="case-title">📍 ทุกตำแหน่ง (วัตถุอยู่ด้านหน้ากระจก)</div>
+      <p style="font-size:0.88rem;">ภาพเสมือนเสมอ ตั้งตรง เล็กกว่าวัตถุ อยู่หลังกระจก มองเห็นได้กว้างกว่า</p>
+      <div class="tags">
+        <span class="tag virtual">ภาพเสมือน</span>
+        <span class="tag upright">ตั้งตรง</span>
+        <span class="tag reduced">เล็กกว่า</span>
+      </div>
+      <p style="font-size:0.82rem;margin-top:8px;opacity:0.7;">ตัวอย่าง: กระจกมองข้าง, กระจกนิรภัย</p>
+    </div>
+  </div>
+
+  <div class="experiment">
+    <h4>🔬 การทดลอง: หาจุดโฟกัสกระจกเว้า</h4>
+    <ol>
+      <li>นำกระจกเว้าออกไปในที่แดด ชี้กระจกรับแสงอาทิตย์</li>
+      <li>นำกระดาษขาวรับแสงสะท้อนจากกระจก</li>
+      <li>ขยับกระดาษจนจุดแสงเล็กที่สุดและสว่างที่สุด</li>
+      <li>วัดระยะจากกระจกถึงกระดาษ = ระยะโฟกัส (f)</li>
+      <li>ทดลองด้วยวัตถุและเทียน วัดระยะภาพต่างๆ</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ===================== SECTION 5 ===================== -->
+<div class="section" id="s5" data-section="5">
+  <div class="section-hero">
+    <span class="hero-emoji">🌊</span>
+    <h2>การหักเหของแสง</h2>
+    <span class="duration">⏱ 24 นาที</span>
+    <p>เมื่อแสงเดินทางจากตัวกลางหนึ่งไปอีกตัวกลางหนึ่ง ความเร็วเปลี่ยน ทิศทางก็เปลี่ยนตาม — ตามกฎของสเนลล์</p>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula">n₁ sin θ₁ = n₂ sin θ₂</div>
+    <p>กฎของสเนลล์ (Snell's Law) | n = ดัชนีหักเห = c/v</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card c-cyan">
+      <h3>📊 ดัชนีหักเหของตัวกลาง</h3>
+      <table class="styled-table" style="margin-top:8px;">
+        <tr><th>ตัวกลาง</th><th>ดัชนีหักเห (n)</th></tr>
+        <tr><td>สุญญากาศ/อากาศ</td><td>≈ 1.00</td></tr>
+        <tr><td>น้ำ</td><td>1.33</td></tr>
+        <tr><td>แก้ว</td><td>1.5 – 1.9</td></tr>
+        <tr><td>เพชร</td><td>2.42</td></tr>
+        <tr><td>น้ำมัน</td><td>~1.46</td></tr>
+      </table>
+    </div>
+    <div class="card c-cyan">
+      <h3>📋 กฎการหักเหของแสง</h3>
+      <ul>
+        <li>รังสีตกกระทบ เส้นปกติ และรังสีหักเห อยู่ในระนาบเดียวกัน</li>
+        <li>แสงจาก<strong>บางไปหนาแน่น</strong>: เบนเข้าหาเส้นปกติ (θ₂ &lt; θ₁)</li>
+        <li>แสงจาก<strong>หนาแน่นไปบาง</strong>: เบนออกจากเส้นปกติ (θ₂ > θ₁)</li>
+        <li>n มากกว่า → แสงช้ากว่า → หักเหมากกว่า</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 500 260" xmlns="http://www.w3.org/2000/svg" font-family="Sarabun, sans-serif">
+      <!-- Interface -->
+      <rect x="0" y="130" width="500" height="130" fill="rgba(0,176,255,0.12)" rx="0"/>
+      <line x1="0" y1="130" x2="500" y2="130" stroke="#00B0FF" stroke-width="2"/>
+      <text x="380" y="155" fill="#00B0FF" font-size="12">ตัวกลาง n₂ (หนาแน่น)</text>
+      <text x="380" y="50" fill="rgba(255,255,255,0.5)" font-size="12">ตัวกลาง n₁ (บาง)</text>
+      <!-- Normal -->
+      <line x1="250" y1="20" x2="250" y2="250" stroke="rgba(255,255,255,0.25)" stroke-dasharray="6,4" stroke-width="1.5"/>
+      <!-- Incident -->
+      <line x1="120" y1="30" x2="250" y2="130" stroke="#FFD600" stroke-width="3"/>
+      <text x="130" y="60" fill="#FFD600" font-size="12">รังสีตกกระทบ</text>
+      <!-- Refracted -->
+      <line x1="250" y1="130" x2="330" y2="250" stroke="#00E676" stroke-width="3"/>
+      <text x="335" y="200" fill="#00E676" font-size="12">รังสีหักเห</text>
+      <!-- Angles -->
+      <path d="M 235 110 A 30 30 0 0 1 250 105" stroke="#FFD600" stroke-width="2" fill="none"/>
+      <text x="208" y="108" fill="#FFD600" font-size="13">θ₁</text>
+      <path d="M 250 155 A 30 30 0 0 0 262 145" stroke="#00E676" stroke-width="2" fill="none"/>
+      <text x="268" y="158" fill="#00E676" font-size="13">θ₂</text>
+      <!-- Point -->
+      <circle cx="250" cy="130" r="5" fill="#fff"/>
+      <!-- Defs -->
+      <defs>
+        <marker id="ag" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#00E676"/>
+        </marker>
+      </defs>
+    </svg>
+    <div class="caption">แสงหักเหเมื่อผ่านจากตัวกลางบางไปหนาแน่น — เบนเข้าหาเส้นปกติ</div>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card c-cyan">
+      <h3>🌏 ตัวอย่างในชีวิตประจำวัน</h3>
+      <div class="life-examples">
+        <span class="life-chip">🖊 ดินสอในแก้วน้ำดูหักงอ</span>
+        <span class="life-chip">🐟 ปลาในน้ำดูตื้นกว่าจริง</span>
+        <span class="life-chip">🌅 พระอาทิตย์ขึ้นก่อนถึงขอบฟ้า</span>
+        <span class="life-chip">💎 แสงสีรุ้งผ่านปริซึม</span>
+        <span class="life-chip">👓 แว่นตาช่วยการมองเห็น</span>
+        <span class="life-chip">🌊 ฝาบ่อน้ำดูตื้น</span>
+      </div>
+    </div>
+    <div class="card c-cyan">
+      <h3>🔬 การทดลอง</h3>
+      <ul>
+        <li>ใส่ดินสอในแก้วน้ำ มองจากด้านข้าง</li>
+        <li>วางเหรียญในชาม ยืนมองเหรียญพอดีขอบชาม แล้วเติมน้ำ</li>
+        <li>ใช้กล่องกระดาษดำ เจาะรู ฉายแสงผ่านน้ำ</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="confusion">
+    <h4>⚠️ จุดที่มักสับสน</h4>
+    <ul>
+      <li>ดัชนีหักเหไม่มีหน่วย เป็นอัตราส่วน n = c/v (ความเร็วแสงในสุญญากาศ ÷ ความเร็วแสงในตัวกลาง)</li>
+      <li>แสงไม่ได้หักเหเมื่อตกตั้งฉาก (θ₁ = 0°) จะทะลุผ่านตรงๆ</li>
+      <li>"ตัวกลางหนาแน่นทางแสง" ≠ หนาแน่นทางมวล (น้ำมันอาจหนาแน่นกว่าน้ำทางแสง แม้เบากว่าน้ำ)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===================== SECTION 6 ===================== -->
+<div class="section" id="s6" data-section="6">
+  <div class="section-hero">
+    <span class="hero-emoji">💎</span>
+    <h2>การสะท้อนกลับหมดของแสง</h2>
+    <span class="duration">⏱ 19 นาที</span>
+    <p>เมื่อแสงเดินทางจากตัวกลางหนาแน่นไปบาง และมุมตกกระทบมากพอ — แสงจะสะท้อนกลับ 100% ไม่มีแสงหักเหออกไปเลย</p>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula">sin θ_c = n₂ / n₁</div>
+    <p>มุมวิกฤต (Critical Angle) θ_c | ใช้เมื่อ n₁ > n₂ (แสงออกจากตัวกลางที่หนาแน่นกว่า)</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card c-green">
+      <h3>📋 เงื่อนไขที่ต้องครบ</h3>
+      <ul>
+        <li>แสงต้องเดินทางจากตัวกลาง<strong>หนาแน่นกว่า → บางกว่า</strong></li>
+        <li>มุมตกกระทบต้อง<strong>มากกว่ามุมวิกฤต</strong> (θ > θ_c)</li>
+        <li>ถ้าครบทั้ง 2 เงื่อนไข → แสงสะท้อนกลับ 100%</li>
+        <li>มุมสะท้อน = มุมตกกระทบ (ยังเป็นไปตามกฎการสะท้อน)</li>
+      </ul>
+    </div>
+    <div class="card c-green">
+      <h3>📊 มุมวิกฤตของตัวกลาง</h3>
+      <table class="styled-table" style="margin-top:8px;">
+        <tr><th>ตัวกลาง (n₁)</th><th>มุมวิกฤต (กับอากาศ)</th></tr>
+        <tr><td>น้ำ (1.33)</td><td>48.8°</td></tr>
+        <tr><td>แก้ว (1.5)</td><td>41.8°</td></tr>
+        <tr><td>เพชร (2.42)</td><td>24.4°</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card c-teal">
+      <h3>🌐 ใยแก้วนำแสง (Fiber Optic)</h3>
+      <p style="margin-bottom:8px;">ใยแก้วนำแสงใช้การสะท้อนกลับหมดส่งข้อมูลด้วยความเร็วแสง ผ่านแกนแก้ว (Core) ที่มีค่า n สูงกว่าชั้นหุ้ม (Cladding)</p>
+      <div class="life-examples">
+        <span class="life-chip">📡 อินเทอร์เน็ต Fiber</span>
+        <span class="life-chip">🏥 กล้องส่องตรวจภายใน</span>
+        <span class="life-chip">💡 ไฟประดับใยแก้ว</span>
+      </div>
+    </div>
+    <div class="card c-teal">
+      <h3>💎 ทำไมเพชรจึงแวววาว</h3>
+      <p>เพชรมี n = 2.42 สูงมาก มุมวิกฤตเพียง 24.4° แสงที่เข้าไปในเพชรจึงสะท้อนกลับหมดภายในได้ง่ายมาก ช่างเจียระไนเพชรออกแบบมุมหน้าเพชรให้แสงสะท้อนกลับหมดมากที่สุด จึงเห็นประกายสวยงาม</p>
+    </div>
+  </div>
+
+  <div class="experiment">
+    <h4>🔬 การทดลอง: สังเกตการสะท้อนกลับหมด</h4>
+    <ol>
+      <li>ใส่น้ำในภาชนะใส วางบนโต๊ะ</li>
+      <li>ฉายแสงเลเซอร์จากใต้น้ำขึ้น (ทำมุมต่างๆ กับผิวน้ำ)</li>
+      <li>ค่อยๆ เพิ่มมุม — สังเกตแสงหักเหบนผิวน้ำ</li>
+      <li>เมื่อมุมถึงมุมวิกฤต แสงหักเหจะหายไป เห็นเฉพาะแสงสะท้อน</li>
+      <li>เพิ่มมุมอีก — แสงสะท้อนกลับหมด 100%</li>
+    </ol>
+  </div>
+
+  <div class="must-know">
+    <h4>⭐ สิ่งที่ควรรู้</h4>
+    <ul>
+      <li>มุมวิกฤตยิ่งน้อย (เช่น เพชร) → สะท้อนกลับหมดได้ง่ายกว่า</li>
+      <li>ปรากฏการณ์มิราจ (Mirage) บนถนนร้อน เกิดจากการสะท้อนกลับหมดของแสงในอากาศ</li>
+      <li>ใยแก้วนำแสง 1 เส้นบางกว่าเส้นผม แต่ส่งข้อมูลได้หลายล้าน bits/วินาที</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===================== SECTION 7 ===================== -->
+<div class="section" id="s7" data-section="7">
+  <div class="section-hero">
+    <span class="hero-emoji">🌈</span>
+    <h2>การกระจายของแสง</h2>
+    <span class="duration">⏱ 10 นาที</span>
+    <p>แสงขาวไม่ใช่แสงสีเดียว — มันประกอบด้วยแสงสีต่างๆ ที่มีความยาวคลื่นต่างกัน เมื่อผ่านปริซึมหรือหยดน้ำ แสงจะแยกออกเป็นสีรุ้ง</p>
+  </div>
+
+  <div class="spectrum-bar">
+    <span>ม่วง</span>
+    <span>คราม</span>
+    <span>น้ำเงิน</span>
+    <span>เขียว</span>
+    <span>เหลือง</span>
+    <span>แสด</span>
+    <span>แดง</span>
+  </div>
+  <p style="text-align:center;font-size:0.8rem;opacity:0.6;margin-bottom:16px;">แสงสีม่วง (ความยาวคลื่นสั้น) → หักเหมาก | แสงสีแดง (ความยาวคลื่นยาว) → หักเหน้อย</p>
+
+  <div class="cards-grid">
+    <div class="card c-teal">
+      <h3>🔬 การกระจายผ่านปริซึม</h3>
+      <ul>
+        <li>แสงขาวผ่านปริซึม → แยกเป็นสเปกตรัม 7 สี</li>
+        <li>แต่ละสีมีดัชนีหักเหต่างกันเล็กน้อย</li>
+        <li>สีม่วงหักเหมากสุด, สีแดงหักเหน้อยสุด</li>
+        <li>ปรากฏการณ์นี้เรียกว่า <strong>Dispersion</strong></li>
+      </ul>
+    </div>
+    <div class="card c-teal">
+      <h3>🌈 รุ้งกินน้ำ</h3>
+      <ul>
+        <li>หยดน้ำทำหน้าที่เหมือนปริซึมทรงกลม</li>
+        <li>แสงอาทิตย์เข้าหยดน้ำ → หักเห → สะท้อนกลับในหยดน้ำ → หักเหออก</li>
+        <li>เห็นรุ้งเมื่อดวงอาทิตย์อยู่<strong>ด้านหลัง</strong> เรา</li>
+        <li>รุ้งกินน้ำ 2 ชั้น: ชั้นใน (แดง-บน ม่วง-ล่าง) ชั้นนอก (สีสลับ)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="highlight info">
+    <h4>💡 Newton และการค้นพบสเปกตรัม</h4>
+    <p>ไอแซก นิวตัน ค้นพบว่าแสงขาวประกอบด้วยสีต่างๆ โดยใช้ปริซึมแยกสีออก แล้วใช้ปริซึมอีกอันรวมสีกลับเป็นแสงขาว — พิสูจน์ว่าสีต่างๆ ล้วนเป็นส่วนหนึ่งของแสงขาว ไม่ใช่สีที่ปริซึมสร้างขึ้น</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card c-teal">
+      <h3>🎨 การผสมแสง vs การผสมสีทา</h3>
+      <p style="margin-bottom:8px;"><strong>แสง (Additive)</strong>: แดง + เขียว + น้ำเงิน = ขาว<br>
+      <strong>สีทา (Subtractive)</strong>: แดง + เหลือง + น้ำเงิน = ดำ</p>
+      <div class="life-examples">
+        <span class="life-chip">📺 หน้าจอ RGB</span>
+        <span class="life-chip">🔦 แสงสี 3 สี</span>
+      </div>
+    </div>
+    <div class="card c-teal">
+      <h3>🌏 ตัวอย่างในชีวิต</h3>
+      <div class="life-examples">
+        <span class="life-chip">🌈 รุ้งกินน้ำ</span>
+        <span class="life-chip">💎 ประกายเพชร</span>
+        <span class="life-chip">💿 แผ่น CD/DVD</span>
+        <span class="life-chip">🫧 ฟิล์มบางน้ำมัน</span>
+        <span class="life-chip">🌅 ท้องฟ้าสีส้มยามเย็น</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="confusion">
+    <h4>⚠️ จุดที่มักสับสน</h4>
+    <ul>
+      <li>การกระจายแสงเกิดจากหักเหต่างกัน ไม่ใช่สะท้อน</li>
+      <li>ท้องฟ้าสีฟ้า เกิดจาก<strong>การกระเจิงของแสง</strong> (Scattering) ไม่ใช่การกระจาย</li>
+      <li>สีของวัตถุเกิดจากการดูดซับบางสี และสะท้อนสีที่เราเห็น</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===================== SECTION 8 ===================== -->
+<div class="section" id="s8" data-section="8">
+  <div class="section-hero">
+    <span class="hero-emoji">🔍</span>
+    <h2>เลนส์และภาพที่เกิดจากเลนส์</h2>
+    <span class="duration">⏱ 27 นาที</span>
+    <p>เลนส์ใช้การหักเหของแสงในการรวมหรือกระจายแสง — เป็นหัวใจสำคัญของแว่นตา กล้อง กล้องโทรทรรศน์ และตาของเรา</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card c-sun">
+      <h3>🔴 เลนส์นูน (Convex / Converging Lens)</h3>
+      <ul>
+        <li>ตรงกลางหนา ขอบบาง</li>
+        <li><strong>รวมแสง</strong> — รังสีขนานมาบรรจบที่โฟกัส</li>
+        <li>โฟกัส<strong>จริง</strong> อยู่ด้านหลังเลนส์</li>
+        <li>Power (กำลังเลนส์) = 1/f (หน่วย diopter)</li>
+      </ul>
+    </div>
+    <div class="card c-orange">
+      <h3>🔵 เลนส์เว้า (Concave / Diverging Lens)</h3>
+      <ul>
+        <li>ตรงกลางบาง ขอบหนา</li>
+        <li><strong>กระจายแสง</strong> — รังสีขนานสะท้อนออกทุกทิศ</li>
+        <li>โฟกัส<strong>เสมือน</strong> อยู่ด้านหน้าเลนส์</li>
+        <li>กำลังเลนส์ติดลบ</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula">1/f = 1/u + 1/v</div>
+    <p>Thin Lens Equation | f+ = เลนส์นูน, f- = เลนส์เว้า</p>
+  </div>
+
+  <h3 style="margin:20px 0 14px;color:#FFD600;">🔴 เลนส์นูน — ตำแหน่งวัตถุและภาพ</h3>
+  <div class="image-cases">
+    <div class="image-case">
+      <div class="case-title">📍 u > 2f</div>
+      <p style="font-size:0.88rem;">ภาพจริง หัวกลับ เล็กกว่าวัตถุ อยู่ระหว่าง f และ 2f ด้านหลังเลนส์</p>
+      <div class="tags"><span class="tag real">ภาพจริง</span><span class="tag inverted">หัวกลับ</span><span class="tag reduced">เล็กกว่า</span></div>
+      <p style="font-size:0.82rem;margin-top:8px;opacity:0.7;">ตัวอย่าง: ตาของมนุษย์มองวัตถุไกล</p>
+    </div>
+    <div class="image-case">
+      <div class="case-title">📍 u = 2f</div>
+      <p style="font-size:0.88rem;">ภาพจริง หัวกลับ ขนาดเท่ากัน อยู่ที่ 2f ด้านหลังเลนส์</p>
+      <div class="tags"><span class="tag real">ภาพจริง</span><span class="tag inverted">หัวกลับ</span><span class="tag same">เท่ากัน</span></div>
+    </div>
+    <div class="image-case">
+      <div class="case-title">📍 f &lt; u &lt; 2f</div>
+      <p style="font-size:0.88rem;">ภาพจริง หัวกลับ ใหญ่กว่าวัตถุ อยู่นอก 2f ด้านหลังเลนส์</p>
+      <div class="tags"><span class="tag real">ภาพจริง</span><span class="tag inverted">หัวกลับ</span><span class="tag enlarged">ใหญ่กว่า</span></div>
+      <p style="font-size:0.82rem;margin-top:8px;opacity:0.7;">ตัวอย่าง: โปรเจคเตอร์ฉายภาพ</p>
+    </div>
+    <div class="image-case">
+      <div class="case-title">📍 u = f</div>
+      <p style="font-size:0.88rem;">ไม่เกิดภาพ รังสีออกขนานกัน ไม่พบกัน</p>
+      <div class="tags"><span class="tag" style="background:rgba(255,255,255,0.1)">ไม่เกิดภาพ</span></div>
+      <p style="font-size:0.82rem;margin-top:8px;opacity:0.7;">ใช้: ไฟฉาย, ไฟสัญญาณ</p>
+    </div>
+    <div class="image-case">
+      <div class="case-title">📍 u &lt; f</div>
+      <p style="font-size:0.88rem;">ภาพเสมือน ตั้งตรง ใหญ่กว่าวัตถุ อยู่ด้านเดียวกับวัตถุ</p>
+      <div class="tags"><span class="tag virtual">ภาพเสมือน</span><span class="tag upright">ตั้งตรง</span><span class="tag enlarged">ใหญ่กว่า</span></div>
+      <p style="font-size:0.82rem;margin-top:8px;opacity:0.7;">ตัวอย่าง: แว่นขยาย, กล้องจุลทรรศน์ (eyepiece)</p>
+    </div>
+  </div>
+
+  <h3 style="margin:20px 0 14px;color:#FF6D00;">🔵 เลนส์เว้า — ทุกตำแหน่ง</h3>
+  <div class="image-cases">
+    <div class="image-case">
+      <div class="case-title">📍 ทุกตำแหน่ง</div>
+      <p style="font-size:0.88rem;">ภาพเสมือนเสมอ ตั้งตรง เล็กกว่าวัตถุ อยู่ด้านเดียวกับวัตถุ</p>
+      <div class="tags"><span class="tag virtual">ภาพเสมือน</span><span class="tag upright">ตั้งตรง</span><span class="tag reduced">เล็กกว่า</span></div>
+      <p style="font-size:0.82rem;margin-top:8px;opacity:0.7;">ตัวอย่าง: แว่นสายตาสั้น (Myopia)</p>
+    </div>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card c-sun">
+      <h3>👁 สายตาและแว่น</h3>
+      <table class="styled-table" style="margin-top:8px;">
+        <tr><th>ปัญหา</th><th>สาเหตุ</th><th>แก้ด้วย</th></tr>
+        <tr><td>สายตาสั้น</td><td>ลูกตายาวเกิน</td><td>เลนส์เว้า</td></tr>
+        <tr><td>สายตายาว</td><td>ลูกตาสั้นเกิน</td><td>เลนส์นูน</td></tr>
+        <tr><td>สายตาแก่</td><td>เลนส์ตาแข็ง</td><td>เลนส์นูน (แว่นอ่าน)</td></tr>
+      </table>
+    </div>
+    <div class="card c-orange">
+      <h3>🌏 ตัวอย่างการใช้เลนส์</h3>
+      <div class="life-examples">
+        <span class="life-chip">📷 กล้องถ่ายรูป</span>
+        <span class="life-chip">🔭 กล้องโทรทรรศน์</span>
+        <span class="life-chip">🔬 กล้องจุลทรรศน์</span>
+        <span class="life-chip">👓 แว่นตา</span>
+        <span class="life-chip">📽 โปรเจคเตอร์</span>
+        <span class="life-chip">🔎 แว่นขยาย</span>
+        <span class="life-chip">👁 ตาของมนุษย์</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="experiment">
+    <h4>🔬 การทดลอง: หาระยะโฟกัสเลนส์นูน</h4>
+    <ol>
+      <li>ชี้เลนส์นูนไปยังแสงอาทิตย์ หรือแหล่งกำเนิดแสงไกลๆ</li>
+      <li>ใช้กระดาษขาวรับแสง ขยับจนจุดแสงเล็กที่สุด</li>
+      <li>วัดระยะจากเลนส์ถึงกระดาษ = ระยะโฟกัส f</li>
+      <li>วางเทียนที่ระยะต่างๆ วัดระยะภาพ และตรวจสอบสูตร 1/f = 1/u + 1/v</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ===================== SECTION 9 ===================== -->
+<div class="section" id="s9" data-section="9">
+  <div class="section-hero">
+    <span class="hero-emoji">✨</span>
+    <h2>ความสว่าง</h2>
+    <span class="duration">⏱ ศึกษาเพิ่มเติม</span>
+    <p>ความสว่างบอกว่าพื้นที่หนึ่งได้รับแสงมากน้อยเพียงใด — ยิ่งใกล้แหล่งกำเนิดแสง และตั้งฉากกับแสง ยิ่งสว่าง</p>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula">E = I / r²</div>
+    <p>ความสว่าง (E, lux) = ความเข้มแสง (I, candela) ÷ ระยะ² | กฎกำลังสอง (Inverse Square Law)</p>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula" style="color:#00E676">E = I · cos θ / r²</div>
+    <p>เมื่อแสงตกกระทบทำมุม θ กับพื้นผิว | θ = 0° (ตั้งฉาก) → สว่างที่สุด</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card c-magenta">
+      <h3>📏 หน่วยความสว่าง</h3>
+      <table class="styled-table" style="margin-top:8px;">
+        <tr><th>ปริมาณ</th><th>สัญลักษณ์</th><th>หน่วย SI</th></tr>
+        <tr><td>ฟลักซ์ส่องสว่าง</td><td>Φ</td><td>lumen (lm)</td></tr>
+        <tr><td>ความเข้มแสง</td><td>I</td><td>candela (cd)</td></tr>
+        <tr><td>ความสว่าง</td><td>E</td><td>lux (lx)</td></tr>
+        <tr><td>ความสว่างปรากฏ</td><td>L</td><td>cd/m²</td></tr>
+      </table>
+    </div>
+    <div class="card c-magenta">
+      <h3>💡 ความสว่างในชีวิต</h3>
+      <table class="styled-table" style="margin-top:8px;">
+        <tr><th>สภาพแวดล้อม</th><th>ความสว่าง (lux)</th></tr>
+        <tr><td>แสงอาทิตย์เต็มๆ</td><td>100,000</td></tr>
+        <tr><td>วันที่มีเมฆ</td><td>10,000</td></tr>
+        <tr><td>ห้องสำนักงาน</td><td>300–500</td></tr>
+        <tr><td>ห้องน้ำ</td><td>100–200</td></tr>
+        <tr><td>แสงจันทร์เต็มดวง</td><td>0.1</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="highlight law">
+    <h4>📉 กฎกำลังสองผกผัน (Inverse Square Law)</h4>
+    <p>ระยะห่างเพิ่มขึ้น 2 เท่า → ความสว่างลดลง 4 เท่า<br>
+    ระยะห่างเพิ่มขึ้น 3 เท่า → ความสว่างลดลง 9 เท่า<br>
+    <em>แสงแผ่กระจายในทรงกลม พื้นที่เพิ่ม r² จึงความสว่างลด r²</em></p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card c-magenta">
+      <h3>🔬 การทดลอง: กฎกำลังสอง</h3>
+      <ul>
+        <li>วางหลอดไฟและโฟโตมิเตอร์บนรางวัด</li>
+        <li>วัดความสว่างที่ระยะ 1, 2, 3 เมตร</li>
+        <li>บันทึกและเปรียบเทียบว่า E × r² คงที่หรือไม่</li>
+      </ul>
+    </div>
+    <div class="card c-magenta">
+      <h3>🌏 ตัวอย่างในชีวิต</h3>
+      <div class="life-examples">
+        <span class="life-chip">📸 Flash กล้อง (ระยะมีผล)</span>
+        <span class="life-chip">🔦 ไฟฉาย</span>
+        <span class="life-chip">🏟 ไฟสนามกีฬา</span>
+        <span class="life-chip">🏠 ออกแบบแสงภายใน</span>
+        <span class="life-chip">☀️ พลังงานแสงอาทิตย์</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="must-know">
+    <h4>⭐ สิ่งที่ควรรู้เพิ่มเติม</h4>
+    <ul>
+      <li>มาตรฐานความสว่างในห้องเรียน: ไม่น้อยกว่า 300 lux</li>
+      <li>ความสว่างไม่เท่ากับความเข้มแสง — ความสว่างขึ้นกับระยะทางและมุมด้วย</li>
+      <li>ดวงตาของเราปรับตัวได้กับความสว่างหลากหลายมาก (Dynamic Range)</li>
+      <li>แหล่งกำเนิดแสงแบบจุด (Point Source) เป็นไปตามกฎกำลังสอง แต่แหล่งกำเนิดขนาดใหญ่ไม่เป็นไปตามกฎนี้</li>
+    </ul>
+  </div>
+
+  <!-- Summary Card -->
+  <div style="background:linear-gradient(135deg,rgba(224,64,251,0.15),rgba(124,77,255,0.1));border:1px solid rgba(224,64,251,0.3);border-radius:var(--radius);padding:24px;margin-top:24px;">
+    <h3 style="margin-bottom:14px;font-size:1.1rem;">🎯 สรุปสูตรที่ต้องจำในบทแสง</h3>
+    <div style="display:grid;gap:10px;font-size:0.88rem;">
+      <div style="background:rgba(255,255,255,0.05);padding:10px 14px;border-radius:10px;">🔹 <strong>กฎสะท้อน:</strong> θᵢ = θᵣ</div>
+      <div style="background:rgba(255,255,255,0.05);padding:10px 14px;border-radius:10px;">🔹 <strong>กฎสเนลล์:</strong> n₁ sin θ₁ = n₂ sin θ₂</div>
+      <div style="background:rgba(255,255,255,0.05);padding:10px 14px;border-radius:10px;">🔹 <strong>มุมวิกฤต:</strong> sin θ_c = n₂/n₁</div>
+      <div style="background:rgba(255,255,255,0.05);padding:10px 14px;border-radius:10px;">🔹 <strong>กระจก/เลนส์:</strong> 1/f = 1/u + 1/v</div>
+      <div style="background:rgba(255,255,255,0.05);padding:10px 14px;border-radius:10px;">🔹 <strong>กำลังขยาย:</strong> m = v/u = h'/h</div>
+      <div style="background:rgba(255,255,255,0.05);padding:10px 14px;border-radius:10px;">🔹 <strong>ความสว่าง:</strong> E = I cos θ / r²</div>
+      <div style="background:rgba(255,255,255,0.05);padding:10px 14px;border-radius:10px;">🔹 <strong>ดัชนีหักเห:</strong> n = c / v</div>
+      <div style="background:rgba(255,255,255,0.05);padding:10px 14px;border-radius:10px;">🔹 <strong>ระยะโฟกัส:</strong> f = R/2</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<button class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+function showSection(n, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('s' + n).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: document.querySelector('.nav-wrapper').offsetTop - 10, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

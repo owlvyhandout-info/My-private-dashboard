@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปเรื่อง แสง (Light) - Owlvy House</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap');
+        
+        :root {
+            --bg-color: #f4f9f9;
+            --text-main: #2d3436;
+            --accent-1: #ff6b6b; /* Red-Pink */
+            --accent-2: #4ecdc4; /* Teal */
+            --accent-3: #feca57; /* Yellow */
+            --accent-4: #5f27cd; /* Purple */
+            --accent-5: #ff9ff3; /* Light Pink */
+            --accent-6: #0abde3; /* Cyan */
+            --accent-7: #10ac84; /* Green */
+            --accent-8: #ff9f43; /* Orange */
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.8em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.2em;
+            margin-top: 10px;
+            font-weight: 300;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+        }
+
+        .toc h2 {
+            color: var(--accent-4);
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .toc a {
+            text-decoration: none;
+            background: var(--bg-color);
+            color: var(--text-main);
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--accent-2);
+            display: flex;
+            align-items: center;
+        }
+
+        .toc a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            background: var(--accent-2);
+            color: white;
+        }
+
+        /* Content Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            border-top: 8px solid;
+        }
+
+        .t1 { border-top-color: var(--accent-1); }
+        .t2 { border-top-color: var(--accent-2); }
+        .t3 { border-top-color: var(--accent-3); }
+        .t4 { border-top-color: var(--accent-4); }
+        .t5 { border-top-color: var(--accent-5); }
+        .t6 { border-top-color: var(--accent-6); }
+        .t7 { border-top-color: var(--accent-7); }
+        .t8 { border-top-color: var(--accent-8); }
+
+        .card h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 0;
+            font-size: 1.8em;
+        }
+
+        .t1 h2 { color: var(--accent-1); }
+        .t2 h2 { color: var(--accent-2); }
+        .t3 h2 { color: #d4a017; } /* Darker yellow for text */
+        .t4 h2 { color: var(--accent-4); }
+        .t5 h2 { color: #d980ce; }
+        .t6 h2 { color: var(--accent-6); }
+        .t7 h2 { color: var(--accent-7); }
+        .t8 h2 { color: var(--accent-8); }
+
+        .section-box {
+            margin-top: 20px;
+        }
+
+        h3 {
+            border-bottom: 2px dashed #eee;
+            padding-bottom: 8px;
+            color: #555;
+            font-size: 1.3em;
+        }
+
+        /* Callouts */
+        .highlight {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #2196f3;
+            margin: 15px 0;
+        }
+
+        .experiment {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #4caf50;
+            margin: 15px 0;
+        }
+        
+        .experiment::before {
+            content: '🔬 การทดลอง/ข้อสังเกต: ';
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .alert {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #ff9800;
+            margin: 15px 0;
+        }
+        
+        .alert::before {
+            content: '⚠️ ข้อสับสนที่พบบ่อย: ';
+            font-weight: bold;
+            color: #e65100;
+        }
+
+        .daily-life {
+            background: #f3e5f5;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #9c27b0;
+            margin: 15px 0;
+        }
+
+        .daily-life::before {
+            content: '🌍 ตัวอย่างในชีวิตประจำวัน: ';
+            font-weight: bold;
+            color: #6a1b9a;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: var(--accent-2);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f9f9f9;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #888;
+            font-size: 1em;
+            margin-top: 40px;
+            border-top: 2px solid #eee;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: white;
+            margin-right: 5px;
+        }
+        .tag-real { background-color: #ff6b6b; }
+        .tag-virtual { background-color: #4ecdc4; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🌟 สรุปเนื้อหาวิทยาศาสตร์ ม.ต้น</h1>
+        <p>บทที่ 2 เรื่อง แสง (Light) | รวบรวมและจัดทำโดย Kru Owlvy (Owlvy House)</p>
+    </header>
+
+    <div class="toc">
+        <h2>📑 สารบัญเนื้อหา</h2>
+        <div class="toc-grid">
+            <a href="#topic1">1. กฎการสะท้อนของแสง</a>
+            <a href="#topic2">2. ภาพที่เกิดจากกระจกเงาราบ</a>
+            <a href="#topic3">3. กระจกเงาโค้ง</a>
+            <a href="#topic4">4. ภาพที่เกิดจากกระจกเงาโค้ง</a>
+            <a href="#topic5">5. การหักเหของแสง</a>
+            <a href="#topic6">6. การสะท้อนกลับหมดของแสง</a>
+            <a href="#topic7">7. การกระจายของแสง</a>
+            <a href="#topic8">8. เลนส์และภาพที่เกิดขึ้น</a>
+            <a href="#topic9">9. ความสว่าง</a>
+        </div>
+    </div>
+
+    <!-- Topic 1 -->
+    <div class="card t1" id="topic1">
+        <h2>🪞 1. กฎการสะท้อนของแสง (Law of Reflection)</h2>
+        <div class="section-box">
+            <h3>หลักการที่เกี่ยวข้อง</h3>
+            <p>เมื่อแสงเดินทางไปตกกระทบผิววัตถุ แสงจะเกิดการสะท้อนกลับสู่ตัวกลางเดิม โดยมีกฎที่สำคัญ 2 ข้อ คือ:</p>
+            <ol>
+                <li>รังสีตกกระทบ (Incident ray), รังสีสะท้อน (Reflected ray) และ เส้นปกติ (Normal line) <strong>ต้องอยู่ในระนาบเดียวกันเสมอ</strong></li>
+                <li><strong>มุมตกกระทบ = มุมสะท้อน</strong> (θi = θr) โดยมุมนี้จะต้องวัดจากรังสีไปยัง "เส้นปกติ" เสมอ</li>
+            </ol>
+            <div class="experiment">
+                ใช้เลเซอร์พอยเตอร์ยิงแสงใส่กระจกเงาในห้องมืด แล้วพ่นควันจางๆ หรือฝุ่นชอล์ก จะเห็นเส้นทางเดินของแสงชัดเจน หากปรับมุมเลเซอร์ให้กว้างขึ้น มุมที่แสงสะท้อนออกก็จะกว้างขึ้นตามด้วยสัดส่วนที่เท่ากันเป๊ะ!
+            </div>
+            <div class="alert">
+                เด็กๆ หลายคนมักเผลอไปวัดมุมตกกระทบจาก "พื้นผิวกระจก" ซึ่ง <strong>ผิด!</strong> ต้องวัดจากเส้นปกติ (เส้นสมมติที่ลากตั้งฉากกับกระจก) เท่านั้นนะ
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic 2 -->
+    <div class="card t2" id="topic2">
+        <h2>🧍 2. ภาพที่เกิดจากกระจกเงาราบ (Images from Plane Mirrors)</h2>
+        <div class="section-box">
+            <h3>ลักษณะภาพที่เกิดขึ้น</h3>
+            <p>กระจกเงาราบคือกระจกส่องหน้าปกติที่เราใช้ทุกวัน ภาพที่ได้จะมีลักษณะเฉพาะตัวดังนี้:</p>
+            <ul>
+                <li><span class="tag tag-virtual">ภาพเสมือนหัวตั้ง</span> (เอาฉากมารับไม่ได้ ภาพไปอยู่หลังกระจก)</li>
+                <li><strong>ขนาดภาพ = ขนาดวัตถุ</strong> และ <strong>ระยะภาพ = ระยะวัตถุ</strong></li>
+                <li>เกิดการกลับซ้ายเป็นขวา (Lateral Inversion)</li>
+            </ul>
+            <div class="daily-life">
+                รถพยาบาล (AMBULANCE) จะเขียนตัวหนังสือกลับซ้ายเป็นขวาที่หน้ารถ เพื่อให้รถคันหน้าที่มองผ่าน "กระจกมองหลัง" (ซึ่งเป็นกระจกเงาราบ) เห็นตัวหนังสือกลับมาอ่านออกได้พอดี
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic 3 & 4 -->
+    <div class="card t3" id="topic3">
+        <h2 id="topic4">🥄 3-4. กระจกเงาโค้ง และภาพที่เกิดขึ้น (Curved Mirrors)</h2>
+        <div class="section-box">
+            <h3>หลักการของกระจกเงาโค้ง</h3>
+            <p>กระจกเงาโค้งแบ่งออกเป็น 2 ชนิดหลักๆ ซึ่งทำหน้าที่จัดการกับแสงต่างกัน:</p>
+            <table>
+                <tr>
+                    <th>ชนิดกระจก</th>
+                    <th>หน้าที่ต่อแสง</th>
+                    <th>ลักษณะภาพที่เกิด</th>
+                    <th>การนำไปใช้งาน</th>
+                </tr>
+                <tr>
+                    <td><strong>กระจกเว้า (Concave)</strong><br><small>ผิวบุ๋มลงไป</small></td>
+                    <td><strong>รวมแสง</strong> (เข้าหาจุดโฟกัส)</td>
+                    <td>เกิดได้ทั้ง <span class="tag tag-real">ภาพจริง</span> (หัวกลับ ทุกขนาด) และ <span class="tag tag-virtual">ภาพเสมือน</span> (หัวตั้ง <strong>ขนาดใหญ่กว่าวัตถุ</strong>)</td>
+                    <td>กระจกหมอฟัน (ขยายฟัน), กระจกแต่งหน้า, จานดาวเทียม</td>
+                </tr>
+                <tr>
+                    <td><strong>กระจกนูน (Convex)</strong><br><small>ผิวป่องออกมา</small></td>
+                    <td><strong>กระจายแสง</strong></td>
+                    <td>เกิดได้แค่ <span class="tag tag-virtual">ภาพเสมือน</span> (หัวตั้ง <strong>ขนาดเล็กกว่าวัตถุ</strong> เสมอ!)</td>
+                    <td>กระจกมองโค้งตามสามแยก, กระจกมองข้างรถยนต์ (ช่วยให้เห็นมุมกว้างขึ้น)</td>
+                </tr>
+            </table>
+            <div class="experiment">
+                ใช้ช้อนสแตนเลสที่ขัดเงาใหม่ๆ ส่องหน้าตัวเอง! <br>
+                - <strong>ส่องด้านบุ๋ม (กระจกเว้า):</strong> ถ้าอยู่ไกลหน้าจะตีลังกา (ภาพจริงหัวกลับ) ถ้ายื่นช้อนเข้าใกล้ตามากๆ ตาจะใหญ่เบ้อเริ่ม (ภาพเสมือนหัวตั้งขนาดใหญ่)<br>
+                - <strong>ส่องด้านนูน (กระจกนูน):</strong> ไม่ว่าจะใกล้หรือไกล หน้าเราจะตั้งตรงแต่เล็กลง และเห็นวิวรอบๆ กว้างขึ้น
+            </div>
+            <div class="alert">
+                ภาพจริง = เอาฉากรับได้ (หัวกลับเสมอ) | ภาพเสมือน = เอาฉากรับไม่ได้ มองเห็นได้ด้วยตา (หัวตั้งเสมอ)
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic 5 -->
+    <div class="card t4" id="topic5">
+        <h2>🌊 5. การหักเหของแสง (Refraction)</h2>
+        <div class="section-box">
+            <h3>หลักการหักเห</h3>
+            <p>แสงเดินทางผ่านตัวกลางโปร่งใสที่ต่างชนิดกัน (ความหนาแน่นต่างกัน) ทำให้ "ความเร็วของแสงเปลี่ยนไป" จึงเกิดการเบนทิศทาง:</p>
+            <ul>
+                <li><strong>จากตัวกลางความหนาแน่นน้อย → มาก</strong> (เช่น อากาศ ไป น้ำ): ความเร็วลดลง แสงจะ <strong>เบนเข้าหา</strong> เส้นปกติ</li>
+                <li><strong>จากตัวกลางความหนาแน่นมาก → น้อย</strong> (เช่น น้ำ ไป อากาศ): ความเร็วเพิ่มขึ้น แสงจะ <strong>เบนออกจาก</strong> เส้นปกติ</li>
+            </ul>
+            <div class="daily-life">
+                เวลาเรามองปลาในสระน้ำ เราจะเห็นปลาอยู่ตื้นกว่าความเป็นจริง เรียกว่า <strong>ลึกปรากฏ (Apparent depth)</strong> หรือเวลาใส่หลอดลงในแก้วน้ำ จะเห็นหลอดหักงอ
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic 6 -->
+    <div class="card t5" id="topic6">
+        <h2>💎 6. การสะท้อนกลับหมดของแสง (Total Internal Reflection)</h2>
+        <div class="section-box">
+            <h3>เงื่อนไขการเกิด</h3>
+            <p>เป็นปรากฏการณ์ต่อเนื่องจากการหักเห เกิดขึ้นเมื่อ: แสงเดินทางจากตัวกลางที่ <strong>หนาแน่นมาก ไป หนาแน่นน้อย</strong> (เช่น แก้วไปอากาศ) และ <strong>มุมตกกระทบ โตกว่า มุมวิกฤต (Critical Angle)</strong> ทำให้แสงไม่หักเหออกไปเลย แต่สะท้อนกลับเข้ามาในตัวกลางเดิมทั้งหมด!</p>
+            <div class="daily-life">
+                <ul>
+                    <li><strong>มิราจ (Mirage):</strong> ภาพลวงตาแอ่งน้ำบนถนนตอนแดดร้อนจัด เกิดจากอากาศใกล้ถนนร้อน (หนาแน่นน้อย) กว่าอากาศด้านบน</li>
+                    <li><strong>เส้นใยแก้วนำแสง (Fiber Optics):</strong> ใช้ส่งสัญญาณอินเทอร์เน็ตความเร็วสูง โดยแสงวิ่งสะท้อนไปมาอยู่ในสายโดยไม่ทะลุออก</li>
+                    <li><strong>ประกายเพชร:</strong> เพชรเจียระไนมาเพื่อให้แสงเข้าแล้วสะท้อนกลับหมดอยู่ข้างใน ทำให้ดูวิบวับ</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic 7 -->
+    <div class="card t6" id="topic7">
+        <h2>🌈 7. การกระจายของแสง (Dispersion)</h2>
+        <div class="section-box">
+            <h3>สเปกตรัมของแสง (Spectrum)</h3>
+            <p>แสงขาว (White light) จากดวงอาทิตย์ แท้จริงแล้วประกอบด้วยแสงสี 7 สี (ม่วง คราม น้ำเงิน เขียว เหลือง แสด แดง) เมื่อแสงขาวเดินทางผ่าน <strong>ปริซึม (Prism)</strong> แสงแต่ละสีจะหักเหไม่เท่ากัน จึงแยกตัวออกจากกัน</p>
+            <ul>
+                <li><strong>สีม่วง:</strong> ความถี่สูงสุด ความยาวคลื่นสั้นสุด หักเห/เบนมากที่สุด</li>
+                <li><strong>สีแดง:</strong> ความถี่ต่ำสุด ความยาวคลื่นยาวสุด หักเห/เบนน้อยที่สุด</li>
+            </ul>
+            <div class="daily-life">
+                การเกิด <strong>รุ้งกินน้ำ</strong> หลังฝนตก โดยมีละอองน้ำในอากาศทำหน้าที่เสมือนปริซึมจิ๋ว หักเหและกระจายแสงอาทิตย์
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic 8 -->
+    <div class="card t7" id="topic8">
+        <h2>🔍 8. เลนส์และภาพที่เกิดจากเลนส์ (Lenses)</h2>
+        <div class="section-box">
+            <p>เลนส์ใช้หลักการ <strong>หักเห</strong> (แสงทะลุผ่านได้) ต่างจากกระจกที่ใช้หลักการสะท้อน <strong>*จำง่ายๆ: เลนส์นูนทำงานคล้ายกระจกเว้า เลนส์เว้าทำงานคล้ายกระจกนูน*</strong></p>
+            <table>
+                <tr>
+                    <th>ชนิดเลนส์</th>
+                    <th>หน้าที่ต่อแสง</th>
+                    <th>ลักษณะภาพที่เกิด</th>
+                    <th>การใช้งาน</th>
+                </tr>
+                <tr>
+                    <td><strong>เลนส์นูน (Convex Lens)</strong><br><small>ตรงกลางหนา ขอบบาง</small></td>
+                    <td><strong>รวมแสง</strong></td>
+                    <td>เกิดได้ทั้ง <span class="tag tag-real">ภาพจริง</span> (ทุกขนาด) และ <span class="tag tag-virtual">ภาพเสมือน</span> (<strong>ขนาดใหญ่กว่าวัตถุ</strong> เท่านั้น)</td>
+                    <td>แว่นขยาย, กล้องจุลทรรศน์, <strong>แว่นตาแก้คนสายตายาว</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>เลนส์เว้า (Concave Lens)</strong><br><small>ตรงกลางบาง ขอบหนา</small></td>
+                    <td><strong>กระจายแสง</strong></td>
+                    <td>เกิดได้แค่ <span class="tag tag-virtual">ภาพเสมือน</span> (หัวตั้ง <strong>ขนาดเล็กกว่าวัตถุ</strong> เสมอ!)</td>
+                    <td>กล้องส่องทางไกล (เลนส์ตา), <strong>แว่นตาแก้คนสายตาสั้น</strong></td>
+                </tr>
+            </table>
+            <div class="alert">
+                <strong>ทริคการจำเรื่องสายตา:</strong><br>
+                "สั้น - เว้า" (สายตาสั้น ใส่เลนส์เว้า เพื่อกระจายแสงให้ตกพอดีจอประสาทตา)<br>
+                "ยาว - นูน" (สายตายาว ใส่เลนส์นูน เพื่อรวมแสงให้ตกพอดีจอประสาทตา)
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic 9 -->
+    <div class="card t8" id="topic9">
+        <h2>💡 9. ความสว่าง (Illuminance)</h2>
+        <div class="section-box">
+            <h3>การคำนวณและหน่วยวัด</h3>
+            <p>ความสว่าง (E) คือ ปริมาณฟลักซ์การส่องสว่าง (อัตราพลังงานแสง) ที่ตกลงบนพื้นที่รับแสง 1 ตารางเมตร</p>
+            <div class="highlight">
+                <strong>สูตร: E = F / A</strong><br>
+                E = ความสว่าง มีหน่วยเป็น <strong>ลักซ์ (Lux : lx)</strong><br>
+                F = ฟลักซ์การส่องสว่าง มีหน่วยเป็น ลูเมน (Lumen : lm)<br>
+                A = พื้นที่รับแสง มีหน่วยเป็น ตารางเมตร (m²)
+            </div>
+            <p>ความสว่างมีผลต่อการมองเห็นและการถนอมสายตา เราใช้เครื่องมือที่เรียกว่า <strong>ลักซ์มิเตอร์ (Lux meter)</strong> ในการวัดความสว่างของห้อง</p>
+            <div class="daily-life">
+                การจัดแสงในห้องต่างๆ ต้องมีความสว่างที่เหมาะสม เช่น:<br>
+                - ทางเดิน/บันได: ~100 ลักซ์<br>
+                - ห้องเรียน/ห้องทำงาน: ~300 - 500 ลักซ์<br>
+                - โต๊ะอ่านหนังสือ/งานเย็บปักถักร้อย: ~500 - 1,000 ลักซ์
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>✨ ไฟล์สรุปเนื้อหาออกแบบสำหรับนักเรียนระดับมัธยมศึกษาตอนต้น ✨</p>
+        <p><strong>Created by:</strong> Kru Owlvy | Owlvy House Academy</p>
+    </footer>
+</div>
+
+</body>
+</html>
