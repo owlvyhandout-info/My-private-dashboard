@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>โครงสร้างเนื้อหา แสง (Light) - Owlvy House</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap');
+        
+        :root {
+            --bg-main: #f8f9fa;
+            --text-dark: #2d3436;
+            --header-bg: #4834d4;
+            --header-text: #ffffff;
+            
+            /* Section Colors */
+            --color-reflect: #ffbe76;
+            --color-refract: #7ed6df;
+            --color-tir: #e056fd;
+            --color-dispersion: #badc58;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 30px 15px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            color: var(--header-bg);
+            font-size: 2.5em;
+            margin: 0 0 10px 0;
+            text-shadow: 2px 2px 0px rgba(72, 52, 212, 0.1);
+        }
+
+        header p {
+            font-size: 1.2em;
+            color: #636e72;
+            margin: 0;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 2px solid #dfe6e9;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 18px;
+            text-align: left;
+            border-bottom: 1px solid #dfe6e9;
+            border-right: 1px solid #dfe6e9;
+            vertical-align: top;
+        }
+
+        th:last-child, td:last-child {
+            border-right: none;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        th {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            font-weight: 600;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        /* Property Column Styling */
+        .prop-reflect { background-color: rgba(255, 190, 118, 0.2); font-weight: bold; color: #d35400; text-align: center; vertical-align: middle;}
+        .prop-refract { background-color: rgba(126, 214, 223, 0.2); font-weight: bold; color: #0984e3; text-align: center; vertical-align: middle;}
+        .prop-tir { background-color: rgba(224, 86, 253, 0.2); font-weight: bold; color: #6c5ce7; text-align: center; vertical-align: middle;}
+        .prop-dispersion { background-color: rgba(186, 220, 88, 0.2); font-weight: bold; color: #44bd32; text-align: center; vertical-align: middle;}
+
+        td ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .highlight {
+            background-color: #ffeaa7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #d63031;
+        }
+
+        .formula {
+            display: inline-block;
+            background: #f1f2f6;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 1.1em;
+            color: #2f3542;
+            border: 1px dashed #a4b0be;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #b2bec3;
+            font-size: 0.9em;
+            border-top: 1px solid #dfe6e9;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🌟 โครงสร้างเนื้อหาวิทยาศาสตร์: เรื่อง แสง</h1>
+        <p>สรุปตารางวิเคราะห์คุณสมบัติของแสง สำหรับนักเรียนมัธยมต้น</p>
+    </header>
+
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th width="15%">คุณสมบัติของแสง</th>
+                    <th width="20%">วัตถุที่สาธิตคุณสมบัตินี้</th>
+                    <th width="25%">ลักษณะภาพที่เกิดขึ้น</th>
+                    <th width="20%">ปรากฏการณ์ธรรมชาติ/การประยุกต์ใช้</th>
+                    <th width="20%">การคำนวณ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- การสะท้อน -->
+                <tr>
+                    <td rowspan="3" class="prop-reflect">🪞 การสะท้อน<br>(Reflection)</td>
+                    <td>1. กระจกเงาราบ</td>
+                    <td>
+                        <ul>
+                            <li><span class="highlight">ภาพเสมือน หัวตั้ง</span></li>
+                            <li>ขนาดภาพ = ขนาดวัตถุ</li>
+                            <li>ระยะภาพ = ระยะวัตถุ</li>
+                            <li>กลับซ้ายเป็นขวา</li>
+                        </ul>
+                    </td>
+                    <td>เงาสะท้อนบนผิวน้ำนิ่ง, กระจกเงาส่องหน้า, กล้องส่องใต้น้ำ (Periscope)</td>
+                    <td>
+                        กฎการสะท้อน:<br>
+                        <span class="formula">มุมตกกระทบ = มุมสะท้อน</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2. กระจกเงาโค้งเว้า<br><small>(รวมแสง)</small></td>
+                    <td>
+                        <ul>
+                            <li><b>ภาพจริง:</b> หัวกลับ (มีทั้งขนาดใหญ่, เท่า, และเล็กกว่าวัตถุ)</li>
+                            <li><b>ภาพเสมือน:</b> หัวตั้ง <span class="highlight">ขนาดใหญ่กว่าวัตถุ</span></li>
+                        </ul>
+                    </td>
+                    <td>ทันตแพทย์ใช้ส่องฟัน, กระจกแต่งหน้า, จานรับสัญญาณดาวเทียม</td>
+                    <td>
+                        <span class="formula">1/f = 1/s + 1/s'</span><br>
+                        <small>(f มีค่าเป็นบวก +)</small>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3. กระจกเงาโค้งนูน<br><small>(กระจายแสง)</small></td>
+                    <td>
+                        <ul>
+                            <li><span class="highlight">ภาพเสมือน หัวตั้ง ขนาดเล็กกว่าวัตถุ เสมอ</span></li>
+                        </ul>
+                    </td>
+                    <td>กระจกมองข้างรถยนต์, กระจกโค้งตามมุมถนน/ทางแยก</td>
+                    <td>
+                        <span class="formula">1/f = 1/s + 1/s'</span><br>
+                        <small>(f มีค่าเป็นลบ -)</small>
+                    </td>
+                </tr>
+
+                <!-- การหักเห -->
+                <tr>
+                    <td rowspan="3" class="prop-refract">🌊 การหักเห<br>(Refraction)</td>
+                    <td>1. เลนส์นูน<br><small>(รวมแสง)</small></td>
+                    <td>
+                        <ul>
+                            <li><b>ภาพจริง:</b> หัวกลับ (ทุกขนาด)</li>
+                            <li><b>ภาพเสมือน:</b> หัวตั้ง <span class="highlight">ขนาดใหญ่กว่าวัตถุ</span></li>
+                        </ul>
+                    </td>
+                    <td>แว่นตาสำหรับคนสายตายาว, กล้องจุลทรรศน์, แว่นขยาย</td>
+                    <td>
+                        <span class="formula">1/f = 1/s + 1/s'</span><br>
+                        <small>(f มีค่าเป็นบวก +)</small>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2. เลนส์เว้า<br><small>(กระจายแสง)</small></td>
+                    <td>
+                        <ul>
+                            <li><span class="highlight">ภาพเสมือน หัวตั้ง ขนาดเล็กกว่าวัตถุ เสมอ</span></li>
+                        </ul>
+                    </td>
+                    <td>แว่นตาสำหรับคนสายตาสั้น</td>
+                    <td>
+                        <span class="formula">1/f = 1/s + 1/s'</span><br>
+                        <small>(f มีค่าเป็นลบ -)</small>
+                    </td>
+                </tr>
+                <tr>
+                    <td><i>(ปรากฏการณ์เกี่ยวกับความลึก)</i></td>
+                    <td>มองเห็นภาพวัตถุที่อยู่ในน้ำ <span class="highlight">อยู่ตื้นกว่าความเป็นจริง</span></td>
+                    <td>
+                        <b>ลึกจริง/ลึกปรากฏ</b><br>
+                        - มองเห็นปลาในน้ำตื้นกว่าความเป็นจริง<br>
+                        - มองเห็นหลอดดูดน้ำหักงอ
+                    </td>
+                    <td>
+                        <span class="formula">ลึกปรากฏ / ลึกจริง = n2 / n1</span>
+                    </td>
+                </tr>
+
+                <!-- การสะท้อนกลับหมด -->
+                <tr>
+                    <td class="prop-tir">💎 การสะท้อนกลับหมดของแสง</td>
+                    <td>ปริซึม, เส้นใยแก้วนำแสง (Fiber Optics), เพชร</td>
+                    <td>แสงเดินทางจากตัวกลางหนาแน่นมากไปน้อย (มุมตกกระทบ > มุมวิกฤต) ทำให้<b>ไม่มีแสงหักเหทะลุออกไป แต่สะท้อนกลับเข้ามา 100%</b></td>
+                    <td>
+                        - การเกิดภาพลวงตา (Mirage) บนถนนร้อนๆ<br>
+                        - ความสว่างประกายแวววาวของเพชร
+                    </td>
+                    <td style="text-align: center; color: #7f8c8d; font-style: italic;">ไม่ต้องเน้นคำนวณ</td>
+                </tr>
+
+                <!-- การกระจายแสง -->
+                <tr>
+                    <td class="prop-dispersion">🌈 การกระจายแสง<br>(Dispersion)</td>
+                    <td>ปริซึม (Prism), ละอองน้ำในอากาศ</td>
+                    <td>แสงขาวหักเหผ่านตัวกลางและแยกออกเป็น <b>สเปกตรัม 7 สี</b> (ม่วง คราม น้ำเงิน เขียว เหลือง แสด แดง)</td>
+                    <td>
+                        - รุ้งกินน้ำ (Rainbow)<br>
+                        - พระอาทิตย์ทรงกลด
+                    </td>
+                    <td style="text-align: center; color: #7f8c8d; font-style: italic;">ไม่ต้องเน้นคำนวณ</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <p>✨ ออกแบบและเรียบเรียงเนื้อหาเพื่อใช้เป็นสื่อการสอนวิทยาศาสตร์ ม.ต้น โดย ครู Kru Owlvy | Owlvy House ✨</p>
+    </footer>
+</div>
+
+</body>
+</html>

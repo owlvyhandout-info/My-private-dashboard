@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บทที่ 2 แสง | วิทยาศาสตร์ ม.ต้น</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700;800&family=Kanit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F0F4FF;
+  --surface: #FFFFFF;
+  --border: #E2E8F0;
+  --text: #1E293B;
+  --muted: #64748B;
+
+  --reflect: #FF6B35;
+  --reflect-light: #FFF0EB;
+  --reflect-mid: #FFD4C2;
+
+  --refract: #0EA5E9;
+  --refract-light: #E0F2FE;
+  --refract-mid: #BAE6FD;
+
+  --total: #8B5CF6;
+  --total-light: #EDE9FE;
+  --total-mid: #DDD6FE;
+
+  --disperse: #10B981;
+  --disperse-light: #D1FAE5;
+  --disperse-mid: #A7F3D0;
+
+  --col1: 220px;
+  --col2: 180px;
+  --col3: 260px;
+  --col4: 220px;
+  --col5: 200px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Prompt', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.page-header {
+  background: linear-gradient(135deg, #1E293B 0%, #0F172A 60%, #1E3A5F 100%);
+  color: white;
+  padding: 40px 24px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(255,107,53,0.15) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 50%, rgba(14,165,233,0.12) 0%, transparent 60%);
+}
+.page-header h1 {
+  font-family: 'Kanit', sans-serif;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 700;
+  position: relative;
+  letter-spacing: 1px;
+}
+.page-header h1 span {
+  background: linear-gradient(90deg, #FF6B35, #F59E0B, #10B981, #0EA5E9, #8B5CF6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.page-header p {
+  margin-top: 8px;
+  opacity: 0.65;
+  font-size: 0.95rem;
+  position: relative;
+}
+.header-badges {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  position: relative;
+}
+.hbadge {
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.85);
+}
+
+/* ── LEGEND ── */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  padding: 16px 20px;
+  background: white;
+  border-bottom: 2px solid var(--border);
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.legend-dot {
+  width: 14px; height: 14px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+/* ── MAIN TABLE WRAPPER ── */
+.table-scroll {
+  overflow-x: auto;
+  padding: 24px 16px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── TABLE ── */
+.main-table {
+  width: 100%;
+  min-width: 1050px;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.08);
+  background: white;
+}
+
+/* ── HEADER ROW ── */
+.main-table thead tr th {
+  padding: 16px 14px;
+  font-family: 'Kanit', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-align: center;
+  background: #1E293B;
+  color: white;
+  letter-spacing: 0.3px;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.main-table thead tr th:last-child { border-right: none; }
+.main-table thead tr th .th-icon { display: block; font-size: 1.3rem; margin-bottom: 4px; }
+
+/* ── SECTION LABEL CELL ── */
+.section-cell {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-family: 'Kanit', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-align: center;
+  vertical-align: middle;
+  padding: 20px 10px;
+  color: white;
+  border-right: 3px solid rgba(0,0,0,0.1);
+  white-space: nowrap;
+}
+
+/* ── DATA CELLS ── */
+.main-table td {
+  padding: 16px 14px;
+  vertical-align: top;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  border-top: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+.main-table td:last-child { border-right: none; }
+
+/* ── SUB-HEADER (device row) ── */
+.sub-header td {
+  font-family: 'Kanit', sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* ── COLOR THEMES PER SECTION ── */
+
+/* REFLECT */
+.reflect-section .section-cell { background: var(--reflect); }
+.reflect-sub { background: var(--reflect-light); }
+.reflect-sub td { background: var(--reflect-light); color: #C2400C; }
+.reflect-row td { background: white; }
+.reflect-row:hover td { background: #FFF8F5; }
+
+/* REFRACT */
+.refract-section .section-cell { background: var(--refract); }
+.refract-sub { background: var(--refract-light); }
+.refract-sub td { background: var(--refract-light); color: #0369A1; }
+.refract-row td { background: white; }
+.refract-row:hover td { background: #F0F9FF; }
+
+/* TOTAL INTERNAL */
+.total-section .section-cell { background: var(--total); }
+.total-sub td { background: var(--total-light); color: #6D28D9; }
+.total-row td { background: white; }
+.total-row:hover td { background: #F5F3FF; }
+
+/* DISPERSE */
+.disperse-section .section-cell { background: var(--disperse); }
+.disperse-sub td { background: var(--disperse-light); color: #065F46; }
+.disperse-row td { background: white; }
+.disperse-row:hover td { background: #F0FDF4; }
+
+/* ── TAGS ── */
+.tag {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 12px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  margin: 2px 3px 2px 0;
+  white-space: nowrap;
+}
+.tag-real    { background: #DBEAFE; color: #1D4ED8; }
+.tag-virtual { background: #EDE9FE; color: #6D28D9; }
+.tag-upright { background: #D1FAE5; color: #065F46; }
+.tag-inverted{ background: #FEE2E2; color: #B91C1C; }
+.tag-same    { background: #F3F4F6; color: #374151; border: 1px solid #D1D5DB; }
+.tag-larger  { background: #FEF3C7; color: #92400E; }
+.tag-smaller { background: #FCE7F3; color: #9D174D; }
+.tag-warn    { background: #FEF3C7; color: #B45309; }
+
+/* ── IMAGE TABLE (cases) ── */
+.cases-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin-top: 6px;
+}
+.cases-table th {
+  background: rgba(0,0,0,0.06);
+  padding: 5px 8px;
+  text-align: center;
+  font-weight: 700;
+  border: 1px solid rgba(0,0,0,0.1);
+  font-size: 0.78rem;
+}
+.cases-table td {
+  padding: 5px 8px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: white !important;
+  font-size: 0.8rem;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 1.5;
+}
+.cases-table tr:nth-child(even) td { background: rgba(0,0,0,0.02) !important; }
+
+/* ── FORMULA BOX ── */
+.formula {
+  background: #1E293B;
+  color: #F8FAFC;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 6px 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+.formula span { color: #FCD34D; }
+
+/* ── INLINE LIST ── */
+ul.clean { padding-left: 16px; }
+ul.clean li { margin-bottom: 4px; font-size: 0.85rem; }
+
+/* ── NATURE CHIP ── */
+.nat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin: 3px 3px 3px 0;
+  border: 1.5px solid;
+}
+.nat-orange { background: #FFF7ED; color: #C2440C; border-color: #FED7AA; }
+.nat-blue   { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+.nat-purple { background: #F5F3FF; color: #6D28D9; border-color: #DDD6FE; }
+.nat-green  { background: #F0FDF4; color: #065F46; border-color: #A7F3D0; }
+
+/* ── HIGHLIGHT NOTE ── */
+.note {
+  border-left: 4px solid;
+  border-radius: 0 8px 8px 0;
+  padding: 8px 12px;
+  margin-top: 8px;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+.note-orange { border-color: var(--reflect); background: #FFF8F5; color: #7C3010; }
+.note-blue   { border-color: var(--refract); background: #F0F9FF; color: #0C4A6E; }
+.note-purple { border-color: var(--total);   background: #F5F3FF; color: #4C1D95; }
+.note-green  { border-color: var(--disperse);background: #F0FDF4; color: #064E3B; }
+
+/* ── DEVICE LABEL ── */
+.device-label {
+  font-family: 'Kanit', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.device-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* ── RAINBOW BAR ── */
+.rainbow { height: 5px; background: linear-gradient(90deg,#FF6B35,#F59E0B,#10B981,#0EA5E9,#8B5CF6); }
+
+/* ── COLLAPSE TOGGLE (mobile-friendly) ── */
+.section-toggle {
+  display: none;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .table-scroll { padding: 12px 8px 30px; }
+  .page-header { padding: 28px 16px 22px; }
+}
+
+/* ── SVG DIAGRAM ── */
+.diagram-cell { text-align: center; }
+.diagram-cell svg { max-width: 100%; }
+.diagram-cell .caption { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+
+/* ── SPECTRUM ── */
+.spectrum {
+  height: 22px;
+  border-radius: 11px;
+  background: linear-gradient(90deg,#7C3AED,#3B82F6,#06B6D4,#10B981,#EAB308,#F97316,#EF4444);
+  margin: 6px 0;
+}
+.spectrum-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--muted);
+  padding: 0 2px;
+}
+
+/* ── SECTION DIVIDER ── */
+.section-divider {
+  height: 6px;
+}
+</style>
+</head>
+<body>
+
+<div class="rainbow"></div>
+
+<div class="page-header">
+  <h1>บทที่ 2 <span>แสง</span></h1>
+  <p>วิทยาศาสตร์ ม.ต้น · สรุปเนื้อหาครบถ้วนตามโครงสร้าง</p>
+  <div class="header-badges">
+    <span class="hbadge">🪞 การสะท้อน</span>
+    <span class="hbadge">🌊 การหักเห</span>
+    <span class="hbadge">💎 สะท้อนกลับหมด</span>
+    <span class="hbadge">🌈 การกระจายแสง</span>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:var(--reflect)"></span>การสะท้อน</div>
+  <div class="legend-item"><span class="legend-dot" style="background:var(--refract)"></span>การหักเห</div>
+  <div class="legend-item"><span class="legend-dot" style="background:var(--total)"></span>สะท้อนกลับหมด</div>
+  <div class="legend-item"><span class="legend-dot" style="background:var(--disperse)"></span>การกระจายแสง</div>
+  <div class="legend-item"><span class="tag tag-real">ภาพจริง</span></div>
+  <div class="legend-item"><span class="tag tag-virtual">ภาพเสมือน</span></div>
+  <div class="legend-item"><span class="tag tag-upright">ตั้งตรง</span></div>
+  <div class="legend-item"><span class="tag tag-inverted">หัวกลับ</span></div>
+</div>
+
+<div class="table-scroll">
+<table class="main-table">
+  <thead>
+    <tr>
+      <th style="width:90px"><span class="th-icon">⚡</span>คุณสมบัติ<br>ของแสง</th>
+      <th style="width:170px"><span class="th-icon">🔭</span>วัตถุที่สาธิต<br>คุณสมบัตินี้</th>
+      <th style="width:280px"><span class="th-icon">🖼</span>ลักษณะภาพที่เกิดขึ้น</th>
+      <th style="width:220px"><span class="th-icon">🌿</span>ปรากฏการณ์ธรรมชาติ<br>ที่เกี่ยวข้อง</th>
+      <th style="width:210px"><span class="th-icon">📐</span>การคำนวณ</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <!-- ══════════════ REFLECTION ══════════════ -->
+
+    <!-- 1. กระจกเงาราบ -->
+    <tr class="reflect-section">
+      <td class="section-cell" rowspan="3" style="background:var(--reflect)">การสะท้อน</td>
+      <td class="sub-header" style="background:var(--reflect-light);color:#C2400C;font-family:'Kanit',sans-serif;font-weight:700;border-top:2px solid var(--reflect)">
+        <div class="device-label">
+          <span class="device-icon" style="background:var(--reflect-mid)">🪞</span>
+          1. กระจกเงาราบ
+        </div>
+      </td>
+      <td style="background:white;border-top:2px solid var(--reflect)">
+        <ul class="clean">
+          <li><span class="tag tag-virtual">ภาพเสมือน</span> <span class="tag tag-upright">ตั้งตรง</span> <span class="tag tag-same">ขนาดเท่ากัน</span></li>
+          <li>ภาพอยู่<strong>หลังกระจก</strong> ลึกเท่ากับระยะวัตถุ</li>
+          <li>ภาพ<strong>กลับซ้าย-ขวา</strong> (Lateral Inversion)</li>
+          <li>รับภาพบนฉากไม่ได้</li>
+        </ul>
+        <div class="note note-orange" style="margin-top:8px">
+          💡 วัตถุห่างกระจก 1 m → ภาพลึกหลังกระจก 1 m → ระยะวัตถุถึงภาพ = <strong>2 m</strong>
+        </div>
+      </td>
+      <td style="background:white;border-top:2px solid var(--reflect)">
+        <span class="nat-chip nat-orange">🌊 ภาพสะท้อนในน้ำ</span>
+        <span class="nat-chip nat-orange">✨ แสงสะท้อนบนพื้นผิวเรียบ</span>
+        <div class="note note-orange" style="margin-top:6px">
+          <strong>สะท้อนแบบสม่ำเสมอ</strong> = ผิวเรียบ ภาพชัด<br>
+          <strong>สะท้อนแบบกระจาย</strong> = ผิวขรุขระ มองเห็นได้ทุกมุม
+        </div>
+      </td>
+      <td style="background:white;border-top:2px solid var(--reflect)">
+        <div class="formula">มุมตกกระทบ = มุมสะท้อน<br><span>θᵢ = θᵣ</span></div>
+        <div class="formula" style="margin-top:6px">จำนวนภาพ = <span>(360°/θ) − 1</span></div>
+        <div class="note note-orange">
+          θ = มุมระหว่างกระจก 2 บาน<br>
+          เช่น 90° → ได้ 3 ภาพ
+        </div>
+      </td>
+    </tr>
+
+    <!-- 2. กระจกเงาโค้งเว้า -->
+    <tr class="reflect-section">
+      <td class="sub-header" style="background:var(--reflect-light);color:#C2400C;font-family:'Kanit',sans-serif;font-weight:700">
+        <div class="device-label">
+          <span class="device-icon" style="background:var(--reflect-mid)">🔴</span>
+          2. กระจกเงาโค้งเว้า
+        </div>
+        <div style="font-size:0.75rem;color:#9A3412;margin-top:4px;font-family:'Prompt',sans-serif;font-weight:400">(Concave Mirror · รวมแสง)</div>
+      </td>
+      <td style="background:white">
+        <table class="cases-table">
+          <thead>
+            <tr><th>ตำแหน่งวัตถุ</th><th>ลักษณะภาพ</th><th>ขนาด</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>u > 2f<br><small style="color:#888">(นอก C)</small></td>
+              <td><span class="tag tag-real">จริง</span><span class="tag tag-inverted">หัวกลับ</span><br><small>ระหว่าง F–C</small></td>
+              <td><span class="tag tag-smaller">เล็กกว่า</span></td>
+            </tr>
+            <tr>
+              <td>u = 2f<br><small style="color:#888">(ที่ C)</small></td>
+              <td><span class="tag tag-real">จริง</span><span class="tag tag-inverted">หัวกลับ</span><br><small>ที่ C</small></td>
+              <td><span class="tag tag-same">เท่ากัน</span></td>
+            </tr>
+            <tr>
+              <td>f &lt; u &lt; 2f<br><small style="color:#888">(F–C)</small></td>
+              <td><span class="tag tag-real">จริง</span><span class="tag tag-inverted">หัวกลับ</span><br><small>นอก C</small></td>
+              <td><span class="tag tag-larger">ใหญ่กว่า</span></td>
+            </tr>
+            <tr>
+              <td>u = f<br><small style="color:#888">(ที่ F)</small></td>
+              <td colspan="2" style="text-align:center;color:#888"><em>ไม่เกิดภาพ</em><br><small>รังสีขนานกัน</small></td>
+            </tr>
+            <tr>
+              <td>u &lt; f<br><small style="color:#888">(ใน F)</small></td>
+              <td><span class="tag tag-virtual">เสมือน</span><span class="tag tag-upright">ตั้งตรง</span><br><small>หลังกระจก</small></td>
+              <td><span class="tag tag-larger">ใหญ่กว่า</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+      <td style="background:white">
+        <span class="nat-chip nat-orange">🔭 กล้องโทรทรรศน์</span>
+        <span class="nat-chip nat-orange">☀️ เตาพลังงานแสงอาทิตย์</span>
+        <span class="nat-chip nat-orange">🚗 ไฟหน้ารถยนต์</span>
+        <span class="nat-chip nat-orange">🦷 กระจกทันตแพทย์</span>
+        <span class="nat-chip nat-orange">🪥 กระจกแต่งหน้า</span>
+      </td>
+      <td style="background:white">
+        <div class="formula"><span>1/f = 1/u + 1/v</span></div>
+        <div class="formula" style="margin-top:6px">กำลังขยาย <span>m = −v/u</span></div>
+        <div class="formula" style="margin-top:6px">f = <span>R/2</span></div>
+        <div class="note note-orange">
+          f, R = ค่า<strong>บวก</strong> (กระจกเว้า)<br>
+          m− = หัวกลับ | m+ = ตั้งตรง
+        </div>
+      </td>
+    </tr>
+
+    <!-- 3. กระจกเงาโค้งนูน -->
+    <tr class="reflect-section">
+      <td class="sub-header" style="background:var(--reflect-light);color:#C2400C;font-family:'Kanit',sans-serif;font-weight:700">
+        <div class="device-label">
+          <span class="device-icon" style="background:var(--reflect-mid)">🔵</span>
+          3. กระจกเงาโค้งนูน
+        </div>
+        <div style="font-size:0.75rem;color:#9A3412;margin-top:4px;font-family:'Prompt',sans-serif;font-weight:400">(Convex Mirror · กระจายแสง)</div>
+      </td>
+      <td style="background:white">
+        <div style="background:#FFF8F5;border-radius:10px;padding:10px 12px;border:1.5px solid var(--reflect-mid)">
+          <strong style="color:#C2400C">ทุกตำแหน่งของวัตถุ ให้ภาพเหมือนกัน:</strong>
+        </div>
+        <ul class="clean" style="margin-top:8px">
+          <li><span class="tag tag-virtual">ภาพเสมือน</span> <span class="tag tag-upright">ตั้งตรง</span> <span class="tag tag-smaller">เล็กกว่าวัตถุ</span></li>
+          <li>ภาพอยู่<strong>หลังกระจก</strong></li>
+          <li>มองเห็นพื้นที่กว้าง (Wide Field of View)</li>
+          <li>โฟกัส = <strong>โฟกัสเสมือน</strong></li>
+        </ul>
+      </td>
+      <td style="background:white">
+        <span class="nat-chip nat-orange">🚗 กระจกมองข้าง</span>
+        <span class="nat-chip nat-orange">🏪 กระจกนิรภัยร้านค้า</span>
+        <span class="nat-chip nat-orange">⚠️ กระจกโค้งหัวถนน</span>
+        <span class="nat-chip nat-orange">🎠 ลูกบอลสะท้อนแสง</span>
+      </td>
+      <td style="background:white">
+        <div class="formula"><span>1/f = 1/u + 1/v</span></div>
+        <div class="note note-orange" style="margin-top:8px">
+          f = ค่า<strong>ลบ</strong> (กระจกนูน)<br>
+          v = ค่าลบเสมอ (ภาพหลังกระจก)
+        </div>
+      </td>
+    </tr>
+
+    <!-- SECTION DIVIDER -->
+    <tr><td colspan="5" class="section-divider" style="background: linear-gradient(90deg,var(--reflect-mid),var(--refract-mid));"></td></tr>
+
+    <!-- ══════════════ REFRACTION ══════════════ -->
+
+    <!-- 1. เลนส์นูน -->
+    <tr class="refract-section">
+      <td class="section-cell" rowspan="3" style="background:var(--refract)">การหักเห</td>
+      <td class="sub-header" style="background:var(--refract-light);color:#0369A1;font-family:'Kanit',sans-serif;font-weight:700;border-top:2px solid var(--refract)">
+        <div class="device-label">
+          <span class="device-icon" style="background:var(--refract-mid)">🔴</span>
+          1. เลนส์นูน
+        </div>
+        <div style="font-size:0.75rem;color:#0C4A6E;margin-top:4px;font-family:'Prompt',sans-serif;font-weight:400">(Convex Lens · รวมแสง)</div>
+      </td>
+      <td style="background:white;border-top:2px solid var(--refract)">
+        <table class="cases-table">
+          <thead>
+            <tr><th>ตำแหน่งวัตถุ</th><th>ลักษณะภาพ</th><th>ขนาด</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>u > 2f</td>
+              <td><span class="tag tag-real">จริง</span><span class="tag tag-inverted">หัวกลับ</span><br><small>ระหว่าง f–2f</small></td>
+              <td><span class="tag tag-smaller">เล็กกว่า</span></td>
+            </tr>
+            <tr>
+              <td>u = 2f</td>
+              <td><span class="tag tag-real">จริง</span><span class="tag tag-inverted">หัวกลับ</span><br><small>ที่ 2f</small></td>
+              <td><span class="tag tag-same">เท่ากัน</span></td>
+            </tr>
+            <tr>
+              <td>f &lt; u &lt; 2f</td>
+              <td><span class="tag tag-real">จริง</span><span class="tag tag-inverted">หัวกลับ</span><br><small>นอก 2f</small></td>
+              <td><span class="tag tag-larger">ใหญ่กว่า</span></td>
+            </tr>
+            <tr>
+              <td>u = f</td>
+              <td colspan="2" style="text-align:center;color:#888"><em>ไม่เกิดภาพ</em><br><small>รังสีออกขนานกัน</small></td>
+            </tr>
+            <tr>
+              <td>u &lt; f</td>
+              <td><span class="tag tag-virtual">เสมือน</span><span class="tag tag-upright">ตั้งตรง</span><br><small>ด้านเดียวกับวัตถุ</small></td>
+              <td><span class="tag tag-larger">ใหญ่กว่า</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+      <td style="background:white;border-top:2px solid var(--refract)">
+        <span class="nat-chip nat-blue">👁 ดวงตามนุษย์</span>
+        <span class="nat-chip nat-blue">💧 หยดน้ำเป็นแว่นขยาย</span>
+        <span class="nat-chip nat-blue">🔍 แมลงตาโต</span>
+        <div class="note note-blue" style="margin-top:6px">
+          <strong>ตา</strong> ใช้เลนส์นูน รวมแสงบนจอประสาทตา<br>
+          <strong>สายตาสั้น</strong> → ใช้เลนส์เว้าแก้<br>
+          <strong>สายตายาว</strong> → ใช้เลนส์นูนแก้
+        </div>
+      </td>
+      <td style="background:white;border-top:2px solid var(--refract)">
+        <div class="formula"><span>1/f = 1/u + 1/v</span></div>
+        <div class="formula" style="margin-top:6px">m = <span>v/u = h'/h</span></div>
+        <div class="note note-blue" style="margin-top:6px">
+          f = ค่า<strong>บวก</strong> (เลนส์นูน)<br>
+          กำลังเลนส์ P = 1/f (หน่วย: ไดออปเตอร์)
+        </div>
+        <div class="note note-blue" style="margin-top:6px">
+          <strong>ตัวอย่าง:</strong> วัตถุห่างเลนส์ 30 cm, f = 20 cm<br>
+          1/20 = 1/30 + 1/v → <strong>v = 60 cm</strong>
+        </div>
+      </td>
+    </tr>
+
+    <!-- 2. เลนส์เว้า -->
+    <tr class="refract-section">
+      <td class="sub-header" style="background:var(--refract-light);color:#0369A1;font-family:'Kanit',sans-serif;font-weight:700">
+        <div class="device-label">
+          <span class="device-icon" style="background:var(--refract-mid)">🔵</span>
+          2. เลนส์เว้า
+        </div>
+        <div style="font-size:0.75rem;color:#0C4A6E;margin-top:4px;font-family:'Prompt',sans-serif;font-weight:400">(Concave Lens · กระจายแสง)</div>
+      </td>
+      <td style="background:white">
+        <div style="background:#EFF6FF;border-radius:10px;padding:10px 12px;border:1.5px solid var(--refract-mid)">
+          <strong style="color:#1D4ED8">ทุกตำแหน่งของวัตถุ ให้ภาพเหมือนกัน:</strong>
+        </div>
+        <ul class="clean" style="margin-top:8px">
+          <li><span class="tag tag-virtual">ภาพเสมือน</span> <span class="tag tag-upright">ตั้งตรง</span> <span class="tag tag-smaller">เล็กกว่าวัตถุ</span></li>
+          <li>ภาพอยู่<strong>ด้านเดียวกับวัตถุ</strong></li>
+          <li>โฟกัสอยู่ด้านเดียวกับวัตถุ = <strong>โฟกัสเสมือน</strong></li>
+        </ul>
+      </td>
+      <td style="background:white">
+        <span class="nat-chip nat-blue">👓 แว่นสายตาสั้น</span>
+        <span class="nat-chip nat-blue">🔭 เลนส์ตาในกล้องโทรทรรศน์บางชนิด</span>
+      </td>
+      <td style="background:white">
+        <div class="formula"><span>1/f = 1/u + 1/v</span></div>
+        <div class="note note-blue" style="margin-top:8px">
+          f = ค่า<strong>ลบ</strong> (เลนส์เว้า)<br>
+          v = ค่าลบเสมอ (ภาพเสมือน)
+        </div>
+      </td>
+    </tr>
+
+    <!-- ลึกจริง/ลึกปรากฏ -->
+    <tr class="refract-section">
+      <td style="background:var(--refract-light);padding:12px 14px;border-top:1px solid var(--border)">
+        <div style="font-family:'Kanit',sans-serif;font-weight:700;color:#0369A1;font-size:0.88rem;margin-bottom:4px">
+          💧 ลึกจริง / ลึกปรากฏ
+        </div>
+        <div style="font-size:0.8rem;color:#0C4A6E">(Apparent Depth)</div>
+      </td>
+      <td style="background:white">
+        <ul class="clean">
+          <li>วัตถุในน้ำดู<strong>ตื้นกว่าความเป็นจริง</strong></li>
+          <li>ภาพเสมือน ตั้งตรง อยู่ใต้ผิวน้ำ</li>
+          <li>ยิ่งมองเฉียง ยิ่งเห็นตื้นกว่า</li>
+        </ul>
+        <div class="note note-blue" style="margin-top:6px">
+          🎣 ปลาในน้ำดูตื้นกว่าจริง → ยิงหอกต้องเล็งต่ำกว่าที่เห็น
+        </div>
+      </td>
+      <td style="background:white">
+        <span class="nat-chip nat-blue">🐟 ปลาดูตื้นกว่าจริง</span>
+        <span class="nat-chip nat-blue">🪙 เหรียญในน้ำดูลอยขึ้น</span>
+        <span class="nat-chip nat-blue">✏️ ดินสอในแก้วน้ำดูงอ</span>
+        <span class="nat-chip nat-blue">🏊 สระว่ายน้ำดูตื้นกว่าความเป็นจริง</span>
+      </td>
+      <td style="background:white">
+        <div class="formula">ลึกปรากฏ = <span>ลึกจริง / n</span></div>
+        <div class="note note-blue" style="margin-top:8px">
+          n = ดัชนีหักเหของของเหลว<br>
+          <strong>ตัวอย่าง:</strong> สระน้ำลึก 4 m, n=1.33<br>
+          ลึกปรากฏ = 4/1.33 ≈ <strong>3.0 m</strong>
+        </div>
+      </td>
+    </tr>
+
+    <!-- SECTION DIVIDER -->
+    <tr><td colspan="5" class="section-divider" style="background:linear-gradient(90deg,var(--refract-mid),var(--total-mid))"></td></tr>
+
+    <!-- ══════════════ TOTAL INTERNAL REFLECTION ══════════════ -->
+    <tr class="total-section">
+      <td class="section-cell" style="background:var(--total);white-space:nowrap">การสะท้อน<br>กลับหมด</td>
+      <td style="background:var(--total-light);border-top:2px solid var(--total)">
+        <div style="font-family:'Kanit',sans-serif;font-weight:700;color:#6D28D9;margin-bottom:8px">วัตถุ/อุปกรณ์</div>
+        <ul class="clean">
+          <li>💎 เพชร (n = 2.42)</li>
+          <li>🔷 แก้ว (n ≈ 1.5)</li>
+          <li>💧 น้ำ (n = 1.33)</li>
+          <li>🌐 ใยแก้วนำแสง</li>
+          <li>🔬 ปริซึม</li>
+        </ul>
+        <div class="note note-purple" style="margin-top:8px">
+          เงื่อนไข: แสงต้องเดินจาก<br>
+          <strong>หนาแน่น → บาง</strong> และ<br>
+          <strong>θ > มุมวิกฤต</strong>
+        </div>
+      </td>
+      <td style="background:white;border-top:2px solid var(--total)">
+        <ul class="clean">
+          <li>แสง<strong>สะท้อนกลับ 100%</strong> ไม่มีแสงหักเหออก</li>
+          <li>ไม่เกิดภาพ — เป็นการสะท้อนแสง ไม่ใช่การเกิดภาพ</li>
+        </ul>
+        <div class="note note-purple" style="margin-top:8px">
+          <strong>3 กรณีเมื่อเพิ่มมุมตกกระทบ:</strong><br>
+          1. θ &lt; θ_c → มีทั้งหักเหและสะท้อน<br>
+          2. θ = θ_c → รังสีหักเหขนานผิว<br>
+          3. θ > θ_c → สะท้อนกลับหมด 100%
+        </div>
+      </td>
+      <td style="background:white;border-top:2px solid var(--total)">
+        <span class="nat-chip nat-purple">💎 ประกายแวววาวของเพชร</span>
+        <span class="nat-chip nat-purple">🌅 ปรากฏการณ์มิราจ (Mirage)</span>
+        <span class="nat-chip nat-purple">🌊 ผิวน้ำดูเป็นกระจกเมื่อมองเฉียง</span>
+        <span class="nat-chip nat-purple">🌈 แสงรุ้งในหยดน้ำ</span>
+        <div class="note note-purple" style="margin-top:8px">
+          <strong>ใยแก้วนำแสง:</strong> ส่งข้อมูล<br>
+          อินเทอร์เน็ต, กล้องส่องภายใน,<br>
+          ไฟประดับ
+        </div>
+      </td>
+      <td style="background:white;border-top:2px solid var(--total)">
+        <div style="background:#F5F3FF;border-radius:10px;padding:12px;border:1.5px solid var(--total-mid);text-align:center">
+          <span style="font-size:0.82rem;color:#6D28D9;font-weight:700">ไม่ต้องคำนวณสูตร</span><br>
+          <span style="font-size:0.75rem;color:#7C3AED;display:block;margin-top:4px">(เน้นแนวคิดและตัวอย่าง)</span>
+        </div>
+        <div class="note note-purple" style="margin-top:8px">
+          <strong>มุมวิกฤตน้อย → สะท้อนกลับหมดง่าย</strong><br>
+          เพชร (24.4°) &lt; แก้ว (41.8°) &lt; น้ำ (48.8°)
+        </div>
+      </td>
+    </tr>
+
+    <!-- SECTION DIVIDER -->
+    <tr><td colspan="5" class="section-divider" style="background:linear-gradient(90deg,var(--total-mid),var(--disperse-mid))"></td></tr>
+
+    <!-- ══════════════ DISPERSION ══════════════ -->
+    <tr class="disperse-section">
+      <td class="section-cell" style="background:var(--disperse)">การกระจาย<br>แสง</td>
+      <td style="background:var(--disperse-light);border-top:2px solid var(--disperse)">
+        <div style="font-family:'Kanit',sans-serif;font-weight:700;color:#065F46;margin-bottom:8px">วัตถุ/อุปกรณ์</div>
+        <ul class="clean">
+          <li>🔷 ปริซึมแก้ว</li>
+          <li>💧 หยดน้ำฝน</li>
+          <li>💿 แผ่น CD/DVD</li>
+          <li>🫧 ฟิล์มบางน้ำมัน</li>
+        </ul>
+        <div class="note note-green" style="margin-top:8px">
+          แสงขาว = รวมแสง 7 สี<br>
+          แต่ละสีหักเหต่างกัน → แยกออก
+        </div>
+      </td>
+      <td style="background:white;border-top:2px solid var(--disperse)">
+        <div class="spectrum"></div>
+        <div class="spectrum-labels">
+          <span>ม่วง<br>(λ สั้น, หักเหมาก)</span>
+          <span>คราม</span>
+          <span>น้ำเงิน</span>
+          <span>เขียว</span>
+          <span>เหลือง</span>
+          <span>แสด</span>
+          <span>แดง<br>(λ ยาว, หักเหน้อย)</span>
+        </div>
+        <ul class="clean" style="margin-top:10px">
+          <li>แสงขาวแยกเป็น<strong>สเปกตรัม 7 สี</strong></li>
+          <li>สีม่วง: ความยาวคลื่นสั้น หักเหมาก</li>
+          <li>สีแดง: ความยาวคลื่นยาว หักเหน้อย</li>
+          <li>รวมสีทุกสีกลับ → ได้<strong>แสงขาว</strong></li>
+        </ul>
+      </td>
+      <td style="background:white;border-top:2px solid var(--disperse)">
+        <span class="nat-chip nat-green">🌈 รุ้งกินน้ำ</span>
+        <span class="nat-chip nat-green">💎 ประกายเพชร</span>
+        <span class="nat-chip nat-green">🌅 ท้องฟ้าสีส้มยามเย็น</span>
+        <span class="nat-chip nat-green">🌊 ฟิล์มน้ำมันบนน้ำ</span>
+        <div class="note note-green" style="margin-top:8px">
+          <strong>รุ้งกินน้ำ:</strong> แสงอาทิตย์ + หยดน้ำ<br>
+          หักเห → สะท้อนในหยดน้ำ → หักเห<br>
+          ดวงอาทิตย์ต้องอยู่<strong>ด้านหลัง</strong>เรา
+        </div>
+      </td>
+      <td style="background:white;border-top:2px solid var(--disperse)">
+        <div style="background:#F0FDF4;border-radius:10px;padding:12px;border:1.5px solid var(--disperse-mid);text-align:center">
+          <span style="font-size:0.82rem;color:#065F46;font-weight:700">ไม่ต้องคำนวณสูตร</span><br>
+          <span style="font-size:0.75rem;color:#047857;display:block;margin-top:4px">(เน้นแนวคิดและตัวอย่าง)</span>
+        </div>
+        <div class="note note-green" style="margin-top:8px">
+          <strong>แสง (Additive):</strong><br>
+          🔴+🟢+🔵 = ⚪ ขาว<br>
+          <strong>สีทา (Subtractive):</strong><br>
+          🔴+🟡+🔵 = ⚫ ดำ
+        </div>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+</div>
+
+<!-- FOOTER NOTE -->
+<div style="max-width:1400px;margin:0 auto;padding:0 16px 40px">
+  <div style="background:white;border-radius:14px;padding:20px 24px;border:1.5px solid var(--border);display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+    <div style="flex:1;min-width:200px">
+      <div style="font-family:'Kanit',sans-serif;font-weight:700;color:#1E293B;margin-bottom:8px;font-size:0.92rem">📌 กฎพื้นฐานที่ใช้ตลอดบท</div>
+      <div style="font-size:0.82rem;color:var(--muted);line-height:1.8">
+        รังสีตกกระทบ เส้นปกติ รังสีสะท้อน/หักเห <strong>อยู่ในระนาบเดียวกันเสมอ</strong><br>
+        ระยะวัตถุ (u) วัดจากกระจก/เลนส์ ไปยังวัตถุ<br>
+        ระยะภาพ (v) วัดจากกระจก/เลนส์ ไปยังภาพ
+      </div>
+    </div>
+    <div style="flex:1;min-width:200px">
+      <div style="font-family:'Kanit',sans-serif;font-weight:700;color:#1E293B;margin-bottom:8px;font-size:0.92rem">🔢 Sign Convention</div>
+      <div style="font-size:0.82rem;color:var(--muted);line-height:1.8">
+        กระจกเว้า / เลนส์นูน: <strong>f = บวก</strong><br>
+        กระจกนูน / เลนส์เว้า: <strong>f = ลบ</strong><br>
+        ภาพจริง: v = บวก (กระจก) | v = บวก (เลนส์ ด้านหลัง)<br>
+        ภาพเสมือน: v = ลบ
+      </div>
+    </div>
+    <div style="flex:1;min-width:200px">
+      <div style="font-family:'Kanit',sans-serif;font-weight:700;color:#1E293B;margin-bottom:8px;font-size:0.92rem">⚡ ข้อสับสนบ่อย</div>
+      <div style="font-size:0.82rem;color:var(--muted);line-height:1.8">
+        มุมสะท้อน วัดจาก<strong>เส้นปกติ</strong> ไม่ใช่จากผิวกระจก<br>
+        กระจกนูน ≠ เลนส์นูน (ผิวสะท้อน vs ผิวหักเห)<br>
+        ภาพเสมือน = มองเห็นได้ แต่<strong>รับบนฉากไม่ได้</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="rainbow"></div>
+
+</body>
+</html>
