@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปคู่มือ: การตั้งค่าสิทธิ์และการส่ง Google Form สำหรับคุณครู</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Sarabun', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f0fa;
+            color: #2d3748;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(103, 58, 183, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .header {
+            background-color: #673ab7; /* Google Forms Purple */
+            color: #ffffff;
+            padding: 35px 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 15px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 35px;
+        }
+        
+        .section-title {
+            color: #673ab7;
+            font-size: 18px;
+            font-weight: 600;
+            border-left: 4px solid #673ab7;
+            padding-left: 12px;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            border-radius: 8px;
+            padding: 22px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .card.classroom {
+            border-left: 5px solid #10b981;
+            background-color: #f0fdf4;
+        }
+        
+        .card.direct {
+            border-left: 5px solid #3b82f6;
+            background-color: #eff6ff;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #1a202c;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        
+        .badge-success { background-color: #d1fae5; color: #065f46; }
+        .badge-info { background-color: #dbeafe; color: #1e40af; }
+        
+        ul, ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+        
+        li:last-child {
+            margin-bottom: 0;
+        }
+        
+        .method-box {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 18px;
+            margin-top: 15px;
+        }
+        
+        .method-tag {
+            display: inline-block;
+            background-color: #e2e8f0;
+            color: #4a5568;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .highlight {
+            background-color: #f3e8ff;
+            color: #673ab7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .warning-box {
+            background-color: #fff7ed;
+            border: 1px solid #ffedd5;
+            border-left: 5px solid #ea580c;
+            border-radius: 8px;
+            padding: 22px;
+            margin-top: 35px;
+        }
+        
+        .warning-title {
+            color: #c2410c;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px;
+            font-size: 13px;
+            color: #718096;
+            border-top: 1px solid #edf2f7;
+            background-color: #fafafa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header Banner -->
+    <div class="header">
+        <h1>สรุปวิธีส่ง Google Form ให้นักเรียนอย่างถูกต้องและปลอดภัย</h1>
+        <p>คู่มือแนะนำการตั้งค่าสิทธิ์สำหรับคุณครู เพื่อป้องกันนักเรียนเข้าแก้ไขไฟล์ต้นฉบับ</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        
+        <!-- Section 1 -->
+        <div class="section">
+            <div class="section-title">1. การใช้งานผ่าน Google Classroom</div>
+            <div class="card classroom">
+                <div class="card-title">วิธีนี้ง่ายและปลอดภัยที่สุด <span class="badge badge-success">แนะนำ</span></div>
+                <ul>
+                    <li><strong>ไม่ต้องตั้งค่าแชร์ไฟล์ใดๆ</strong> ที่ตัว Google Form หรือใน Google Drive ทั้งสิ้น</li>
+                    <li>เมื่อสร้างงาน (Assignment) หรือ งานแบบทดสอบ (Quiz Assignment) แล้วแนบไฟล์ฟอร์มลงไป ระบบของ Google Classroom จะทำการบริหารจัดการสิทธิ์เบื้องหลังให้โดยอัตโนมัติ</li>
+                    <li>นักเรียนในคลาสทุกคนจะสามารถคลิกเข้าไปเพื่อ "ตอบกลับ/ทำแบบทดสอบ" ได้ทันที โดยไม่มีสิทธิ์แก้ไขคำถามของคุณครู</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section 2 -->
+        <div class="section">
+            <div class="section-title">2. การส่งลิงก์ให้นักเรียนโดยตรง (ไม่ผ่าน Classroom)</div>
+            <p style="margin-top: 0; margin-bottom: 15px;">ในกรณีที่ต้องการส่งลิงก์ผ่านช่องทางอื่น เช่น LINE, Telegram หรือ Facebook มีวิธีทำที่ปลอดภัย 2 รูปแบบ เพื่อไม่ให้นักเรียนเข้าถึงสิทธิ์แก้ไข (Collaborator) ดังนี้ครับ:</p>
+            
+            <div class="card direct">
+                <div class="card-title">รูปแบบที่ 1: การใช้ทางลัดผ่านหน้า Google Drive <span class="badge badge-info">สะดวก/รวดเร็ว</span></div>
+                <ul>
+                    <li>คลิกขวาที่ไฟล์ฟอร์มในหน้า Drive (โดยไม่ต้องกดเปิดฟอร์มเข้าไปข้างใน) แล้วเลือกเมนู <span class="highlight">แชร์ (Share)</span></li>
+                    <li>ในหัวข้อ การเข้าถึงทั่วไป (General access) ให้ปรับสิทธิ์เป็น <span class="highlight">มุมมองผู้ตอบ (Responder view)</span></li>
+                    <li>ตั้งค่าให้เป็น <strong>"ผู้ใช้อินเทอร์เน็ตทุกคนที่มีลิงก์จะตอบกลับได้"</strong> จากนั้นคัดลอกลิงก์ไปใช้งานได้ทันที</li>
+                </ul>
+
+                <div class="method-box">
+                    <div class="method-tag">รูปแบบที่ 2: ทำจากด้านในหน้าต่าง Google Form</div>
+                    <ul>
+                        <li>เปิดไฟล์ Google Form ขึ้นมา</li>
+                        <li><strong>ห้ามกดปุ่ม "แชร์"</strong> (ที่เป็นไอคอนรูปคนเครื่องหมายบวก) เพราะนั่นคือการเชิญผู้ร่วมแก้ไขไฟล์</li>
+                        <li>ให้กดปุ่ม <span class="highlight">ส่ง (Send)</span> สีม่วงที่มุมบนขวา -> เลือกแท็บไอคอน <span class="highlight">ลิงก์ (Link)</span> -> กดคัดลอก URL ไปส่งให้นักเรียน</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3 / Warning -->
+        <div class="warning-box">
+            <div class="warning-title">⚠️ ข้อควรระวังเพิ่มเติม (สำคัญมากสำหรับบัญชีโรงเรียน)</div>
+            <p style="margin: 0;">หากคุณครูใช้บัญชีองค์กรหรือบัญชีของโรงเรียน (Google Workspace) ในการสร้างฟอร์ม อย่าลืมเข้าไปที่แท็บ <strong>Settings (การตั้งค่า) > Responses (การตอบกลับ)</strong> แล้วทำการ <strong>ปิด (Turn off)</strong> ตัวเลือกที่จำกัดสิทธิ์เฉพาะผู้ใช้ในองค์กร <em>(Restrict to users in [ชื่อโรงเรียน]...)</em> ไม่อย่างนั้นนักเรียนหรือผู้ปกครองที่ใช้บัญชี @gmail.com ทั่วไป จะไม่สามารถเข้าทำฟอร์มได้และจะขึ้นเตือนว่า "ไม่มีสิทธิ์เข้าถึง" ครับ</p>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        เรียบเรียงเนื้อหาเพื่ออำนวยความสะดวกในการจัดการเรียนการสอนอย่างปลอดภัย
+    </div>
+</div>
+
+</body>
+</html>
