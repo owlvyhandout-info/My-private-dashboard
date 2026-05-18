@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เปรียบเทียบการสร้างแบบทดสอบ: NotebookLM vs Gems</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f4f6f9;
+            color: #334155;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        .date-badge {
+            position: absolute;
+            top: 25px;
+            right: 40px;
+            font-size: 0.85rem;
+            color: #64748b;
+            background-color: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 500;
+            border: 1px solid #e2e8f0;
+        }
+        h1 {
+            color: #1e3a8a;
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            max-width: 75%;
+        }
+        h2 {
+            color: #0f172a;
+            font-size: 1.3rem;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 4px solid #0d9488;
+            padding-left: 12px;
+        }
+        p {
+            margin-bottom: 1.2rem;
+            color: #475569;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 14px 16px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #1e3a8a;
+            color: #ffffff;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        th:first-child {
+            width: 20px; /* Features column width */
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+        .recommendation-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 25px;
+        }
+        /* Flexbox fallback/alternative using block layout since we shouldn't rely heavily on complex grid for print, but for standard HTML it's fine. We will use clean standard divs instead */
+        .box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .box-notebook {
+            border-top: 4px solid #3b82f6;
+        }
+        .box-gems {
+            border-top: 4px solid #0d9488;
+        }
+        .box h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        .box h3.notebook-title {
+            color: #2563eb;
+        }
+        .box h3.gems-title {
+            color: #0d9488;
+        }
+        ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+        li {
+            margin-bottom: 8px;
+            color: #475569;
+        }
+        .highlight {
+            font-weight: 600;
+            color: #0f172a;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- วันที่สอบถามมุมบนขวา -->
+    <div class="date-badge">วันที่สอบถาม: 18 พฤษภาคม 2569</div>
+
+    <h1>สรุปเปรียบเทียบการสร้างแบบทดสอบและแชร์ใช้งาน<br><small style="font-size: 1.1rem; color: #64748b; font-weight: 400;">NotebookLM vs. Gems (Instruction + Documents)</small></h1>
+    
+    <p>สรุปการวิเคราะห์เปรียบเทียบเชิงลึกระหว่างการใช้ <strong>NotebookLM</strong> และ <strong>Gems (บน Gemini Advanced)</strong> ในการอัปโหลดเอกสารต้นฉบับเพื่อสร้างแบบทดสอบ (Quiz) และการส่งต่อให้ผู้อื่นใช้งาน เพื่อช่วยเลือกเครื่องมือที่ตอบโจทย์ความต้องการได้มีประสิทธิภาพสูงสุด</p>
+
+    <h2>1. เปรียบเทียบลักษณะคำถามที่สร้างขึ้น</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>หัวข้อเปรียบเทียบ</th>
+                <th>NotebookLM</th>
+                <th>Gems (Instruction + Documents)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="highlight">ความแม่นยำและอ้างอิงเนื้อหา</td>
+                <td><strong>สูงมาก (Strictly Grounded):</strong> AI ดึงข้อมูลและจำกัดคำตอบเฉพาะจากคลังเอกสารที่อัปโหลดเท่านั้น โอกาสเกิดข้อมูลเท็จ (Hallucination) ต่ำมาก มีการระบุแหล่งที่มาชัดเจน</td>
+                <td><strong>ปานกลางถึงสูง:</strong> อ้างอิงเอกสารหลักได้ดี แต่หากเขียนคำสั่ง (Instruction) ไม่รัดกุม AI อาจนำความรู้ทั่วไปในฐานข้อมูลขนาดใหญ่มาปะปนในคำถามได้</td>
+            </tr>
+            <tr>
+                <td class="highlight">ความซับซ้อนและการพลิกแพลง</td>
+                <td><strong>ตรงไปตรงมา (Fact-based):</strong> เหมาะสำหรับข้อสอบวัดความจำ ความเข้าใจพื้นฐาน หรือเนื้อหาตามบทเรียน ไม่เน้นการวิเคราะห์พลิกแพลงนอกเหนือจากที่บันทึกไว้</td>
+                <td><strong>ยืดหยุ่นและสร้างสรรค์สูง:</strong> สามารถสั่งการให้ประยุกต์คำถามได้หลากหลาย เช่น "สร้างโจทย์สถานการณ์สมมติ", "แต่งข้อสอบหลอก" หรือวิเคราะห์เคสที่ซับซ้อน</td>
+            </tr>
+            <tr>
+                <td class="highlight">การจัดรูปแบบ (Formatting)</td>
+                <td><strong>จำกัดตามระบบ:</strong> มีรูปแบบมาตรฐานที่ระบบเตรียมไว้ให้ (เช่น ปรนัย 4 ตัวเลือก, อัตนัย, หรือจัดทำเป็น Study Guide) ไม่สามารถปรับแต่งโทนเสียงหรือสไตล์เฉพาะตัวได้มากนัก</td>
+                <td><strong>ไร้ขีดจำกัด (Tailored Output):</strong> กำหนดรูปแบบผ่านคำสั่งได้ทุกรูปแบบ เช่น ให้ส่งมาเป็นตาราง, ออกแบบเป็นเกมตอบคำถาม, หรือใช้โทนเสียงแบบคุณครูใจดี/กรรมการคุมสอบที่เข้มงวด</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>2. เปรียบเทียบข้อจำกัดและการแชร์ใช้งาน</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>หัวข้อเปรียบเทียบ</th>
+                <th>NotebookLM</th>
+                <th>Gems (Instruction + Documents)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="highlight">วิธีการแชร์ให้ผู้อื่น</td>
+                <td>แชร์ผ่านการเชิญอีเมล (คัดลอกลิงก์) โดยกำหนดสิทธิ์ให้เป็น Viewer หรือ Editor ของ Notebook ตัวนั้นๆ</td>
+                <td>แชร์ผ่านการสร้าง "ลิงก์แชร์ของหน้า Gem" ให้ผู้รับกดเปิดใช้งานบอทได้ทันที</td>
+            </tr>
+            <tr>
+                <td class="highlight">การเข้าถึงเอกสารต้นฉบับ</td>
+                <td><span style="color: #b91c1c;"><strong>ผู้รับจะเห็นเอกสารทั้งหมด:</strong></span> ผู้ใช้ที่เข้ามาร่วมจะสามารถอ่านไฟล์ต้นฉบับ และใช้แชทเพื่อสืบค้นข้อมูลในคลังเอกสารได้อย่างอิสระ</td>
+                <td><span style="color: #15803d;"><strong>ซ่อนเอกสารต้นฉบับไว้เบื้องหลัง:</strong></span> ผู้รับจะเห็นเพียงหน้าต่างแชทเพื่อทำข้อสอบเท่านั้น ไม่เห็นไฟล์เอกสารโดยตรง (ยกเว้นกรณีจงใจป้อนคำสั่งล่อลวงให้บอทคายข้อมูล)</td>
+            </tr>
+            <tr>
+                <td class="highlight">รูปแบบปฏิสัมพันธ์ (UX)</td>
+                <td>เน้นการเป็น <strong>"คู่มืออ่านสอบอัจฉริยะ"</strong> ผู้ใช้ปลายทางต้องเข้ามาคลิกสั่งสร้าง Quiz หรือคิดคำถามเพื่อทดสอบตัวเองเป็นหลัก</td>
+                <td>เน้นการเป็น <strong>"ติวเตอร์ส่วนตัว (Interactive Bot)"</strong> บอทสามารถทักทาย เริ่มถามทีละข้อ รอให้ตอบ ตรวจคำตอบพร้อมอธิบายเหตุผล และสรุปคะแนนได้แบบอัตโนมัติ</td>
+            </tr>
+            <tr>
+                <td class="highlight">เงื่อนไขบัญชีผู้ใช้งาน</td>
+                <td><strong>ใช้งานฟรี:</strong> ทั้งผู้สร้างและผู้ใช้งานปลายทาง ขอเพียงมีบัญชี Google ทั่วไปก็สามารถเข้าถึงและใช้งานได้ทันที</td>
+                <td><strong>มีค่าใช้จ่าย:</strong> การสร้างและแชร์จำเป็นต้องใช้บัญชีระดับ <strong>Gemini Advanced</strong> และผู้ใช้งานปลายทางอาจต้องใช้บัญชีระดับเดียวกันตามเงื่อนไขสิทธิ์การแชร์ของระบบ</td>
+            </tr>
+            <tr>
+                <td class="highlight">ปริมาณเอกสารที่รองรับ</td>
+                <td>รองรับสูงสุด 50 แหล่งข้อมูล (สูงสุด 500,000 คำต่อ 1 แหล่งข้อมูล) จุเนื้อหาได้มหาศาล</td>
+                <td>จำกัดปริมาณไฟล์และขนาดข้อความมากกว่า ขึ้นอยู่กับขนาด Context Window ของโมเดล Gemini ที่ใช้งานในขณะนั้น</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>3. บทสรุปและคำแนะนำในการเลือกใช้งาน</h2>
+    
+    <div class="box box-notebook">
+        <h3 class="notebook-title">💡 ควรเลือกใช้ NotebookLM เมื่อ:</h3>
+        <ul>
+            <li>ต้องการสร้าง <strong>"คลังความรู้สำหรับเรียนรู้ร่วมกัน"</strong> ที่เน้นให้ผู้เรียนเข้ามาอ่าน ค้นคว้า และทำสรุป/แบบทดสอบด้วยตัวเอง</li>
+            <li>ต้องการความแม่นยำสูงสุดตามตัวอักษรในเอกสาร และไม่กังวลเรื่องที่ผู้ใช้จะเห็นไฟล์ต้นฉบับ</li>
+            <li>ต้องการให้ทุกคนเข้าใช้งานได้ <strong>ฟรี</strong> โดยไม่มีข้อจำกัดด้านค่าใช้จ่ายของบัญชี Google</li>
+        </ul>
+    </div>
+
+    <div class="box box-gems">
+        <h3 class="gems-title">💡 ควรเลือกใช้ Gems เมื่อ:</h3>
+        <ul>
+            <li>ต้องการสร้าง <strong>"บอททำข้อสอบจำลองแบบโต้ตอบ (Interactive Quiz Bot)"</strong> ที่ทำหน้าที่เสมือนคุณครูคอยถาม ตรวจสอบ และอธิบายทีละข้อ</li>
+            <li>ต้องการ <strong style="color: #15803d;">"ปกป้องไฟล์ต้นฉบับ"</strong> ไม่ต้องการให้ผู้ทำแบบทดสอบเห็นเนื้อหาข้างใน หรือเห็นคำสั่งเบื้องหลัง</li>
+            <li>ต้องการข้อสอบที่มีความพลิกแพลง ใช้โจทย์สถานการณ์สมมติ หรือต้องการควบคุมดีไซน์และโทนเสียงของบทสนทนาอย่างละเอียด (ภายใต้เงื่อนไขที่ผู้ใช้เข้าถึงบริการแบบพรีเมียมได้)</li>
+        </ul>
+    </div>
+
+</div>
+
+</body>
+</html>
