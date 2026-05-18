@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>สรุปการลำเลียงสารผ่านเยื่อหุ้มเซลล์</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
+      margin: 0;
+      line-height: 1.8;
+    }
+
+    header {
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 30px 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      color: #1d4ed8;
+      margin-top: 0;
+    }
+
+    h3 {
+      color: #0f766e;
+    }
+
+    .highlight {
+      background: #eff6ff;
+      border-left: 6px solid #2563eb;
+      padding: 16px;
+      border-radius: 10px;
+      margin: 16px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #d1d5db;
+      padding: 14px;
+      text-align: left;
+    }
+
+    th {
+      background: #dbeafe;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 14px;
+      margin-top: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .equation {
+      background: #111827;
+      color: #f9fafb;
+      padding: 16px;
+      border-radius: 12px;
+      font-family: Consolas, monospace;
+      overflow-x: auto;
+      margin: 18px 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+
+    ul li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>การลำเลียงสารผ่านเยื่อหุ้มเซลล์</h1>
+  <p>สรุปเรื่อง Diffusion, Osmosis, Active Transport และแนวคิดเรื่องพลังงาน</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>1. เยื่อหุ้มเซลล์คืออะไร</h2>
+
+    <p>
+      เยื่อหุ้มเซลล์ (Cell Membrane) เป็นโครงสร้างที่ทำหน้าที่ควบคุมการผ่านเข้า–ออกของสาร
+      โดยมีโครงสร้างหลักเป็นฟอสโฟลิพิดสองชั้น (Phospholipid Bilayer)
+      และมีโปรตีนแทรกอยู่ในเยื่อหุ้ม
+    </p>
+
+    <div class="highlight">
+      เยื่อหุ้มเซลล์เป็น “เยื่อเลือกผ่าน” (Selective Permeable Membrane)
+      คือยอมให้บางสารผ่านได้ง่าย และบางสารผ่านได้ยาก
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/57/Cell_membrane_detailed_diagram_en.svg" alt="Cell Membrane Diagram">
+  </div>
+
+  <div class="card">
+    <h2>2. Passive Transport</h2>
+
+    <p>
+      คือการลำเลียงสารผ่านเยื่อหุ้มเซลล์ โดยเซลล์ไม่ต้องใช้พลังงาน ATP
+      แต่ยังคงมีแรงขับทางฟิสิกส์ เช่น ความต่างความเข้มข้น หรือความดันออสโมติก
+    </p>
+
+    <h3>ตัวอย่าง Passive Transport</h3>
+
+    <ul>
+      <li>Diffusion (การแพร่)</li>
+      <li>Osmosis (ออสโมซิส)</li>
+      <li>Facilitated Diffusion</li>
+    </ul>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/37/Diffusion.svg" alt="Diffusion Diagram">
+  </div>
+
+  <div class="card">
+    <h2>3. Osmosis (ออสโมซิส)</h2>
+
+    <p>
+      ออสโมซิส คือการเคลื่อนที่ของ “น้ำ” ผ่านเยื่อเลือกผ่าน
+      จากบริเวณที่มีน้ำมาก ไปยังบริเวณที่มีน้ำน้อย
+    </p>
+
+    <div class="highlight">
+      Osmosis จัดเป็น Passive Transport เพราะ “ไม่ใช้ ATP จากเซลล์”
+      ไม่ได้แปลว่าไม่มีพลังงานเกี่ยวข้องเลย
+    </div>
+
+    <h3>แรงที่ทำให้ออสโมซิสเกิดขึ้น</h3>
+
+    <ul>
+      <li>ความต่างความเข้มข้น</li>
+      <li>ความต่างศักย์น้ำ</li>
+      <li>ความดันออสโมติก</li>
+      <li>พลังงานจลน์ของโมเลกุลน้ำ</li>
+    </ul>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/Osmosis.svg" alt="Osmosis Diagram">
+
+    <h3>ตัวอย่างออสโมซิส</h3>
+
+    <ul>
+      <li>รากพืชดูดน้ำจากดิน</li>
+      <li>เม็ดเลือดแดงพองในน้ำบริสุทธิ์</li>
+      <li>เม็ดเลือดแดงเหี่ยวในสารละลายเข้มข้น</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>4. Active Transport</h2>
+
+    <p>
+      คือการลำเลียงสารผ่านเยื่อหุ้มเซลล์โดยต้องใช้พลังงาน ATP
+      เพื่อขนส่งสารสวนความเข้มข้น
+    </p>
+
+    <div class="highlight">
+      Active Transport = ใช้พลังงานเมแทบอลิซึมของเซลล์
+    </div>
+
+    <h3>ลักษณะสำคัญ</h3>
+
+    <ul>
+      <li>ใช้ ATP</li>
+      <li>ลำเลียงจากเข้มข้นต่ำ → สูง</li>
+      <li>ต้องอาศัยโปรตีนลำเลียง</li>
+    </ul>
+
+    <div class="equation">
+      ATP → ADP + Pi + Energy
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/Sodium-potassium_pump.svg" alt="Sodium Potassium Pump">
+
+    <h3>ตัวอย่าง</h3>
+
+    <ul>
+      <li>Na⁺/K⁺ Pump</li>
+      <li>การดูดแร่ธาตุของรากพืช</li>
+      <li>การรักษาศักย์ไฟฟ้าของเซลล์ประสาท</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>5. ประเด็นสำคัญเรื่อง “พลังงาน”</h2>
+
+    <p>
+      คำว่า “ไม่ใช้พลังงาน” ในชีววิทยา มักหมายถึง
+      “ไม่ใช้ ATP จากเซลล์” ไม่ได้หมายความว่าไม่มีพลังงานทางฟิสิกส์เลย
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>กระบวนการ</th>
+          <th>ใช้ ATP จากเซลล์</th>
+          <th>มีแรงขับทางฟิสิกส์</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Diffusion</td>
+          <td>❌</td>
+          <td>✅</td>
+        </tr>
+        <tr>
+          <td>Osmosis</td>
+          <td>❌</td>
+          <td>✅</td>
+        </tr>
+        <tr>
+          <td>Active Transport</td>
+          <td>✅</td>
+          <td>✅</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>6. สรุปแนวคิดสำคัญ</h2>
+
+    <ul>
+      <li>เยื่อหุ้มเซลล์เป็นเยื่อเลือกผ่าน</li>
+      <li>Passive Transport ไม่ใช้ ATP จากเซลล์</li>
+      <li>Osmosis เป็นการเคลื่อนที่ของน้ำ</li>
+      <li>Osmosis ยังมีพลังงานทางฟิสิกส์เกี่ยวข้อง</li>
+      <li>Active Transport ใช้ ATP</li>
+      <li>การลำเลียงสวนความเข้มข้นต้องใช้พลังงานจากเซลล์</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  จัดทำเพื่อสรุปชีววิทยาเรื่องการลำเลียงสารผ่านเยื่อหุ้มเซลล์
+</footer>
+
+</body>
+</html>
