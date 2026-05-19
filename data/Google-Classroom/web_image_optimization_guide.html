@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปการตั้งค่ารูปภาพสำหรับเว็บไซต์และคู่มือ XnConvert</title>
+    <style>
+        /* Base Styling & Theme Variables */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-color: #f7f9fc;
+            --container-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --primary: #ff4757;
+            --secondary: #2ed573;
+            --accent: #1e90ff;
+            --border-color: #e2e8f0;
+            --badge-bg: #ffe0e3;
+            --badge-text: #ff4757;
+            --card-hover: rgba(255, 71, 87, 0.05);
+            --code-bg: #f1f5f9;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --container-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #ff6b81;
+            --secondary: #2ed573;
+            --accent: #70a1ff;
+            --border-color: #334155;
+            --badge-bg: #3b2027;
+            --badge-text: #ff6b81;
+            --card-hover: rgba(255, 107, 129, 0.08);
+            --code-bg: #0f172a;
+        }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Top Bar & Theme Toggle */
+        .top-navbar {
+            background-color: var(--container-bg);
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 12px 24px;
+            display: block;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        .navbar-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: table;
+            width: 100%;
+        }
+
+        .nav-title {
+            display: table-cell;
+            vertical-align: middle;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        .theme-switch-wrapper {
+            display: table-cell;
+            text-align: right;
+            vertical-align: middle;
+        }
+
+        .theme-btn {
+            background: none;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .theme-btn:hover {
+            background-color: var(--primary);
+            color: #ffffff;
+        }
+
+        /* Main Container */
+        .main-wrapper {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Header */
+        .hero-banner {
+            background: linear-gradient(135deg, #ff4757, #ff6b81, #1e90ff);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 40px 30px;
+            margin-bottom: 35px;
+            box-shadow: 0 10px 25px rgba(255, 71, 87, 0.2);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hero-banner h1 {
+            margin: 0 0 12px 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .hero-banner p {
+            margin: 0;
+            font-size: 16px;
+            opacity: 0.95;
+            max-width: 800px;
+        }
+
+        /* Content Sections */
+        .section-block {
+            background-color: var(--container-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid var(--primary);
+            display: inline-block;
+        }
+        
+        .section-title.blue-accent {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* Grid / Columns using Table Fallback for WeasyPrint compatibility */
+        .metrics-grid {
+            display: table;
+            width: 100%;
+            margin-bottom: 20px;
+            border-spacing: 15px 0;
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+
+        .metrics-card {
+            display: table-cell;
+            background-color: var(--bg-color);
+            border-radius: 12px;
+            padding: 20px;
+            width: 33.33%;
+            vertical-align: top;
+            border-left: 5px solid var(--primary);
+            transition: transform 0.2s;
+        }
+
+        .metrics-card.accent-card {
+            border-left-color: var(--accent);
+        }
+
+        .metrics-card.secondary-card {
+            border-left-color: var(--secondary);
+        }
+
+        .metrics-card h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: var(--text-main);
+        }
+
+        .metrics-card p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* List Styling */
+        ul, ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        strong {
+            color: var(--text-main);
+        }
+
+        /* Badges & Highlights */
+        .badge {
+            background-color: var(--badge-bg);
+            color: var(--badge-text);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .highlight-box {
+            background-color: var(--code-bg);
+            border-left: 4px solid var(--secondary);
+            padding: 15px 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+
+        /* Step Guide Styling */
+        .step-container {
+            margin-top: 20px;
+        }
+
+        .step-item {
+            position: relative;
+            padding-left: 45px;
+            margin-bottom: 25px;
+        }
+
+        .step-number {
+            position: absolute;
+            left: 0;
+            top: 2px;
+            background-color: var(--accent);
+            color: #ffffff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .step-item h4 {
+            margin: 0 0 6px 0;
+            font-size: 17px;
+            color: var(--text-main);
+        }
+
+        .step-item p, .step-item ul {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        code {
+            background-color: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 14px;
+            color: var(--primary);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 768px) {
+            .metrics-grid {
+                display: block;
+                margin-left: 0;
+                margin-right: 0;
+            }
+            .metrics-card {
+                display: block;
+                width: 100%;
+                margin-bottom: 15px;
+                border-spacing: 0;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <!-- Top Navigation Bar -->
+    <nav class="top-navbar">
+        <div class="navbar-container">
+            <div class="nav-title">🌐 Web Image Optimization & Automation</div>
+            <div class="theme-switch-wrapper">
+                <button class="theme-btn" id="themeToggleBtn" onclick="toggleTheme()">สลับโหมด: Deep Navy</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-wrapper">
+        
+        <!-- Hero Banner Section -->
+        <header class="hero-banner">
+            <h1>คู่มือการตั้งค่าขนาดรูปภาพ & บีบอัดไฟล์สำหรับหน้าเว็บ</h1>
+            <p>หลักการสำคัญไม่ใช่แค่ "ขนาดภาพ" (Dimensions) แต่คือ "ขนาดไฟล์" (File Size) เพื่อให้หน้าเว็บโหลดได้อย่างรวดเร็ว ไม่หน่วง เพิ่มประสิทธิภาพให้กับ SEO และประสบการณ์ที่ดีของผู้ใช้งาน</p>
+        </header>
+
+        <!-- Section 1: Standard Concepts -->
+        <section class="section-block">
+            <h2 class="section-title">1. เกณฑ์มาตรฐานของรูปภาพบนเว็บไซต์</h2>
+            <p style="margin-top: 0; color: var(--text-muted);">เป้าหมายสูงสุดคือ รูปภาพเล็กพอที่จะโหลดไว แต่ยังคงความคมชัดที่ตาแยกไม่ออก</p>
+            
+            <div class="metrics-grid">
+                <div class="metrics-card">
+                    <h3>🖼️ ไฟล์แบนเนอร์ (Full Banner)</h3>
+                    <p><strong>ขนาดไฟล์:</strong> ไม่เกิน <span class="badge">200KB - 500KB</span></p>
+                    <p style="margin-top: 8px;"><strong>มิติที่แนะนำ:</strong> กว้าง 1920px (หรือ 1600px) &times; สูง 400px - 600px</p>
+                </div>
+                <div class="metrics-card accent-card">
+                    <h3>📝 รูปประกอบเนื้อหาทั่วไป</h3>
+                    <p><strong>ขนาดไฟล์:</strong> ไม่เกิน <span class="badge" style="background-color:#d0ebff; color:#1e90ff;">50KB - 150KB</span></p>
+                    <p style="margin-top: 8px;"><strong>มิติที่แนะนำ:</strong> ความกว้างไม่เกิน 800px - 1000px (ตามคอลัมน์)</p>
+                </div>
+                <div class="metrics-card secondary-card">
+                    <h3>⚡ ฟอร์แมตไฟล์ยอดนิยม</h3>
+                    <p><strong>WebP:</strong> <span class="badge" style="background-color:#d3f9d8; color:#2ed573;">แนะนำที่สุด</span> เล็ก คมชัดสูง</p>
+                    <p style="margin-top: 4px;"><strong>JPEG:</strong> เหมาะกับภาพถ่ายรายละเอียดสีเยอะ</p>
+                    <p style="margin-top: 4px;"><strong>PNG:</strong> เหมาะกับรูปที่มีพื้นหลังโปร่งใส</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <strong>💡 เคล็ดลับเพิ่มเติม:</strong> หากรูปภาพมีขนาดเกิน 500KB ควรส่งผ่านเครื่องมือบีบอัด (Compression) เช่น <strong>TinyPNG</strong> หรือ <strong>Squoosh.app</strong> เสมอ
+            </div>
+        </section>
+
+        <!-- Section 2: GitHub Warnings -->
+        <section class="section-block">
+            <h2 class="section-title blue-accent">⚠️ ข้อควรระวังเมื่ออัปโหลดขึ้น GitHub</h2>
+            <p style="margin-top: 0;">แม้ GitHub จะรองรับไฟล์ได้สูงสุด 100MB แต่ถ้าเป็นการแสดงผลบน <strong>GitHub Pages</strong> หรือเว็บไซต์ทั่วไป:</p>
+            <ul>
+                <li><strong>ปัญหาเว็บโหลดช้า:</strong> ไฟล์ที่ใหญ่เกินไปจะทำให้ผู้ใช้งานรู้สึกว่าเว็บค้าง ส่งผลเสียรุนแรงต่อ SEO และ UX</li>
+                <li><strong>การตั้งชื่อไฟล์:</strong> ควรใช้ <code>ตัวพิมพ์เล็กทั้งหมด</code> ไม่มีเว้นวรรค และไม่มีอักขระพิเศษ เช่น ปรับจาก <code>Desert Banner 01!.png</code> เป็น <code>desert-banner.webp</code> เพื่อการเข้าถึงที่เสถียรในทุกระบบ</li>
+            </ul>
+        </section>
+
+        <!-- Section 3: Step-by-Step Guide for XnConvert -->
+        <section class="section-block">
+            <h2 class="section-title">🛠️ คู่มือทีละขั้นตอน: บีบอัดรูปภาพด้วย XnConvert</h2>
+            <p style="margin-top: 0; color: var(--text-muted);">เครื่องมือทรงประสิทธิภาพในการย่อและบีบอัดไฟล์ภาพจำนวนมากพร้อมๆ กัน เพื่อคุมขนาดให้อยู่ในช่วง 200KB - 500KB</p>
+            
+            <div class="step-container">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <h4>เพิ่มไฟล์รูปภาพ (Input)</h4>
+                    <p>เปิดโปรแกรม XnConvert ไปที่แถบ <strong>Input</strong> &rarr; กดปุ่ม <strong>Add files</strong> แล้วเลือกรูปภาพแบนเนอร์ที่คุณต้องการจัดการเข้ามาในระบบ</p>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <h4>ตั้งค่าปรับมิติภาพ (Actions)</h4>
+                    <p>ไปที่แถบ <strong>Actions</strong> &rarr; กด <strong>Add action &gt; Image &gt; Resize</strong></p>
+                    <ul style="margin-top: 5px; color: var(--text-muted);">
+                        <li>ตั้งค่า <strong>Width (ความกว้าง):</strong> <code>1920 px</code> (หรือตามความกว้างสูงสุดของหน้าเว็บคุณ)</li>
+                        <li>ตั้งค่า <strong>Height (ความสูง):</strong> ปล่อยเป็น <code>Automatic</code> เพื่อรักษาอัตราส่วนภาพดั้งเดิมไว้ ไม่ให้ภาพบิดเบี้ยว</li>
+                    </ul>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <h4>ตั้งค่าการบีบอัดควบคุมขนาดไฟล์ (Output)</h4>
+                    <p>ไปที่แถบ <strong>Output</strong> เพื่อกำหนดลักษณะไฟล์ปลายทาง:</p>
+                    <ul style="margin-top: 5px; color: var(--text-muted);">
+                        <li><strong>Format:</strong> แนะนำให้เลือก <code>WebP</code> (บีบอัดดีที่สุด) หรือ <code>JPG</code> จากนั้นกดปุ่ม <strong>Settings</strong> ข้างๆ ช่องเลือก Format</li>
+                        <li><strong>ถ้าเลือก JPG:</strong> ปรับค่า Quality ลงมาอยู่ระหว่าง <code>60 - 80</code></li>
+                        <li><strong>ถ้าเลือก WebP:</strong> ปรับค่า Quality ลงมาอยู่ระหว่าง <code>60 - 75</code></li>
+                    </ul>
+                    <div style="margin-top: 8px; background-color: var(--bg-color); padding: 10px; border-radius: 8px; font-size: 14px;">
+                        📌 <strong>เทคนิคการล็อคขนาดไฟล์ไม่ให้เกิน 500KB:</strong> ให้เริ่มต้นทดสอบที่ Quality 70 แล้วกด Convert ดูผลลัพธ์ หากขนาดไฟล์ยังเกิน 500KB ให้กลับมาลดค่า Quality ลงทีละ 5 (เช่น 65, 60) แล้วลองใหม่อีกครั้ง
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <h4>ดำเนินการแปลงไฟล์ (Convert)</h4>
+                    <p>เลือก <strong>Output folder</strong> (โฟลเดอร์ปลายทางที่ต้องการบันทึกไฟล์) จากนั้นตรวจสอบชื่อไฟล์ที่ตั้งไว้ (แนะนำตัวพิมพ์เล็กและคั่นด้วยขีดกลาง) &rarr; กดปุ่ม <strong>Convert</strong> บริเวณมุมล่างขวา</p>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="border-left-color: var(--primary); margin-bottom: 0;">
+                💡 <strong>แก้ไขปัญหาภาพเบลอ:</strong> หากลด Quality จนถึง 60 แล้วแต่ขนาดไฟล์ยังเกิน 500KB แสดงว่าภาพต้นฉบับละเอียดเกินไป (เช่น 4K) แนะนำให้กลับไปที่ขั้นตอนที่ 2 แล้วปรับแก้ <strong>Width (Resize) ลดลงเหลือ 1600px</strong> จะช่วยลดขนาดไฟล์ได้อย่างมีประสิทธิภาพสูงสุดโดยไม่สูญเสียความคมชัด
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>สรุปเนื้อหาและจัดทำเป็นโครงสร้างเว็บแบบ Interactive Responsive • 2026</p>
+        </footer>
+
+    </div>
+
+    <!-- Theme Toggle JavaScript Script -->
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const themeBtn = document.getElementById('themeToggleBtn');
+            
+            if (currentTheme === 'light') {
+                body.setAttribute('data-theme', 'dark');
+                themeBtn.innerText = 'สลับโหมด: Light Mode';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeBtn.innerText = 'สลับโหมด: Deep Navy';
+            }
+        }
+    </script>
+</body>
+</html>
