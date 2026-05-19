@@ -1,0 +1,1529 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>รูปแบบการปรับตัวของสิ่งมีชีวิต</title>
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Sarabun', 'Segoe UI', sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ===== LAYOUT ===== */
+    .page-wrapper { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+    /* ===== HEADER ===== */
+    .main-header {
+      text-align: center;
+      padding: 3rem 2rem 2rem;
+      background: linear-gradient(135deg, #1a1f2e 0%, #16213e 50%, #0f3460 100%);
+      border-radius: 20px;
+      margin-bottom: 3rem;
+      border: 1px solid #2d3748;
+      position: relative;
+      overflow: hidden;
+    }
+    .main-header::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(99,179,237,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .main-header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #63b3ed, #9f7aea, #ed64a6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.75rem;
+    }
+    .main-header p { color: #94a3b8; font-size: 1rem; }
+    .badge-row { display: flex; gap: 0.75rem; justify-content: center; margin-top: 1.25rem; flex-wrap: wrap; }
+    .badge {
+      padding: 0.35rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .badge-morph  { background: rgba(99,179,237,0.15); color: #63b3ed; border: 1px solid rgba(99,179,237,0.3); }
+    .badge-physio { background: rgba(159,122,234,0.15); color: #9f7aea; border: 1px solid rgba(159,122,234,0.3); }
+    .badge-behav  { background: rgba(72,187,120,0.15);  color: #48bb78; border: 1px solid rgba(72,187,120,0.3); }
+
+    /* ===== SECTION HEADER ===== */
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-bottom: 0.75rem;
+    }
+    .section-label .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+    .section-block { margin-bottom: 3.5rem; }
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+      line-height: 1.3;
+    }
+    .section-desc { color: #94a3b8; font-size: 0.92rem; margin-bottom: 2rem; }
+
+    /* ===== PART 1 – OVERVIEW TABLE ===== */
+    .overview-table-wrap {
+      overflow-x: auto;
+      border-radius: 16px;
+      border: 1px solid #2d3748;
+    }
+    table.overview {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+    table.overview th, table.overview td {
+      padding: 1rem 1.25rem;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid #2d3748;
+    }
+    table.overview thead tr {
+      background: #1a1f2e;
+    }
+    table.overview th {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .th-type  { color: #e2e8f0; }
+    .th-plant { color: #68d391; }
+    .th-animal { color: #f6ad55; }
+
+    table.overview tbody tr:nth-child(even) { background: #131720; }
+    table.overview tbody tr:nth-child(odd)  { background: #0f1117; }
+    table.overview tbody tr:hover { background: #1a2035; transition: background 0.2s; }
+
+    .type-cell {
+      font-weight: 700;
+      font-size: 0.9rem;
+      min-width: 180px;
+    }
+    .type-morph  { color: #63b3ed; }
+    .type-physio { color: #9f7aea; }
+    .type-behav  { color: #48bb78; }
+    .type-badge {
+      display: inline-block;
+      margin-top: 0.35rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 8px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .tb-morph  { background: rgba(99,179,237,0.12); color: #90cdf4; border: 1px solid rgba(99,179,237,0.25); }
+    .tb-physio { background: rgba(159,122,234,0.12); color: #c4b5fd; border: 1px solid rgba(159,122,234,0.25); }
+    .tb-behav  { background: rgba(72,187,120,0.12);  color: #9ae6b4; border: 1px solid rgba(72,187,120,0.25); }
+
+    .example-list { list-style: none; padding: 0; }
+    .example-list li {
+      padding: 0.3rem 0;
+      font-size: 0.88rem;
+      color: #cbd5e0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .example-list li::before {
+      content: '›';
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+      color: #4a5568;
+    }
+    .highlight-term {
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    /* note row */
+    .note-row td {
+      background: #1a1a2e !important;
+      font-size: 0.82rem;
+      color: #94a3b8;
+      border-top: 1px dashed #2d3748;
+      padding: 0.65rem 1.25rem;
+    }
+    .note-icon { color: #f6ad55; margin-right: 0.4rem; }
+
+    /* confusion box */
+    .confusion-box {
+      margin-top: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: rgba(246,173,85,0.07);
+      border: 1px solid rgba(246,173,85,0.25);
+      border-radius: 12px;
+    }
+    .confusion-box h4 { color: #f6ad55; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .confusion-box p { color: #cbd5e0; font-size: 0.85rem; }
+
+    /* ===== PART 2 – HABITAT CARDS ===== */
+    .habitat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(620px, 1fr));
+      gap: 2rem;
+    }
+    @media (max-width: 700px) {
+      .habitat-grid { grid-template-columns: 1fr; }
+    }
+
+    .habitat-card {
+      background: #131720;
+      border: 1px solid #2d3748;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .habitat-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid #2d3748;
+    }
+    .habitat-icon {
+      font-size: 2rem;
+      width: 52px; height: 52px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 14px;
+      flex-shrink: 0;
+    }
+    .habitat-header h3 { font-size: 1.1rem; font-weight: 800; }
+    .habitat-header p { font-size: 0.8rem; color: #94a3b8; margin-top: 0.15rem; }
+
+    /* desert */
+    .h-desert .habitat-icon { background: rgba(237,137,54,0.15); }
+    .h-desert .habitat-header h3 { color: #ed8936; }
+    /* mangrove */
+    .h-mangrove .habitat-icon { background: rgba(72,187,120,0.12); }
+    .h-mangrove .habitat-header h3 { color: #48bb78; }
+    /* polar */
+    .h-polar .habitat-icon { background: rgba(99,179,237,0.12); }
+    .h-polar .habitat-header h3 { color: #63b3ed; }
+    /* deep sea */
+    .h-deep .habitat-icon { background: rgba(159,122,234,0.12); }
+    .h-deep .habitat-header h3 { color: #9f7aea; }
+    /* rainforest */
+    .h-rainforest .habitat-icon { background: rgba(56,178,172,0.12); }
+    .h-rainforest .habitat-header h3 { color: #38b2ac; }
+    /* grassland */
+    .h-grassland .habitat-icon { background: rgba(246,173,85,0.12); }
+    .h-grassland .habitat-header h3 { color: #f6ad55; }
+
+    .habitat-panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .habitat-panel {
+      padding: 1.25rem 1.5rem;
+    }
+    .habitat-panel:first-child {
+      border-right: 1px solid #2d3748;
+    }
+    .panel-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .panel-title-animal { color: #f6ad55; }
+    .panel-title-plant  { color: #68d391; }
+
+    .adapt-item {
+      margin-bottom: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      background: #0f1117;
+      border-left: 3px solid;
+    }
+    .adapt-morph  { border-color: #63b3ed; }
+    .adapt-physio { border-color: #9f7aea; }
+    .adapt-behav  { border-color: #48bb78; }
+
+    .adapt-item .name {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: #e2e8f0;
+      margin-bottom: 0.2rem;
+    }
+    .adapt-item .trait {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      margin-bottom: 0.25rem;
+    }
+    .adapt-item .why {
+      font-size: 0.8rem;
+      color: #cbd5e0;
+      padding: 0.3rem 0.5rem;
+      background: rgba(255,255,255,0.04);
+      border-radius: 6px;
+    }
+    .adapt-item .why strong { color: #fbd38d; }
+
+    .type-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.1rem 0.45rem;
+      border-radius: 6px;
+      margin-left: 0.4rem;
+      vertical-align: middle;
+    }
+    .tag-m { background: rgba(99,179,237,0.15); color: #90cdf4; }
+    .tag-p { background: rgba(159,122,234,0.15); color: #c4b5fd; }
+    .tag-b { background: rgba(72,187,120,0.15);  color: #9ae6b4; }
+    .tag-x { background: rgba(246,173,85,0.15);  color: #fbd38d; }
+
+    /* ===== PART 3 – ORGANISM SPOTLIGHT ===== */
+    .organisms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+    .org-card {
+      background: #131720;
+      border: 1px solid #2d3748;
+      border-radius: 18px;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .org-card:hover {
+      transform: translateY(-3px);
+      border-color: #4a5568;
+    }
+    .org-card-header {
+      padding: 1.1rem 1.4rem 0.85rem;
+      border-bottom: 1px solid #2d3748;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .org-emoji {
+      font-size: 1.8rem;
+      width: 48px; height: 48px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      flex-shrink: 0;
+    }
+    .org-card-header h3 { font-size: 1rem; font-weight: 800; color: #e2e8f0; }
+    .org-card-header p { font-size: 0.78rem; color: #94a3b8; margin-top: 0.15rem; }
+    .org-card-body { padding: 1.1rem 1.4rem; }
+
+    .adapt-section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .asl-morph  { color: #63b3ed; }
+    .asl-physio { color: #9f7aea; }
+    .asl-behav  { color: #48bb78; }
+
+    .org-adapt-list { list-style: none; margin-bottom: 1rem; }
+    .org-adapt-list li {
+      font-size: 0.83rem;
+      color: #cbd5e0;
+      padding: 0.25rem 0;
+      padding-left: 0.9rem;
+      position: relative;
+    }
+    .org-adapt-list li::before {
+      content: '—';
+      position: absolute; left: 0;
+      color: #4a5568;
+    }
+
+    .ambiguous-alert {
+      background: rgba(246,173,85,0.08);
+      border: 1px dashed rgba(246,173,85,0.3);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.78rem;
+      color: #fbd38d;
+      margin-top: 0.75rem;
+    }
+    .ambiguous-alert strong { color: #f6ad55; }
+
+    /* divider */
+    .part-divider {
+      width: 100%; height: 1px;
+      background: linear-gradient(to right, transparent, #2d3748, transparent);
+      margin: 3.5rem 0;
+    }
+
+    /* key box */
+    .key-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.25rem;
+      background: #131720;
+      border: 1px solid #2d3748;
+      border-radius: 12px;
+      align-items: center;
+    }
+    .key-box span { font-size: 0.78rem; color: #94a3b8; margin-right: 0.25rem; }
+    .key-item {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.78rem; color: #cbd5e0;
+    }
+    .key-dot {
+      width: 10px; height: 10px; border-radius: 3px;
+    }
+
+    /* ===== FOOTER ===== */
+    .page-footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding: 1.5rem;
+      color: #4a5568;
+      font-size: 0.78rem;
+      border-top: 1px solid #1e2533;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 640px) {
+      .main-header h1 { font-size: 1.5rem; }
+      .habitat-panels { grid-template-columns: 1fr; }
+      .habitat-panel:first-child { border-right: none; border-bottom: 1px solid #2d3748; }
+      table.overview { min-width: 480px; }
+      .organisms-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ========== HEADER ========== -->
+  <header class="main-header">
+    <h1>🌿 รูปแบบการปรับตัวของสิ่งมีชีวิต</h1>
+    <p>Adaptations in Living Organisms · Owlvy Academy · สรุปครบ 3 ส่วน</p>
+    <div class="badge-row">
+      <span class="badge badge-morph">① Morphological / Structural</span>
+      <span class="badge badge-physio">② Physiological</span>
+      <span class="badge badge-behav">③ Behavioral</span>
+    </div>
+  </header>
+
+  <!-- ========================= PART 1 ========================= -->
+  <div class="section-block">
+    <div class="section-label">
+      <span class="dot" style="background:#63b3ed"></span>
+      ส่วนที่ 1
+    </div>
+    <h2 class="section-title">ภาพรวมการปรับตัวของสิ่งมีชีวิต</h2>
+    <p class="section-desc">
+      จัดกลุ่ม 3 ประเภทหลัก × 2 อาณาจักร (สัตว์ / พืช) — Mnemonic: <strong style="color:#f6ad55">Be-More-Structure</strong>
+    </p>
+
+    <!-- Legend -->
+    <div class="key-box">
+      <span>สัญลักษณ์ประเภทการปรับตัว:</span>
+      <div class="key-item"><span class="key-dot" style="background:#63b3ed"></span> Morphological (กายภาพภายนอก)</div>
+      <div class="key-item"><span class="key-dot" style="background:#9f7aea"></span> Physiological (สรีรวิทยา/ชีวเคมี)</div>
+      <div class="key-item"><span class="key-dot" style="background:#48bb78"></span> Behavioral (พฤติกรรม)</div>
+      <div class="key-item"><span class="key-dot" style="background:#f6ad55"></span> Ambiguous (ก้ำกึ่ง/จำแนกได้ 2 แบบ)</div>
+    </div>
+
+    <div class="overview-table-wrap">
+      <table class="overview">
+        <thead>
+          <tr>
+            <th class="th-type">ประเภทการปรับตัว</th>
+            <th class="th-plant">🌿 พืช (Plant)</th>
+            <th class="th-animal">🦁 สัตว์ (Animal)</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- ROW 1: Morphological -->
+          <tr>
+            <td class="type-cell">
+              <div class="type-morph">① การปรับตัวด้าน<br>รูปร่าง / ลักษณะ</div>
+              <span class="type-badge tb-morph">Morphological Adaptation</span><br/>
+              <span style="font-size:0.7rem; color:#718096; display:block; margin-top:0.3rem">
+                aka Structural Adaptation<br>= การปรับโครงสร้างภายนอก
+              </span>
+            </td>
+            <td>
+              <ul class="example-list">
+                <li><span class="highlight-term">ผักตบชวา</span> — โคนก้านพองมีโพรงอากาศ → ลอยน้ำได้</li>
+                <li><span class="highlight-term">เมล็ดยาง / สน / ปอ</span> — มีปีกหรือเส้นใย น้ำหนักเบา → กระจายพันธุ์ด้วยลม</li>
+                <li><span class="highlight-term">กระบองเพชร</span> — ใบเปลี่ยนเป็นหนาม ลำต้นอวบน้ำ</li>
+                <li><span class="highlight-term">รากค้ำยัน (Prop roots)</span> ของโกงกาง — ยึดโคลนในป่าชายเลน</li>
+                <li><span class="highlight-term">ใบบัว</span> — ผิวขี้ผึ้งเคลือบ ไม่อุ้มน้ำ → สะอาดตัวเอง</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="example-list">
+                <li><span class="highlight-term">นกยาง</span> — นิ้วเท้ายาว ทรงตัวในน้ำตื้น</li>
+                <li><span class="highlight-term">เป็ด</span> — หนังขึงระหว่างนิ้ว → พายน้ำ</li>
+                <li><span class="highlight-term">ไก่</span> — เล็บใหญ่แข็งแกร่ง → คุ้ยเขี่ยหาอาหาร</li>
+                <li><span class="highlight-term">อูฐ</span> — หนังตาสามชั้น ขนตายาว กีบกว้าง → ป้องกันทราย</li>
+                <li><span class="highlight-term">เสือดาว</span> — ลวดลายบนขน → พรางตัวในป่า</li>
+                <li><span class="highlight-term">นกเพนกวิน</span> — ขนสีดำ-ขาว รูปร่างกลมอ้วน → ลดการสูญเสียความร้อน</li>
+              </ul>
+            </td>
+          </tr>
+
+          <!-- NOTE ROW 1 -->
+          <tr class="note-row">
+            <td colspan="3">
+              <span class="note-icon">⚠️</span>
+              <strong>ข้อสังเกต:</strong> หลายแหล่งใช้ Morphological กับ Structural แทนกันได้ บางตำราแบ่ง Structural ออกมาเป็นประเภทที่ 4 ต่างหาก — ควรดูว่าตำราที่ใช้นิยามอย่างไร
+            </td>
+          </tr>
+
+          <!-- ROW 2: Physiological -->
+          <tr>
+            <td class="type-cell">
+              <div class="type-physio">② การปรับตัวด้าน<br>สรีรวิทยา</div>
+              <span class="type-badge tb-physio">Physiological Adaptation</span><br/>
+              <span style="font-size:0.7rem; color:#718096; display:block; margin-top:0.3rem">
+                = กลไกชีวเคมี/ฮอร์โมน<br>ภายในร่างกาย
+              </span>
+            </td>
+            <td>
+              <ul class="example-list">
+                <li><span class="highlight-term">กระบองเพชร</span> — ใช้กระบวนการ CAM Photosynthesis เปิดปากใบเฉพาะกลางคืน → ลดการสูญเสียน้ำ</li>
+                <li><span class="highlight-term">หม้อข้าวหม้อแกงลิง</span> — หลั่งน้ำย่อยโปรตีน (Protease) ย่อยแมลง → ทดแทนไนโตรเจนในดิน</li>
+                <li><span class="highlight-term">พืชทนเค็ม (Halophytes)</span> — สะสม solute ในเซลล์เพื่อรักษา Osmotic balance</li>
+                <li><span class="highlight-term">ต้นไม้ผลัดใบ</span> — สร้าง abscisic acid สั่งให้ใบร่วงในฤดูหนาว → ลดการสูญเสียน้ำ</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="example-list">
+                <li><span class="highlight-term">ปลาในโคลนตม</span> — เพิ่มปริมาณฮีโมโกลบิน → จับ O₂ ได้มากขึ้นในน้ำที่ O₂ น้อย</li>
+                <li><span class="highlight-term">ปลาทะเล</span> — ขับเกลือส่วนเกินออกทางเหงือก (Active Transport)</li>
+                <li><span class="highlight-term">นกทะเล</span> — ต่อมใต้จมูกขับ NaCl ส่วนเกิน</li>
+                <li><span class="highlight-term">มนุษย์บนที่สูง</span> — สร้างเม็ดเลือดแดงเพิ่ม → รับ O₂ ในอากาศเบาบาง</li>
+                <li><span class="highlight-term">หมีขั้วโลก</span> — สะสมไขมันหนาใต้ผิวหนัง + ชะลอการเผาผลาญในฤดูหนาว</li>
+                <li><span class="highlight-term">อูฐ</span> — เก็บไขมันในหนอก เผาผลาญเพื่อให้พลังงาน+น้ำ</li>
+              </ul>
+            </td>
+          </tr>
+
+          <!-- NOTE ROW 2 -->
+          <tr class="note-row">
+            <td colspan="3">
+              <span class="note-icon">⚠️</span>
+              <strong>จุดก้ำกึ่งที่สับสนบ่อย:</strong> กระบองเพชร "ใบเปลี่ยนเป็นหนาม" = Morphological แต่ "CAM Photosynthesis" = Physiological — สิ่งมีชีวิตชนิดเดียวกันมีทั้งสองประเภทพร้อมกันได้
+            </td>
+          </tr>
+
+          <!-- ROW 3: Behavioral -->
+          <tr>
+            <td class="type-cell">
+              <div class="type-behav">③ การปรับตัวด้าน<br>พฤติกรรม</div>
+              <span class="type-badge tb-behav">Behavioral Adaptation</span><br/>
+              <span style="font-size:0.7rem; color:#718096; display:block; margin-top:0.3rem">
+                = การกระทำเพื่อตอบสนอง<br>ต่อสิ่งแวดล้อม
+              </span>
+            </td>
+            <td>
+              <ul class="example-list">
+                <li><span class="highlight-term">ทานตะวัน</span> — หันดอกตามดวงอาทิตย์ (Phototropism) → รับแสงสูงสุด</li>
+                <li><span class="highlight-term">ต้นไมยราบ</span> — หุบใบเมื่อถูกสัมผัส → ป้องกันการกิน</li>
+                <li><span class="highlight-term">พืชบางชนิด</span> — ออกดอกตามช่วงเวลาแสง (Photoperiodism)</li>
+              </ul>
+            </td>
+            <td>
+              <ul class="example-list">
+                <li><span class="highlight-term">ไฮยีนา</span> — หากินกลางคืนในทะเลทราย → หนีความร้อน</li>
+                <li><span class="highlight-term">นกอพยพ</span> — อพยพตามฤดูกาล → ตามแหล่งอาหาร</li>
+                <li><span class="highlight-term">หมี</span> — จำศีล (Hibernation) ในฤดูหนาว → ประหยัดพลังงาน</li>
+                <li><span class="highlight-term">สกังค์</span> — ปล่อยกลิ่นฉุนเมื่อถูกคุกคาม → ขับไล่ศัตรู</li>
+                <li><span class="highlight-term">ปลาหมึก</span> — พ่นหมึกและเปลี่ยนสีกะทันหัน → ลวงผู้ล่า</li>
+                <li><span class="highlight-term">นกบางชนิด</span> — เต้นรำหรือแสดงขนงาม → ดึงดูดคู่ผสมพันธุ์</li>
+              </ul>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="confusion-box">
+      <h4>🔀 ประเด็นสับสนที่ต้องระวัง: ความซ้ำซ้อนระหว่าง Morphological กับ Physiological</h4>
+      <p>
+        หลายตำราไทยใช้ <em>Morphological</em> หมายถึง "การเปลี่ยนแปลงรูปร่างโครงสร้างที่มองเห็นได้จากภายนอก" 
+        แต่บางตำรา (โดยเฉพาะต่างประเทศ) รวม <em>Structural Adaptation</em> เข้ากับ Physiological 
+        เพราะ "โครงสร้างมีผลต่อการทำงาน (Function follows Structure)" 
+        — ดังนั้นในข้อสอบควรตรวจสอบนิยามของแต่ละแหล่งก่อนตอบ
+      </p>
+    </div>
+  </div>
+
+  <div class="part-divider"></div>
+
+  <!-- ========================= PART 2 ========================= -->
+  <div class="section-block">
+    <div class="section-label">
+      <span class="dot" style="background:#48bb78"></span>
+      ส่วนที่ 2
+    </div>
+    <h2 class="section-title">การปรับตัวรายพื้นที่ (Habitat-Specific Adaptations)</h2>
+    <p class="section-desc">
+      ลงรายละเอียดการปรับตัวของสิ่งมีชีวิตในแต่ละ Biome — แต่ละ Card แบ่ง Panel <strong>สัตว์</strong> และ <strong>พืช</strong>
+      พร้อมอธิบายว่าลักษณะนั้น <strong>ส่งผลอย่างไร</strong> ต่อการอยู่รอด
+    </p>
+
+    <div class="key-box">
+      <span>Tag:</span>
+      <div class="key-item"><span class="type-tag tag-m">M</span> Morphological</div>
+      <div class="key-item"><span class="type-tag tag-p">P</span> Physiological</div>
+      <div class="key-item"><span class="type-tag tag-b">B</span> Behavioral</div>
+      <div class="key-item"><span class="type-tag tag-x">M+P</span> ก้ำกึ่ง</div>
+    </div>
+
+    <div class="habitat-grid">
+
+      <!-- ===== DESERT ===== -->
+      <div class="habitat-card h-desert">
+        <div class="habitat-header">
+          <div class="habitat-icon">🏜️</div>
+          <div>
+            <h3>ทะเลทราย (Desert)</h3>
+            <p>ปัญหาหลัก: ขาดน้ำ, อุณหภูมิสุดขีด กลางวัน/กลางคืน, ดินขาดแร่ธาตุ</p>
+          </div>
+        </div>
+        <div class="habitat-panels">
+          <div class="habitat-panel">
+            <div class="panel-title panel-title-animal">🦁 สัตว์</div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">อูฐ (Camel) <span class="type-tag tag-m">M</span><span class="type-tag tag-p">P</span></div>
+              <div class="trait">หนอกเก็บไขมัน, ขนตายาว, หนังตา 3 ชั้น, กีบกว้าง, จมูกปิดได้</div>
+              <div class="why"><strong>ผล:</strong> ไขมันในหนอกสลายให้พลังงาน+น้ำ | ขนตาและหนังตากันทราย | กีบกระจายน้ำหนักบนทราย</div>
+            </div>
+
+            <div class="adapt-item adapt-physio">
+              <div class="name">กระรอกดิน (Ground Squirrel) <span class="type-tag tag-b">B</span><span class="type-tag tag-p">P</span></div>
+              <div class="trait">จำศีลในฤดูร้อน (Estivation) + ออกหากินช่วงเช้า-เย็น</div>
+              <div class="why"><strong>ผล:</strong> หลีกเลี่ยงความร้อนสูงสุดกลางวัน ลดการสูญเสียน้ำจากการหายใจ</div>
+            </div>
+
+            <div class="adapt-item adapt-behav">
+              <div class="name">ไฮยีนา (Hyena) <span class="type-tag tag-b">B</span></div>
+              <div class="trait">ออกหากินกลางคืน (Nocturnal)</div>
+              <div class="why"><strong>ผล:</strong> อุณหภูมิกลางคืนต่ำกว่ากลางวันมาก → ลดการสูญเสียน้ำและความร้อน</div>
+            </div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">กิ้งก่าทะเลทราย (Desert Lizard) <span class="type-tag tag-b">B</span></div>
+              <div class="trait">นอนแบนราบบนหินตอนเช้า, ยกตัวสูงในช่วงกลางวัน</div>
+              <div class="why"><strong>ผล:</strong> ดูดซับความร้อนจากหินตอนเช้า → กระตุ้นระบบเผาผลาญ | ยกตัวสูงหนีพื้นร้อน</div>
+            </div>
+          </div>
+
+          <div class="habitat-panel">
+            <div class="panel-title panel-title-plant">🌵 พืช</div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">กระบองเพชร (Cactus) <span class="type-tag tag-x">M+P</span></div>
+              <div class="trait">ใบ→หนาม, ลำต้นอวบ, ผิวเคลือบ Cuticle หนา, รากตื้นแต่กว้าง</div>
+              <div class="why"><strong>ผล:</strong> หนามลดพื้นที่คายน้ำ | ลำต้นสะสมน้ำ | Cuticle กันน้ำระเหย | รากดูดน้ำฝนได้ทันที</div>
+            </div>
+
+            <div class="adapt-item adapt-physio">
+              <div class="name">พืช CAM <span class="type-tag tag-p">P</span></div>
+              <div class="trait">เปิดปากใบเฉพาะกลางคืน (Crassulacean Acid Metabolism)</div>
+              <div class="why"><strong>ผล:</strong> CO₂ เข้าตอนกลางคืนที่เย็นกว่า → สูญเสียน้ำน้อยกว่าพืชปกติถึง 10 เท่า</div>
+            </div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">พืชล้มลุกทะเลทราย (Ephemeral plants) <span class="type-tag tag-b">B</span></div>
+              <div class="trait">งอกเร็ว, ออกดอก, และตายใน 2-3 สัปดาห์หลังฝนตก</div>
+              <div class="why"><strong>ผล:</strong> ใช้ประโยชน์ช่วงน้ำมีอย่างเต็มที่ เมล็ดทนแล้งได้นานหลายปี</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== MANGROVE ===== -->
+      <div class="habitat-card h-mangrove">
+        <div class="habitat-header">
+          <div class="habitat-icon">🌊</div>
+          <div>
+            <h3>ป่าชายเลน (Mangrove)</h3>
+            <p>ปัญหาหลัก: ดินเลน O₂ น้อย, น้ำเค็ม-น้ำจืดสลับ, คลื่นลม</p>
+          </div>
+        </div>
+        <div class="habitat-panels">
+          <div class="habitat-panel">
+            <div class="panel-title panel-title-animal">🦀 สัตว์</div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">ปูโกงกาง / ปูแสม <span class="type-tag tag-m">M</span><span class="type-tag tag-b">B</span></div>
+              <div class="trait">ก้ามแข็งแรง, เดินขวางได้เร็ว, ขุดรูในโคลน</div>
+              <div class="why"><strong>ผล:</strong> หนีน้ำขึ้น-ลงได้ทัน | รูในโคลนให้ความชุ่มชื้นและปกป้องในช่วงแล้ง</div>
+            </div>
+
+            <div class="adapt-item adapt-physio">
+              <div class="name">ปลากระบอก / ปลาตีน <span class="type-tag tag-m">M</span><span class="type-tag tag-p">P</span></div>
+              <div class="trait">ครีบแข็งแรงใช้เดินบนโคลน, หายใจผ่านผิวหนังได้ชั่วคราว</div>
+              <div class="why"><strong>ผล:</strong> เคลื่อนที่บนบกและในน้ำได้ → เข้าถึงแหล่งอาหารหลายแบบ</div>
+            </div>
+
+            <div class="adapt-item adapt-behav">
+              <div class="name">นกกินปลา / นกยาง <span class="type-tag tag-m">M</span></div>
+              <div class="trait">นิ้วเท้ายาว, คอยาว, จะงอยปากแหลมยาว</div>
+              <div class="why"><strong>ผล:</strong> ทรงตัวในน้ำตื้น | ส่องจับปลาได้จากระยะไกลโดยไม่ทำน้ำออง</div>
+            </div>
+          </div>
+
+          <div class="habitat-panel">
+            <div class="panel-title panel-title-plant">🌱 พืช</div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">โกงกาง (Rhizophora) <span class="type-tag tag-m">M</span></div>
+              <div class="trait">รากค้ำยัน (Prop/Stilt roots) โค้งงอออกจากลำต้น</div>
+              <div class="why"><strong>ผล:</strong> ยึดโคลนเหลวได้มั่นคง | รากยื่นสูงเหนือโคลน → แลกก๊าซกับอากาศได้</div>
+            </div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">แสม / ลำแพน — รากหายใจ (Pneumatophores) <span class="type-tag tag-m">M</span></div>
+              <div class="trait">รากชูขึ้นจากโคลนตั้งตรงเหมือนหมุดจำนวนมาก</div>
+              <div class="why"><strong>ผล:</strong> รับ O₂ จากอากาศโดยตรง เพราะโคลนขาดออกซิเจน (Anaerobic soil)</div>
+            </div>
+
+            <div class="adapt-item adapt-physio">
+              <div class="name">โกงกาง — เมล็ดงอกบนต้น (Vivipary) <span class="type-tag tag-x">M+P</span></div>
+              <div class="trait">เมล็ดงอกเป็นต้นอ่อนยาวบนต้นแม่ก่อนหล่นลงโคลน</div>
+              <div class="why"><strong>ผล:</strong> ต้นอ่อนปักโคลนได้ทันทีไม่ต้องรอเงื่อนไขงอก → อัตราการอยู่รอดสูง</div>
+            </div>
+
+            <div class="adapt-item adapt-physio">
+              <div class="name">พืชชายเลน — ต่อมขับเกลือ <span class="type-tag tag-p">P</span></div>
+              <div class="trait">ใบมีต่อมขับเกลือออกมาเป็นผลึกบนผิวใบ</div>
+              <div class="why"><strong>ผล:</strong> กำจัดเกลือที่ดูดซึมมากับน้ำทะเล → รักษาสมดุล Osmotic ในเซลล์</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== POLAR ===== -->
+      <div class="habitat-card h-polar">
+        <div class="habitat-header">
+          <div class="habitat-icon">🧊</div>
+          <div>
+            <h3>ขั้วโลก / ทุนดรา (Polar / Tundra)</h3>
+            <p>ปัญหาหลัก: อุณหภูมิต่ำมาก, ลมแรง, ฤดูหนาวยาว, แสงน้อย</p>
+          </div>
+        </div>
+        <div class="habitat-panels">
+          <div class="habitat-panel">
+            <div class="panel-title panel-title-animal">🐻‍❄️ สัตว์</div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">หมีขั้วโลก (Polar Bear) <span class="type-tag tag-m">M</span><span class="type-tag tag-p">P</span></div>
+              <div class="trait">ขนสองชั้น (ขนนุ่มด้านในกันความร้อน + ขนกันน้ำด้านนอก), ไขมันใต้ผิว 10 ซม.</div>
+              <div class="why"><strong>ผล:</strong> ขนกลวงดักอากาศกันหนาว | ไขมันหนาเป็นฉนวนความร้อน + พลังงานสำรองในช่วงจำศีล</div>
+            </div>
+
+            <div class="adapt-item adapt-physio">
+              <div class="name">แมวน้ำ (Seal) <span class="type-tag tag-p">P</span></div>
+              <div class="trait">ไขมันหนาใต้ผิวหนัง (Blubber), เลือดไหลเวียนแบบ Counter-current</div>
+              <div class="why"><strong>ผล:</strong> ระบบ Counter-current ให้เลือดอุ่นจากหัวใจอุ่นเลือดเย็นจากขาก่อนเข้าหัวใจ → กันสูญเสียความร้อน</div>
+            </div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">เพนกวิน (Penguin) <span class="type-tag tag-m">M</span><span class="type-tag tag-b">B</span></div>
+              <div class="trait">รูปร่างอ้วนกลม (ลดพื้นที่ผิว:ปริมาตร), ขนแน่นกันน้ำ, รวมกลุ่มกัน (Huddling)</div>
+              <div class="why"><strong>ผล:</strong> รูปทรงกลมลดการสูญเสียความร้อน | การรวมกลุ่มลดอุณหภูมิที่สูญเสียได้ถึง 50%</div>
+            </div>
+
+            <div class="adapt-item adapt-behav">
+              <div class="name">หมีสีน้ำตาล / ตัวนาก <span class="type-tag tag-b">B</span><span class="type-tag tag-p">P</span></div>
+              <div class="trait">จำศีล (Hibernation) ลดอัตราการเต้นหัวใจจาก 40 → 8 ครั้ง/นาที</div>
+              <div class="why"><strong>ผล:</strong> ลดการใช้พลังงานสูงสุดในช่วงที่อาหารหายาก → อยู่รอดด้วยไขมันสะสม</div>
+            </div>
+          </div>
+
+          <div class="habitat-panel">
+            <div class="panel-title panel-title-plant">🌿 พืช</div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">พืชทุนดรา — ลำต้นเตี้ยกอดดิน <span class="type-tag tag-m">M</span></div>
+              <div class="trait">เติบโตแนวราบใกล้พื้นดิน, ใบหนาอวบน้ำ</div>
+              <div class="why"><strong>ผล:</strong> หนีลมแรงที่ผิวพื้น | พื้นดินอุ่นกว่าอากาศ → ได้รับความร้อนจากดิน</div>
+            </div>
+
+            <div class="adapt-item adapt-physio">
+              <div class="name">มอส / ไลเคน (Moss / Lichen) <span class="type-tag tag-p">P</span></div>
+              <div class="trait">ทนการแช่แข็งและละลายซ้ำๆ ได้, สังเคราะห์แสงได้แม้อุณหภูมิ -5°C</div>
+              <div class="why"><strong>ผล:</strong> เอนไซม์ทนหนาวพิเศษ (Cryoenzymes) ทำงานได้ในอุณหภูมิต่ำ → ไม่ต้องรอฤดูร้อน</div>
+            </div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">ต้นไม้แคระ (Dwarf Trees) <span class="type-tag tag-m">M</span></div>
+              <div class="trait">โตช้ามาก ลำต้นบิดงอ รากแผ่ตื้น</div>
+              <div class="why"><strong>ผล:</strong> ดินขั้วโลกแข็ง (Permafrost) ไม่ให้รากลึก → รากแผ่กว้างแทน | ประหยัดพลังงานในการเติบโต</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== DEEP SEA ===== -->
+      <div class="habitat-card h-deep">
+        <div class="habitat-header">
+          <div class="habitat-icon">🌊</div>
+          <div>
+            <h3>ใต้ทะเลลึก (Deep Sea / Abyssal Zone)</h3>
+            <p>ปัญหาหลัก: ความดันสูงมาก, ไม่มีแสง, อุณหภูมิต่ำ, อาหารหายาก</p>
+          </div>
+        </div>
+        <div class="habitat-panels">
+          <div class="habitat-panel">
+            <div class="panel-title panel-title-animal">🐠 สัตว์</div>
+
+            <div class="adapt-item adapt-physio">
+              <div class="name">ปลาทะเลลึก <span class="type-tag tag-p">P</span><span class="type-tag tag-m">M</span></div>
+              <div class="trait">ไม่มีถุงลม, เซลล์มีสาร TMAO ต้านความดัน, กระดูกอ่อนยืดหยุ่น</div>
+              <div class="why"><strong>ผล:</strong> ถุงลมจะระเบิดที่ความดันสูง → วิวัฒนาการหายไป | TMAO รักษาโครงสร้างโปรตีนภายใต้ความดัน</div>
+            </div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">ปลาหน้ากาก / ปลา Anglerfish <span class="type-tag tag-m">M</span><span class="type-tag tag-b">B</span></div>
+              <div class="trait">มีอวัยวะเรืองแสง (Bioluminescence) บนหัว</div>
+              <div class="why"><strong>ผล:</strong> ใช้แสงล่อเหยื่อในความมืดสนิท → ไม่ต้องไล่ล่าซึ่งสิ้นเปลืองพลังงาน</div>
+            </div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">ปลา Gulper Eel <span class="type-tag tag-m">M</span></div>
+              <div class="trait">ปากกว้างมากเกินสัดส่วน กลืนเหยื่อที่ใหญ่กว่าตัวได้</div>
+              <div class="why"><strong>ผล:</strong> อาหารหายากมาก → ต้องกินทุกอย่างที่พบโดยไม่พลาดโอกาส</div>
+            </div>
+
+            <div class="adapt-item adapt-physio">
+              <div class="name">สิ่งมีชีวิตที่ Hydrothermal Vent <span class="type-tag tag-p">P</span></div>
+              <div class="trait">แบคทีเรีย Chemosynthesis แทน Photosynthesis</div>
+              <div class="why"><strong>ผล:</strong> ไม่มีแสงอาทิตย์ → ใช้พลังงานจากสารเคมี H₂S แทน เป็นฐานของห่วงโซ่อาหารทะเลลึก</div>
+            </div>
+          </div>
+
+          <div class="habitat-panel">
+            <div class="panel-title panel-title-plant">🔬 สิ่งมีชีวิตอื่น</div>
+            <div style="color:#94a3b8; font-size:0.82rem; padding: 0.5rem 0; margin-bottom:0.75rem">
+              * ทะเลลึกมืดสนิท ไม่มีพืชสีเขียว แต่มีสิ่งมีชีวิตที่น่าสนใจ:
+            </div>
+
+            <div class="adapt-item adapt-physio">
+              <div class="name">แบคทีเรียทะเลลึก (Extremophiles) <span class="type-tag tag-p">P</span></div>
+              <div class="trait">เอนไซม์ทำงานได้ที่ความดัน 1,000 atm และอุณหภูมิ 2°C</div>
+              <div class="why"><strong>ผล:</strong> โปรตีนโครงสร้างพิเศษ ไม่พับตัวในสภาวะที่โปรตีนทั่วไปสลายทันที</div>
+            </div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">หนอนท่อ (Tube Worms) <span class="type-tag tag-m">M</span><span class="type-tag tag-p">P</span></div>
+              <div class="trait">อยู่ในท่อแข็ง ไม่มีปากหรือกระเพาะ มีแบคทีเรียซิมไบโอซิสในร่างกาย</div>
+              <div class="why"><strong>ผล:</strong> แบคทีเรีย Chemosynthesis ภายในร่างกายผลิตอาหารให้โดยตรง → ไม่ต้องกิน</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== RAINFOREST ===== -->
+      <div class="habitat-card h-rainforest">
+        <div class="habitat-header">
+          <div class="habitat-icon">🌳</div>
+          <div>
+            <h3>ป่าฝนเขตร้อน (Tropical Rainforest)</h3>
+            <p>ปัญหาหลัก: แข่งขันแสง, ชั้น Canopy บังแสง, ศัตรูพืช-สัตว์หนาแน่น</p>
+          </div>
+        </div>
+        <div class="habitat-panels">
+          <div class="habitat-panel">
+            <div class="panel-title panel-title-animal">🦜 สัตว์</div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">กิ้งก่าคาเมเลียน <span class="type-tag tag-m">M</span><span class="type-tag tag-p">P</span></div>
+              <div class="trait">เซลล์สีเปลี่ยนได้ (Chromatophores), ตาหมุนอิสระ 2 ตาแยกกัน</div>
+              <div class="why"><strong>ผล:</strong> พรางตัวตามพื้นหลัง | เห็นสองทิศทางพร้อมกัน ตรวจจับศัตรู/เหยื่อได้รอบทิศ</div>
+            </div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">ลิงและสัตว์เกาะกิ่ง <span class="type-tag tag-m">M</span></div>
+              <div class="trait">นิ้วหัวแม่มือจับได้ (Opposable Thumbs), หางจับได้ (Prehensile Tail)</div>
+              <div class="why"><strong>ผล:</strong> ชีวิตบนต้นไม้สูง → ต้องจับกิ่งได้แม่นยำ | หางเป็น "มือที่ 5" ช่วยทรงตัว</div>
+            </div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">กบพิษ (Poison Dart Frog) <span class="type-tag tag-m">M</span><span class="type-tag tag-p">P</span></div>
+              <div class="trait">สีสดใสเตือนภัย (Aposematism), ผิวหนังสร้างพิษ</div>
+              <div class="why"><strong>ผล:</strong> สีเตือน "ฉันมีพิษ อย่ากิน!" → ไม่ต้องหนี ลดพลังงาน | พิษผ่านอาหาร (แมลงมีพิษ)</div>
+            </div>
+          </div>
+
+          <div class="habitat-panel">
+            <div class="panel-title panel-title-plant">🌱 พืช</div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">พืชอิงอาศัย (Epiphytes) เช่น กล้วยไม้ <span class="type-tag tag-m">M</span></div>
+              <div class="trait">รากอากาศ (Aerial Roots) ดูดซับความชื้นและแสง, เกาะลำต้นไม้ใหญ่</div>
+              <div class="why"><strong>ผล:</strong> อยู่ชั้นบนของป่ารับแสงได้มากกว่าพื้นดิน โดยไม่ต้องสร้างลำต้นสูง → ประหยัดพลังงาน</div>
+            </div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">พืชใบใหญ่ / ชั้นล่าง (Understory Plants) <span class="type-tag tag-m">M</span><span class="type-tag tag-p">P</span></div>
+              <div class="trait">ใบกว้างและบางมาก, สีเขียวเข้ม, มีคลอโรฟิลล์มาก</div>
+              <div class="why"><strong>ผล:</strong> ใบกว้าง = เพิ่มพื้นที่รับแสงน้อย | คลอโรฟิลล์มาก = ประสิทธิภาพสูงสุดในแสงน้อย</div>
+            </div>
+
+            <div class="adapt-item adapt-physio">
+              <div class="name">หม้อข้าวหม้อแกงลิง (Pitcher Plant) <span class="type-tag tag-p">P</span></div>
+              <div class="trait">ใบเปลี่ยนเป็นกับดักเหยื่อ, หลั่งน้ำย่อย Protease และ Lipase</div>
+              <div class="why"><strong>ผล:</strong> ดินป่าฝนมักขาด N และ P → ย่อยสัตว์ขนาดเล็กเพื่อดูดซึม N, P โดยตรง</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== GRASSLAND ===== -->
+      <div class="habitat-card h-grassland">
+        <div class="habitat-header">
+          <div class="habitat-icon">🦒</div>
+          <div>
+            <h3>ทุ่งหญ้าสะวันนา / ทุ่งหญ้า (Savanna / Grassland)</h3>
+            <p>ปัญหาหลัก: สัตว์กินพืชหนาแน่น, ไฟป่าตามธรรมชาติ, ฤดูแล้งยาว</p>
+          </div>
+        </div>
+        <div class="habitat-panels">
+          <div class="habitat-panel">
+            <div class="panel-title panel-title-animal">🦓 สัตว์</div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">ยีราฟ (Giraffe) <span class="type-tag tag-m">M</span><span class="type-tag tag-p">P</span></div>
+              <div class="trait">คอยาวมาก, หัวใจขนาดใหญ่พิเศษ, ลิ้นยาว 45 ซม.</div>
+              <div class="why"><strong>ผล:</strong> เข้าถึงใบไม้ชั้นสูงที่สัตว์อื่นแข่งขันน้อยกว่า | หัวใจสูบฉีดเลือดขึ้นคอสูง 2 ม.</div>
+            </div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">ม้าลาย (Zebra) <span class="type-tag tag-m">M</span></div>
+              <div class="trait">ลายขาว-ดำ</div>
+              <div class="why"><strong>ผล:</strong> ทฤษฎีหลายอย่าง: ทำสิงโตสับสนในฝูง | ลายขัดขวาง Dazzle Effect | กันแมลงดูดเลือด (ได้รับการยืนยันว่าแมลงไม่ชอบลาย)</div>
+            </div>
+
+            <div class="adapt-item adapt-behav">
+              <div class="name">วิลเดอบีสต์ (Wildebeest) <span class="type-tag tag-b">B</span></div>
+              <div class="trait">อพยพเป็นฝูงล้านตัวตามวงรอบฝน</div>
+              <div class="why"><strong>ผล:</strong> ตามหญ้าสดเสมอ | ฝูงใหญ่ลดความเสี่ยงจากนักล่าต่อตัว (Dilution Effect)</div>
+            </div>
+          </div>
+
+          <div class="habitat-panel">
+            <div class="panel-title panel-title-plant">🌾 พืช</div>
+
+            <div class="adapt-item adapt-physio">
+              <div class="name">หญ้าทุ่ง — ใช้ C4 Photosynthesis <span class="type-tag tag-p">P</span></div>
+              <div class="trait">กระบวนการตรึง CO₂ แบบ C4 ที่มีประสิทธิภาพสูงในแสงแดดจัด</div>
+              <div class="why"><strong>ผล:</strong> สังเคราะห์แสงได้เร็วกว่า C3 ถึง 2-3 เท่าในอุณหภูมิสูงและแสงจ้า → เติบโตเร็ว</div>
+            </div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">หญ้า — ฐานเจริญ (Intercalary Meristem) <span class="type-tag tag-m">M</span></div>
+              <div class="trait">จุดเจริญอยู่ฐานของใบ ไม่ใช่ปลายใบ</div>
+              <div class="why"><strong>ผل:</strong> สัตว์กิน/ไฟไหม้ตัดยอดออก → ฐานที่ยังเหลืออยู่งอกใหม่ได้ทันที ต่างจากพืชใบเลี้ยงคู่ทั่วไป</div>
+            </div>
+
+            <div class="adapt-item adapt-morph">
+              <div class="name">ต้นอะเคเซีย (Acacia) <span class="type-tag tag-m">M</span><span class="type-tag tag-p">P</span></div>
+              <div class="trait">มีหนามแหลม, ใบเล็กลดการระเหย, รากลึกมาก</div>
+              <div class="why"><strong>ผล:</strong> หนามป้องกันสัตว์กิน | รากลึกถึง 30 ม. เข้าถึงน้ำใต้ดินในฤดูแล้ง</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end habitat-grid -->
+  </div>
+
+  <div class="part-divider"></div>
+
+  <!-- ========================= PART 3 ========================= -->
+  <div class="section-block">
+    <div class="section-label">
+      <span class="dot" style="background:#9f7aea"></span>
+      ส่วนที่ 3
+    </div>
+    <h2 class="section-title">Spotlight: สิ่งมีชีวิตที่มีทั้ง Morphological + Physiological</h2>
+    <p class="section-desc">
+      เน้นสิ่งมีชีวิตที่มีทั้งการปรับตัวด้านกายภาพ <em>และ</em> สรีรวิทยา 
+      — ชี้ให้เห็นความแตกต่าง และกรณีที่จำแนกได้ทั้งสองแบบ
+    </p>
+
+    <div class="key-box">
+      <span>คำอธิบาย Tag:</span>
+      <div class="key-item"><span class="type-tag tag-m">M</span> = Morphological ชัดเจน</div>
+      <div class="key-item"><span class="type-tag tag-p">P</span> = Physiological ชัดเจน</div>
+      <div class="key-item"><span class="type-tag tag-b">B</span> = Behavioral ชัดเจน</div>
+      <div class="key-item"><span class="type-tag tag-x">M/P</span> = ก้ำกึ่ง จำแนกได้ทั้งสองแบบ</div>
+    </div>
+
+    <!-- ===== ANIMALS ===== -->
+    <div class="section-label" style="margin-bottom:1rem;">
+      <span class="dot" style="background:#f6ad55"></span>
+      สัตว์ (Animals)
+    </div>
+
+    <div class="organisms-grid">
+
+      <!-- CAMEL -->
+      <div class="org-card">
+        <div class="org-card-header">
+          <div class="org-emoji">🐪</div>
+          <div>
+            <h3>อูฐ (Camel)</h3>
+            <p>Camelus dromedarius · ทะเลทราย</p>
+          </div>
+        </div>
+        <div class="org-card-body">
+          <div class="adapt-section-label asl-morph">🔷 Morphological (กายภาพ)</div>
+          <ul class="org-adapt-list">
+            <li>กีบกว้างแบน → กระจายน้ำหนักบนทราย</li>
+            <li>ขนตายาวและหนังตา 3 ชั้น → กันทรายเข้าตา</li>
+            <li>จมูกปิด-เปิดได้ → กันทรายเข้าจมูก</li>
+            <li>หนอกขนาดใหญ่ → เก็บไขมัน (ไม่ใช่น้ำ!)</li>
+          </ul>
+          <div class="adapt-section-label asl-physio">🔶 Physiological (สรีรวิทยา)</div>
+          <ul class="org-adapt-list">
+            <li>เผาผลาญไขมันในหนอก → ได้น้ำ metabolic water</li>
+            <li>ทนการสูญเสียน้ำได้ถึง 25% ของน้ำหนักตัว (มนุษย์ตายที่ 15%)</li>
+            <li>อุณหภูมิร่างกายผันผวนได้ 34°C–41°C → ลดการเหงื่อ</li>
+            <li>ปัสสาวะเข้มข้นมาก, อุจจาระแห้งมาก → ประหยัดน้ำสุดขีด</li>
+          </ul>
+          <div class="adapt-section-label asl-behav">🟢 Behavioral</div>
+          <ul class="org-adapt-list">
+            <li>หันข้างรับแสงอาทิตย์ตรงๆ ตอนกลางวัน → ลดพื้นที่รับความร้อน</li>
+          </ul>
+          <div class="ambiguous-alert">
+            <strong>⚠️ กรณีก้ำกึ่ง:</strong> "หนอก" มักถูกเข้าใจผิดว่าเป็น Morphological (ถุงน้ำ) แต่จริงๆ คือ Physiological (ถุงไขมัน+กลไก metabolic water) — ตอบ Morphological ได้ถ้าถามว่า "รูปร่าง" แต่ต้องเสริมว่ากลไกจริงคือ Physiological
+          </div>
+        </div>
+      </div>
+
+      <!-- POLAR BEAR -->
+      <div class="org-card">
+        <div class="org-card-header">
+          <div class="org-emoji">🐻‍❄️</div>
+          <div>
+            <h3>หมีขั้วโลก (Polar Bear)</h3>
+            <p>Ursus maritimus · ขั้วโลกเหนือ</p>
+          </div>
+        </div>
+        <div class="org-card-body">
+          <div class="adapt-section-label asl-morph">🔷 Morphological (กายภาพ)</div>
+          <ul class="org-adapt-list">
+            <li>ขนสองชั้น: ขนนุ่มด้านใน + ขนกันน้ำด้านนอก</li>
+            <li>ขนกลวงช่วยดักอากาศ (บางตำราระบุว่านำแสงไปยังผิวหนัง)</li>
+            <li>ผิวหนังสีดำดูดซับความร้อน</li>
+            <li>อุ้งเท้าใหญ่ มีตุ่มยางกันลื่นบนน้ำแข็ง</li>
+          </ul>
+          <div class="adapt-section-label asl-physio">🔶 Physiological (สรีรวิทยา)</div>
+          <ul class="org-adapt-list">
+            <li>ไขมันใต้ผิวหนัง (Blubber) หนา 10 ซม. เป็นฉนวน</li>
+            <li>จำศีลบางส่วน (Torpor) แม่หมีตั้งท้องในฤดูหนาว: อัตราเผาผลาญลดลงแต่ไม่ลึกเท่าหมีสีน้ำตาล</li>
+            <li>เลือดไหลเวียนแบบ Counter-current ในขา</li>
+          </ul>
+          <div class="ambiguous-alert">
+            <strong>⚠️ กรณีก้ำกึ่ง:</strong> "ไขมันหนา" — เป็น Morphological (โครงสร้างชั้นไขมัน) หรือ Physiological (กลไกกันความร้อน)? ตอบได้ทั้งคู่ — ส่วนใหญ่นับเป็น Physiological เพราะเน้น "หน้าที่" การเป็นฉนวน
+          </div>
+        </div>
+      </div>
+
+      <!-- DEEP SEA FISH -->
+      <div class="org-card">
+        <div class="org-card-header">
+          <div class="org-emoji">🐟</div>
+          <div>
+            <h3>ปลาทะเลลึก (Deep Sea Fish)</h3>
+            <p>เช่น Anglerfish, Viperfish · Abyssal Zone</p>
+          </div>
+        </div>
+        <div class="org-card-body">
+          <div class="adapt-section-label asl-morph">🔷 Morphological (กายภาพ)</div>
+          <ul class="org-adapt-list">
+            <li>ตาโต (บางชนิด) → รับแสงน้อยสุดขีด</li>
+            <li>ปากและกระเพาะขยายได้มหาศาล → กินเหยื่อใหญ่กว่าตัว</li>
+            <li>อวัยวะเรืองแสง (Photophores) ตามลำตัว</li>
+            <li>กระดูกอ่อนและเนื้อเยื่ออ่อน → ลดความหนาแน่นของร่างกาย</li>
+          </ul>
+          <div class="adapt-section-label asl-physio">🔶 Physiological (สรีรวิทยา)</div>
+          <ul class="org-adapt-list">
+            <li>สาร TMAO (Trimethylamine oxide) ในเซลล์ → ต้านความดันสูง</li>
+            <li>ไม่มีถุงลม → ปรับความลึกโดยเปลี่ยนปริมาณ lipid</li>
+            <li>เอนไซม์ทำงานได้ที่ 2–4°C (Psychrophilic enzymes)</li>
+          </ul>
+          <div class="ambiguous-alert">
+            <strong>⚠️ กรณีก้ำกึ่ง:</strong> Bioluminescence — Morphological (อวัยวะ Photophore มีอยู่จริง) หรือ Physiological (กระบวนการ Luciferin-Luciferase เคมีแสง)? — นักชีววิทยาจัดเป็น "Morpho-physiological" ทั้งคู่
+          </div>
+        </div>
+      </div>
+
+      <!-- HUMANS -->
+      <div class="org-card">
+        <div class="org-card-header">
+          <div class="org-emoji">🧑</div>
+          <div>
+            <h3>มนุษย์ (Humans)</h3>
+            <p>Homo sapiens · สิ่งแวดล้อมหลากหลาย</p>
+          </div>
+        </div>
+        <div class="org-card-body">
+          <div class="adapt-section-label asl-morph">🔷 Morphological (กายภาพ)</div>
+          <ul class="org-adapt-list">
+            <li>คนอยู่ในแถบร้อน: ผิวคล้ำ เมลานินมาก → กันรังสี UV</li>
+            <li>คนอยู่ในแถบหนาว: ผิวขาว สังเคราะห์ Vitamin D ในแสงน้อยได้</li>
+            <li>กลุ่ม Inuit: ร่างกายเตี้ยอ้วน (ลด Surface Area:Volume) → รักษาความร้อน</li>
+          </ul>
+          <div class="adapt-section-label asl-physio">🔶 Physiological (สรีรวิทยา)</div>
+          <ul class="org-adapt-list">
+            <li>บนที่สูง (เช่น ทิเบต เปรู): เพิ่มการสร้าง RBC + Hemoglobin → รับ O₂ ในอากาศเบาบาง</li>
+            <li>อากาศร้อน: เพิ่มการหลั่งเหงื่อ (ระเหยระบายความร้อน)</li>
+            <li>สร้าง EPO (Erythropoietin) กระตุ้น Bone Marrow สร้างเม็ดเลือดแดงเพิ่ม</li>
+          </ul>
+          <div class="adapt-section-label asl-behav">🟢 Behavioral</div>
+          <ul class="org-adapt-list">
+            <li>สร้างเสื้อผ้า, ที่อยู่อาศัย, ไฟ → ปรับตัวทางวัฒนธรรมแทนกายภาพ</li>
+          </ul>
+          <div class="ambiguous-alert">
+            <strong>⚠️ กรณีก้ำกึ่ง:</strong> มนุษย์ทิเบต พบ Gene HIF-2α ที่เพิ่มจำนวน RBC — เป็น Physiological ชัดเจน แต่ตัว Gene เองที่เปลี่ยนคือ Genetic/Evolutionary Adaptation ซึ่งเป็นอีกระดับหนึ่ง
+          </div>
+        </div>
+      </div>
+
+      <!-- CHAMELEON -->
+      <div class="org-card">
+        <div class="org-card-header">
+          <div class="org-emoji">🦎</div>
+          <div>
+            <h3>กิ้งก่าคาเมเลียน (Chameleon)</h3>
+            <p>Chameleonidae · ป่าร้อนชื้น</p>
+          </div>
+        </div>
+        <div class="org-card-body">
+          <div class="adapt-section-label asl-morph">🔷 Morphological (กายภาพ)</div>
+          <ul class="org-adapt-list">
+            <li>ตาหมุนอิสระสองตาแยกกัน → มองได้เกือบ 360°</li>
+            <li>ลิ้นยาวและยืดออกได้ 1.5 เท่าตัว → ตีเหยื่อได้เร็ว</li>
+            <li>นิ้วเท้าจับคู่ (Zygodactyl feet) → เกาะกิ่งมั่นคง</li>
+          </ul>
+          <div class="adapt-section-label asl-physio">🔶 Physiological (สรีรวิทยา)</div>
+          <ul class="org-adapt-list">
+            <li>เซลล์ Chromatophores มี Nanocrystals ที่เปลี่ยนการหักเหแสง → เปลี่ยนสีได้</li>
+            <li>ควบคุมอุณหภูมิร่างกายโดยเปลี่ยนสี (เข้มรับความร้อน, อ่อนสะท้อน)</li>
+          </ul>
+          <div class="ambiguous-alert">
+            <strong>⚠️ กรณีก้ำกึ่ง:</strong> "การเปลี่ยนสี" — Morphological (เซลล์ Chromatophore มีอยู่จริง) + Physiological (กระบวนการ Nanocrystal เปลี่ยนการหักเหแสง) + Behavioral (เปลี่ยนสีเพื่อสื่อสาร อารมณ์ หรือควบคุมอุณหภูมิ) — เป็นตัวอย่างที่มีทั้ง 3 แบบพร้อมกัน!
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end animals grid -->
+
+    <!-- ===== PLANTS ===== -->
+    <div class="section-label" style="margin: 2.5rem 0 1rem;">
+      <span class="dot" style="background:#68d391"></span>
+      พืช (Plants)
+    </div>
+
+    <div class="organisms-grid">
+
+      <!-- CACTUS -->
+      <div class="org-card">
+        <div class="org-card-header">
+          <div class="org-emoji">🌵</div>
+          <div>
+            <h3>กระบองเพชร (Cactus)</h3>
+            <p>Cactaceae · ทะเลทราย</p>
+          </div>
+        </div>
+        <div class="org-card-body">
+          <div class="adapt-section-label asl-morph">🔷 Morphological (กายภาพ)</div>
+          <ul class="org-adapt-list">
+            <li>ใบเปลี่ยนเป็นหนาม → ลดพื้นที่คายน้ำและป้องกันสัตว์กิน</li>
+            <li>ลำต้นอวบน้ำ มีร่อง (Accordion-like) → ขยายได้เมื่อเก็บน้ำ หดเมื่อน้ำน้อย</li>
+            <li>รากตื้นกว้าง (Shallow extensive roots) → ดูดน้ำฝนทันที</li>
+          </ul>
+          <div class="adapt-section-label asl-physio">🔶 Physiological (สรีรวิทยา)</div>
+          <ul class="org-adapt-list">
+            <li>ใช้ CAM Photosynthesis → เปิดปากใบเฉพาะกลางคืน ลดการสูญเสียน้ำ</li>
+            <li>Cuticle (ผิวเคลือบขี้ผึ้ง) หนามาก → ลด Transpiration</li>
+            <li>Mucilage (เมือก) ในเซลล์ → กักเก็บน้ำและป้องกันการแข็งตัว</li>
+          </ul>
+          <div class="ambiguous-alert">
+            <strong>⚠️ กรณีก้ำกึ่ง (ตัวอย่างในไฟล์ตำรา):</strong> "ลำต้นอวบกักเก็บน้ำ" — บางแหล่งจัด Morphological บางแหล่งจัด Physiological เพราะเป็นทั้งรูปร่าง (อวบ) และหน้าที่ (กักเก็บน้ำ) — ตำรา Owlvy Academy ระบุไว้ชัดว่า "บางแหล่งจัดเป็นการปรับตัวด้านรูปร่าง"
+          </div>
+        </div>
+      </div>
+
+      <!-- PITCHER PLANT -->
+      <div class="org-card">
+        <div class="org-card-header">
+          <div class="org-emoji">🪴</div>
+          <div>
+            <h3>หม้อข้าวหม้อแกงลิง (Pitcher Plant)</h3>
+            <p>Nepenthes · ป่าดิบชื้น / พื้นที่척박</p>
+          </div>
+        </div>
+        <div class="org-card-body">
+          <div class="adapt-section-label asl-morph">🔷 Morphological (กายภาพ)</div>
+          <ul class="org-adapt-list">
+            <li>ใบเปลี่ยนรูปเป็นหม้อ (Modified leaf) มีฝาปิด-เปิด</li>
+            <li>ขอบหม้อลื่น (Peristome) → แมลงเหยียบแล้วลื่นตกลงไป</li>
+            <li>ผนังหม้อเรียบ+ขี้ผึ้ง → ปีนออกไม่ได้</li>
+          </ul>
+          <div class="adapt-section-label asl-physio">🔶 Physiological (สรีรวิทยา)</div>
+          <ul class="org-adapt-list">
+            <li>หลั่ง Protease, Lipase, Chitinase → ย่อยแมลงเอาแหล่ง N, P</li>
+            <li>ของเหลวในหม้อเป็นกรดอ่อน (pH 3–4) → ฆ่าเชื้อโรคและย่อยโปรตีนเหยื่อ</li>
+            <li>ดูดซึม N และ P โดยตรงผ่านผนังหม้อ</li>
+          </ul>
+          <div class="ambiguous-alert">
+            <strong>⚠️ กรณีก้ำกึ่ง:</strong> "ใบเปลี่ยนรูป" = Morphological ชัด แต่ "การหลั่งน้ำย่อย" = Physiological ชัด — เป็นตัวอย่างสุดคลาสสิกที่มีทั้งสองแบบแยกชัดเจน เหมาะอธิบายความแตกต่างในข้อสอบ
+          </div>
+        </div>
+      </div>
+
+      <!-- MANGROVE -->
+      <div class="org-card">
+        <div class="org-card-header">
+          <div class="org-emoji">🌴</div>
+          <div>
+            <h3>โกงกาง (Mangrove / Rhizophora)</h3>
+            <p>Rhizophoraceae · ป่าชายเลน</p>
+          </div>
+        </div>
+        <div class="org-card-body">
+          <div class="adapt-section-label asl-morph">🔷 Morphological (กายภาพ)</div>
+          <ul class="org-adapt-list">
+            <li>รากค้ำยัน (Prop/Stilt roots) โค้งงอออกจากลำต้น → ยึดโคลนเหลว</li>
+            <li>เมล็ดงอกเป็นต้นอ่อน (Propagule) บนต้นแม่ก่อนหล่น</li>
+            <li>ใบอวบน้ำ มี Cuticle หนา → กันเกลือ</li>
+          </ul>
+          <div class="adapt-section-label asl-physio">🔶 Physiological (สรีรวิทยา)</div>
+          <ul class="org-adapt-list">
+            <li>กรองเกลือที่รากก่อนเข้าลำต้น (Salt exclusion) → ดูดน้ำทะเลได้</li>
+            <li>สะสมเกลือในใบแก่แล้วทิ้งใบ (Salt accumulation strategy)</li>
+            <li>สร้าง Aerenchyma (เนื้อเยื่อโพรงอากาศ) → ส่ง O₂ ลงรากในโคลน</li>
+          </ul>
+          <div class="ambiguous-alert">
+            <strong>⚠️ กรณีก้ำกึ่ง:</strong> Vivipary (เมล็ดงอกบนต้นแม่) — Morphological (รูปร่างของต้นอ่อน) หรือ Physiological (กลไก Hormonal ที่ควบคุมการงอก)? ส่วนใหญ่จัดเป็น Morphological/Structural เพราะเน้นที่รูปร่างที่มองเห็นได้
+          </div>
+        </div>
+      </div>
+
+      <!-- LOTUS / WATER LILY -->
+      <div class="org-card">
+        <div class="org-card-header">
+          <div class="org-emoji">🪷</div>
+          <div>
+            <h3>ผักตบชวา / บัว (Water Hyacinth / Lotus)</h3>
+            <p>พืชน้ำ · แหล่งน้ำนิ่ง</p>
+          </div>
+        </div>
+        <div class="org-card-body">
+          <div class="adapt-section-label asl-morph">🔷 Morphological (กายภาพ) — ผักตบชวา</div>
+          <ul class="org-adapt-list">
+            <li>โคนก้านพองออก มีโพรงอากาศ → ลอยน้ำได้ น้ำหนักเบา</li>
+            <li>รากห้อยลงในน้ำดูดแร่ธาตุ → ไม่ต้องปักดิน</li>
+          </ul>
+          <div class="adapt-section-label asl-morph">🔷 Morphological (กายภาพ) — บัว</div>
+          <ul class="org-adapt-list">
+            <li>ใบมี Lotus Effect: ผิวขนเล็กมาก (Nano-structure) + ขี้ผึ้งเคลือบ → น้ำกลิ้งไม่ติด</li>
+            <li>ก้านยืดยาวตามระดับน้ำ → ใบลอยอยู่บนผิวน้ำเสมอ</li>
+          </ul>
+          <div class="adapt-section-label asl-physio">🔶 Physiological (สรีรวิทยา)</div>
+          <ul class="org-adapt-list">
+            <li>บัว: สร้างความร้อนในดอก (Thermogenesis) → ดึงดูดแมลงผสมเกสร</li>
+            <li>Aerenchyma ในก้านและรากส่ง O₂ จากใบลงรากในตะกอน</li>
+          </ul>
+          <div class="ambiguous-alert">
+            <strong>⚠️ กรณีก้ำกึ่ง (จากตำรา):</strong> "โคนก้านผักตบชวาพอง" — ตำราระบุเป็น Morphological แต่โพรงอากาศมีหน้าที่ทำให้ลอย ซึ่งเป็น Physiological function → จัดได้ทั้งสองแบบ
+          </div>
+        </div>
+      </div>
+
+      <!-- RUBBER TREE SEED -->
+      <div class="org-card">
+        <div class="org-card-header">
+          <div class="org-emoji">🌱</div>
+          <div>
+            <h3>ต้นยาง / พืชกระจายพันธุ์ด้วยลม</h3>
+            <p>Hevea brasiliensis · ป่าเขตร้อน</p>
+          </div>
+        </div>
+        <div class="org-card-body">
+          <div class="adapt-section-label asl-morph">🔷 Morphological (กายภาพ)</div>
+          <ul class="org-adapt-list">
+            <li>เมล็ดมีปีก (Samara) น้ำหนักเบามาก → ลอยตามลมได้ไกล</li>
+            <li>ปีกหมุนเหมือนใบพัดเฮลิคอปเตอร์ → ชะลอการตกและเพิ่มระยะลอย</li>
+            <li>เมล็ดขนาดเล็กพลังงานน้อยแต่จำนวนมาก → กลยุทธ์กระจายพันธุ์กว้าง</li>
+          </ul>
+          <div class="adapt-section-label asl-physio">🔶 Physiological (สรีรวิทยา)</div>
+          <ul class="org-adapt-list">
+            <li>เมล็ดมีสารยับยั้งการงอก (Dormancy) → รอสภาพแวดล้อมที่เหมาะสมก่อนงอก</li>
+            <li>ต้นยางสร้าง Latex → เป็นทั้งสารป้องกันแมลงกิน และปิดบาดแผล</li>
+          </ul>
+          <div class="ambiguous-alert">
+            <strong>⚠️ กรณีก้ำกึ่ง:</strong> Dormancy — เป็น Morphological (เปลือกเมล็ดแข็ง) หรือ Physiological (สารเคมีกดการงอก ABA)? — ตอบว่า "มีทั้งสององค์ประกอบ" เป็นคำตอบที่ถูกต้องที่สุด
+          </div>
+        </div>
+      </div>
+
+      <!-- SUNFLOWER -->
+      <div class="org-card">
+        <div class="org-card-header">
+          <div class="org-emoji">🌻</div>
+          <div>
+            <h3>ทานตะวัน / พืชที่ตอบสนองแสง</h3>
+            <p>Helianthus annuus · ทุ่งโล่ง</p>
+          </div>
+        </div>
+        <div class="org-card-body">
+          <div class="adapt-section-label asl-morph">🔷 Morphological (กายภาพ)</div>
+          <ul class="org-adapt-list">
+            <li>ดอกขนาดใหญ่สีสด → ดึงดูดแมลงผสมเกสร</li>
+            <li>เมล็ดหันออกตามขอบ → กระจายได้ง่าย</li>
+          </ul>
+          <div class="adapt-section-label asl-physio">🔶 Physiological (สรีรวิทยา)</div>
+          <ul class="org-adapt-list">
+            <li>Heliotropism — การกระจาย Auxin ไม่สม่ำเสมอตามฝั่งแสง → ก้านโค้งตามดวงอาทิตย์</li>
+            <li>เซลล์ Motor cells ที่ฐานก้านเปลี่ยนแรงดัน Turgor → ขยับดอกได้</li>
+          </ul>
+          <div class="adapt-section-label asl-behav">🟢 Behavioral</div>
+          <ul class="org-adapt-list">
+            <li>Heliotropism ถือเป็น Plant Behavior (Tropism) — พืชที่ตอบสนองต่อสิ่งเร้า</li>
+          </ul>
+          <div class="ambiguous-alert">
+            <strong>⚠️ กรณีก้ำกึ่ง:</strong> Heliotropism เป็น Behavioral (การตอบสนองต่อสิ่งแวดล้อม) หรือ Physiological (กลไก Auxin + Turgor)? นักชีววิทยาพืชส่วนใหญ่จัดเป็น Plant Tropism ซึ่งถือเป็น Behavioral + Physiological พร้อมกัน
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end plant grid -->
+
+    <!-- Summary confusion box -->
+    <div class="confusion-box" style="margin-top:2.5rem; border-color: rgba(159,122,234,0.3); background: rgba(159,122,234,0.06)">
+      <h4 style="color:#9f7aea; font-size:1rem; margin-bottom:0.75rem">
+        📌 สรุปประเด็นสับสนและจุดที่ต้องระวังในการจำแนก
+      </h4>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1rem; margin-top:0.75rem">
+        <div style="padding:0.85rem; background:rgba(0,0,0,0.2); border-radius:10px; border:1px solid #2d3748">
+          <div style="color:#63b3ed; font-weight:700; font-size:0.85rem; margin-bottom:0.5rem">① Morphological vs Structural</div>
+          <p style="color:#a0aec0; font-size:0.8rem">บางตำราใช้แยกกัน บางตำราใช้แทนกัน ควรดูนิยามของตำราที่ใช้</p>
+        </div>
+        <div style="padding:0.85rem; background:rgba(0,0,0,0.2); border-radius:10px; border:1px solid #2d3748">
+          <div style="color:#9f7aea; font-weight:700; font-size:0.85rem; margin-bottom:0.5rem">② สิ่งมีชีวิตชนิดเดียวมีหลายประเภท</div>
+          <p style="color:#a0aec0; font-size:0.8rem">สิ่งมีชีวิตหนึ่งชนิดสามารถมีการปรับตัวทั้ง 3 แบบพร้อมกัน เช่น อูฐ, หมีขั้วโลก, กิ้งก่า</p>
+        </div>
+        <div style="padding:0.85rem; background:rgba(0,0,0,0.2); border-radius:10px; border:1px solid #2d3748">
+          <div style="color:#48bb78; font-weight:700; font-size:0.85rem; margin-bottom:0.5rem">③ "โครงสร้างสัมพันธ์กับหน้าที่"</div>
+          <p style="color:#a0aec0; font-size:0.8rem">Structure-Function Relationship: ส่วนใหญ่ถ้ามีโครงสร้างพิเศษ ย่อมมีหน้าที่พิเศษ → ทำให้ก้ำกึ่ง M+P เสมอ</p>
+        </div>
+        <div style="padding:0.85rem; background:rgba(0,0,0,0.2); border-radius:10px; border:1px solid #2d3748">
+          <div style="color:#f6ad55; font-weight:700; font-size:0.85rem; margin-bottom:0.5rem">④ วิธีตอบข้อสอบที่ก้ำกึ่ง</div>
+          <p style="color:#a0aec0; font-size:0.8rem">ถ้าถามว่า "รูปร่าง/ลักษณะ" → Morphological | "กลไก/ปฏิกิริยา" → Physiological | "พฤติกรรม/การกระทำ" → Behavioral</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end section-block -->
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    สรุปโดยอ้างอิงจาก Owlvy Academy · เพิ่มเติมข้อมูลจากความรู้ชีววิทยาทั่วไป · จัดทำเป็น HTML
+  </div>
+
+</div><!-- end page-wrapper -->
+
+</body>
+</html>
+
+							<script>
+                            	
+							</script>
+                        
+<!-- ======================================================= -->
+<!-- เริ่มต้นส่วนที่เพิ่ม: ปุ่มเปลี่ยน Theme และระบบแทรกรูปภาพ (V3) -->
+<!-- ======================================================= -->
+
+<!-- 1. ปุ่มเปลี่ยนแสดงผล (Theme Switcher) -->
+<div id="theme-switcher" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; gap: 8px; background: rgba(0,0,0,0.7); padding: 10px; border-radius: 12px; backdrop-filter: blur(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+  <span style="color: white; font-size: 14px; line-height: 28px; margin-right: 5px;">🎨 ปรับโทนสี:</span>
+  <button onclick="setTheme('default')" style="background: #1a1f2e; color: #e2e8f0; border: 1px solid #2d3748; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-family: 'Sarabun', sans-serif;">Default</button>
+  <button onclick="setTheme('light')" style="background: #f8f9fa; color: #2d3748; border: 1px solid #cbd5e0; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-family: 'Sarabun', sans-serif;">Light</button>
+  <button onclick="setTheme('deep-blue')" style="background: #020617; color: #cbd5e1; border: 1px solid #1e293b; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-family: 'Sarabun', sans-serif;">Deep Blue</button>
+  <button onclick="setTheme('sweet')" style="background: #ffe4e1; color: #5d4037; border: 1px solid #ffb6c1; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-family: 'Sarabun', sans-serif;">Sweet</button>
+</div>
+
+<!-- 2. CSS ควบคุมสีฟอนต์และพื้นหลังของแต่ละ Theme -->
+<style id="custom-theme-styles">
+  /* --- Light Tone --- */
+  body.theme-light { background: #f8f9fa !important; color: #2d3748 !important; }
+  body.theme-light .main-header { background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 50%, #a0aec0 100%) !important; border-color: #cbd5e0 !important; }
+  body.theme-light .main-header h1 { background: linear-gradient(135deg, #2b6cb0, #6b46c1, #b83280) !important; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  body.theme-light .main-header p, body.theme-light .section-desc, body.theme-light .section-label { color: #4a5568 !important; }
+  body.theme-light table.overview thead tr { background: #e2e8f0 !important; }
+  body.theme-light table.overview tbody tr:nth-child(even) { background: #edf2f7 !important; }
+  body.theme-light table.overview tbody tr:nth-child(odd) { background: #f8f9fa !important; }
+  body.theme-light table.overview th, body.theme-light table.overview td { border-color: #cbd5e0 !important; color: #2d3748 !important; }
+  body.theme-light .habitat-card, body.theme-light .org-card, body.theme-light .key-box { background: #ffffff !important; border-color: #cbd5e0 !important; }
+  body.theme-light .habitat-header, body.theme-light .org-card-header, body.theme-light .habitat-panel:first-child { border-color: #cbd5e0 !important; }
+  body.theme-light .adapt-item { background: #f7fafc !important; }
+  body.theme-light .example-list li, body.theme-light .adapt-item .trait, body.theme-light .org-card-header p { color: #4a5568 !important; }
+  body.theme-light .highlight-term, body.theme-light .adapt-item .name, body.theme-light .habitat-header h3, body.theme-light .org-card-header h3 { color: #1a202c !important; }
+  body.theme-light .confusion-box { background: rgba(237,137,54,0.15) !important; border-color: #ed8936 !important; }
+  body.theme-light .confusion-box p { color: #4a5568 !important; }
+  body.theme-light .note-row td { background: #fff5f5 !important; border-top: 1px dashed #feb2b2 !important; color: #c53030 !important; }
+
+  /* --- Deep Blue Tone --- */
+  body.theme-deep-blue { background: #020617 !important; color: #e2e8f0 !important; }
+  body.theme-deep-blue .main-header { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #172554 100%) !important; border-color: #1e293b !important; }
+  body.theme-deep-blue table.overview thead tr { background: #0f172a !important; }
+  body.theme-deep-blue table.overview tbody tr:nth-child(even) { background: #020617 !important; }
+  body.theme-deep-blue table.overview tbody tr:nth-child(odd) { background: #0f172a !important; }
+  body.theme-deep-blue table.overview th, body.theme-deep-blue table.overview td { border-color: #1e293b !important; }
+  body.theme-deep-blue .habitat-card, body.theme-deep-blue .org-card, body.theme-deep-blue .key-box { background: #0f172a !important; border-color: #1e293b !important; }
+  body.theme-deep-blue .habitat-header, body.theme-deep-blue .org-card-header, body.theme-deep-blue .habitat-panel:first-child { border-color: #1e293b !important; }
+  body.theme-deep-blue .adapt-item { background: #020617 !important; }
+  body.theme-deep-blue .example-list li { color: #cbd5e1 !important; }
+  body.theme-deep-blue .note-row td { background: #0f172a !important; border-top: 1px dashed #334155 !important; }
+
+  /* --- Sweet Tone --- */
+  body.theme-sweet { background: #fff0f5 !important; color: #5d4037 !important; }
+  body.theme-sweet .main-header { background: linear-gradient(135deg, #ffd1dc 0%, #ffb6c1 50%, #ffc0cb 100%) !important; border-color: #ffb6c1 !important; }
+  body.theme-sweet .main-header h1 { background: linear-gradient(135deg, #d81b60, #8e24aa, #e53935) !important; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  body.theme-sweet .main-header p, body.theme-sweet .section-desc, body.theme-sweet .section-label { color: #6d4c41 !important; }
+  body.theme-sweet table.overview thead tr { background: #ffc0cb !important; }
+  body.theme-sweet table.overview tbody tr:nth-child(even) { background: #ffe4e1 !important; }
+  body.theme-sweet table.overview tbody tr:nth-child(odd) { background: #fff0f5 !important; }
+  body.theme-sweet table.overview th, body.theme-sweet table.overview td { border-color: #ffb6c1 !important; }
+  body.theme-sweet .habitat-card, body.theme-sweet .org-card, body.theme-sweet .key-box { background: #ffffff !important; border-color: #ffb6c1 !important; }
+  body.theme-sweet .habitat-header, body.theme-sweet .org-card-header, body.theme-sweet .habitat-panel:first-child { border-color: #ffb6c1 !important; }
+  body.theme-sweet .adapt-item { background: #fff0f5 !important; }
+  body.theme-sweet .example-list li, body.theme-sweet .adapt-item .trait, body.theme-sweet .org-card-header p { color: #6d4c41 !important; }
+  body.theme-sweet .highlight-term, body.theme-sweet .adapt-item .name, body.theme-sweet .habitat-header h3, body.theme-sweet .org-card-header h3 { color: #3e2723 !important; }
+  body.theme-sweet .confusion-box { background: rgba(216,27,96,0.1) !important; border-color: #d81b60 !important; }
+  body.theme-sweet .confusion-box h4 { color: #d81b60 !important; }
+  body.theme-sweet .confusion-box p { color: #5d4037 !important; }
+  body.theme-sweet .note-row td { background: #fff !important; border-top: 1px dashed #ffb6c1 !important; color: #d81b60 !important; }
+  body.theme-sweet .th-type, body.theme-sweet .th-plant, body.theme-sweet .th-animal { color: #d81b60 !important; }
+</style>
+
+<!-- 3. JavaScript ระบบแทรกรูปภาพแบบมีระบบสำรอง (Multiple Fallbacks) -->
+<script>
+  function setTheme(theme) {
+    document.body.classList.remove('theme-light', 'theme-deep-blue', 'theme-sweet');
+    if (theme !== 'default') {
+      document.body.classList.add('theme-' + theme);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    // กำหนดรูปภาพ 3 แหล่งสำหรับแต่ละหัวข้อ (เพื่อป้องกันลิงก์เสียหรือถูกบล็อก)
+    const habitatImages = {
+      'h-desert': ['image1.png'],
+      'h-mangrove': ['image2.png'],
+      'h-polar': ['image3.png'],
+      'h-deep': ['image4.png'],
+      'h-rainforest': ['image5.png'],
+      'h-grassland': ['image6.png']
+    };
+
+    for (const [habitatClass, imgUrls] of Object.entries(habitatImages)) {
+      const headerElem = document.querySelector('.' + habitatClass + ' .habitat-header');
+      if (headerElem) {
+        const imgContainer = document.createElement('div');
+        imgContainer.style.width = "100%";
+        imgContainer.style.height = "160px";
+        imgContainer.style.backgroundColor = "rgba(0,0,0,0.2)";
+        imgContainer.style.display = "flex";
+        imgContainer.style.alignItems = "center";
+        imgContainer.style.justifyContent = "center";
+        imgContainer.style.overflow = "hidden";
+        imgContainer.style.borderBottom = "1px solid rgba(255,255,255,0.1)";
+
+        const img = document.createElement('img');
+        img.alt = "ภาพประกอบ " + habitatClass;
+        img.style.width = "100%";
+        img.style.height = "100%";
+        img.style.objectFit = "cover";
+        img.style.opacity = "0.9";
+        
+        let currentUrlIndex = 0;
+
+        // ฟังก์ชันโหลดรูป ถ้าไม่สำเร็จให้ใช้รูปลำดับถัดไป
+        const loadNextImage = () => {
+          if (currentUrlIndex < imgUrls.length) {
+            img.src = imgUrls[currentUrlIndex];
+            currentUrlIndex++;
+          } else {
+            // ถ้ารูปเสียทุกแหล่ง ให้แสดงกล่องข้อความแทน ไม่ซ่อนภาพ
+            img.style.display = 'none';
+            imgContainer.innerHTML = '<span style="color:#a0aec0; font-size:14px; display:flex; align-items:center; gap:5px;">📷 ไม่สามารถแสดงรูปภาพได้ชั่วคราว</span>';
+          }
+        };
+
+        img.onerror = loadNextImage;
+        imgContainer.appendChild(img);
+        
+        // เริ่มโหลดรูปแรก
+        loadNextImage();
+
+        headerElem.parentNode.insertBefore(imgContainer, headerElem.nextSibling);
+      }
+    }
+  });
+</script>
+<!-- ======================================================= -->
+<!-- สิ้นสุดส่วนที่เพิ่ม -->
+<!-- ======================================================= -->
+</body>
+                        </html>
+                    
