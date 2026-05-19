@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รูปแบบการปรับตัวของสิ่งมีชีวิต</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Kanit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --morph: #1a6b4a;
+    --morph-light: #e8f5ef;
+    --morph-mid: #2d9b6a;
+    --physio: #1a3f8b;
+    --physio-light: #e8eef9;
+    --physio-mid: #3060cc;
+    --behav: #7b1a6b;
+    --behav-light: #f5e8f3;
+    --behav-mid: #b33a9b;
+    --gold: #d4a017;
+    --bg: #f7f4ee;
+    --text: #1a1a2e;
+    --shadow: rgba(0,0,0,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, #0d2b1a 0%, #1a3f2b 40%, #0d2040 100%);
+    padding: 70px 20px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(45,155,106,0.25) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(48,96,204,0.2) 0%, transparent 60%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(212,160,23,0.2);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Kanit', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    padding: 5px 18px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .hero h1 {
+    font-family: 'Kanit', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: #6dffc2; }
+  .hero-sub {
+    color: rgba(255,255,255,0.7);
+    font-size: 1.05rem;
+    max-width: 620px;
+    margin: 0 auto 36px;
+    position: relative;
+  }
+  .mnemonic-pill {
+    display: inline-block;
+    background: linear-gradient(90deg, #d4a017, #f0c040);
+    color: #1a1a00;
+    font-family: 'Kanit', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 8px 28px;
+    border-radius: 30px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(212,160,23,0.4);
+  }
+  .overview-cards {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 48px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .ov-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 20px 28px;
+    color: #fff;
+    text-align: center;
+    min-width: 170px;
+    backdrop-filter: blur(8px);
+    transition: transform 0.2s, background 0.2s;
+  }
+  .ov-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.12); }
+  .ov-card .num {
+    font-family: 'Kanit', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    display: block;
+  }
+  .ov-card .num.green { color: #6dffc2; }
+  .ov-card .num.blue { color: #7ab4ff; }
+  .ov-card .num.pink { color: #ff8fe0; }
+  .ov-card p { font-size: 0.85rem; color: rgba(255,255,255,0.75); margin-top: 4px; }
+
+  /* ===== PURPOSE BAR ===== */
+  .purpose-section {
+    background: linear-gradient(90deg, #1a3f2b, #1a3f8b 50%, #4a1a5a);
+    padding: 28px 20px;
+    text-align: center;
+  }
+  .purpose-label {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .purpose-pills {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .purpose-pill {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 24px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .purpose-pill .icon { font-size: 1.1rem; }
+
+  /* ===== MAIN CONTENT ===== */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 24px;
+  }
+
+  /* ===== SECTION HEADER ===== */
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 32px;
+    padding: 28px 32px;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .section-header::after {
+    content: '';
+    position: absolute;
+    right: -20px; top: -20px;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    opacity: 0.08;
+  }
+  .sh-morph { background: var(--morph-light); border-left: 6px solid var(--morph); }
+  .sh-morph::after { background: var(--morph); }
+  .sh-physio { background: var(--physio-light); border-left: 6px solid var(--physio); }
+  .sh-physio::after { background: var(--physio); }
+  .sh-behav { background: var(--behav-light); border-left: 6px solid var(--behav); }
+  .sh-behav::after { background: var(--behav); }
+
+  .sh-number {
+    font-family: 'Kanit', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    opacity: 0.2;
+    flex-shrink: 0;
+  }
+  .sh-content { flex: 1; }
+  .sh-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 12px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+  .tag-morph { background: var(--morph); color: #fff; }
+  .tag-physio { background: var(--physio); color: #fff; }
+  .tag-behav { background: var(--behav); color: #fff; }
+  .sh-title {
+    font-family: 'Kanit', sans-serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+  .sh-morph .sh-title { color: var(--morph); }
+  .sh-physio .sh-title { color: var(--physio); }
+  .sh-behav .sh-title { color: var(--behav); }
+  .sh-eng {
+    font-size: 0.85rem;
+    color: #888;
+    font-style: italic;
+  }
+  .sh-desc {
+    font-size: 0.95rem;
+    color: #555;
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+
+  /* ===== SUBSECTION ===== */
+  .subsection {
+    margin-bottom: 36px;
+  }
+  .subsection-title {
+    font-family: 'Kanit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .st-morph { background: var(--morph); color: #fff; }
+  .st-morph2 { background: var(--morph-mid); color: #fff; }
+  .st-physio { background: var(--physio); color: #fff; }
+  .st-physio2 { background: var(--physio-mid); color: #fff; }
+  .st-behav { background: var(--behav); color: #fff; }
+
+  /* ===== CARDS GRID ===== */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
+    margin-bottom: 20px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: 0 2px 12px var(--shadow);
+    border-top: 4px solid transparent;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px var(--shadow); }
+  .card-morph { border-top-color: var(--morph); }
+  .card-physio { border-top-color: var(--physio); }
+  .card-behav { border-top-color: var(--behav); }
+
+  .card-icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .card-name {
+    font-family: 'Kanit', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .card-morph .card-name { color: var(--morph); }
+  .card-physio .card-name { color: var(--physio); }
+  .card-behav .card-name { color: var(--behav); }
+  .card-desc { font-size: 0.88rem; color: #555; line-height: 1.6; }
+  .card-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+  .ctag-food { background: #fff3cd; color: #856404; }
+  .ctag-hide { background: #f8d7da; color: #842029; }
+  .ctag-move { background: #d1ecf1; color: #0c5460; }
+  .ctag-repro { background: #fce4ec; color: #880e4f; }
+  .ctag-env { background: #e8f5e9; color: #2e7d32; }
+
+  /* ===== ORGAN ADAPTATION ===== */
+  .organ-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .organ-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 18px;
+    box-shadow: 0 2px 10px var(--shadow);
+    border-left: 4px solid var(--morph-mid);
+  }
+  .organ-card h4 {
+    font-family: 'Kanit', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--morph);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .organ-card ul { list-style: none; padding: 0; }
+  .organ-card li {
+    font-size: 0.82rem;
+    color: #555;
+    padding: 4px 0;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .organ-card li:last-child { border-bottom: none; }
+  .organ-card li::before { content: '→'; color: var(--morph-mid); flex-shrink: 0; font-size: 0.75rem; margin-top: 2px; }
+
+  /* ===== SECTION DIVIDER ===== */
+  .section-divider {
+    height: 4px;
+    border-radius: 2px;
+    margin: 60px 0;
+    background: linear-gradient(90deg, var(--morph), var(--physio), var(--behav));
+    opacity: 0.3;
+  }
+
+  /* ===== NOTE BOX ===== */
+  .note-box {
+    background: #fffbec;
+    border: 1px solid #f0c040;
+    border-left: 5px solid var(--gold);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 0.88rem;
+    color: #6b5200;
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .note-box .note-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+  /* ===== SUMMARY TABLE ===== */
+  .summary-section {
+    background: linear-gradient(135deg, #0d2b1a, #0d2040);
+    padding: 60px 24px;
+  }
+  .summary-section h2 {
+    font-family: 'Kanit', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .summary-section .sub { text-align: center; color: rgba(255,255,255,0.6); margin-bottom: 36px; font-size: 0.9rem; }
+  .table-wrapper {
+    max-width: 960px;
+    margin: 0 auto;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
+    overflow: hidden;
+    font-size: 0.88rem;
+  }
+  th {
+    font-family: 'Kanit', sans-serif;
+    font-weight: 700;
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+  }
+  th.th-purpose { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.9); }
+  th.th-morph { background: rgba(26,107,74,0.6); color: #6dffc2; }
+  th.th-physio { background: rgba(26,63,139,0.6); color: #7ab4ff; }
+  th.th-behav { background: rgba(123,26,107,0.6); color: #ff8fe0; }
+  td {
+    padding: 14px 16px;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.85);
+    line-height: 1.55;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.04); }
+  td.purpose-cell {
+    font-family: 'Kanit', sans-serif;
+    font-weight: 600;
+    color: #fff;
+  }
+  td .dot { color: rgba(255,255,255,0.4); margin-right: 4px; }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    background: #111;
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 0.82rem;
+  }
+  .footer strong { color: var(--gold); }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate { animation: fadeInUp 0.5s ease both; }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">OWLVY ACADEMY · BIOLOGY</div>
+  <h1>รูปแบบการปรับตัว<br>ของ<span>สิ่งมีชีวิต</span></h1>
+  <p class="hero-sub">สิ่งมีชีวิตปรับเปลี่ยนรูปร่าง โครงสร้าง และพฤติกรรมเพื่อให้อยู่รอดในสภาพแวดล้อมที่หลากหลาย ตามกระบวนการคัดเลือกโดยธรรมชาติ</p>
+  <div class="mnemonic-pill">🧠 Mnemonic: Be – More – Structure</div>
+  <div class="overview-cards">
+    <div class="ov-card animate delay-1">
+      <span class="num green">①</span>
+      <p>การปรับตัวด้านรูปร่างลักษณะ<br>(Morphological)</p>
+    </div>
+    <div class="ov-card animate delay-2">
+      <span class="num blue">②</span>
+      <p>การปรับตัวด้านสรีรวิทยา<br>(Physiological)</p>
+    </div>
+    <div class="ov-card animate delay-3">
+      <span class="num pink">③</span>
+      <p>การปรับตัวด้านพฤติกรรม<br>(Behavioral)</p>
+    </div>
+  </div>
+</div>
+
+<!-- PURPOSE BAR -->
+<div class="purpose-section">
+  <div class="purpose-label">วัตถุประสงค์หลักของการปรับตัว · Food – Fight – Reproduce – Surrounding</div>
+  <div class="purpose-pills">
+    <div class="purpose-pill"><span class="icon">🍃</span> เพื่อหาอาหาร</div>
+    <div class="purpose-pill"><span class="icon">⚔️</span> เพื่อต่อสู้และหลบหลีกภัย</div>
+    <div class="purpose-pill"><span class="icon">🥚</span> เพื่อการสืบพันธุ์</div>
+    <div class="purpose-pill"><span class="icon">🌡️</span> เพื่อให้สอดคล้องกับสภาวะแวดล้อม</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+  <!-- ===== SECTION 1: MORPHOLOGICAL ===== -->
+  <div class="section-header sh-morph animate">
+    <div class="sh-number">①</div>
+    <div class="sh-content">
+      <span class="sh-tag tag-morph">Morphological Adaptation</span>
+      <div class="sh-title">การปรับตัวด้านรูปร่าง ลักษณะ หน้าที่</div>
+      <div class="sh-eng">morphological adaptation / #Physiological Adaptation</div>
+      <p class="sh-desc">การปรับเปลี่ยนรูปร่าง โครงสร้างภายในหรือภายนอกร่างกาย สีผิว สีขน ฯลฯ ให้เหมาะสมกับแหล่งที่อยู่หรือสิ่งแวดล้อมนั้นๆ เพื่อหาอาหาร หลบภัย สืบพันธุ์</p>
+    </div>
+  </div>
+
+  <!-- 1.1 Plants -->
+  <div class="subsection">
+    <div class="subsection-title st-morph">🌿 1.1 การปรับตัวด้านรูปร่างลักษณะของ<span style="font-weight:400">พืช</span></div>
+    <div class="cards-grid">
+      <div class="card card-morph animate">
+        <div class="card-icon">🪴</div>
+        <div class="card-name">ผักตบชวา</div>
+        <div class="card-desc">โคนก้านพองออก ภายในมีโพรงอากาศมาก ทำให้ลำต้นมีน้ำหนักเบาและลอยน้ำได้</div>
+        <span class="card-tag ctag-env">สภาพแวดล้อมน้ำ</span>
+      </div>
+      <div class="card card-morph animate delay-1">
+        <div class="card-icon">🌬️</div>
+        <div class="card-name">เมล็ดต้นยาง</div>
+        <div class="card-desc">มีปีกและน้ำหนักเบา ลอยไปตกในที่ไกลๆ ได้ด้วยลม เพื่อขยายพันธุ์</div>
+        <span class="card-tag ctag-repro">ขยายพันธุ์</span>
+      </div>
+      <div class="card card-morph animate delay-2">
+        <div class="card-icon">🌊</div>
+        <div class="card-name">ต้นโกงกาง</div>
+        <div class="card-desc">รากค้ำจุนแตกแขนงทำมุมเกือบตั้งฉากกับลำต้น รากบางส่วนโผล่เหนือดินเพื่อหายใจขณะน้ำทะเลท่วม</div>
+        <span class="card-tag ctag-env">ป่าชายเลน</span>
+      </div>
+      <div class="card card-morph animate delay-3">
+        <div class="card-icon">🫧</div>
+        <div class="card-name">ผักกระเฉด</div>
+        <div class="card-desc">มีนวมสีขาวลักษณะคล้ายฟองน้ำหุ้มไว้ ทำให้ลอยอยู่เหนือผิวน้ำได้</div>
+        <span class="card-tag ctag-env">สภาพแวดล้อมน้ำ</span>
+      </div>
+      <div class="card card-morph animate">
+        <div class="card-icon">🌵</div>
+        <div class="card-name">กระบองเพชร</div>
+        <div class="card-desc">ลำต้นอวบน้ำ ลดใบเป็นหนาม มีสาร Cutin เคลือบผิว ลดการคายน้ำ เหมาะกับสภาพแห้งแล้ง</div>
+        <span class="card-tag ctag-env">ทะเลทราย</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1.2 Animals -->
+  <div class="subsection">
+    <div class="subsection-title st-morph2">🦎 1.2 การปรับตัวด้านรูปร่างลักษณะของ<span style="font-weight:400">สัตว์</span></div>
+    <div class="cards-grid">
+      <div class="card card-morph animate">
+        <div class="card-icon">🐪</div>
+        <div class="card-name">อูฐ</div>
+        <div class="card-desc">ขนตายาวหนา เมื่อหลับตาปิดสนิทไม่ให้ทรายเข้าตาขณะมีพายุทราย</div>
+        <span class="card-tag ctag-env">ทะเลทราย</span>
+      </div>
+      <div class="card card-morph animate delay-1">
+        <div class="card-icon">🌿</div>
+        <div class="card-name">ตั๊กแตนกิ่งไม้</div>
+        <div class="card-desc">มีสีและรูปร่างเหมือนใบไม้ เพื่อพรางตัวซ่อนจากผู้ล่า</div>
+        <span class="card-tag ctag-hide">หลบผู้ล่า</span>
+      </div>
+      <div class="card card-morph animate delay-2">
+        <div class="card-icon">🐸</div>
+        <div class="card-name">กบ</div>
+        <div class="card-desc">ขาหลังยาวและแข็งแรงกระโดดได้สูง เท้าเป็นพังผืดช่วยว่ายน้ำได้คล่อง</div>
+        <span class="card-tag ctag-move">เคลื่อนที่</span>
+      </div>
+      <div class="card card-morph animate delay-3">
+        <div class="card-icon">🦉</div>
+        <div class="card-name">นกฮูก</div>
+        <div class="card-desc">ลายและสีขนคล้ายเปลือกไม้ ซ่อนตัวได้ดีเวลาออกล่าเหยื่อ</div>
+        <span class="card-tag ctag-food">ล่าอาหาร</span>
+      </div>
+      <div class="card card-morph animate">
+        <div class="card-icon">🦎</div>
+        <div class="card-name">ตุ๊กแกหางใบไม้ / กิ้งก่า</div>
+        <div class="card-desc">รูปร่าง สีผิว ลวดลายคล้ายกิ่งไม้หรือใบไม้ — การพรางตัวเพื่อหาอาหารและหลบผู้ล่า</div>
+        <span class="card-tag ctag-hide">พรางตัว</span>
+      </div>
+    </div>
+
+    <!-- Organ adaptation -->
+    <div class="subsection-title st-morph" style="margin-top:28px; font-size:0.95rem;">🔬 การปรับตัวตามลักษณะอวัยวะ</div>
+    <div class="organ-grid">
+      <div class="organ-card">
+        <h4>👄 ปาก</h4>
+        <ul>
+          <li>ผีเสื้อ/ผึ้ง — ปากคล้ายงวง ดูดน้ำหวาน</li>
+          <li>แมลงวัน — ปากคล้ายฟองน้ำ เลียอาหาร</li>
+          <li>นกเหยี่ยว — ปากแหลมงองุ้ม ฉีกเนื้อ</li>
+        </ul>
+      </div>
+      <div class="organ-card">
+        <h4>🪲 ลำตัว</h4>
+        <ul>
+          <li>ตั๊กแตนสนามหญ้า/กิ่งไม้ — รูปร่างคล้ายใบไม้ พรางตา</li>
+          <li>แมลงสาบ — ลำตัวแบน อยู่ที่แคบได้</li>
+        </ul>
+      </div>
+      <div class="organ-card">
+        <h4>🦵 ขา</h4>
+        <ul>
+          <li>แมลงกระชอน — ขาหน้าใหญ่ ขุดดิน</li>
+          <li>ตั๊กแตน — ขาหลังใหญ่ยาว กระโดด</li>
+          <li>กระต่าย — ขาหลังยาว กระโดดไกล</li>
+          <li>ตะพาบน้ำ — ขารูปใบพาย ว่ายน้ำเร็ว</li>
+        </ul>
+      </div>
+      <div class="organ-card">
+        <h4>🦶 เท้า</h4>
+        <ul>
+          <li>นกยาง — นิ้วเท้ายาว ทรงตัว</li>
+          <li>เป็ด — แผ่นหนังระหว่างนิ้ว ว่ายน้ำ</li>
+          <li>ไก่ — เล็บเท้าใหญ่ คุ้ยเขี่ย</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ===== SECTION 2: PHYSIOLOGICAL ===== -->
+  <div class="section-header sh-physio animate">
+    <div class="sh-number" style="color:#1a3f8b;">②</div>
+    <div class="sh-content">
+      <span class="sh-tag tag-physio">Physiological Adaptation</span>
+      <div class="sh-title">การปรับตัวด้านสรีรวิทยา / โครงสร้างภายใน</div>
+      <div class="sh-eng">physiological adaptation / #Structural Adaptation</div>
+      <p class="sh-desc">การปรับตัวเกี่ยวกับหน้าที่และกลไกการทำงานของอวัยวะต่างๆ รวมทั้งปฏิกิริยาชีวเคมีที่เกิดขึ้นในร่างกายสิ่งมีชีวิต</p>
+    </div>
+  </div>
+
+  <!-- 2.1 Plants -->
+  <div class="subsection">
+    <div class="subsection-title st-physio">🌱 2.1 การปรับตัวด้านสรีรวิทยาของ<span style="font-weight:400">พืช</span></div>
+    <div class="cards-grid">
+      <div class="card card-physio animate">
+        <div class="card-icon">🌵</div>
+        <div class="card-name">กระบองเพชร</div>
+        <div class="card-desc">เปลี่ยนใบเป็นหนาม ลำต้นอวบกักเก็บน้ำ มีสารคล้ายขี้ผึ้งเคลือบผิวลดการคายน้ำในทะเลทราย</div>
+        <span class="card-tag ctag-env">* บางแหล่งจัดเป็นด้านรูปร่าง</span>
+      </div>
+      <div class="card card-physio animate delay-1">
+        <div class="card-icon">🪴</div>
+        <div class="card-name">หม้อข้าวหม้อแกงลิง</div>
+        <div class="card-desc">ปรับใบให้เป็นกับดักแมลง ปล่อยน้ำย่อยย่อยแมลง เพื่อรับธาตุอาหารทดแทนที่ขาดแคลนในดิน</div>
+        <span class="card-tag ctag-food">หาอาหาร</span>
+      </div>
+      <div class="card card-physio animate delay-2">
+        <div class="card-icon">🪤</div>
+        <div class="card-name">กาบหอยแครง</div>
+        <div class="card-desc">พืชกินสัตว์ที่ดักจับแมลง/แมง และย่อยเพื่อรับไนโตรเจนสำหรับสร้างโปรตีน ซึ่งขาดแคลนในดิน</div>
+        <span class="card-tag ctag-food">หาอาหาร</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.2 Animals -->
+  <div class="subsection">
+    <div class="subsection-title st-physio2">🔬 2.2 การปรับตัวด้านสรีรวิทยาของ<span style="font-weight:400">สัตว์</span></div>
+    <div class="cards-grid">
+      <div class="card card-physio animate">
+        <div class="card-icon">🐪</div>
+        <div class="card-name">อูฐ</div>
+        <div class="card-desc">หลอดไตส่วนต้นในหน่วยไตยาวกว่าสัตว์อื่น ไตดูดน้ำกลับได้ดี ร่างกายไม่ขาดน้ำ</div>
+        <span class="card-tag ctag-env">ทะเลทราย</span>
+      </div>
+      <div class="card card-physio animate delay-1">
+        <div class="card-icon">🦎</div>
+        <div class="card-name">กิ้งก่าคาเมเลียน</div>
+        <div class="card-desc">เปลี่ยนสีผิวเพื่อสื่อสารกับกิ้งก่าตัวอื่นในกลุ่ม ไม่ใช่แค่พรางตัว</div>
+        <span class="card-tag ctag-repro">สื่อสาร</span>
+      </div>
+      <div class="card card-physio animate delay-2">
+        <div class="card-icon">🏝️</div>
+        <div class="card-name">อีกัวนาทะเล (กาลาปากอส)</div>
+        <div class="card-desc">มีต่อมข้างจมูกพ่นน้ำเกลือส่วนเกินที่ได้จากการกินสาหร่ายใต้ทะเลออกจากร่างกาย</div>
+        <span class="card-tag ctag-env">สมดุลเกลือ</span>
+      </div>
+      <div class="card card-physio animate delay-3">
+        <div class="card-icon">🐟</div>
+        <div class="card-name">ปลาตีน</div>
+        <div class="card-desc">ตาโปนมองได้บนบก ครีบอกแข็งแรงเคลื่อนบนเลน มีอวัยวะพิเศษข้างเหงือกเก็บความชุ่มชื้นและนำออกซิเจนเข้าไปผสมน้ำเพื่อหายใจ</div>
+        <span class="card-tag ctag-move">สะเทินน้ำสะเทินบก</span>
+      </div>
+      <div class="card card-physio animate">
+        <div class="card-icon">🩸</div>
+        <div class="card-name">ปลาในโคลนตม / สัตว์ออกซิเจนต่ำ</div>
+        <div class="card-desc">เพิ่มปริมาณฮีโมโกลบินเพื่อจับออกซิเจนได้มากขึ้น</div>
+        <span class="card-tag ctag-env">ออกซิเจนต่ำ</span>
+      </div>
+      <div class="card card-physio animate delay-1">
+        <div class="card-icon">🐠</div>
+        <div class="card-name">ปลาทะเล</div>
+        <div class="card-desc">ได้รับเกลือแร่มาก → ขับเกลือออกทางเหงือกโดยกระบวนการ Active Transport</div>
+        <span class="card-tag ctag-env">สมดุลเกลือ</span>
+      </div>
+      <div class="card card-physio animate delay-2">
+        <div class="card-icon">🐦</div>
+        <div class="card-name">นกทะเล</div>
+        <div class="card-desc">มีต่อมใต้จมูกขับเกลือ NaCl ที่มากเกินพอออกจากร่างกาย</div>
+        <span class="card-tag ctag-env">สมดุลเกลือ</span>
+      </div>
+      <div class="card card-physio animate delay-3">
+        <div class="card-icon">🌡️</div>
+        <div class="card-name">สัตว์เลือดอุ่น</div>
+        <div class="card-desc">อุณหภูมิคงที่ ไม่เปลี่ยนตามสิ่งแวดล้อม ใต้ผิวหนังมีต่อมเหงื่อช่วยลดอุณหภูมิร่างกาย</div>
+        <span class="card-tag ctag-env">ควบคุมอุณหภูมิ</span>
+      </div>
+      <div class="card card-physio animate">
+        <div class="card-icon">🧑</div>
+        <div class="card-name">มนุษย์ — ที่สูง</div>
+        <div class="card-desc">อยู่บนที่สูงนาน → ร่างกายเพิ่มการสร้างเม็ดเลือดแดง เพราะความหนาแน่นออกซิเจนต่ำ</div>
+        <span class="card-tag ctag-env">ออกซิเจนต่ำ</span>
+      </div>
+      <div class="card card-physio animate delay-1">
+        <div class="card-icon">💦</div>
+        <div class="card-name">มนุษย์ — อากาศร้อน</div>
+        <div class="card-desc">ร่างกายเพิ่มการหลั่งเหงื่อเมื่ออากาศร้อนจัด เพื่อระบายความร้อน</div>
+        <span class="card-tag ctag-env">ควบคุมอุณหภูมิ</span>
+      </div>
+      <div class="card card-physio animate delay-2">
+        <div class="card-icon">🐻‍❄️</div>
+        <div class="card-name">สัตว์เขตหนาว</div>
+        <div class="card-desc">มีชั้นไขมันหนาใต้ผิวหนัง เพื่อป้องกันการสูญเสียความร้อนออกจากร่างกาย</div>
+        <span class="card-tag ctag-env">เขตหนาว</span>
+      </div>
+      <div class="card card-physio animate delay-3">
+        <div class="card-icon">🦨</div>
+        <div class="card-name">สกังค์ (Skunk)</div>
+        <div class="card-desc">สร้างกลิ่นฉุนรุนแรงเพื่อขับไล่ศัตรูและป้องกันตัว</div>
+        <span class="card-tag ctag-hide">ป้องกันตัว</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ===== SECTION 3: BEHAVIORAL ===== -->
+  <div class="section-header sh-behav animate">
+    <div class="sh-number" style="color:#7b1a6b;">③</div>
+    <div class="sh-content">
+      <span class="sh-tag tag-behav">Behavioral Adaptation</span>
+      <div class="sh-title">การปรับตัวด้านพฤติกรรม</div>
+      <div class="sh-eng">behavioral adaptation</div>
+      <p class="sh-desc">การปรับเปลี่ยนพฤติกรรมด้านต่างๆ ให้เหมาะสมในการดำรงชีวิต เกี่ยวกับการหาอาหาร การสืบพันธุ์ การอพยพ ซึ่งอาจเป็นการปรับตัวชั่วคราวหรือถาวรก็ได้</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="cards-grid">
+      <div class="card card-behav animate">
+        <div class="card-icon">🌙</div>
+        <div class="card-name">ไฮยีนา</div>
+        <div class="card-desc">ออกหากินในเวลากลางคืน เนื่องจากตอนกลางวันทะเลทรายมีอากาศร้อนจัด</div>
+        <span class="card-tag ctag-env">หลีกร้อน</span>
+      </div>
+      <div class="card card-behav animate delay-1">
+        <div class="card-icon">🐟</div>
+        <div class="card-name">ปลาแซลมอน</div>
+        <div class="card-desc">ว่ายจากทะเลทวนน้ำขึ้นไปวางไข่ในลำธารน้ำจืด สัญชาตญาณสืบพันธุ์ที่น่าทึ่ง</div>
+        <span class="card-tag ctag-repro">สืบพันธุ์</span>
+      </div>
+      <div class="card card-behav animate delay-2">
+        <div class="card-icon">🐦</div>
+        <div class="card-name">นกอพยพ (นกนางแอ่น / นกปากห่าง)</div>
+        <div class="card-desc">อพยพจากเขตหนาวสู่เขตอบอุ่น/ร้อนชั่วคราว เพื่อหาอาหารและผสมพันธุ์ แล้วอพยพกลับเมื่อสิ้นฤดูหนาว</div>
+        <span class="card-tag ctag-food">หาอาหาร + สืบพันธุ์</span>
+      </div>
+      <div class="card card-behav animate delay-3">
+        <div class="card-icon">😴</div>
+        <div class="card-name">การจำศีล (Hibernation)</div>
+        <div class="card-desc">หมี กบ งูหางกระดิ่ง ดอร์เมาส์ ปลาช่อน ปลาปอดออสเตรเลีย ฯลฯ จำศีลในฤดูหนาว/ร้อนเพราะหาอาหารยาก</div>
+        <span class="card-tag ctag-env">ฤดูกาลสุดขั้ว</span>
+      </div>
+      <div class="card card-behav animate">
+        <div class="card-icon">🫥</div>
+        <div class="card-name">แมลงพรางตัว</div>
+        <div class="card-desc">แมลงที่มีสีพรางตัวเหมือนสิ่งแวดล้อมมักไม่เคลื่อนที่ ทำให้สังเกตได้ยาก</div>
+        <span class="card-tag ctag-hide">หลบผู้ล่า</span>
+      </div>
+      <div class="card card-behav animate delay-1">
+        <div class="card-icon">🐣</div>
+        <div class="card-name">สัตว์ออกลูกน้อย</div>
+        <div class="card-desc">สัตว์ที่ออกลูกได้ไม่มาก มักหวงแหนและเลี้ยงดูดูแลลูกอย่างพิถีพิถัน</div>
+        <span class="card-tag ctag-repro">ดูแลลูก</span>
+      </div>
+      <div class="card card-behav animate delay-2">
+        <div class="card-icon">🐃</div>
+        <div class="card-name">ควาย</div>
+        <div class="card-desc">เมื่ออากาศร้อนมาก ควายจะแช่ปลักในหนองน้ำเล็กๆ เพื่อระบายความร้อนและหนีแมลง</div>
+        <span class="card-tag ctag-env">ลดความร้อน</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conclusion note -->
+  <div class="note-box animate">
+    <div class="note-icon">💡</div>
+    <div>
+      <strong>สรุป:</strong> พืชและสัตว์อาจมีการปรับตัวครบทั้ง 3 รูปแบบ หรืออาจเน้นทางใดทางหนึ่ง การปรับตัวเหล่านี้เกิดจากการเปลี่ยนแปลงในหน่วยพันธุกรรม จึงถ่ายทอดไปสู่รุ่นต่อๆ ไปได้ ทำให้เกิด <strong>การวิวัฒนาการ</strong> และ <strong>ความหลากหลายทางชีวภาพ</strong> ตามกระบวนการ <em>คัดเลือกโดยธรรมชาติ (Natural Selection)</em>
+    </div>
+  </div>
+
+</div><!-- end .container -->
+
+<!-- SUMMARY TABLE -->
+<div class="summary-section">
+  <h2>ตารางสรุปการปรับตัวตามวัตถุประสงค์</h2>
+  <p class="sub">Food – Fight/Hide – Reproduce – Surrounding</p>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th class="th-purpose" style="width:20%">วัตถุประสงค์</th>
+          <th class="th-morph" style="width:27%">① รูปร่าง / ลักษณะ<br><small style="font-weight:400;color:rgba(109,255,194,0.7)">(Morphological)</small></th>
+          <th class="th-physio" style="width:27%">② สรีรวิทยา / โครงสร้าง<br><small style="font-weight:400;color:rgba(122,180,255,0.7)">(Physiological)</small></th>
+          <th class="th-behav" style="width:26%">③ พฤติกรรม<br><small style="font-weight:400;color:rgba(255,143,224,0.7)">(Behavioral)</small></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="purpose-cell">🍃 หาอาหาร</td>
+          <td>นกเหยี่ยวปากงองุ้ม, ผีเสื้อปากดูดน้ำหวาน, แมลงวันปากเลีย, ครีบปลาตีน</td>
+          <td>หม้อข้าวหม้อแกงลิง + กาบหอยแครง ปล่อยน้ำย่อย, ฮีโมโกลบินเพิ่มในปลา</td>
+          <td>ไฮยีนาออกหากินกลางคืน, นกอพยพหาอาหาร, ปลาแซลมอนว่ายขึ้นต้นน้ำ</td>
+        </tr>
+        <tr>
+          <td class="purpose-cell">⚔️ ต่อสู้ / หลบภัย</td>
+          <td>ตั๊กแตนกิ่งไม้ลวดลายพราง, นกฮูกลายเปลือกไม้, ตุ๊กแกหางใบไม้</td>
+          <td>สกังค์สร้างกลิ่นขับไล่ศัตรู, กิ้งก่าคาเมเลียนเปลี่ยนสี</td>
+          <td>แมลงพรางตัวไม่เคลื่อนไหว, สัตว์หวงแหนลูก</td>
+        </tr>
+        <tr>
+          <td class="purpose-cell">🥚 สืบพันธุ์</td>
+          <td>เมล็ดยางมีปีกลอยตามลม, ขาหน้ากบว่ายน้ำได้</td>
+          <td>กิ้งก่าคาเมเลียนเปลี่ยนสีสื่อสาร, ฮอร์โมนตอบสนองฤดูกาล</td>
+          <td>ปลาแซลมอนวางไข่ในลำธาร, นกอพยพผสมพันธุ์, สัตว์เลี้ยงดูลูก</td>
+        </tr>
+        <tr>
+          <td class="purpose-cell">🌡️ สภาวะแวดล้อม</td>
+          <td>กระบองเพชรลำต้นอวบน้ำ, โกงกางรากหายใจ, อูฐขนตาหนา, ผักตบชวาลอยน้ำ</td>
+          <td>อูฐไตดูดน้ำกลับ, ปลาทะเลขับเกลือ Active Transport, สัตว์หนาวชั้นไขมัน, มนุษย์สร้างเม็ดเลือดแดงบนที่สูง</td>
+          <td>ควายแช่ปลัก, สัตว์จำศีล, นกอพยพตามฤดูกาล</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>จัดทำโดย <strong>OWLVY ACADEMY</strong> &nbsp;·&nbsp; BIO: สิ่งมีชีวิตและสิ่งแวดล้อม &nbsp;·&nbsp; รูปแบบการปรับตัวของสิ่งมีชีวิต</p>
+  <p style="margin-top:6px; color:rgba(255,255,255,0.3)">ที่มา: คู่มือเตรียมสอบแข่งขัน สอวน.วิทยาศาสตร์ ม.ต้น (ชีววิทยา) · ผศ.สมาน แก้วไวยุทธ · สนพ.Hi-Ed · 2553</p>
+</div>
+
+<script>
+// Scroll-based reveal animation
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.card, .section-header, .organ-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
