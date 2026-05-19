@@ -1,0 +1,662 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦉 เมื่อไหร่ต้องใช้อะไร</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 24px;
+    line-height: 1.7;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+
+  .header {
+    text-align: center;
+    background: linear-gradient(135deg, #1e3a5f, #1e293b);
+    border: 1px solid #38bdf8;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 32px;
+  }
+  .header h1 { font-size: 2em; color: #fbbf24; margin-bottom: 8px; }
+  .header p { color: #94a3b8; }
+
+  h2 {
+    color: #38bdf8;
+    font-size: 1.3em;
+    border-left: 4px solid #38bdf8;
+    padding-left: 12px;
+    margin: 36px 0 16px;
+  }
+  h3 { color: #a78bfa; margin: 16px 0 8px; }
+
+  .box {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 12px 0;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: #38bdf8; }
+  .card-title {
+    font-weight: bold;
+    font-size: 1em;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #334155;
+  }
+
+  pre {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    color: #4ade80;
+    font-family: monospace;
+    font-size: 0.85em;
+    margin: 10px 0;
+  }
+  code {
+    background: #0f172a;
+    color: #fbbf24;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+
+  .alert {
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 10px 0;
+    font-size: 0.9em;
+  }
+  .alert-info { background: #0c1a2e; border: 1px solid #38bdf8; color: #bae6fd; }
+  .alert-info::before { content: "💡 "; }
+  .alert-success { background: #052e16; border: 1px solid #4ade80; color: #bbf7d0; }
+  .alert-success::before { content: "✅ "; }
+  .alert-warning { background: #422006; border: 1px solid #f97316; color: #fed7aa; }
+  .alert-warning::before { content: "⚠️ "; }
+  .alert-special { background: #2d1657; border: 1px solid #a78bfa; color: #ddd6fe; }
+  .alert-special::before { content: "🌟 "; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.88em;
+  }
+  th {
+    background: #1e3a5f;
+    color: #38bdf8;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #1e293b;
+    background: #1e293b;
+  }
+  tr:hover td { background: #263348; }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: bold;
+    margin: 2px;
+  }
+  .tag-none { background: #052e16; color: #4ade80; border: 1px solid #4ade80; }
+  .tag-nodejs { background: #1c3a1c; color: #86efac; border: 1px solid #86efac; }
+  .tag-server { background: #422006; color: #fbbf24; border: 1px solid #fbbf24; }
+  .tag-cli { background: #1e1b4b; color: #a78bfa; border: 1px solid #a78bfa; }
+
+  .level-box {
+    border-radius: 12px;
+    padding: 20px;
+    margin: 12px 0;
+    border: 2px solid;
+  }
+  .level-1 { background: #052e16; border-color: #4ade80; }
+  .level-2 { background: #0c1a2e; border-color: #38bdf8; }
+  .level-3 { background: #2d1b00; border-color: #fbbf24; }
+  .level-4 { background: #2d1657; border-color: #a78bfa; }
+
+  .level-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+  .level-1 .level-title { color: #4ade80; }
+  .level-2 .level-title { color: #38bdf8; }
+  .level-3 .level-title { color: #fbbf24; }
+  .level-4 .level-title { color: #a78bfa; }
+
+  .you-badge {
+    display: inline-block;
+    background: #fbbf24;
+    color: #0f172a;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-left: 8px;
+  }
+
+  .flow-item {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-family: monospace;
+    font-size: 0.88em;
+    margin: 4px 0;
+  }
+  .flow-item.green { border-color: #4ade80; color: #4ade80; }
+  .flow-item.blue { border-color: #38bdf8; color: #38bdf8; }
+  .flow-item.yellow { border-color: #fbbf24; color: #fbbf24; }
+  .flow-arrow { text-align: center; color: #475569; padding: 2px 0; }
+
+  .step-list { list-style: none; padding: 0; }
+  .step-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #1e293b;
+    font-size: 0.92em;
+  }
+  .step-list li:last-child { border-bottom: none; }
+  .step-num {
+    background: #3b82f6;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75em;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  hr { border: none; border-top: 1px solid #1e293b; margin: 32px 0; }
+
+  .footer {
+    text-align: center;
+    padding: 24px;
+    color: #475569;
+    font-size: 0.88em;
+    margin-top: 40px;
+    border-top: 1px solid #1e293b;
+  }
+
+  .highlight-box {
+    background: linear-gradient(135deg, #1a2e1a, #1e293b);
+    border: 2px solid #4ade80;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 16px 0;
+  }
+  .highlight-box h3 { color: #4ade80; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>🦉 เมื่อไหร่ต้องใช้อะไร?</h1>
+    <p>เกณฑ์ตัดสินใจ Firebase / Node.js / Server / CLI</p>
+    <p style="color:#475569; font-size:0.85em; margin-top:8px;">ยกตัวอย่างทุกกรณี | เข้าใจง่าย | นำไปใช้ได้จริง</p>
+  </div>
+
+  <!-- SECTION 1: หลักการง่ายๆ -->
+  <h2>🎯 หลักการง่ายๆ ก่อนเลย</h2>
+
+  <div class="box">
+    <pre>ถามตัวเองแค่นี้:
+
+❓ โค้ดรันที่ไหน?
+
+Browser (ฝั่ง User)     → ไม่ต้องติดตั้งอะไร
+Server (ฝั่ง Backend)   → ต้องการ Node.js / Server
+
+❓ ต้องการอะไรเพิ่ม?
+
+แค่แสดงผล + Login + เรียก API   → Browser พอ ✅
+รันโค้ดอัตโนมัติ / Cron Job      → ต้องการ Server
+จัดการ Database ซับซ้อน         → ต้องการ Node.js CLI
+Deploy ผ่าน Terminal             → ต้องการ Firebase CLI</pre>
+  </div>
+
+  <hr>
+
+  <!-- SECTION 2: 4 ระดับ -->
+  <h2>📊 4 ระดับ ต้องการอะไรแตกต่างกัน</h2>
+
+  <!-- Level 1 -->
+  <div class="level-box level-1">
+    <div class="level-title">
+      🟢 ระดับ 1: แค่ Browser พอ
+      <span class="you-badge">👈 คุณอยู่ตรงนี้!</span>
+    </div>
+    <div class="card-grid">
+      <div>
+        <h3>ทำอะไรได้บ้าง</h3>
+        <ul class="step-list">
+          <li><div class="step-num">✅</div><div>Login Google / Email</div></li>
+          <li><div class="step-num">✅</div><div>อ่าน/เขียน Firestore</div></li>
+          <li><div class="step-num">✅</div><div>เรียก API ภายนอก (OpenRouter)</div></li>
+          <li><div class="step-num">✅</div><div>แสดงผลข้อมูล</div></li>
+          <li><div class="step-num">✅</div><div>Host บน GitHub Pages</div></li>
+          <li><div class="step-num">✅</div><div>อัปโหลดไฟล์ Firebase Storage</div></li>
+        </ul>
+      </div>
+      <div>
+        <h3>ต้องการอะไร</h3>
+        <ul class="step-list">
+          <li><div class="step-num">✅</div><div>Browser อย่างเดียว</div></li>
+          <li><div class="step-num">✅</div><div>Firebase Account (ฟรี)</div></li>
+          <li><div class="step-num">✅</div><div>GitHub Account (ฟรี)</div></li>
+          <li><div class="step-num">❌</div><div>ไม่ต้อง Node.js</div></li>
+          <li><div class="step-num">❌</div><div>ไม่ต้อง Terminal</div></li>
+          <li><div class="step-num">❌</div><div>ไม่ต้อง Server</div></li>
+        </ul>
+      </div>
+    </div>
+    <div class="alert alert-success" style="margin-top:12px;">
+      งานของคุณ: Login Google + GitHub Pages + OpenRouter = ระดับนี้ทั้งหมด!
+    </div>
+  </div>
+
+  <!-- Level 2 -->
+  <div class="level-box level-2">
+    <div class="level-title">🔵 ระดับ 2: ต้องการ Node.js + Firebase CLI</div>
+    <div class="card-grid">
+      <div>
+        <h3>ทำอะไรได้เพิ่ม</h3>
+        <ul class="step-list">
+          <li><div class="step-num">+</div><div>Deploy ผ่าน Terminal แทน GitHub</div></li>
+          <li><div class="step-num">+</div><div>จัดการ Firebase Rules ผ่าน Code</div></li>
+          <li><div class="step-num">+</div><div>Import/Export Database จำนวนมาก</div></li>
+          <li><div class="step-num">+</div><div>ใช้ Firebase Emulator ทดสอบ Local</div></li>
+        </ul>
+      </div>
+      <div>
+        <h3>ต้องติดตั้ง</h3>
+        <pre style="font-size:0.82em;"># ติดตั้ง Node.js ก่อน
+https://nodejs.org
+
+# แล้วค่อยติดตั้ง Firebase CLI
+npm install -g firebase-tools
+
+# Login
+firebase login</pre>
+      </div>
+    </div>
+    <div class="alert alert-info">ถ้าพอใจกับ GitHub Pages อยู่แล้ว ไม่จำเป็นต้องมาระดับนี้</div>
+  </div>
+
+  <!-- Level 3 -->
+  <div class="level-box level-3">
+    <div class="level-title">🟡 ระดับ 3: ต้องการ Cloud Functions + Node.js</div>
+    <div class="card-grid">
+      <div>
+        <h3>ทำอะไรได้เพิ่ม</h3>
+        <ul class="step-list">
+          <li><div class="step-num">+</div><div>รันโค้ดบน Server อัตโนมัติ</div></li>
+          <li><div class="step-num">+</div><div>Cron Job ทำงานตามเวลา</div></li>
+          <li><div class="step-num">+</div><div>รับ Webhook โดยไม่ต้องมี Server</div></li>
+          <li><div class="step-num">+</div><div>ประมวลผลหนักๆ ฝั่ง Server</div></li>
+          <li><div class="step-num">+</div><div>ส่ง Email อัตโนมัติ</div></li>
+        </ul>
+      </div>
+      <div>
+        <h3>ต้องการ</h3>
+        <ul class="step-list">
+          <li><div class="step-num">!</div><div>Node.js บนเครื่อง</div></li>
+          <li><div class="step-num">!</div><div>Firebase CLI</div></li>
+          <li><div class="step-num">!</div><div>อัปเกรด Firebase Plan (Blaze)</div></li>
+          <li><div class="step-num">!</div><div>ความรู้ JavaScript/Node.js</div></li>
+        </ul>
+      </div>
+    </div>
+    <div class="alert alert-warning">ต้องอัปเกรดเป็น Blaze Plan (จ่ายตามใช้จริง) ถึงจะใช้ Functions ได้</div>
+  </div>
+
+  <!-- Level 4 -->
+  <div class="level-box level-4">
+    <div class="level-title">🟣 ระดับ 4: ต้องการ Server เต็มรูปแบบ + n8n</div>
+    <div class="card-grid">
+      <div>
+        <h3>ทำอะไรได้เพิ่ม</h3>
+        <ul class="step-list">
+          <li><div class="step-num">+</div><div>Automation ซับซ้อน</div></li>
+          <li><div class="step-num">+</div><div>เชื่อม Service หลายอย่าง</div></li>
+          <li><div class="step-num">+</div><div>Bot Line / Telegram</div></li>
+          <li><div class="step-num">+</div><div>ประมวลผลข้อมูลขนาดใหญ่</div></li>
+        </ul>
+      </div>
+      <div>
+        <h3>ต้องการ</h3>
+        <ul class="step-list">
+          <li><div class="step-num">!</div><div>n8n (ติดตั้งแล้ว ✅)</div></li>
+          <li><div class="step-num">!</div><div>Cloudflare Tunnel (ติดตั้งแล้ว ✅)</div></li>
+          <li><div class="step-num">!</div><div>เครื่องเปิดตลอด</div></li>
+        </ul>
+      </div>
+    </div>
+    <div class="alert alert-special">คุณมีระดับนี้อยู่แล้วด้วย! n8n + Cloudflare พร้อมใช้งาน</div>
+  </div>
+
+  <hr>
+
+  <!-- SECTION 3: ทำไมคุณไม่ต้องติดตั้งอะไร -->
+  <h2>🌟 ทำไมงานของคุณไม่ต้องติดตั้งอะไรเพิ่ม?</h2>
+
+  <div class="highlight-box">
+    <h3>ระบบของคุณทำงานแบบนี้</h3>
+    <div class="flow-item blue">👤 User เปิด Browser</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item green">🌐 GitHub Pages แสดง index.html</div>
+    <div class="flow-arrow">↓ (โค้ดรันใน Browser ของ User)</div>
+    <div class="flow-item green">🔐 Firebase Auth → Login Google</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item green">🗄️ Firestore → ดึง API Key</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item green">🤖 OpenRouter API → เรียก AI</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item green">📱 แสดงผลกลับใน Browser</div>
+
+    <div class="alert alert-success" style="margin-top:16px;">
+      ทุกอย่างรันใน Browser ของ User → ไม่ต้องมี Server ของคุณเลย!
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>เปรียบเทียบให้เห็นภาพ</h3>
+    <table>
+      <tr>
+        <th>ส่วนงาน</th>
+        <th>รันที่ไหน</th>
+        <th>ต้องการอะไร</th>
+      </tr>
+      <tr>
+        <td>หน้าเว็บ (HTML/CSS/JS)</td>
+        <td>Browser ของ User</td>
+        <td>✅ GitHub Pages ฟรี</td>
+      </tr>
+      <tr>
+        <td>Login Google</td>
+        <td>Firebase Server (Google จัดการ)</td>
+        <td>✅ Firebase Auth ฟรี</td>
+      </tr>
+      <tr>
+        <td>เก็บ API Key</td>
+        <td>Firebase Server (Google จัดการ)</td>
+        <td>✅ Firestore ฟรี</td>
+      </tr>
+      <tr>
+        <td>เรียก AI</td>
+        <td>OpenRouter Server (เขาจัดการ)</td>
+        <td>✅ แค่มี API Key</td>
+      </tr>
+      <tr>
+        <td>Server ของคุณ</td>
+        <td>-</td>
+        <td>✅ ไม่ต้องมีเลย!</td>
+      </tr>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- SECTION 4: ตัวอย่างเปรียบเทียบ -->
+  <h2>📚 ตัวอย่างเปรียบเทียบ ว่าแบบไหนต้องการอะไร</h2>
+
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-title" style="color:#4ade80;">
+        🟢 เว็บ Chat AI (แบบคุณ)
+        <span class="you-badge">คุณ</span>
+      </div>
+      <pre style="font-size:0.8em;">User → Browser
+Browser → Firebase Login
+Browser → Firestore (ดึง Key)
+Browser → OpenRouter AI
+Browser → แสดงผล</pre>
+      <div class="alert alert-success" style="font-size:0.82em;">
+        ต้องการ: แค่ Browser
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="color:#38bdf8;">🔵 เว็บ React/Next.js</div>
+      <pre style="font-size:0.8em;">npm create next-app
+npm install firebase
+npm run dev
+npm run build</pre>
+      <div class="alert alert-info" style="font-size:0.82em;">
+        ต้องการ: Node.js เพราะ Build โค้ดก่อน
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="color:#fbbf24;">🟡 ส่ง Email อัตโนมัติทุกวัน</div>
+      <pre style="font-size:0.8em;">Cloud Functions
+  → Trigger ทุกวัน 8:00
+  → ดึงข้อมูล Firestore
+  → ส่ง Email
+  → รันบน Google Server</pre>
+      <div class="alert alert-warning" style="font-size:0.82em;">
+        ต้องการ: Node.js + Firebase CLI + Blaze Plan
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="color:#a78bfa;">🟣 Bot Line รับ-ตอบ</div>
+      <pre style="font-size:0.8em;">Line → Webhook
+→ n8n รับ
+→ ประมวลผล
+→ Firebase เก็บ Log
+→ ตอบกลับ Line</pre>
+      <div class="alert alert-special" style="font-size:0.82em;">
+        ต้องการ: n8n + Cloudflare (คุณมีแล้ว ✅)
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="color:#f87171;">🔴 Backend API เต็มรูปแบบ</div>
+      <pre style="font-size:0.8em;">Express.js Server
+  → รับ Request
+  → ประมวลผล
+  → ต่อ Database
+  → ส่งผลกลับ</pre>
+      <div style="background:#450a0a; border:1px solid #f87171; border-radius:8px; padding:10px; margin-top:8px; font-size:0.82em; color:#fecaca;">
+        ⛔ ต้องการ: Node.js + VPS Server + ค่าใช้จ่ายรายเดือน
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="color:#fb923c;">🟠 Mobile App (Flutter/React Native)</div>
+      <pre style="font-size:0.8em;">Flutter/React Native
+  → ใช้ Firebase SDK
+  → Build เป็น .apk
+  → ติดตั้งบนมือถือ</pre>
+      <div class="alert alert-warning" style="font-size:0.82em;">
+        ต้องการ: Flutter SDK หรือ Node.js + Android Studio
+      </div>
+    </div>
+
+  </div>
+
+  <hr>
+
+  <!-- SECTION 5: เกณฑ์ตัดสินใจ -->
+  <h2>🤔 เกณฑ์ตัดสินใจ ต้องการอะไร?</h2>
+
+  <div class="box">
+    <table>
+      <tr>
+        <th>ถามตัวเองว่า</th>
+        <th>คำตอบ</th>
+        <th>ต้องการ</th>
+      </tr>
+      <tr>
+        <td>โค้ดรันใน Browser ได้ไหม?</td>
+        <td>ใช่</td>
+        <td><span class="tag tag-none">แค่ Browser</span></td>
+      </tr>
+      <tr>
+        <td>ต้องการ Framework (React/Vue)?</td>
+        <td>ใช่</td>
+        <td><span class="tag tag-nodejs">Node.js</span></td>
+      </tr>
+      <tr>
+        <td>ต้อง Deploy ผ่าน Terminal?</td>
+        <td>ใช่</td>
+        <td><span class="tag tag-cli">Firebase CLI</span></td>
+      </tr>
+      <tr>
+        <td>ต้องรันโค้ดอัตโนมัติบน Server?</td>
+        <td>ใช่</td>
+        <td><span class="tag tag-server">Cloud Functions</span></td>
+      </tr>
+      <tr>
+        <td>ต้องรับ Webhook / Automation?</td>
+        <td>ใช่</td>
+        <td><span class="tag tag-server">n8n + Cloudflare</span></td>
+      </tr>
+      <tr>
+        <td>ต้องการ Backend API เต็มรูปแบบ?</td>
+        <td>ใช่</td>
+        <td><span class="tag tag-server">VPS Server</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <hr>
+
+  <!-- SECTION 6: สรุปงานคุณ -->
+  <h2>✅ สรุป: งานของคุณต้องการอะไรบ้าง</h2>
+
+  <div class="highlight-box">
+    <h3>ระบบปัจจุบันของคุณ</h3>
+    <table>
+      <tr>
+        <th>งาน</th>
+        <th>ใช้อะไร</th>
+        <th>ต้องติดตั้ง?</th>
+      </tr>
+      <tr>
+        <td>หน้าเว็บ</td>
+        <td>HTML/CSS/JS ใน index.html</td>
+        <td>✅ ไม่ต้อง</td>
+      </tr>
+      <tr>
+        <td>Host เว็บ</td>
+        <td>GitHub Pages</td>
+        <td>✅ ไม่ต้อง (ใช้ Browser)</td>
+      </tr>
+      <tr>
+        <td>Login Google</td>
+        <td>Firebase Authentication</td>
+        <td>✅ ไม่ต้อง (CDN)</td>
+      </tr>
+      <tr>
+        <td>เก็บ API Key</td>
+        <td>Firebase Firestore</td>
+        <td>✅ ไม่ต้อง (CDN)</td>
+      </tr>
+      <tr>
+        <td>เรียก AI</td>
+        <td>OpenRouter API</td>
+        <td>✅ ไม่ต้อง (fetch)</td>
+      </tr>
+      <tr>
+        <td>Automation</td>
+        <td>n8n + Cloudflare</td>
+        <td>✅ ติดตั้งแล้ว</td>
+      </tr>
+    </table>
+
+    <div class="alert alert-success" style="margin-top:16px; font-size:1em;">
+      ทุกอย่างพร้อมแล้ว! ไม่ต้องติดตั้งอะไรเพิ่มสำหรับงานระดับนี้
+    </div>
+  </div>
+
+  <div class="box" style="margin-top:16px;">
+    <h3>สิ่งที่ Firebase CDN จัดการให้อัตโนมัติ</h3>
+    <pre>เมื่อ Browser เปิดเว็บ:
+
+Browser อ่าน index.html
+    ↓
+เจอ script type="module"
+    ↓
+โหลด Firebase จาก:
+https://www.gstatic.com/firebasejs/...
+    ↓
+Firebase พร้อมใช้งานใน Browser ทันที
+
+= ไม่ต้อง npm install
+= ไม่ต้อง node_modules
+= ไม่ต้อง Terminal
+= แค่อินเตอร์เน็ตก็พอ! ✅</pre>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    🦉 Firebase Guide | owlvyhousedeep-bot | 2025<br>
+    <span style="font-size:0.85em;">ระดับ 1 = Browser | ระดับ 2 = CLI | ระดับ 3 = Functions | ระดับ 4 = Server</span>
+  </div>
+
+</div>
+</body>
+</html>
+
+							<script>
+                            	
+							</script>
+                        </body>
+                        </html>
+                    
