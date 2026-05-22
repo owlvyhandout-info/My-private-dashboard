@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สมรสเท่าเทียม × IVF และอุ้มบุญ</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Noto+Serif+Thai:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d14;
+    --surface: #14141f;
+    --card: #1a1a2e;
+    --border: #2a2a45;
+    --accent: #e040fb;
+    --accent2: #7c4dff;
+    --green: #00e676;
+    --red: #ff1744;
+    --amber: #ffab40;
+    --text: #e8e8f0;
+    --muted: #8888aa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -40%;
+    left: -20%;
+    width: 80vw;
+    height: 80vw;
+    background: radial-gradient(circle, rgba(124,77,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -30%;
+    right: -20%;
+    width: 70vw;
+    height: 70vw;
+    background: radial-gradient(circle, rgba(224,64,251,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    padding: 2.5rem 0 3rem;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .flag-strip {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 1.5rem;
+  }
+
+  .flag-strip span {
+    display: block;
+    height: 5px;
+    border-radius: 3px;
+    animation: grow 0.8s ease both;
+  }
+  .flag-strip span:nth-child(1) { width: 40px; background: #e53935; animation-delay: 0.1s; }
+  .flag-strip span:nth-child(2) { width: 30px; background: #ffffff; animation-delay: 0.2s; }
+  .flag-strip span:nth-child(3) { width: 50px; background: #1565c0; animation-delay: 0.3s; }
+  .flag-strip span:nth-child(4) { width: 30px; background: #ffffff; animation-delay: 0.4s; }
+  .flag-strip span:nth-child(5) { width: 40px; background: #e53935; animation-delay: 0.5s; }
+  .flag-strip span:nth-child(6) { width: 20px; background: var(--accent); animation-delay: 0.6s; }
+
+  header h1 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.3;
+    background: linear-gradient(135deg, #e040fb, #7c4dff, #40c4ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 300;
+  }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .section:nth-child(2) { animation-delay: 0.1s; }
+  .section:nth-child(3) { animation-delay: 0.2s; }
+  .section:nth-child(4) { animation-delay: 0.3s; }
+  .section:nth-child(5) { animation-delay: 0.4s; }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-label .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .section-label h2 {
+    font-family: 'Noto Serif Thai', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  /* STATUS CARD */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem 1.6rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: 3px 0 0 3px;
+  }
+
+  .card.done::before { background: var(--green); }
+  .card.blocked::before { background: var(--red); }
+  .card.pending::before { background: var(--amber); }
+
+  .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+
+  .badge.done { background: rgba(0,230,118,0.12); color: var(--green); border: 1px solid rgba(0,230,118,0.25); }
+  .badge.blocked { background: rgba(255,23,68,0.12); color: #ff6b6b; border: 1px solid rgba(255,23,68,0.25); }
+  .badge.pending { background: rgba(255,171,64,0.12); color: var(--amber); border: 1px solid rgba(255,171,64,0.25); }
+
+  .card-body {
+    font-size: 0.9rem;
+    color: #b0b0cc;
+    line-height: 1.65;
+  }
+
+  .card-body strong { color: var(--text); font-weight: 600; }
+
+  /* TABLE */
+  .table-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  thead tr {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  thead th {
+    padding: 0.9rem 1.2rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--muted);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(124,77,255,0.05); }
+
+  tbody td {
+    padding: 0.9rem 1.2rem;
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  .status-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+  }
+
+  .status-icon.ok { background: rgba(0,230,118,0.1); color: var(--green); }
+  .status-icon.no { background: rgba(255,23,68,0.1); color: #ff6b6b; }
+  .status-icon.wip { background: rgba(255,171,64,0.1); color: var(--amber); }
+
+  /* NOTE */
+  .note {
+    background: rgba(124,77,255,0.07);
+    border: 1px solid rgba(124,77,255,0.2);
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+    font-size: 0.85rem;
+    color: #c0b0e0;
+    line-height: 1.6;
+    display: flex;
+    gap: 0.8rem;
+  }
+
+  .note-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+  /* SOURCE */
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.6s ease 0.5s both;
+  }
+
+  footer a { color: #9c7fff; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes grow {
+    from { transform: scaleX(0); opacity: 0; }
+    to { transform: scaleX(1); opacity: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="flag-strip">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <h1>สมรสเท่าเทียม × IVF & อุ้มบุญ</h1>
+    <p>สถานะกฎหมายไทยสำหรับคู่สมรสเพศเดียวกัน — ข้อมูล ณ พฤษภาคม 2569</p>
+  </header>
+
+  <!-- DONE -->
+  <div class="section">
+    <div class="section-label">
+      <div class="dot" style="background:var(--green)"></div>
+      <h2>สิ่งที่เกิดขึ้นแล้ว</h2>
+    </div>
+    <div class="card done">
+      <div class="card-title">
+        กฎหมายสมรสเท่าเทียม
+        <span class="badge done">✓ มีผลบังคับใช้แล้ว</span>
+      </div>
+      <div class="card-body">
+        มีผลบังคับใช้ตั้งแต่ <strong>23 มกราคม 2568</strong> คู่รัก LGBTQ+ ได้รับสิทธิเท่าเทียมในด้านมรดก ทรัพย์สิน สิทธิรักษาพยาบาล และการจดทะเบียนสมรสอย่างเป็นทางการ
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCKED -->
+  <div class="section">
+    <div class="section-label">
+      <div class="dot" style="background:var(--red)"></div>
+      <h2>สิ่งที่ยังทำไม่ได้</h2>
+    </div>
+    <div class="card blocked">
+      <div class="card-title">
+        IVF และอุ้มบุญ ยังถูกปิดกั้นโดยกฎหมายเดิม
+        <span class="badge blocked">✗ ยังไม่อนุญาต</span>
+      </div>
+      <div class="card-body">
+        <strong>พ.ร.บ. คุ้มครองเด็กที่เกิดโดยอาศัยเทคโนโลยีช่วยการเจริญพันธุ์ทางการแพทย์ พ.ศ. 2558</strong> กำหนดให้ผู้มีสิทธิ์ต้องเป็น <strong>"คู่สมรสชาย-หญิง"</strong> ที่จดทะเบียนถูกต้อง — คู่สมรสเพศเดียวกันถูกห้ามโดยชัดเจน แม้จดทะเบียนตามกฎหมายสมรสเท่าเทียมแล้วก็ตาม
+        <br><br>
+        ผลพวง: ไม่สามารถจดชื่อพ่อแม่ร่วมในใบเกิด และต้องผ่านกระบวนการรับบุตรบุญธรรมที่ยาวนานแทน
+      </div>
+    </div>
+  </div>
+
+  <!-- IN PROGRESS -->
+  <div class="section">
+    <div class="section-label">
+      <div class="dot" style="background:var(--amber)"></div>
+      <h2>ความคืบหน้า — อยู่ระหว่างดำเนินการ</h2>
+    </div>
+    <div class="card pending">
+      <div class="card-title">
+        ร่างกฎหมายอุ้มบุญ ฉบับ 2
+        <span class="badge pending">⟳ กำลังแก้ไข</span>
+      </div>
+      <div class="card-body">
+        กระทรวงสาธารณสุข (สบส.) กำลังพัฒนาร่าง พ.ร.บ. ฉบับใหม่ โดยมีแนวทาง:
+        <br><br>
+        • <strong>เปลี่ยนคำ</strong> "สามีและภรรยา" เป็น <strong>"คู่สมรส"</strong> เพื่อรองรับทุกเพศ<br>
+        • เปิดทางให้คู่สมรสต่างชาติทำอุ้มบุญในไทยได้<br>
+        • จัดประชุมกับสถานพยาบาลทั่วประเทศ 241 แห่ง เพื่อรับฟังความเห็น<br>
+        • <strong>ยังไม่มีกำหนดเสร็จที่ชัดเจน</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="section">
+    <div class="section-label">
+      <div class="dot" style="background:var(--accent2)"></div>
+      <h2>ตารางสรุปสถานะ</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ประเด็น</th>
+            <th>สถานะ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>จดทะเบียนสมรส</td>
+            <td><span class="status-icon ok">✓ ทำได้แล้ว</span></td>
+          </tr>
+          <tr>
+            <td>IVF สำหรับคู่หญิง-หญิง</td>
+            <td><span class="status-icon no">✗ ยังไม่ได้</span></td>
+          </tr>
+          <tr>
+            <td>อุ้มบุญสำหรับคู่เพศเดียวกัน</td>
+            <td><span class="status-icon no">✗ ยังไม่ได้</span></td>
+          </tr>
+          <tr>
+            <td>ร่างกฎหมายแก้ไขฉบับใหม่</td>
+            <td><span class="status-icon wip">⟳ อยู่ระหว่างดำเนินการ</span></td>
+          </tr>
+          <tr>
+            <td>จดชื่อพ่อแม่ร่วมในใบเกิด</td>
+            <td><span class="status-icon no">✗ ยังไม่รองรับ</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- NOTE -->
+  <div class="section">
+    <div class="note">
+      <div class="note-icon">💡</div>
+      <div>
+        <strong>สรุปสั้นๆ:</strong> แม้กฎหมายสมรสเท่าเทียมจะผ่านแล้วตั้งแต่ต้นปี 2568 แต่ <strong>พ.ร.บ. อุ้มบุญ พ.ศ. 2558</strong> ยังไม่ได้รับการแก้ไข ทำให้คู่สมรสเพศเดียวกันยังไม่มีสิทธิ์ใช้เทคโนโลยีช่วยการเจริญพันธุ์ (IVF/IUI/อุ้มบุญ) อย่างถูกกฎหมายในขณะนี้ ต้องรอดูความคืบหน้าของร่างกฎหมายฉบับใหม่ต่อไป
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    ที่มา: 
+    <a href="https://www.amnesty.or.th/blog/2025/07/thai-marriage-equality-gaps/" target="_blank">Amnesty International Thailand</a> · 
+    <a href="https://www.thaipbs.or.th/news/content/348489" target="_blank">Thai PBS</a> · 
+    <a href="https://hss.moph.go.th/show_topic.php?id=1097" target="_blank">กรมสนับสนุนบริการสุขภาพ (สบส.)</a>
+    <br>ข้อมูล ณ พฤษภาคม 2569 · เนื้อหาเพื่อการศึกษา ไม่ใช่คำปรึกษาทางกฎหมาย
+  </footer>
+
+</div>
+</body>
+</html>
