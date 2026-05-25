@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌿 การลำเลียงน้ำและอาหารของพืช</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0fdf4; --bg2: #dcfce7; --bg3: #bbf7d0;
+    --surface: #ffffff; --surface2: #f7fef9;
+    --border: #86efac;
+    --text: #14532d; --text2: #166534; --text3: #15803d;
+    --accent1: #16a34a; --accent2: #059669; --accent3: #0d9488;
+    --accent4: #0284c7; --accent5: #7c3aed; --accent6: #dc2626; --accent7: #d97706;
+    --xylem: #3b82f6; --phloem: #f59e0b; --cambium: #8b5cf6;
+    --monocot: #06b6d4; --dicot: #f43f5e;
+    --shadow: 0 4px 20px rgba(22,163,74,0.12);
+    --shadow-lg: 0 8px 40px rgba(22,163,74,0.18);
+    --radius: 16px; --radius-sm: 10px;
+  }
+  [data-theme="dark"] {
+    --bg: #0a1628; --bg2: #0f2040; --bg3: #1a3a5c;
+    --surface: #132038; --surface2: #1e2f4a;
+    --border: #1e4080;
+    --text: #e0f0ff; --text2: #93c5fd; --text3: #60a5fa;
+    --accent1: #3b82f6; --accent2: #0ea5e9; --accent3: #06b6d4;
+    --accent4: #818cf8; --accent5: #a78bfa; --accent6: #f87171; --accent7: #fbbf24;
+    --xylem: #60a5fa; --phloem: #fbbf24; --cambium: #c084fc;
+    --monocot: #22d3ee; --dicot: #fb7185;
+    --shadow: 0 4px 20px rgba(0,0,0,0.4);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Sarabun', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.4s, color 0.4s; }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, var(--accent1) 0%, var(--accent3) 50%, var(--accent4) 100%);
+    padding: 44px 24px 36px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Ccircle cx='30' cy='30' r='4' fill='%23ffffff' fill-opacity='0.07'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-emoji { font-size: 52px; display: block; margin-bottom: 10px; animation: float 3s ease-in-out infinite; position: relative; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .hero h1 { font-family:'Chakra Petch',sans-serif; font-size:clamp(20px,5vw,34px); font-weight:700; color:#fff; text-shadow:0 2px 12px rgba(0,0,0,0.2); margin-bottom:6px; position:relative; }
+  .hero p { color:rgba(255,255,255,0.88); font-size:14px; position:relative; }
+
+  /* ===== STICKY NAV ===== */
+  .sticky-nav {
+    position: sticky; top: 0; z-index: 300;
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    box-shadow: var(--shadow);
+    transition: background 0.4s;
+  }
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 16px; border-bottom: 1px solid var(--border); gap: 10px; flex-wrap: wrap;
+  }
+  .nav-brand { font-family:'Chakra Petch',sans-serif; font-size:13px; font-weight:700; color:var(--text2); white-space:nowrap; }
+  .toggle-btn {
+    display:flex; align-items:center; gap:6px;
+    background:var(--bg2); border:2px solid var(--border); border-radius:50px;
+    padding:5px 14px; cursor:pointer; font-family:'Sarabun',sans-serif;
+    font-size:12px; font-weight:600; color:var(--text); transition:all 0.25s; white-space:nowrap;
+  }
+  .toggle-btn:hover { background:var(--accent1); color:#fff; border-color:var(--accent1); }
+
+  /* chapter pills row */
+  .chapter-nav {
+    display:flex; align-items:center; gap:5px;
+    padding:7px 14px; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch;
+  }
+  .chapter-nav::-webkit-scrollbar { display:none; }
+  .nav-pill {
+    display:flex; align-items:center; gap:4px;
+    padding:5px 12px; border-radius:50px; border:1.5px solid var(--border);
+    background:var(--bg2); color:var(--text2);
+    font-family:'Sarabun',sans-serif; font-size:12px; font-weight:600;
+    cursor:pointer; white-space:nowrap; transition:all 0.2s; text-decoration:none; flex-shrink:0;
+  }
+  .nav-pill:hover, .nav-pill.active { background:var(--accent1); color:#fff; border-color:var(--accent1); transform:translateY(-1px); }
+  .nav-pill .pi { font-size:13px; }
+
+  /* ===== LAYOUT ===== */
+  .container { max-width: 1100px; margin: 0 auto; padding: 28px 16px 40px; }
+
+  /* scroll-target offset for sticky nav */
+  .section-anchor { display:block; height:0; margin-top:-80px; padding-top:80px; }
+
+  /* ===== SECTION HEADERS ===== */
+  .sec-header { display:flex; align-items:center; gap:12px; margin:36px 0 18px; padding-bottom:12px; border-bottom:3px solid var(--border); }
+  .sec-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+  .sec-header h2 { font-family:'Chakra Petch',sans-serif; font-size:19px; font-weight:700; color:var(--text); }
+  .sec-header small { font-size:12px; color:var(--text3); margin-top:2px; display:block; }
+
+  /* ===== CARDS ===== */
+  .card { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); transition:transform 0.2s, box-shadow 0.2s; }
+  .card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:14px; }
+  .grid3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; }
+  .card-title { font-family:'Chakra Petch',sans-serif; font-size:15px; font-weight:700; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+  .card-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+  /* ===== TISSUE CARDS ===== */
+  .tissue-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
+  .tissue-card { border-radius:var(--radius-sm); padding:14px; border-left:5px solid; background:var(--surface2); transition:transform 0.2s; }
+  .tissue-card:hover { transform:translateX(4px); }
+  .tissue-card h3 { font-size:14px; font-weight:700; margin-bottom:7px; }
+  .tissue-card ul { list-style:none; }
+  .tissue-card ul li { font-size:12px; padding:3px 0; display:flex; align-items:flex-start; gap:5px; }
+  .tissue-card ul li::before { content:'▸'; flex-shrink:0; margin-top:1px; }
+
+  /* ===== VASCULAR COMPARE ===== */
+  .vascular-compare { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media(max-width:580px){.vascular-compare{grid-template-columns:1fr;}}
+  .v-card { border-radius:var(--radius); padding:18px; }
+  .v-card.xylem { background:linear-gradient(135deg,#dbeafe,#bfdbfe); border:2px solid var(--xylem); }
+  .v-card.phloem { background:linear-gradient(135deg,#fef3c7,#fde68a); border:2px solid var(--phloem); }
+  [data-theme="dark"] .v-card.xylem { background:linear-gradient(135deg,#1e3a5f,#1e4080); }
+  [data-theme="dark"] .v-card.phloem { background:linear-gradient(135deg,#3d2f0a,#5c420d); }
+  .v-card h3 { font-family:'Chakra Petch',sans-serif; font-size:20px; font-weight:700; margin-bottom:10px; }
+  .v-card .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; margin:3px; }
+  .v-card ul { text-align:left; list-style:none; margin-top:10px; }
+  .v-card ul li { padding:5px 0; font-size:13px; border-bottom:1px dashed rgba(0,0,0,0.1); display:flex; gap:7px; }
+  [data-theme="dark"] .v-card ul li { border-color:rgba(255,255,255,0.1); }
+  .v-card ul li:last-child { border:none; }
+
+  /* ===== COMPARE TABLE ===== */
+  .compare-table { width:100%; border-collapse:collapse; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); }
+  .compare-table th { padding:12px 14px; font-family:'Chakra Petch',sans-serif; font-size:14px; font-weight:700; color:#fff; }
+  .compare-table th:nth-child(2) { background:var(--monocot); }
+  .compare-table th:nth-child(3) { background:var(--dicot); }
+  .compare-table th:first-child { background:var(--surface2); color:var(--text2); }
+  .compare-table td { padding:10px 14px; font-size:13px; background:var(--surface); color:var(--text); border-bottom:1px solid var(--border); text-align:center; }
+  .compare-table td:first-child { font-weight:600; text-align:left; color:var(--text2); background:var(--surface2); }
+  .compare-table tr:last-child td { border:none; }
+  .compare-table tr:hover td { background:var(--bg2); }
+
+  /* ===== FLOW BOX ===== */
+  .flow-box { display:flex; flex-wrap:wrap; align-items:center; gap:6px; padding:12px 14px; background:var(--surface2); border-radius:var(--radius-sm); border:1.5px solid var(--border); }
+  .flow-item { background:var(--accent1); color:#fff; font-weight:700; font-size:12px; padding:6px 12px; border-radius:7px; white-space:nowrap; }
+  .flow-arrow { color:var(--accent2); font-size:18px; font-weight:900; }
+
+  /* ===== OSMOSIS CARD ===== */
+  .osmosis-card { background:linear-gradient(135deg,var(--surface2),var(--bg2)); border:2px solid var(--border); border-radius:var(--radius); padding:20px; text-align:center; }
+
+  /* ===== HIGHLIGHT BOXES ===== */
+  .highlight { border-radius:var(--radius-sm); padding:12px 16px; margin:10px 0; display:flex; gap:10px; align-items:flex-start; }
+  .highlight.exam { background:rgba(220,38,38,0.08); border-left:4px solid var(--accent6); }
+  .highlight.tip { background:rgba(16,163,74,0.08); border-left:4px solid var(--accent1); }
+  .highlight.warn { background:rgba(217,119,6,0.10); border-left:4px solid var(--accent7); }
+  .highlight-icon { font-size:18px; flex-shrink:0; }
+  .highlight p { font-size:13px; line-height:1.6; }
+
+  /* ===== QUICK REFERENCE ===== */
+  .qr-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:10px; }
+  .qr-item { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:12px; text-align:center; transition:all 0.2s; cursor:default; }
+  .qr-item:hover { background:var(--accent1); color:#fff; border-color:var(--accent1); }
+  .qr-item:hover .qr-q { color:rgba(255,255,255,0.8); }
+  .qr-item:hover .qr-a { color:#fff; }
+  .qr-q { font-size:11px; color:var(--text3); margin-bottom:5px; }
+  .qr-a { font-size:15px; font-weight:800; font-family:'Chakra Petch',sans-serif; color:var(--accent1); }
+
+  /* ===== CONFUSION ===== */
+  .confusion-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px; }
+  .conf-item { background:var(--surface); border-radius:var(--radius-sm); overflow:hidden; border:1.5px solid var(--border); }
+  .conf-wrong { background:rgba(220,38,38,0.08); padding:10px 14px; font-size:12px; display:flex; gap:7px; align-items:center; color:var(--accent6); border-bottom:1px solid var(--border); }
+  .conf-right { background:rgba(16,163,74,0.08); padding:10px 14px; font-size:12px; display:flex; gap:7px; align-items:center; color:var(--accent1); }
+  .conf-label { font-weight:700; font-size:10px; letter-spacing:1px; }
+
+  /* ===== CROSS SECTIONS ===== */
+  .cross-sections { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media(max-width:580px){.cross-sections{grid-template-columns:1fr;}}
+  .cs-card { background:var(--surface); border:2px solid var(--border); border-radius:var(--radius); padding:18px; text-align:center; }
+  .cs-card h3 { font-family:'Chakra Petch',sans-serif; margin-bottom:14px; font-size:15px; }
+  .cs-layers { list-style:none; }
+  .cs-layers li { padding:7px 10px; margin:3px 0; border-radius:6px; font-size:12px; font-weight:600; display:flex; align-items:center; gap:7px; }
+  .layer-ep { background:rgba(34,211,238,0.2); color:var(--monocot); border:1px solid var(--monocot); }
+  .layer-co { background:rgba(16,163,74,0.15); color:var(--accent1); border:1px solid var(--accent1); }
+  .layer-en { background:rgba(245,158,11,0.15); color:var(--phloem); border:1px solid var(--phloem); }
+  .layer-pe { background:rgba(139,92,246,0.15); color:var(--cambium); border:1px solid var(--cambium); }
+  .layer-ph { background:rgba(245,158,11,0.2); color:var(--phloem); border:1px solid var(--phloem); }
+  .layer-ca { background:rgba(139,92,246,0.2); color:var(--cambium); border:1px solid var(--cambium); }
+  .layer-xy { background:rgba(59,130,246,0.2); color:var(--xylem); border:1px solid var(--xylem); }
+  .layer-pi { background:rgba(100,116,139,0.15); color:var(--text3); border:1px solid var(--border); }
+  .outer-label,.inner-label { font-size:10px; color:var(--text3); }
+  .arrow-label { color:var(--text3); font-size:16px; line-height:1; }
+
+  /* ===== TRANSPORT ===== */
+  .transport-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; }
+  .trans-card { border-radius:var(--radius-sm); padding:16px; text-align:center; border:2px solid; }
+  .trans-card h3 { font-family:'Chakra Petch',sans-serif; font-size:16px; margin-bottom:8px; }
+  .trans-card p { font-size:12px; line-height:1.6; }
+  .trans-card .formula { font-size:22px; margin:10px 0; }
+  .trans-osmosis { background:rgba(59,130,246,0.08); border-color:var(--xylem); }
+  .trans-diffusion { background:rgba(16,163,74,0.08); border-color:var(--accent1); }
+  .trans-active { background:rgba(220,38,38,0.08); border-color:var(--accent6); }
+
+  /* ===== EXPERIMENT ===== */
+  .experiment-card { background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1)); border:2px solid var(--xylem); border-radius:var(--radius); padding:20px; }
+  .exp-result { display:flex; gap:12px; flex-wrap:wrap; margin-top:14px; }
+  .exp-item { flex:1; min-width:130px; background:var(--surface); border-radius:var(--radius-sm); padding:12px; text-align:center; border:1.5px solid var(--border); }
+  .exp-item .exp-emoji { font-size:28px; display:block; margin-bottom:6px; }
+  .exp-item p { font-size:12px; font-weight:600; }
+
+  /* ===== TAGS ===== */
+  .tag { padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; display:inline-block; }
+  .tag-blue { background:rgba(59,130,246,0.15); color:var(--xylem); border:1px solid var(--xylem); }
+  .tag-yellow { background:rgba(245,158,11,0.15); color:var(--phloem); border:1px solid var(--phloem); }
+  .tag-purple { background:rgba(139,92,246,0.15); color:var(--cambium); border:1px solid var(--cambium); }
+  .tag-green { background:rgba(16,163,74,0.15); color:var(--accent1); border:1px solid var(--accent1); }
+  .tag-red { background:rgba(220,38,38,0.12); color:var(--accent6); border:1px solid var(--accent6); }
+  .tag-cyan { background:rgba(6,182,212,0.12); color:var(--monocot); border:1px solid var(--monocot); }
+  .tag-pink { background:rgba(244,63,94,0.12); color:var(--dicot); border:1px solid var(--dicot); }
+
+  /* ===== MISC ===== */
+  .info-row { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; }
+  .info-chip { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:6px 12px; font-size:12px; display:flex; align-items:center; gap:5px; }
+  .footer { text-align:center; padding:28px 16px; color:var(--text3); font-size:12px; border-top:2px solid var(--border); margin-top:40px; }
+
+  /* progress indicator */
+  .progress-bar { height:3px; background:linear-gradient(90deg,var(--accent1),var(--accent4)); position:fixed; top:0; left:0; z-index:999; transition:width 0.1s; }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-emoji">🌿</span>
+  <h1>การลำเลียงน้ำและอาหารของพืช</h1>
+  <p>Plant Physiology &amp; Anatomy · เนื้อเยื่อพืช · ภาคตัดขวาง</p>
+</div>
+
+<!-- STICKY NAV -->
+<div class="sticky-nav" id="stickyNav">
+  <!-- top bar -->
+  <div class="top-bar">
+    <span class="nav-brand">🌿 BIO — Plant Transport</span>
+    <button class="toggle-btn" onclick="toggleTheme()">
+      <span id="themeIcon">🌙</span>
+      <span id="themeText">Deep Blue</span>
+    </button>
+  </div>
+  <!-- chapter pills -->
+  <div class="chapter-nav" id="chapterNav">
+    <a class="nav-pill active" href="#sec-overview" data-sec="sec-overview"><span class="pi">🗺️</span>ภาพรวม</a>
+    <a class="nav-pill" href="#sec-tissue" data-sec="sec-tissue"><span class="pi">🔬</span>เนื้อเยื่อ</a>
+    <a class="nav-pill" href="#sec-vascular" data-sec="sec-vascular"><span class="pi">🚰</span>Xylem/Phloem</a>
+    <a class="nav-pill" href="#sec-monodicot" data-sec="sec-monodicot"><span class="pi">🌾</span>Mono vs Dicot</a>
+    <a class="nav-pill" href="#sec-cross" data-sec="sec-cross"><span class="pi">✂️</span>ภาคตัดขวาง</a>
+    <a class="nav-pill" href="#sec-transport" data-sec="sec-transport"><span class="pi">⚗️</span>กลไกลำเลียง</a>
+    <a class="nav-pill" href="#sec-forces" data-sec="sec-forces"><span class="pi">🌬️</span>แรงขับน้ำ</a>
+    <a class="nav-pill" href="#sec-experiments" data-sec="sec-experiments"><span class="pi">🧫</span>การทดลอง</a>
+    <a class="nav-pill" href="#sec-qr" data-sec="sec-qr"><span class="pi">⚡</span>Quick Ref</a>
+    <a class="nav-pill" href="#sec-mistakes" data-sec="sec-mistakes"><span class="pi">❌</span>จุดสับสน</a>
+    <a class="nav-pill" href="#sec-summary" data-sec="sec-summary"><span class="pi">📊</span>สรุป</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- OVERVIEW -->
+  <div class="section-anchor" id="sec-overview"></div>
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#16a34a,#059669)">🗺️</div>
+    <div><h2>ภาพรวมของบท</h2><small>แกนกลาง Plant Physiology + Plant Anatomy</small></div>
+  </div>
+  <div class="card">
+    <p style="font-size:14px;line-height:1.8;margin-bottom:14px">บทนี้เชื่อมระบบสำคัญทั้งหมดของพืชเข้าด้วยกัน ตั้งแต่การดูดน้ำในดิน → ลำเลียงขึ้น → ใช้ในกระบวนการต่าง ๆ → คายออกสู่อากาศ</p>
+    <div class="info-row">
+      <div class="info-chip">💧 การดูดน้ำ</div>
+      <div class="info-chip">🧪 ลำเลียงแร่ธาตุ</div>
+      <div class="info-chip">🍬 ลำเลียงอาหาร</div>
+      <div class="info-chip">💨 การคายน้ำ</div>
+      <div class="info-chip">🌱 โครงสร้างราก-ลำต้น</div>
+      <div class="info-chip">🔬 เนื้อเยื่อพืช</div>
+      <div class="info-chip">⚗️ ออสโมซิส-การแพร่</div>
+      <div class="info-chip">🌿 Mono vs Dicot</div>
+    </div>
+  </div>
+
+  <!-- TISSUE -->
+  <div class="section-anchor" id="sec-tissue"></div>
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#0d9488,#0284c7)">🔬</div>
+    <div><h2>PART 1–2 : เนื้อเยื่อพืช (Plant Tissue)</h2><small>Meristem · Permanent Tissue</small></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><div class="card-dot" style="background:#16a34a"></div>เนื้อเยื่อเจริญ (Meristem)</div>
+      <p style="font-size:12px;margin-bottom:10px">แบ่งเซลล์ได้ตลอดเวลา · นิวเคลียสใหญ่ · ผนังบาง</p>
+      <div class="tissue-grid" style="grid-template-columns:1fr 1fr;gap:8px">
+        <div class="tissue-card" style="border-color:#16a34a">
+          <h3 style="color:#16a34a">Apical Meristem</h3>
+          <ul><li>ปลายยอด/ปลายราก</li><li>ทำให้สูง/ยาวขึ้น</li><li style="font-weight:700">→ Primary Growth</li></ul>
+        </div>
+        <div class="tissue-card" style="border-color:#8b5cf6">
+          <h3 style="color:#8b5cf6">Lateral Meristem</h3>
+          <ul><li>Vascular cambium</li><li>Cork cambium</li><li style="font-weight:700">→ Secondary Growth</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="card-dot" style="background:#0284c7"></div>เนื้อเยื่อถาวร (Permanent Tissue)</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="tissue-card" style="border-color:#06b6d4">
+          <h3 style="color:#06b6d4">Epidermis</h3>
+          <ul><li>ผิวชั้นนอกสุด</li><li>ป้องกัน + ลดสูญเสียน้ำ</li><li>ยื่นเป็น <strong>ขนราก</strong> ในราก</li></ul>
+        </div>
+        <div class="tissue-card" style="border-color:#16a34a">
+          <h3 style="color:#16a34a">Cortex</h3>
+          <ul><li>อยู่ถัดจาก epidermis</li><li>เก็บสะสมอาหาร</li><li>ทางผ่านน้ำ (Parenchyma)</li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:12px">
+    <div class="grid2">
+      <div class="card" style="border-color:var(--phloem)">
+        <div class="card-title"><div class="card-dot" style="background:var(--phloem)"></div>Endodermis ⭐ สำคัญมาก</div>
+        <p style="font-size:12px;line-height:1.7">ด่านควบคุมสุดท้ายก่อนน้ำเข้า Xylem<br>มี <strong>Casparian Strip</strong> (ประกอบด้วย Suberin)<br>→ กันน้ำผ่านผนังเซลล์ ต้องผ่านเยื่อหุ้มเซลล์แทน<br>→ พืชจึง <strong>"เลือกสารได้"</strong></p>
+      </div>
+      <div class="card" style="border-color:var(--cambium)">
+        <div class="card-title"><div class="card-dot" style="background:var(--cambium)"></div>Pericycle</div>
+        <p style="font-size:12px;line-height:1.7">อยู่ถัดจาก Endodermis<br><br>หน้าที่: <strong>กำเนิดรากแขนง</strong> (Lateral root formation)</p>
+        <div class="highlight tip" style="margin-top:10px;padding:8px 12px">
+          <span class="highlight-icon">💡</span>
+          <p>Root hair ≠ เนื้อเยื่อใหม่<br>คือ <strong>Epidermis ที่ยืดยาว</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VASCULAR -->
+  <div class="section-anchor" id="sec-vascular"></div>
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#3b82f6,#f59e0b)">🚰</div>
+    <div><h2>PART 3 : เนื้อเยื่อลำเลียง (Vascular Tissue)</h2><small>Xylem · Phloem · Cambium — สำคัญที่สุดของบท</small></div>
+  </div>
+  <div class="vascular-compare">
+    <div class="v-card xylem">
+      <h3 style="color:var(--xylem)">🔵 Xylem</h3>
+      <div><span class="badge" style="background:var(--xylem);color:#fff">เซลล์ตาย</span><span class="badge" style="background:rgba(59,130,246,0.2);color:var(--xylem)">ลำเลียงขึ้น</span></div>
+      <ul>
+        <li>💧 ลำเลียงน้ำ + แร่ธาตุ</li>
+        <li>🏗️ ค้ำจุนพืช (มี Lignin)</li>
+        <li>⚫ ไม่มีนิวเคลียส/ไซโทพลาซึม</li>
+        <li>📏 ผนังหนามาก</li>
+        <li>🔵 Vessel Element (พืชดอก)</li>
+        <li>🔹 Tracheid (พืชทั่วไป)</li>
+      </ul>
+      <div class="flow-box" style="margin-top:12px;justify-content:center;">
+        <div class="flow-item" style="background:var(--xylem)">ราก</div><span class="flow-arrow">→</span>
+        <div class="flow-item" style="background:var(--xylem)">ลำต้น</div><span class="flow-arrow">→</span>
+        <div class="flow-item" style="background:var(--xylem)">ใบ</div>
+      </div>
+    </div>
+    <div class="v-card phloem">
+      <h3 style="color:#92400e">🟡 Phloem</h3>
+      <div><span class="badge" style="background:var(--phloem);color:#fff">เซลล์มีชีวิต</span><span class="badge" style="background:rgba(245,158,11,0.2);color:#92400e">สองทิศทาง</span></div>
+      <ul>
+        <li>🍬 ลำเลียงอาหาร (น้ำตาล)</li>
+        <li>🔸 Sieve Tube (มี sieve plate)</li>
+        <li>🤝 Companion Cell</li>
+        <li>⬆️⬇️ ขึ้น/ลงได้ทั้งคู่</li>
+        <li>📍 Source → Sink</li>
+      </ul>
+      <div style="margin-top:12px;background:rgba(245,158,11,0.1);border-radius:8px;padding:10px;font-size:12px;text-align:left;">
+        <strong>Source</strong> = สร้างอาหาร (ใบ)<br>
+        <strong>Sink</strong> = ใช้/สะสม (ราก, ผล, เมล็ด)
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px;border-color:var(--cambium)">
+    <div class="card-title"><div class="card-dot" style="background:var(--cambium)"></div>🟣 Cambium (แคมเบียม)</div>
+    <div class="grid3">
+      <div><p style="font-size:12px"><strong>ตำแหน่ง:</strong> อยู่ระหว่าง Xylem กับ Phloem</p></div>
+      <div><p style="font-size:12px"><strong>หน้าที่:</strong> แบ่งเซลล์สร้าง Xylem+Phloem ใหม่ → ลำต้นโตด้านข้าง</p></div>
+      <div><p style="font-size:12px"><strong>พบเด่นใน:</strong> <span class="tag tag-pink">พืชใบเลี้ยงคู่</span></p></div>
+    </div>
+  </div>
+
+  <!-- MONOCOT vs DICOT -->
+  <div class="section-anchor" id="sec-monodicot"></div>
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,var(--monocot),var(--dicot))">🌾</div>
+    <div><h2>PART 4 : พืชใบเลี้ยงเดี่ยว vs ใบเลี้ยงคู่</h2><small>Monocot vs Dicot</small></div>
+  </div>
+  <table class="compare-table">
+    <thead>
+      <tr><th>ลักษณะ</th><th>🌾 Monocot</th><th>🌳 Dicot</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>ตัวอย่าง</td><td>ข้าว, อ้อย, กล้วย, ข้าวโพด, มะพร้าว</td><td>ชบา, ถั่ว, มะม่วง, กุหลาบ</td></tr>
+      <tr><td>เส้นใบ</td><td>ขนาน (parallel)</td><td>ร่างแห (net-like)</td></tr>
+      <tr><td>ระบบราก</td><td>รากฝอย (fibrous)</td><td>รากแก้ว (taproot)</td></tr>
+      <tr><td>มัดท่อลำเลียง</td><td>กระจัดกระจาย</td><td>เรียงเป็นวง</td></tr>
+      <tr><td>Cambium</td><td>❌ ไม่มี</td><td>✅ มี</td></tr>
+      <tr><td>การโตด้านข้าง</td><td>น้อยมาก</td><td>โตได้มาก</td></tr>
+      <tr><td>กลีบดอก</td><td>3 หรือทวีคูณ 3</td><td>4–5 หรือทวีคูณ</td></tr>
+    </tbody>
+  </table>
+
+  <!-- CROSS SECTION -->
+  <div class="section-anchor" id="sec-cross"></div>
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#dc2626,#d97706)">✂️</div>
+    <div><h2>PART 5 : ภาคตัดขวาง (Cross Section)</h2><small>รากและลำต้น Monocot vs Dicot — เรียงจากนอก→ใน</small></div>
+  </div>
+  <p style="font-weight:700;font-size:15px;margin-bottom:10px;color:var(--text2)">🌿 ลำต้น (Stem)</p>
+  <div class="cross-sections">
+    <div class="cs-card">
+      <h3 style="color:var(--dicot)">Dicot Stem — เรียงเป็นวง</h3>
+      <div class="outer-label">นอกสุด ↓</div>
+      <ul class="cs-layers">
+        <li class="layer-ep">🔵 Epidermis</li>
+        <li class="layer-co">🟢 Cortex</li>
+        <li class="layer-ph">🟡 Phloem</li>
+        <li class="layer-ca">🟣 Cambium</li>
+        <li class="layer-xy">🔵 Xylem</li>
+        <li class="layer-pi">⚫ Pith (กลาง)</li>
+      </ul>
+      <div class="inner-label">↑ ในสุด</div>
+      <div class="highlight tip" style="margin-top:10px;padding:7px 10px"><span>💡</span><p><strong>โฟลเอ็มอยู่นอก</strong> · <strong>ไซเล็มอยู่ใน</strong></p></div>
+    </div>
+    <div class="cs-card">
+      <h3 style="color:var(--monocot)">Monocot Stem — กระจาย</h3>
+      <div style="padding:18px;background:var(--bg2);border-radius:10px;font-size:13px;line-height:1.9;text-align:left;">
+        <p>มัดท่อลำเลียง <strong>กระจัดกระจาย</strong> ทั่วลำต้น</p>
+        <p style="margin-top:6px">ไม่มี Cortex/Pith ที่ชัดเจน</p>
+        <p style="margin-top:6px">ไม่มี Cambium → โตด้านข้างได้น้อย</p>
+        <p style="margin-top:10px;font-size:11px;color:var(--text3)">แต่ละมัด = Xylem + Phloem</p>
+      </div>
+    </div>
+  </div>
+  <p style="font-weight:700;font-size:15px;margin:18px 0 10px;color:var(--text2)">🌱 ราก (Root)</p>
+  <div class="cross-sections">
+    <div class="cs-card">
+      <h3 style="color:var(--dicot)">Dicot Root — Xylem รูปดาว</h3>
+      <ul class="cs-layers">
+        <li class="layer-ep">Epidermis (+ ขนราก)</li>
+        <li class="layer-co">Cortex</li>
+        <li class="layer-en">Endodermis (Casparian Strip)</li>
+        <li class="layer-pe">Pericycle</li>
+        <li class="layer-ph">Phloem (แทรกระหว่างแขนดาว)</li>
+        <li class="layer-xy">Xylem (กลางราก รูปดาว ⭐)</li>
+      </ul>
+    </div>
+    <div class="cs-card">
+      <h3 style="color:var(--monocot)">Monocot Root — มี Pith กลาง</h3>
+      <ul class="cs-layers">
+        <li class="layer-ep">Epidermis</li>
+        <li class="layer-co">Cortex</li>
+        <li class="layer-en">Endodermis</li>
+        <li class="layer-pe">Pericycle</li>
+        <li class="layer-ph">Phloem (เรียงเป็นวง)</li>
+        <li class="layer-xy">Xylem (เรียงเป็นวง)</li>
+        <li class="layer-pi">Pith (กลางราก)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TRANSPORT MECHANISMS -->
+  <div class="section-anchor" id="sec-transport"></div>
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#7c3aed,#2563eb)">⚗️</div>
+    <div><h2>PART 6 : กลไกการลำเลียง</h2><small>Osmosis · Diffusion · Active Transport · Apoplast · Symplast</small></div>
+  </div>
+  <div class="transport-grid">
+    <div class="trans-card trans-osmosis">
+      <div class="formula">💧</div>
+      <h3 style="color:var(--xylem)">Osmosis</h3>
+      <p>น้ำเคลื่อนที่ผ่าน <strong>เยื่อเลือกผ่าน</strong><br>เจือจาง → เข้มข้น<br><br>ไม่ใช้พลังงาน</p>
+    </div>
+    <div class="trans-card trans-diffusion">
+      <div class="formula">🌊</div>
+      <h3 style="color:var(--accent1)">Diffusion</h3>
+      <p>สารเคลื่อนจาก <strong>มาก → น้อย</strong><br><br>O₂ เข้าราก · CO₂ ออก<br><br>ไม่ใช้พลังงาน</p>
+    </div>
+    <div class="trans-card trans-active">
+      <div class="formula">⚡</div>
+      <h3 style="color:var(--accent6)">Active Transport</h3>
+      <p>ทวนความเข้มข้น<br><strong>น้อย → มาก</strong><br><br>ใช้ <strong>ATP</strong><br>K⁺, NO₃⁻, PO₄³⁻</p>
+    </div>
+  </div>
+  <div class="osmosis-card" style="margin-top:14px">
+    <p style="font-weight:700;font-size:14px;margin-bottom:4px">ลำดับเส้นทางน้ำในราก</p>
+    <div class="flow-box" style="justify-content:center;margin:12px 0">
+      <div class="flow-item">ดิน</div><span class="flow-arrow">→</span>
+      <div class="flow-item">Root Hair</div><span class="flow-arrow">→</span>
+      <div class="flow-item">Cortex</div><span class="flow-arrow">→</span>
+      <div class="flow-item">Endodermis</div><span class="flow-arrow">→</span>
+      <div class="flow-item">Xylem</div><span class="flow-arrow">→</span>
+      <div class="flow-item">ใบ/อากาศ</div>
+    </div>
+    <div class="grid2" style="gap:10px">
+      <div class="card" style="padding:12px">
+        <strong style="font-size:13px">🔀 Apoplast Pathway</strong>
+        <p style="font-size:12px;margin-top:7px">น้ำผ่าน <strong>ผนังเซลล์ + ช่องว่าง</strong><br>เร็ว แต่ควบคุมไม่ได้<br>หยุดที่ <strong>Casparian Strip</strong></p>
+      </div>
+      <div class="card" style="padding:12px">
+        <strong style="font-size:13px">🔀 Symplast Pathway</strong>
+        <p style="font-size:12px;margin-top:7px">น้ำผ่าน <strong>Cytoplasm + Plasmodesmata</strong><br>ช้ากว่า แต่ <strong>ควบคุมได้</strong><br>ผ่าน Endodermis ได้</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORCES -->
+  <div class="section-anchor" id="sec-forces"></div>
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#0ea5e9,#06b6d4)">🌬️</div>
+    <div><h2>PART 7 : แรงขับเคลื่อนน้ำ</h2><small>Transpiration Pull · Root Pressure</small></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title" style="color:var(--accent4)"><div class="card-dot" style="background:var(--accent4)"></div>Transpiration Pull</div>
+      <p style="font-size:12px;line-height:1.7">น้ำระเหยออกทาง <strong>ปากใบ (Stomata)</strong><br>→ เกิดแรงดึงน้ำขึ้นใน Xylem<br>→ ดึงน้ำจากรากขึ้นด้านบน<br><br>เป็น <strong>แรงหลัก</strong>ในการลำเลียงน้ำ</p>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--xylem)"><div class="card-dot" style="background:var(--xylem)"></div>Root Pressure</div>
+      <p style="font-size:12px;line-height:1.7">แร่ธาตุสะสมใน Xylem → ความเข้มข้นสูง<br>→ น้ำออสโมซิสเข้า Xylem<br>→ เกิดแรงดันภายใน<br><br>พบเด่นเวลากลางคืน / ความชื้นสูง</p>
+    </div>
+  </div>
+
+  <!-- EXPERIMENTS -->
+  <div class="section-anchor" id="sec-experiments"></div>
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#dc2626,#7c3aed)">🧫</div>
+    <div><h2>PART 8 : การทดลองสำคัญ</h2><small>น้ำสีแดง · การควั่นต้นไม้</small></div>
+  </div>
+  <div class="grid2">
+    <div class="experiment-card">
+      <div class="card-title" style="color:var(--xylem)">🔴 การทดลองน้ำสีแดง</div>
+      <p style="font-size:12px;margin-bottom:10px">ใส่สีแดงในน้ำ → สังเกตเส้นทาง</p>
+      <div class="exp-result">
+        <div class="exp-item"><span class="exp-emoji">🔴</span><p>จุดแดง/เส้นแดงใน <strong>Xylem</strong></p></div>
+        <div class="exp-item"><span class="exp-emoji">✅</span><p>พิสูจน์: น้ำไปใน <strong>Xylem</strong></p></div>
+      </div>
+    </div>
+    <div class="experiment-card" style="border-color:var(--phloem)">
+      <div class="card-title" style="color:var(--phloem)">✂️ การควั่นต้นไม้</div>
+      <p style="font-size:12px;margin-bottom:10px">ตัดเปลือก (Phloem) รอบต้น</p>
+      <div class="exp-result">
+        <div class="exp-item"><span class="exp-emoji">⬆️</span><p>เหนือรอยควั่น <strong>บวม</strong></p></div>
+        <div class="exp-item"><span class="exp-emoji">💀</span><p>รากอดอาหาร → พืชตาย</p></div>
+      </div>
+      <div class="highlight warn" style="margin-top:10px;padding:7px 10px">
+        <span>⚠️</span><p><strong>ช่วงแรก:</strong> น้ำยังขึ้นได้ เพราะ Xylem ยังไม่ถูกทำลาย!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK REFERENCE -->
+  <div class="section-anchor" id="sec-qr"></div>
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#dc2626,#d97706)">⚡</div>
+    <div><h2>PART 9 : Quick Reference</h2><small>โจทย์สอบชอบถาม — จำทันที ตอบทันที</small></div>
+  </div>
+  <div class="qr-grid">
+    <div class="qr-item"><div class="qr-q">🔥 "เซลล์ที่ตายแล้ว"</div><div class="qr-a" style="color:var(--xylem)">Xylem</div></div>
+    <div class="qr-item"><div class="qr-q">🍬 "ลำเลียงอาหาร"</div><div class="qr-a" style="color:var(--phloem)">Phloem</div></div>
+    <div class="qr-item"><div class="qr-q">💧 "ลำเลียงน้ำ"</div><div class="qr-a" style="color:var(--xylem)">Xylem</div></div>
+    <div class="qr-item"><div class="qr-q">🌊 "น้ำสีแดงไปที่ใด"</div><div class="qr-a" style="color:var(--xylem)">Xylem</div></div>
+    <div class="qr-item"><div class="qr-q">📏 "โตด้านข้าง"</div><div class="qr-a" style="color:var(--cambium)">Cambium</div></div>
+    <div class="qr-item"><div class="qr-q">🌀 "กระจัดกระจาย"</div><div class="qr-a" style="color:var(--monocot)">Monocot</div></div>
+    <div class="qr-item"><div class="qr-q">⭕ "เรียงเป็นวง"</div><div class="qr-a" style="color:var(--dicot)">Dicot</div></div>
+    <div class="qr-item"><div class="qr-q">🛡️ "ควบคุมสารเข้า xylem"</div><div class="qr-a" style="color:var(--phloem)">Endodermis</div></div>
+    <div class="qr-item"><div class="qr-q">🌱 "กำเนิดรากแขนง"</div><div class="qr-a" style="color:var(--cambium)">Pericycle</div></div>
+    <div class="qr-item"><div class="qr-q">🔬 "ดูดน้ำเพิ่มพื้นที่"</div><div class="qr-a" style="color:var(--accent1)">Root Hair</div></div>
+    <div class="qr-item"><div class="qr-q">⭐ "xylem รากกลาง"</div><div class="qr-a" style="color:var(--xylem)">รูปดาว</div></div>
+    <div class="qr-item"><div class="qr-q">⚡ "ทวนความเข้มข้น"</div><div class="qr-a" style="color:var(--accent6)">Active Transport</div></div>
+  </div>
+
+  <!-- MISTAKES -->
+  <div class="section-anchor" id="sec-mistakes"></div>
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#dc2626,#f43f5e)">❌</div>
+    <div><h2>PART 10 : จุดสับสนยอดฮิต</h2><small>ความเข้าใจผิดที่พบบ่อยที่สุด</small></div>
+  </div>
+  <div class="confusion-grid">
+    <div class="conf-item">
+      <div class="conf-wrong"><span>❌</span><div><div class="conf-label">เข้าใจผิด</div>น้ำไปใน Phloem</div></div>
+      <div class="conf-right"><span>✅</span><div><div class="conf-label">ถูกต้อง</div>น้ำหลักไปใน <strong>Xylem</strong></div></div>
+    </div>
+    <div class="conf-item">
+      <div class="conf-wrong"><span>❌</span><div><div class="conf-label">เข้าใจผิด</div>Phloem เป็นเซลล์ตาย</div></div>
+      <div class="conf-right"><span>✅</span><div><div class="conf-label">ถูกต้อง</div>Phloem เป็น <strong>เซลล์มีชีวิต</strong></div></div>
+    </div>
+    <div class="conf-item">
+      <div class="conf-wrong"><span>❌</span><div><div class="conf-label">เข้าใจผิด</div>ควั่นต้นแล้วน้ำขึ้นไม่ได้</div></div>
+      <div class="conf-right"><span>✅</span><div><div class="conf-label">ถูกต้อง</div>น้ำ<strong>ยังขึ้นได้</strong>ช่วงหนึ่ง</div></div>
+    </div>
+    <div class="conf-item">
+      <div class="conf-wrong"><span>❌</span><div><div class="conf-label">เข้าใจผิด</div>Monocot ไม่มีท่อลำเลียง</div></div>
+      <div class="conf-right"><span>✅</span><div><div class="conf-label">ถูกต้อง</div>มี แต่ <strong>กระจัดกระจาย</strong></div></div>
+    </div>
+    <div class="conf-item">
+      <div class="conf-wrong"><span>❌</span><div><div class="conf-label">เข้าใจผิด</div>Osmosis = สารไปหาน้ำ</div></div>
+      <div class="conf-right"><span>✅</span><div><div class="conf-label">ถูกต้อง</div><strong>น้ำไปหาสาร</strong></div></div>
+    </div>
+    <div class="conf-item">
+      <div class="conf-wrong"><span>❌</span><div><div class="conf-label">เข้าใจผิด</div>Root hair = เนื้อเยื่อใหม่</div></div>
+      <div class="conf-right"><span>✅</span><div><div class="conf-label">ถูกต้อง</div><strong>Epidermis ที่ยืดยาว</strong></div></div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="section-anchor" id="sec-summary"></div>
+  <div class="sec-header">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#16a34a,#7c3aed)">📊</div>
+    <div><h2>PART 11 : สรุปรวม High Yield</h2><small>โครงสร้าง ↔ หน้าที่ ↔ คีย์เวิร์ด</small></div>
+  </div>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th style="background:var(--surface2);color:var(--text2)">โครงสร้าง</th>
+        <th style="background:var(--accent1)">หน้าที่หลัก</th>
+        <th style="background:var(--accent4)">คีย์เวิร์ดจำ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Xylem</td><td>ลำเลียงน้ำ + แร่ธาตุ + ค้ำจุน</td><td><span class="tag tag-blue">เซลล์ตาย</span> <span class="tag tag-blue">ขึ้นบน</span></td></tr>
+      <tr><td>Phloem</td><td>ลำเลียงอาหาร/น้ำตาล</td><td><span class="tag tag-yellow">เซลล์มีชีวิต</span> <span class="tag tag-yellow">หลายทิศ</span></td></tr>
+      <tr><td>Cambium</td><td>สร้าง Xylem+Phloem ใหม่</td><td><span class="tag tag-purple">โตด้านข้าง</span></td></tr>
+      <tr><td>Root Hair</td><td>ดูดน้ำ + แร่ธาตุ</td><td><span class="tag tag-green">เพิ่มพื้นที่ผิว</span></td></tr>
+      <tr><td>Endodermis</td><td>ควบคุมสารเข้า Xylem</td><td><span class="tag tag-yellow">Casparian Strip</span></td></tr>
+      <tr><td>Pericycle</td><td>กำเนิดรากแขนง</td><td><span class="tag tag-green">Lateral root</span></td></tr>
+      <tr><td>Apical Meristem</td><td>เจริญยาวขึ้น</td><td><span class="tag tag-green">Primary Growth</span></td></tr>
+      <tr><td>Lateral Meristem</td><td>เจริญกว้างขึ้น</td><td><span class="tag tag-purple">Secondary Growth</span></td></tr>
+      <tr><td>Monocot Bundle</td><td>ลำเลียง</td><td><span class="tag tag-cyan">กระจัดกระจาย</span></td></tr>
+      <tr><td>Dicot Bundle</td><td>ลำเลียง + เจริญด้านข้าง</td><td><span class="tag tag-pink">เรียงเป็นวง</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="card" style="margin-top:20px;border-color:var(--accent1);background:linear-gradient(135deg,var(--bg2),var(--surface));text-align:center;padding:28px 20px">
+    <div style="font-size:38px;margin-bottom:8px">🌿</div>
+    <h3 style="font-family:'Chakra Petch',sans-serif;font-size:17px;margin-bottom:10px;color:var(--accent1)">แก่นแท้ของทั้งบท</h3>
+    <p style="font-size:14px;font-weight:700;color:var(--text);max-width:560px;margin:0 auto;line-height:1.9">
+      "โครงสร้างของพืช ถูกออกแบบให้เหมาะกับหน้าที่"<br>
+      <span style="font-size:12px;font-weight:400;color:var(--text3)">Structure follows Function — ทุกส่วนมีเหตุผลที่มันเป็นอย่างนั้น</span>
+    </p>
+  </div>
+
+</div>
+
+<div class="footer">
+  🌿 สรุปเนื้อหา BIO · การลำเลียงน้ำและอาหารของพืช · Plant Physiology &amp; Anatomy<br>
+  <span style="font-size:11px;margin-top:4px;display:block">จัดทำจากแบบฝึกหัด + เนื้อหาเพิ่มเติม</span>
+</div>
+
+<script>
+  // ===== THEME =====
+  let isDark = false;
+  function toggleTheme() {
+    isDark = !isDark;
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : '');
+    document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
+    document.getElementById('themeText').textContent = isDark ? 'Light' : 'Deep Blue';
+  }
+
+  // ===== PROGRESS BAR =====
+  window.addEventListener('scroll', () => {
+    const doc = document.documentElement;
+    const scrolled = doc.scrollTop || document.body.scrollTop;
+    const total = doc.scrollHeight - doc.clientHeight;
+    const pct = total > 0 ? (scrolled / total) * 100 : 0;
+    document.getElementById('progressBar').style.width = pct + '%';
+  });
+
+  // ===== ACTIVE NAV PILL on scroll =====
+  const sections = [
+    'sec-overview','sec-tissue','sec-vascular','sec-monodicot',
+    'sec-cross','sec-transport','sec-forces','sec-experiments',
+    'sec-qr','sec-mistakes','sec-summary'
+  ];
+  const pills = document.querySelectorAll('.nav-pill');
+
+  const navHeight = 80;
+
+  function updateActivePill() {
+    let current = sections[0];
+    for (const id of sections) {
+      const el = document.getElementById(id);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= navHeight + 10) current = id;
+      }
+    }
+    pills.forEach(p => {
+      p.classList.toggle('active', p.dataset.sec === current);
+    });
+    // auto-scroll active pill into view in the nav
+    const activePill = document.querySelector('.nav-pill.active');
+    if (activePill) {
+      activePill.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+    }
+  }
+
+  window.addEventListener('scroll', updateActivePill, { passive: true });
+  updateActivePill();
+</script>
+</body>
+</html>
