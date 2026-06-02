@@ -1,0 +1,513 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+:root{
+  --bg:#0a1628;--bg2:#0f1f3d;--bg3:#162040;--bg4:#1a2a50;
+  --card:#0d1b36;--card2:#112040;
+  --border:#1e3a6e;--border2:#2a4a7f;
+  --text:#e8f0fe;--text2:#93b4e0;--text3:#5a7db5;
+  --accent:#3d7af5;--accent2:#5a8df7;
+  --green:#2dd4a0;--green2:#1a9e78;
+  --amber:#f5a623;--amber2:#c7841a;
+  --teal:#38bdf8;--teal2:#0e94cc;
+  --purple:#a78bfa;--purple2:#7c5cbf;
+  --coral:#f87171;--coral2:#c85252;
+  --badge-bg:rgba(61,122,245,0.15);
+  --toggle-bg:#1e3a6e;
+}
+.light{
+  --bg:#f0f6ff;--bg2:#e6f0ff;--bg3:#dbeafe;--bg4:#cfe2ff;
+  --card:#ffffff;--card2:#f8faff;
+  --border:#b8d0f5;--border2:#8ab3ef;
+  --text:#0f172a;--text2:#1e40af;--text3:#4b74bc;
+  --accent:#1d4ed8;--accent2:#1e56c7;
+  --green:#047857;--green2:#065f46;
+  --amber:#b45309;--amber2:#92400e;
+  --teal:#0369a1;--teal2:#075985;
+  --purple:#6d28d9;--purple2:#5b21b6;
+  --coral:#dc2626;--coral2:#b91c1c;
+  --badge-bg:rgba(29,78,216,0.1);
+  --toggle-bg:#dbeafe;
+}
+.wrap{background:var(--bg);min-height:100vh;padding:1rem;color:var(--text)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 0 1rem;flex-wrap:wrap;gap:8px}
+.title-main{font-size:18px;font-weight:500;color:var(--text)}
+.subtitle{font-size:13px;color:var(--text3);margin-top:2px}
+.toggle-btn{display:flex;align-items:center;gap:6px;background:var(--toggle-bg);border:0.5px solid var(--border2);border-radius:20px;padding:6px 14px;cursor:pointer;font-size:13px;color:var(--text2);transition:all 0.2s}
+.toggle-btn:hover{border-color:var(--accent)}
+.toggle-btn i{font-size:15px}
+.nav-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.nav-btn{padding:6px 14px;border-radius:20px;border:0.5px solid var(--border);background:var(--card);font-size:13px;color:var(--text2);cursor:pointer;transition:all 0.2s}
+.nav-btn:hover,.nav-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.section{display:none;animation:fadeIn 0.3s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:12px}
+.card-title{font-size:15px;font-weight:500;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.card-title i{font-size:17px;color:var(--accent)}
+.card-sub{font-size:12px;color:var(--text3);margin-bottom:12px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:500}
+.badge-blue{background:rgba(61,122,245,0.15);color:var(--accent)}
+.badge-green{background:rgba(45,212,160,0.15);color:var(--green)}
+.badge-amber{background:rgba(245,166,35,0.15);color:var(--amber)}
+.badge-purple{background:rgba(167,139,250,0.15);color:var(--purple)}
+.badge-coral{background:rgba(248,113,113,0.15);color:var(--coral)}
+.badge-teal{background:rgba(56,189,248,0.15);color:var(--teal)}
+.row-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border);font-size:13px}
+.row-item:last-child{border-bottom:none}
+.row-label{min-width:140px;font-weight:500;color:var(--text);flex-shrink:0}
+.row-desc{color:var(--text2);line-height:1.5}
+.row-type{min-width:90px;flex-shrink:0}
+.hier{background:var(--card2);border:0.5px solid var(--border2);border-radius:8px;padding:0.75rem 1rem;font-family:var(--font-mono);font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:12px}
+.hier .hl{color:var(--accent);font-weight:500}
+.hier .hl2{color:var(--green);font-weight:500}
+.hier .hl3{color:var(--amber);font-weight:500}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mini-card{background:var(--card2);border:0.5px solid var(--border);border-radius:8px;padding:0.75rem}
+.mini-label{font-size:11px;color:var(--text3);margin-bottom:4px}
+.mini-val{font-size:13px;color:var(--text);font-weight:500}
+.mini-desc{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.5}
+.layer-bar{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.layer{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;font-size:13px}
+.layer-name{font-weight:500;min-width:110px;color:var(--text)}
+.layer-cell{color:var(--text2);font-size:12px;flex:1}
+.layer-func{color:var(--text3);font-size:12px;text-align:right;min-width:130px}
+.l-blue{background:rgba(61,122,245,0.08);border-left:3px solid var(--accent)}
+.l-green{background:rgba(45,212,160,0.08);border-left:3px solid var(--green)}
+.l-amber{background:rgba(245,166,35,0.08);border-left:3px solid var(--amber)}
+.l-teal{background:rgba(56,189,248,0.08);border-left:3px solid var(--teal)}
+.l-purple{background:rgba(167,139,250,0.08);border-left:3px solid var(--purple)}
+.l-coral{background:rgba(248,113,113,0.08);border-left:3px solid var(--coral)}
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.cmp-card{background:var(--card2);border:0.5px solid var(--border);border-radius:8px;padding:0.75rem}
+.cmp-head{font-size:12px;font-weight:500;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.cmp-item{font-size:12px;color:var(--text2);padding:3px 0;border-bottom:0.5px solid var(--border);line-height:1.5}
+.cmp-item:last-child{border-bottom:none}
+.note-box{background:rgba(61,122,245,0.08);border:0.5px solid rgba(61,122,245,0.3);border-radius:8px;padding:0.75rem 1rem;margin:8px 0;font-size:13px;color:var(--text2);line-height:1.6}
+.note-box strong{color:var(--accent)}
+@media(max-width:480px){.two-col,.cmp-grid{grid-template-columns:1fr}.three-col{grid-template-columns:1fr 1fr}.layer-func{display:none}.row-label{min-width:110px}}
+</style>
+
+<div class="wrap" id="app">
+<h2 class="sr-only">สรุปเซลล์และเนื้อเยื่อในพืช — ราก ลำต้น ใบ และระบบลำเลียง</h2>
+
+<div class="topbar">
+  <div>
+    <div class="title-main"><i class="ti ti-plant-2" aria-hidden="true"></i> เซลล์และเนื้อเยื่อในพืช</div>
+    <div class="subtitle">ราก · ลำต้น · ใบ · ระบบลำเลียง</div>
+  </div>
+  <button class="toggle-btn" onclick="toggleTheme()" id="themeBtn">
+    <i class="ti ti-sun" id="themeIcon"></i>
+    <span id="themeLabel">โหมดสว่าง</span>
+  </button>
+</div>
+
+<div class="nav-bar">
+  <button class="nav-btn active" onclick="show('overview',this)"><i class="ti ti-layout-grid" aria-hidden="true"></i> ภาพรวม</button>
+  <button class="nav-btn" onclick="show('root',this)"><i class="ti ti-arrow-down-circle" aria-hidden="true"></i> ราก</button>
+  <button class="nav-btn" onclick="show('stem',this)"><i class="ti ti-line-height" aria-hidden="true"></i> ลำต้น</button>
+  <button class="nav-btn" onclick="show('leaf',this)"><i class="ti ti-leaf" aria-hidden="true"></i> ใบ</button>
+  <button class="nav-btn" onclick="show('vascular',this)"><i class="ti ti-git-branch" aria-hidden="true"></i> ระบบลำเลียง</button>
+  <button class="nav-btn" onclick="show('cells',this)"><i class="ti ti-circle-dot" aria-hidden="true"></i> ชนิดเซลล์</button>
+</div>
+
+<!-- OVERVIEW -->
+<div class="section active" id="sec-overview">
+  <div class="card">
+    <div class="card-title"><i class="ti ti-hierarchy" aria-hidden="true"></i> ลำดับชั้นโครงสร้าง</div>
+    <div class="card-sub">จากเล็กที่สุดไปใหญ่ที่สุด</div>
+    <div class="hier">
+<span class="hl">เซลล์ (Cell)</span>  →  หน่วยเล็กที่สุดที่มีชีวิต
+  เช่น พาเรงคิมา, เทรคีด, เวสเซล, ซีฟทิวบ์
+  ↓
+<span class="hl2">เนื้อเยื่อ (Tissue)</span>  →  เซลล์ชนิดเดียวกันหรือหลายชนิด รวมกัน
+  เช่น ไซเลม, โฟลเอม, พาลิเซด, สปองจี
+  ↓
+<span class="hl3">เนื้อเยื่อรวม (Complex Tissue)</span>  →  เนื้อเยื่อหลายชนิดรวมเป็นมัด
+  เช่น วาสคิวลาร์บันเดิล
+  ↓
+<span style="color:var(--coral)">อวัยวะ (Organ)</span>  →  ราก, ลำต้น, ใบ</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-bulb" aria-hidden="true"></i> คำตอบสำคัญ — พาลิเซด & สปองจี</div>
+    <div class="note-box">
+      <strong>พาเรงคิมา</strong> = ชนิดของ <strong>เซลล์</strong> (cell type) — เป็นเซลล์พื้นฐาน ผนังบาง มีชีวิต<br><br>
+      <strong>พาลิเซด (Palisade tissue)</strong> = <strong>เนื้อเยื่อ</strong> — ประกอบด้วยเซลล์พาเรงคิมารูปยาว เรียงชิดแนวตั้ง<br><br>
+      <strong>สปองจี (Spongy tissue)</strong> = <strong>เนื้อเยื่อ</strong> — ประกอบด้วยเซลล์พาเรงคิมารูปไม่แน่นอน เรียงหลวม มีช่องว่างมาก
+    </div>
+    <div class="two-col" style="margin-top:10px">
+      <div class="mini-card">
+        <div class="mini-label">พาลิเซด</div>
+        <div class="mini-val"><span class="badge badge-blue">เนื้อเยื่อ</span></div>
+        <div class="mini-desc">เซลล์พาเรงคิมา + รูปยาว + เรียงชิด + คลอโรพลาสต์มาก</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-label">สปองจี</div>
+        <div class="mini-val"><span class="badge badge-blue">เนื้อเยื่อ</span></div>
+        <div class="mini-desc">เซลล์พาเรงคิมา + รูปไม่แน่นอน + มีช่องว่าง + แลกเปลี่ยนแก๊ส</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-table" aria-hidden="true"></i> เนื้อเยื่อหลักทั้ง 3 อวัยวะ</div>
+    <div class="row-item" style="font-size:12px;padding:6px 0;color:var(--text3)">
+      <div class="row-label">เนื้อเยื่อ</div><div class="row-type">ประเภท</div><div class="row-desc">พบใน</div>
+    </div>
+    <div class="row-item"><div class="row-label">เอพิเดอร์มิส</div><div class="row-type"><span class="badge badge-blue">เนื้อเยื่อ</span></div><div class="row-desc">ราก, ลำต้น, ใบ — ชั้นนอกสุด</div></div>
+    <div class="row-item"><div class="row-label">คอร์เทกซ์</div><div class="row-type"><span class="badge badge-blue">เนื้อเยื่อ</span></div><div class="row-desc">ราก, ลำต้น — ชั้นกลาง</div></div>
+    <div class="row-item"><div class="row-label">เอนโดเดอร์มิส</div><div class="row-type"><span class="badge badge-blue">เนื้อเยื่อ</span></div><div class="row-desc">ราก — ขอบในคอร์เทกซ์</div></div>
+    <div class="row-item"><div class="row-label">เพริไซเคิล</div><div class="row-type"><span class="badge badge-blue">เนื้อเยื่อ</span></div><div class="row-desc">ราก — แตกรากแขนง</div></div>
+    <div class="row-item"><div class="row-label">พาลิเซด</div><div class="row-type"><span class="badge badge-blue">เนื้อเยื่อ</span></div><div class="row-desc">ใบ — สังเคราะห์แสงหลัก</div></div>
+    <div class="row-item"><div class="row-label">สปองจี</div><div class="row-type"><span class="badge badge-blue">เนื้อเยื่อ</span></div><div class="row-desc">ใบ — แลกเปลี่ยนแก๊ส</div></div>
+    <div class="row-item"><div class="row-label">วาสคิวลาร์บันเดิล</div><div class="row-type"><span class="badge badge-teal">เนื้อเยื่อรวม</span></div><div class="row-desc">ราก, ลำต้น, ใบ — ลำเลียง</div></div>
+    <div class="row-item"><div class="row-label">พิธ</div><div class="row-type"><span class="badge badge-blue">เนื้อเยื่อ</span></div><div class="row-desc">ลำต้น — กลางสุด สะสมอาหาร</div></div>
+  </div>
+</div>
+
+<!-- ROOT -->
+<div class="section" id="sec-root">
+  <div class="card">
+    <div class="card-title"><i class="ti ti-arrow-down-circle" aria-hidden="true"></i> ราก — โครงสร้างจากนอกสู่ใน</div>
+    <div class="card-sub">ลำดับชั้นเนื้อเยื่อจากผิวนอกถึงกลาง</div>
+    <div class="layer-bar">
+      <div class="layer l-blue">
+        <div class="layer-name">เอพิเดอร์มิส</div>
+        <div class="layer-cell">เซลล์เอพิเดอร์มิส + <strong>ขนราก</strong> (Root hair)</div>
+        <div class="layer-func">ดูดน้ำ & แร่ธาตุ</div>
+      </div>
+      <div class="layer l-green">
+        <div class="layer-name">คอร์เทกซ์</div>
+        <div class="layer-cell">เซลล์พาเรงคิมา (หลายชั้น)</div>
+        <div class="layer-func">สะสมอาหาร, ลำเลียงน้ำ</div>
+      </div>
+      <div class="layer l-amber">
+        <div class="layer-name">เอนโดเดอร์มิส</div>
+        <div class="layer-cell">เซลล์เอนโดเดอร์มิส + <strong>Casparian strip</strong></div>
+        <div class="layer-func">กรองสารเข้าท่อลำเลียง</div>
+      </div>
+      <div class="layer l-teal">
+        <div class="layer-name">เพริไซเคิล</div>
+        <div class="layer-cell">เซลล์เพริไซเคิล (1 ชั้น)</div>
+        <div class="layer-func">แตกรากแขนง</div>
+      </div>
+      <div class="layer l-purple">
+        <div class="layer-name">ไซเลม</div>
+        <div class="layer-cell">เทรคีด + เวสเซล (รูปดาว)</div>
+        <div class="layer-func">ลำเลียงน้ำ ↑</div>
+      </div>
+      <div class="layer l-coral">
+        <div class="layer-name">โฟลเอม</div>
+        <div class="layer-cell">ซีฟทิวบ์ + คอมพาเนียน (ระหว่างแฉกดาว)</div>
+        <div class="layer-func">ลำเลียงอาหาร ↓</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-info-circle" aria-hidden="true"></i> จุดเด่นของราก</div>
+    <div class="note-box">
+      <strong>Casparian strip</strong> — แถบซับเบอรินรอบเซลล์เอนโดเดอร์มิส บังคับให้น้ำและแร่ธาตุไหลผ่านเซลล์เท่านั้น ไม่สามารถลอดระหว่างเซลล์ได้ ทำหน้าที่เหมือน "ด่านกรอง"
+    </div>
+    <div class="note-box" style="margin-top:6px">
+      <strong>ขนราก</strong> — เป็นส่วนที่ยื่นออกมาของเซลล์เอพิเดอร์มิส เพิ่มพื้นที่ผิวสัมผัสดิน ทำให้ดูดน้ำได้มากขึ้น
+    </div>
+    <div class="note-box" style="margin-top:6px">
+      <strong>รูปแบบไซเลมในราก</strong> — เรียงเป็น "รูปดาว" (2–6 แฉก) โฟลเอมอยู่ระหว่างแฉก ต่างจากลำต้นที่เรียงเป็นมัดวง
+    </div>
+  </div>
+</div>
+
+<!-- STEM -->
+<div class="section" id="sec-stem">
+  <div class="card">
+    <div class="card-title"><i class="ti ti-line-height" aria-hidden="true"></i> ลำต้น — โครงสร้างจากนอกสู่ใน</div>
+    <div class="card-sub">ลำดับชั้นเนื้อเยื่อ</div>
+    <div class="layer-bar">
+      <div class="layer l-blue">
+        <div class="layer-name">เอพิเดอร์มิส</div>
+        <div class="layer-cell">เซลล์เอพิเดอร์มิส + <strong>คิวทิน</strong> (Cuticle)</div>
+        <div class="layer-func">ป้องกันน้ำระเหย</div>
+      </div>
+      <div class="layer l-green">
+        <div class="layer-name">คอร์เทกซ์</div>
+        <div class="layer-cell">พาเรงคิมา + คอลเลงคิมา + สเกลอเรงคิมา</div>
+        <div class="layer-func">ค้ำจุน, สะสม</div>
+      </div>
+      <div class="layer l-purple">
+        <div class="layer-name">วาสคิวลาร์บันเดิล</div>
+        <div class="layer-cell">ไซเลม (ใน) + โฟลเอม (นอก) + แคมเบียม</div>
+        <div class="layer-func">ลำเลียงน้ำ & อาหาร</div>
+      </div>
+      <div class="layer l-amber">
+        <div class="layer-name">พิธ (Pith)</div>
+        <div class="layer-cell">เซลล์พาเรงคิมา</div>
+        <div class="layer-func">สะสมอาหาร</div>
+      </div>
+    </div>
+    <div class="cmp-grid">
+      <div class="cmp-card">
+        <div class="cmp-head"><span class="badge badge-blue">ใบเลี้ยงคู่</span></div>
+        <div class="cmp-item">มัดท่อลำเลียงเรียงเป็น <strong>วงรอบ</strong></div>
+        <div class="cmp-item">มีแคมเบียม (เจริญได้)</div>
+        <div class="cmp-item">ไซเลมอยู่ด้านใน โฟลเอมด้านนอก</div>
+        <div class="cmp-item">เช่น ถั่ว, มะม่วง, กุหลาบ</div>
+      </div>
+      <div class="cmp-card">
+        <div class="cmp-head"><span class="badge badge-green">ใบเลี้ยงเดี่ยว</span></div>
+        <div class="cmp-item">มัดท่อลำเลียง <strong>กระจายทั่วไป</strong></div>
+        <div class="cmp-item">ไม่มีแคมเบียม (ไม่ขยายขวาง)</div>
+        <div class="cmp-item">แต่ละมัดมีไซเลม + โฟลเอม</div>
+        <div class="cmp-item">เช่น ข้าว, อ้อย, กล้วย</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-info-circle" aria-hidden="true"></i> เนื้อเยื่อค้ำจุนในคอร์เทกซ์</div>
+    <div class="row-item"><div class="row-label">คอลเลงคิมา</div><div class="row-type"><span class="badge badge-green">เซลล์</span></div><div class="row-desc">ผนังหนาไม่สม่ำเสมอ ยังมีชีวิต ยืดหยุ่นได้ พบในลำต้นอ่อน, ขอบใบ</div></div>
+    <div class="row-item"><div class="row-label">สเกลอเรงคิมา</div><div class="row-type"><span class="badge badge-coral">เซลล์</span></div><div class="row-desc">ผนังหนามาก ไม่มีชีวิต แข็งแรง พบในลำต้นแก่, เมล็ด, กะลา</div></div>
+  </div>
+</div>
+
+<!-- LEAF -->
+<div class="section" id="sec-leaf">
+  <div class="card">
+    <div class="card-title"><i class="ti ti-leaf" aria-hidden="true"></i> ใบ — โครงสร้างจากบนลงล่าง</div>
+    <div class="card-sub">ลำดับชั้นเนื้อเยื่อในแผ่นใบ (Cross section)</div>
+    <div class="layer-bar">
+      <div class="layer l-blue">
+        <div class="layer-name">Upper Epidermis</div>
+        <div class="layer-cell">เซลล์ใส ไม่มีคลอโรพลาสต์ เคลือบคิวทิน</div>
+        <div class="layer-func">ป้องกัน ให้แสงผ่าน</div>
+      </div>
+      <div class="layer l-green">
+        <div class="layer-name">พาลิเซด</div>
+        <div class="layer-cell">พาเรงคิมา รูปยาว เรียงชิดแนวตั้ง คลอโรพลาสต์มาก</div>
+        <div class="layer-func">สังเคราะห์แสงหลัก</div>
+      </div>
+      <div class="layer l-teal">
+        <div class="layer-name">สปองจี</div>
+        <div class="layer-cell">พาเรงคิมา รูปไม่แน่นอน เรียงหลวม มีช่องว่างอากาศ</div>
+        <div class="layer-func">แลกเปลี่ยนแก๊ส</div>
+      </div>
+      <div class="layer l-purple">
+        <div class="layer-name">เส้นใบ</div>
+        <div class="layer-cell">วาสคิวลาร์บันเดิล (ไซเลม + โฟลเอม)</div>
+        <div class="layer-func">ลำเลียงน้ำ & อาหาร</div>
+      </div>
+      <div class="layer l-amber">
+        <div class="layer-name">Lower Epidermis</div>
+        <div class="layer-cell">เซลล์คุม (Guard cell) + ปากใบ (Stomata)</div>
+        <div class="layer-func">ควบคุมแก๊ส & น้ำ</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-circle-dot" aria-hidden="true"></i> เซลล์คุม & ปากใบ</div>
+    <div class="note-box">
+      <strong>เซลล์คุม (Guard cell)</strong> — เซลล์คู่รูปเมล็ดถั่ว มีคลอโรพลาสต์ ควบคุมการเปิด-ปิดปากใบโดยการเปลี่ยนแรงดันเต่ง (turgor pressure)
+    </div>
+    <div class="two-col" style="margin-top:8px">
+      <div class="mini-card">
+        <div class="mini-label">เมื่อเซลล์คุมอิ่มน้ำ</div>
+        <div class="mini-val" style="color:var(--green)">ปากใบ เปิด</div>
+        <div class="mini-desc">แลกเปลี่ยน CO₂, O₂ และคายน้ำ</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-label">เมื่อเซลล์คุมขาดน้ำ</div>
+        <div class="mini-val" style="color:var(--coral)">ปากใบ ปิด</div>
+        <div class="mini-desc">ลดการสูญเสียน้ำ (ช่วงแล้ง)</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-compare" aria-hidden="true"></i> พาลิเซด vs สปองจี</div>
+    <div class="cmp-grid">
+      <div class="cmp-card">
+        <div class="cmp-head"><span class="badge badge-green">พาลิเซด tissue</span></div>
+        <div class="cmp-item">เซลล์พาเรงคิมา รูปยาว</div>
+        <div class="cmp-item">เรียงชิดกัน แนวตั้ง</div>
+        <div class="cmp-item">คลอโรพลาสต์หนาแน่น</div>
+        <div class="cmp-item">ใต้ผิวใบด้านบน</div>
+        <div class="cmp-item">หน้าที่หลัก: สังเคราะห์แสง</div>
+      </div>
+      <div class="cmp-card">
+        <div class="cmp-head"><span class="badge badge-teal">สปองจี tissue</span></div>
+        <div class="cmp-item">เซลล์พาเรงคิมา รูปไม่แน่นอน</div>
+        <div class="cmp-item">เรียงหลวม มีช่องว่างมาก</div>
+        <div class="cmp-item">คลอโรพลาสต์น้อยกว่า</div>
+        <div class="cmp-item">เหนือผิวใบด้านล่าง</div>
+        <div class="cmp-item">หน้าที่หลัก: แลกเปลี่ยนแก๊ส</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VASCULAR -->
+<div class="section" id="sec-vascular">
+  <div class="card">
+    <div class="card-title"><i class="ti ti-git-branch" aria-hidden="true"></i> ลำดับชั้น — ระบบลำเลียง</div>
+    <div class="hier">
+<span class="hl">วาสคิวลาร์บันเดิล</span>  <span class="badge badge-teal" style="font-size:10px">เนื้อเยื่อรวม</span>
+├── <span class="hl2">ไซเลม (Xylem)</span>  <span class="badge badge-blue" style="font-size:10px">เนื้อเยื่อรวม</span>
+│   ├── เทรคีด (Tracheid) .............. <span class="badge badge-amber" style="font-size:10px">เซลล์</span>
+│   ├── เวสเซล (Vessel element) ........ <span class="badge badge-amber" style="font-size:10px">เซลล์</span>
+│   ├── ไซเลม ไฟเบอร์ .................. <span class="badge badge-amber" style="font-size:10px">เซลล์</span>
+│   └── ไซเลม พาเรงคิมา ............... <span class="badge badge-amber" style="font-size:10px">เซลล์</span>
+│
+└── <span class="hl2">โฟลเอม (Phloem)</span>  <span class="badge badge-blue" style="font-size:10px">เนื้อเยื่อรวม</span>
+    ├── ซีฟทิวบ์ (Sieve tube element) .. <span class="badge badge-amber" style="font-size:10px">เซลล์</span>
+    ├── คอมพาเนียนเซลล์ ............... <span class="badge badge-amber" style="font-size:10px">เซลล์</span>
+    ├── โฟลเอม ไฟเบอร์ ................ <span class="badge badge-amber" style="font-size:10px">เซลล์</span>
+    └── โฟลเอม พาเรงคิมา .............. <span class="badge badge-amber" style="font-size:10px">เซลล์</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-compare" aria-hidden="true"></i> ไซเลม vs โฟลเอม</div>
+    <div class="cmp-grid">
+      <div class="cmp-card">
+        <div class="cmp-head"><span class="badge badge-blue">ไซเลม (Xylem)</span></div>
+        <div class="cmp-item">ลำเลียง <strong>น้ำ & แร่ธาตุ</strong> ↑ (ดิน → ใบ)</div>
+        <div class="cmp-item">เซลล์ส่วนใหญ่ <strong>ไม่มีชีวิต</strong></div>
+        <div class="cmp-item">ผนังเซลล์หนา มีลิกนิน</div>
+        <div class="cmp-item">แรงดันออสโมซิส + การคายน้ำ</div>
+        <div class="cmp-item">อยู่ด้านใน (ราก: รูปดาว)</div>
+      </div>
+      <div class="cmp-card">
+        <div class="cmp-head"><span class="badge badge-green">โฟลเอม (Phloem)</span></div>
+        <div class="cmp-item">ลำเลียง <strong>น้ำตาล & อาหาร</strong> ↑↓ (ใบ → ทุกส่วน)</div>
+        <div class="cmp-item">เซลล์หลัก <strong>มีชีวิต</strong></div>
+        <div class="cmp-item">ผนังเซลล์บาง มีรูตะแกรง</div>
+        <div class="cmp-item">แรงดันออสโมซิส (Source→Sink)</div>
+        <div class="cmp-item">อยู่ด้านนอก (ระหว่างแฉกดาว)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-compare" aria-hidden="true"></i> เทรคีด vs เวสเซล</div>
+    <div class="cmp-grid">
+      <div class="cmp-card">
+        <div class="cmp-head"><span class="badge badge-purple">เทรคีด (Tracheid)</span></div>
+        <div class="cmp-item">รูปร่างยาว แคบ <strong>ปลายแหลม</strong></div>
+        <div class="cmp-item">เชื่อมกันผ่าน <strong>รูพรุน (pit)</strong></div>
+        <div class="cmp-item">ประสิทธิภาพ<strong>น้อยกว่า</strong></div>
+        <div class="cmp-item">พบใน<strong>พืชทุกชนิด</strong> (เฟิร์น, สน, พืชดอก)</div>
+        <div class="cmp-item">ไม่มีชีวิต</div>
+      </div>
+      <div class="cmp-card">
+        <div class="cmp-head"><span class="badge badge-amber">เวสเซล (Vessel element)</span></div>
+        <div class="cmp-item">รูปร่างสั้น กว้าง <strong>ปลายตัด</strong></div>
+        <div class="cmp-item">ผนังปลาย<strong>เปิด</strong> ต่อกันเป็นท่อยาว</div>
+        <div class="cmp-item">ประสิทธิภาพ<strong>สูงกว่า</strong></div>
+        <div class="cmp-item">พบใน<strong>พืชดอก</strong> (Angiosperm) เป็นหลัก</div>
+        <div class="cmp-item">ไม่มีชีวิต</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-compare" aria-hidden="true"></i> ซีฟทิวบ์ vs คอมพาเนียนเซลล์</div>
+    <div class="cmp-grid">
+      <div class="cmp-card">
+        <div class="cmp-head"><span class="badge badge-teal">ซีฟทิวบ์ (Sieve tube)</span></div>
+        <div class="cmp-item"><strong>ไม่มีนิวเคลียส</strong> (สลายไปตอนเจริญ)</div>
+        <div class="cmp-item">มีรูตะแกรง (Sieve plate) ที่ผนังปลาย</div>
+        <div class="cmp-item">ลำเลียงน้ำตาล / กรดอะมิโน</div>
+        <div class="cmp-item">ต้องพึ่งคอมพาเนียนเซลล์</div>
+        <div class="cmp-item">มีชีวิต (แต่ไม่สมบูรณ์)</div>
+      </div>
+      <div class="cmp-card">
+        <div class="cmp-head"><span class="badge badge-coral">คอมพาเนียนเซลล์</span></div>
+        <div class="cmp-item"><strong>มีนิวเคลียส</strong> ขนาดใหญ่</div>
+        <div class="cmp-item">ควบคุมการทำงานของซีฟทิวบ์</div>
+        <div class="cmp-item">เมแทบอลิซึมสูง</div>
+        <div class="cmp-item">เกิดจากเซลล์แม่เดียวกับซีฟทิวบ์</div>
+        <div class="cmp-item">มีชีวิต (สมบูรณ์)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CELL TYPES -->
+<div class="section" id="sec-cells">
+  <div class="card">
+    <div class="card-title"><i class="ti ti-circle-dot" aria-hidden="true"></i> เซลล์พื้นฐาน — พาเรงคิมา, คอลเลงคิมา, สเกลอเรงคิมา</div>
+    <div class="three-col" style="margin-bottom:10px">
+      <div class="mini-card">
+        <div class="mini-label">พาเรงคิมา</div>
+        <div class="mini-val"><span class="badge badge-green">เซลล์</span></div>
+        <div class="mini-desc">ผนังบาง · มีชีวิต · รูปหลายเหลี่ยม · เซลล์พื้นฐานของพืช · พบทุกส่วน</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-label">คอลเลงคิมา</div>
+        <div class="mini-val"><span class="badge badge-amber">เซลล์</span></div>
+        <div class="mini-desc">ผนังหนาไม่สม่ำเสมอ · มีชีวิต · ยืดหยุ่น · พบลำต้นอ่อน ขอบใบ</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-label">สเกลอเรงคิมา</div>
+        <div class="mini-val"><span class="badge badge-coral">เซลล์</span></div>
+        <div class="mini-desc">ผนังหนามาก มีลิกนิน · ไม่มีชีวิต · แข็งแรง · พบลำต้นแก่ เมล็ด กะลา</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-table" aria-hidden="true"></i> สรุปเซลล์ทั้งหมดในระบบลำเลียง</div>
+    <div class="row-item" style="font-size:12px;padding:6px 0;color:var(--text3)">
+      <div class="row-label">ชื่อเซลล์</div><div class="row-type">ชีวิต</div><div class="row-desc">หน้าที่ / ลักษณะ</div>
+    </div>
+    <div class="row-item"><div class="row-label">เทรคีด</div><div class="row-type"><span class="badge badge-coral" style="font-size:10px">ตาย</span></div><div class="row-desc">ลำเลียงน้ำ ยาวแคบ ปลายแหลม เชื่อมผ่าน pit</div></div>
+    <div class="row-item"><div class="row-label">เวสเซล</div><div class="row-type"><span class="badge badge-coral" style="font-size:10px">ตาย</span></div><div class="row-desc">ลำเลียงน้ำ สั้นกว้าง ปลายเปิด ต่อกันเป็นท่อ</div></div>
+    <div class="row-item"><div class="row-label">ไซเลม ไฟเบอร์</div><div class="row-type"><span class="badge badge-coral" style="font-size:10px">ตาย</span></div><div class="row-desc">ค้ำจุนโครงสร้างในไซเลม</div></div>
+    <div class="row-item"><div class="row-label">ไซเลม พาเรงคิมา</div><div class="row-type"><span class="badge badge-green" style="font-size:10px">มีชีวิต</span></div><div class="row-desc">สะสมอาหารในไซเลม ช่วยลำเลียงด้านข้าง</div></div>
+    <div class="row-item"><div class="row-label">ซีฟทิวบ์</div><div class="row-type"><span class="badge badge-amber" style="font-size:10px">กึ่งมีชีวิต</span></div><div class="row-desc">ลำเลียงน้ำตาล ไม่มีนิวเคลียส มีรูตะแกรง</div></div>
+    <div class="row-item"><div class="row-label">คอมพาเนียนเซลล์</div><div class="row-type"><span class="badge badge-green" style="font-size:10px">มีชีวิต</span></div><div class="row-desc">ควบคุมซีฟทิวบ์ มีนิวเคลียส เมแทบอลิซึมสูง</div></div>
+    <div class="row-item"><div class="row-label">โฟลเอม ไฟเบอร์</div><div class="row-type"><span class="badge badge-coral" style="font-size:10px">ตาย</span></div><div class="row-desc">ค้ำจุนโครงสร้างในโฟลเอม</div></div>
+    <div class="row-item"><div class="row-label">โฟลเอม พาเรงคิมา</div><div class="row-type"><span class="badge badge-green" style="font-size:10px">มีชีวิต</span></div><div class="row-desc">สะสมอาหารในโฟลเอม</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="ti ti-map" aria-hidden="true"></i> ตำแหน่งเซลล์ในแต่ละอวัยวะ</div>
+    <div class="row-item" style="font-size:12px;padding:6px 0;color:var(--text3)">
+      <div class="row-label">เซลล์ / เนื้อเยื่อ</div><div class="row-type" style="min-width:60px">ราก</div><div class="row-desc">ลำต้น · ใบ</div>
+    </div>
+    <div class="row-item"><div class="row-label">เอพิเดอร์มิส</div><div class="row-type" style="min-width:60px;color:var(--green)">✓</div><div class="row-desc">✓ ลำต้น · ✓ ใบ (บน+ล่าง)</div></div>
+    <div class="row-item"><div class="row-label">พาเรงคิมา</div><div class="row-type" style="min-width:60px;color:var(--green)">✓</div><div class="row-desc">✓ ลำต้น (พิธ) · ✓ ใบ (พาลิเซด+สปองจี)</div></div>
+    <div class="row-item"><div class="row-label">คอลเลงคิมา</div><div class="row-type" style="min-width:60px;color:var(--text3)">—</div><div class="row-desc">✓ ลำต้นอ่อน (คอร์เทกซ์) · ✓ ขอบใบ</div></div>
+    <div class="row-item"><div class="row-label">สเกลอเรงคิมา</div><div class="row-type" style="min-width:60px;color:var(--text3)">—</div><div class="row-desc">✓ ลำต้นแก่ · — ใบ (น้อย)</div></div>
+    <div class="row-item"><div class="row-label">เทรคีด/เวสเซล</div><div class="row-type" style="min-width:60px;color:var(--green)">✓</div><div class="row-desc">✓ ลำต้น · ✓ เส้นใบ</div></div>
+    <div class="row-item"><div class="row-label">ซีฟทิวบ์/คอมพาเนียน</div><div class="row-type" style="min-width:60px;color:var(--green)">✓</div><div class="row-desc">✓ ลำต้น · ✓ เส้นใบ</div></div>
+    <div class="row-item"><div class="row-label">เซลล์คุม (Stomata)</div><div class="row-type" style="min-width:60px;color:var(--text3)">—</div><div class="row-desc">— ลำต้น · ✓ ผิวใบล่าง</div></div>
+    <div class="row-item"><div class="row-label">เอนโดเดอร์มิส</div><div class="row-type" style="min-width:60px;color:var(--green)">✓</div><div class="row-desc">— ลำต้น · — ใบ</div></div>
+    <div class="row-item"><div class="row-label">ขนราก</div><div class="row-type" style="min-width:60px;color:var(--green)">✓</div><div class="row-desc">— · —</div></div>
+  </div>
+</div>
+
+</div>
+<script>
+function show(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+var dark=true;
+function toggleTheme(){
+  dark=!dark;
+  var app=document.getElementById('app');
+  var icon=document.getElementById('themeIcon');
+  var label=document.getElementById('themeLabel');
+  if(dark){
+    app.classList.remove('light');
+    icon.className='ti ti-sun';
+    label.textContent='โหมดสว่าง';
+  } else {
+    app.classList.add('light');
+    icon.className='ti ti-moon';
+    label.textContent='โหมดมืด';
+  }
+}
+</script>
