@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือการตั้งค่า Firebase & การเชื่อมต่อ Code - Owlvy Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #4B44CC;
+            --secondary: #FF9F43;
+            --danger: #FF6B6B;
+            --success: #43E97B;
+            --bg: #F4F7F6;
+            --card-bg: #FFFFFF;
+            --text-main: #2D3748;
+            --text-muted: #718096;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 40px 20px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.2);
+        }
+
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.2rem;
+        }
+
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .step-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary);
+        }
+
+        .step-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            border-bottom: 2px dashed #edf2f7;
+            padding-bottom: 10px;
+        }
+
+        .step-title span {
+            font-size: 1.8rem;
+            margin-right: 10px;
+        }
+
+        .box {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .box-warning {
+            background-color: rgba(255, 107, 107, 0.1);
+            border: 1px solid var(--danger);
+        }
+
+        .box-warning h4 {
+            color: var(--danger);
+            margin: 0 0 8px 0;
+        }
+
+        .box-value {
+            background-color: rgba(67, 233, 123, 0.1);
+            border: 1px solid var(--success);
+        }
+
+        .box-value h4 {
+            color: #27ae60;
+            margin: 0 0 8px 0;
+        }
+
+        .code-block {
+            background-color: #1E1E1E;
+            color: #D4D4D4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+
+        .highlight {
+            color: #CE9178;
+        }
+
+        .comment {
+            color: #6A9955;
+        }
+
+        .keyword {
+            color: #569CD6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🦉 สรุปขั้นตอนตั้งค่า Firebase</h1>
+        <p>คู่มือเตรียมระบบหลังบ้านและการเชื่อมต่อสำหรับ Owlvy Academy</p>
+    </div>
+
+    <div class="step-card">
+        <div class="step-title"><span>1️⃣</span> การสร้าง Firebase Project (โปรเจกต์ใหม่)</div>
+        <p>ไปที่ Firebase Console กด "Add Project" ตั้งชื่อโปรเจกต์ (เช่น Owlvy-Gate) และเลือกเปิด/ปิด Google Analytics ตามต้องการ</p>
+        
+        <div class="box box-warning">
+            <h4>⚠️ ข้อควรระวัง</h4>
+            <ul style="margin: 0; padding-left: 20px;">
+                <li><strong>Project ID</strong> จะถูกสร้างขึ้นอัตโนมัติและไม่สามารถเปลี่ยนชื่อได้ในภายหลัง ควรตรวจดูให้แน่ใจว่าชื่ออ่านง่าย</li>
+                <li>หากเปิด Google Analytics ไว้ ระบบจะบังคับให้เลือก Account ของ Analytics ในขั้นตอนถัดไป (ถ้าโปรเจกต์เล็ก แนะนำให้ปิดไปก่อนเพื่อความรวดเร็ว)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="step-card">
+        <div class="step-title"><span>2️⃣</span> การสร้าง App (ลงทะเบียนเว็บ)</div>
+        <p>ที่หน้าหลักของโปรเจกต์ ให้คลิกไอคอนรูป <b>&lt;/&gt; (Web)</b> เพื่อลงทะเบียนหน้าเว็บของเราเข้ากับ Firebase</p>
+        
+        <div class="box box-warning">
+            <h4>⚠️ ข้อควรระวัง</h4>
+            <ul style="margin: 0; padding-left: 20px;">
+                <li>ไม่ต้องติ๊กเลือก "Also set up Firebase Hosting" หากคุณครูใช้งานผ่าน GitHub Pages อยู่แล้ว</li>
+            </ul>
+        </div>
+
+        <div class="box box-value">
+            <h4>💾 ค่าที่ต้องนำไปใช้ต่อ (สำคัญมาก)</h4>
+            <p style="margin-top: 0;">ระบบจะแสดงโค้ด <code>firebaseConfig</code> ให้คุณครู <b>คัดลอก (Copy) ข้อมูลในปีกกานี้เก็บไว้ทั้งหมด</b> (ประกอบด้วย apiKey, authDomain, projectId ฯลฯ)</p>
+        </div>
+    </div>
+
+    <div class="step-card">
+        <div class="step-title"><span>3️⃣</span> การเปิดระบบยืนยันตัวตน (Authentication)</div>
+        <p>ไปที่เมนู <b>Build > Authentication</b> กด Get Started แล้วเลือก <b>Google</b> เป็น Sign-in method</p>
+        
+        <div class="box box-warning">
+            <h4>⚠️ ข้อควรระวัง</h4>
+            <ul style="margin: 0; padding-left: 20px;">
+                <li>อย่าลืม <b>"เปิดสวิตช์ (Enable)"</b> ที่มุมขวาบน</li>
+                <li>ต้องเลือก <b>Support email</b> (อีเมลของคุณครู) ในช่อง Dropdown ให้เรียบร้อย ไม่เช่นนั้นระบบจะกดเซฟไม่ได้และล็อกอินจะพัง</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="step-card">
+        <div class="step-title"><span>4️⃣</span> การสร้าง Database (Firestore)</div>
+        <p>ไปที่เมนู <b>Build > Firestore Database</b> กด Create Database เลือก Location เป็น Singapore (asia-southeast1) หรือใกล้เคียง</p>
+        
+        <div class="box box-warning">
+            <h4>⚠️ ข้อควรระวัง</h4>
+            <ul style="margin: 0; padding-left: 20px;">
+                <li>หากเลือก <b>"Start in Test Mode"</b> ระบบจะอนุญาตให้อ่าน/เขียนข้อมูลได้อิสระ แต่มีอายุจำกัดแค่ 30 วัน! เมื่อระบบเปิดใช้งานจริง ควรไปที่แท็บ Rules เพื่อปรับกฎความปลอดภัย (Security Rules) ถาวร</li>
+            </ul>
+        </div>
+
+        <div class="box box-value">
+            <h4>💾 ค่าที่ต้องนำไปใช้ต่อ</h4>
+            <p style="margin-top: 0;"><b>ชื่อ Collection (กล่องเก็บข้อมูล)</b> ที่คุณครูคิดไว้ เช่น <code>"registered_students"</code> จะต้องนำไปเขียนในโค้ด <code>app.js</code> ให้ตรงกันเป๊ะๆ (ตัวพิมพ์เล็ก-ใหญ่มีผล)</p>
+        </div>
+    </div>
+
+    <div class="step-card">
+        <div class="step-title"><span>5️⃣</span> กำหนด Domain (แก้ปัญหาล็อกอินวนลูป)</div>
+        <p>ไปที่ <b>Authentication > Settings > Authorized domains</b> แล้วกดปุ่ม <b>Add domain</b></p>
+        
+        <div class="box box-warning">
+            <h4>⚠️ ข้อควรระวัง (จุดตายของมือถือ)</h4>
+            <ul style="margin: 0; padding-left: 20px;">
+                <li>หากไม่เพิ่มโดเมนหน้าเว็บของคุณครูลงในนี้ ระบบ Google Login บนมือถือจะบล็อกการเข้าถึงและดีดกลับทันที</li>
+            </ul>
+        </div>
+
+        <div class="box box-value">
+            <h4>💾 ค่าที่ต้องนำไปใช้ต่อ</h4>
+            <p style="margin-top: 0;">ต้องพิมพ์ชื่อ Domain <b>โดยไม่ต้องมี https:// หรือ / ต่อท้าย</b> เช่น พิมพ์แค่ <code>owlvyhouse.github.io</code></p>
+        </div>
+    </div>
+
+    <div class="step-card">
+        <div class="step-title" style="border-color: var(--secondary); color: var(--secondary);"><span>💻</span> การนำค่าไปใส่ใน Code (index.html & app.js)</div>
+        <p>เมื่อได้ค่า <code>firebaseConfig</code> จากขั้นตอนที่ 2 มาแล้ว ให้นำมาประกอบร่างดังนี้ครับ:</p>
+
+        <h3>1. ไฟล์ <code>index.html</code></h3>
+        <p>ในหน้า HTML ไม่ต้องใส่ค่า Config เพียงแค่เรียกใช้ <code>app.js</code> แบบ Module และเตรียมปุ่มไว้ให้พร้อม</p>
+        <div class="code-block">
+&lt;body&gt;
+    <span class="comment">&lt;!-- ปุ่มเข้าสู่ระบบ --&gt;</span>
+    &lt;button <span class="keyword">id</span>=<span class="highlight">"btn-login"</span>&gt;เข้าสู่ระบบด้วย Google&lt;/button&gt;
+
+    <span class="comment">&lt;!-- จุดสำคัญ: ต้องใส่ type="module" เสมอเพื่อให้ Import Firebase ทำงานได้ --&gt;</span>
+    &lt;script <span class="keyword">type</span>=<span class="highlight">"module"</span> <span class="keyword">src</span>=<span class="highlight">"app.js"</span>&gt;&lt;/script&gt;
+&lt;/body&gt;
+        </div>
+
+        <h3>2. ไฟล์ <code>app.js</code></h3>
+        <p>นำก้อน <code>firebaseConfig</code> มาวาง และเชื่อมต่อระบบ Login + Database</p>
+        <div class="code-block">
+<span class="keyword">import</span> { initializeApp } <span class="keyword">from</span> <span class="highlight">"https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"</span>;
+<span class="keyword">import</span> { getAuth, signInWithPopup, GoogleAuthProvider } <span class="keyword">from</span> <span class="highlight">"https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"</span>;
+<span class="keyword">import</span> { getFirestore } <span class="keyword">from</span> <span class="highlight">"https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"</span>;
+
+<span class="comment">// 🚨 นำค่าจาก ข้อ 2 (การสร้าง App) มาวางทับตรงนี้ 🚨</span>
+<span class="keyword">const</span> firebaseConfig = {
+    apiKey: <span class="highlight">"AIzaSy... ของครู"</span>,
+    authDomain: <span class="highlight">"owlvy-gate.firebaseapp.com"</span>,
+    projectId: <span class="highlight">"owlvy-gate"</span>,
+    storageBucket: <span class="highlight">"owlvy-gate.firebasestorage.app"</span>,
+    messagingSenderId: <span class="highlight">"123456789"</span>,
+    appId: <span class="highlight">"1:123456789:web:abcdef"</span>
+};
+
+<span class="comment">// เริ่มต้นระบบ</span>
+<span class="keyword">const</span> app = initializeApp(firebaseConfig);
+<span class="keyword">const</span> auth = getAuth(app);
+<span class="keyword">const</span> db = getFirestore(app); <span class="comment">// เตรียมพร้อมใช้ Database (ข้อ 4)</span>
+<span class="keyword">const</span> provider = <span class="keyword">new</span> GoogleAuthProvider();
+
+<span class="comment">// ผูกคำสั่งกับปุ่มใน index.html</span>
+document.getElementById(<span class="highlight">'btn-login'</span>).addEventListener(<span class="highlight">'click'</span>, () => {
+    signInWithPopup(auth, provider)
+        .then((result) => {
+            console.log(<span class="highlight">"ล็อกอินสำเร็จ!"</span>, result.user.displayName);
+            <span class="comment">// เขียนโค้ดส่งไปหน้า Gem หรือบันทึกชื่อลง Firestore ตรงนี้</span>
+        })
+        .catch((error) => {
+            console.error(<span class="highlight">"เกิดข้อผิดพลาด:"</span>, error);
+        });
+});
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
