@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือสถาปัตยกรรมระบบ Firebase - Owlvy House Academy</title>
+    <style>
+        /* ตั้งค่ารูปแบบตัวอักษรและการเลื่อนหน้าจอ */
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Sarabun'; 
+            line-height: 1.6; 
+            color: #333; 
+            margin: 0; 
+            background-color: #f0f2f5; 
+        }
+        
+        /* แถบเมนูด้านบนสุด (ยึดติดขอบจอ) */
+        header { 
+            background: #1a252f; 
+            color: white; 
+            padding: 15px 0; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+        }
+        nav ul { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            flex-wrap: wrap;
+            gap: 15px; 
+        }
+        nav a { 
+            color: #ecf0f1; 
+            text-decoration: none; 
+            font-weight: bold; 
+            padding: 8px 15px; 
+            border-radius: 5px; 
+            background: rgba(255,255,255,0.1);
+            transition: background 0.3s; 
+        }
+        nav a:hover { background: #3498db; color: white; }
+
+        /* ส่วนเนื้อหาหลัก */
+        .container { 
+            max-width: 900px; 
+            margin: 40px auto; 
+            background: white; 
+            padding: 40px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+        }
+        h1 { color: #2c3e50; text-align: center; font-size: 2em; margin-bottom: 10px; }
+        h2 { 
+            color: #2980b9; 
+            border-bottom: 2px solid #ecf0f1; 
+            padding-bottom: 10px; 
+            margin-top: 50px; 
+            padding-top: 60px; /* ชดเชยพื้นที่แถบเมนูตอนเลื่อน */
+        }
+        h3 { color: #34495e; margin-top: 25px; }
+        
+        /* ปุ่มย้อนกลับขึ้นด้านบน */
+        .back-to-top { 
+            display: inline-block; 
+            margin-top: 25px; 
+            text-decoration: none; 
+            color: #e67e22; 
+            font-size: 0.95em; 
+            font-weight: bold; 
+            background: #fff3e0;
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+        .back-to-top:hover { background: #ffe0b2; }
+
+        /* กล่องแสดงโค้ด */
+        .code-block { 
+            background: #2b2b2b; 
+            color: #f8f8f2; 
+            padding: 15px; 
+            border-radius: 8px; 
+            overflow-x: auto; 
+            font-family: 'Courier New', Courier, monospace; 
+            font-size: 0.9em;
+        }
+
+        /* ตาราง */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.95em; }
+        th, td { border: 1px solid #ddd; padding: 15px; text-align: left; }
+        th { background-color: #34495e; color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+
+        /* กล่องเน้นข้อความ */
+        .highlight { 
+            background-color: #e8f4f8; 
+            padding: 15px 20px; 
+            border-left: 5px solid #3498db; 
+            margin: 20px 0; 
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
+</head>
+<body id="top">
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#section1">1. ขั้นตอนการติดตั้ง (ล่าสุด)</a></li>
+                <li><a href="#section2">2. ปัญหาที่แก้ไขแล้ว</a></li>
+                <li><a href="#section3">3. การจัดการ: Command Line vs Web</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>🚀 คู่มือสถาปัตยกรรมระบบ Firebase</h1>
+        <p style="text-align: center; color: #7f8c8d;">สำหรับดูแลระบบสถาบัน Owlvy House Academy</p>
+
+        <h2 id="section1">1. สรุปขั้นตอนการติดตั้งระบบ (เวอร์ชันล่าสุดแบบ Multi-site)</h2>
+        
+        <div class="highlight">
+            <strong>เป้าหมายของโครงสร้างนี้:</strong> เราต้องการใช้โปรเจกต์ <code>owlvyhouseacademy-gate</code> เพียงโปรเจกต์เดียว แต่สามารถแบ่ง URL ออกเป็น 2 เว็บไซต์ คือ (1) หน้ารวม Portal และ (2) แอป Gemini Gem โดยทั้งสองแอปใช้ฐานข้อมูลร่วมกัน
+        </div>
+
+        <h3>ขั้นตอนที่ 1: ตั้งค่าบน Firebase Console (Web)</h3>
+        <ul>
+            <li>ไปที่ Firebase Console เข้าโปรเจกต์ <code>owlvyhouseacademy-gate</code></li>
+            <li>ไปที่เมนู <strong>Hosting</strong> เลื่อนลงล่างสุด คลิกปุ่ม <strong>"Add another site"</strong></li>
+            <li>ตั้งชื่อไซต์ใหม่สำหรับหน้ารวม เช่น <code>owlvyhouse-portal</code> (จะได้โดเมน owlvyhouse-portal.web.app)</li>
+        </ul>
+
+        <h3>ขั้นตอนที่ 2: จัดเตรียม Folder ในคอมพิวเตอร์</h3>
+        <p>สร้างโฟลเดอร์หลักขึ้นมา 1 โฟลเดอร์ (เช่น <code>owlvy-project</code>) และสร้างโฟลเดอร์ย่อยด้านในแยกตามแอป:</p>
+<pre class="code-block">
+📁 owlvy-project (โฟลเดอร์หลัก)
+  ├── 📁 portal-app      (ใส่ไฟล์ index.html ของหน้ารวม)
+  ├── 📁 public          (ใส่ไฟล์ของแอป Gemini Gem ตัวเดิม)
+  └── 📄 firebase.json   (ไฟล์ควบคุมเส้นทาง)
+</pre>
+
+        <h3>ขั้นตอนที่ 3: ตั้งค่าไฟล์ firebase.json (สำคัญที่สุด)</h3>
+        <p>สร้างหรือแก้ไขไฟล์ <code>firebase.json</code> ให้อยู่นอกสุด เพื่อระบุว่าโฟลเดอร์ไหน วิ่งไปที่ไซต์ไหน:</p>
+<pre class="code-block">
+{
+  "hosting": [
+    {
+      "target": "portal-site",
+      "public": "portal-app",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    },
+    {
+      "target": "gemini-site",
+      "public": "public",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    }
+  ]
+}
+</pre>
+
+        <h3>ขั้นตอนที่ 4: ผูก Target และอัปโหลด (ผ่าน Command Line)</h3>
+        <p>เปิด Terminal ที่โฟลเดอร์หลัก แล้วพิมพ์คำสั่งผูกชื่อ Target เข้ากับชื่อ Site จริงที่อยู่บนเว็บ:</p>
+<pre class="code-block">
+// ผูกชื่อไซต์ของหน้ารวม
+firebase target:apply hosting portal-site owlvyhouse-portal
+
+// ผูกชื่อไซต์ของแอป Gemini
+firebase target:apply hosting gemini-site owlvyhouseacademy-gate
+
+// เมื่อทุกอย่างพร้อม สั่งอัปเดตไฟล์ทั้งหมดขึ้นเน็ต
+firebase deploy
+</pre>
+        <a href="#top" class="back-to-top">⬆ ย้อนกลับขึ้นด้านบน</a>
+
+
+        <h2 id="section2">2. สรุปปัญหาที่เคยเกิดขึ้นและวิธีแก้ไข (Lessons Learned)</h2>
+
+        <h3>🔴 ปัญหาที่ 1: การติดลูป Login (Login Loop) และ Popup โดนบล็อก</h3>
+        <p><strong>อาการ:</strong> นักเรียนกดลิงก์จากแอป LINE หรือ Facebook แล้วกดปุ่มล็อกอิน Google แต่หน้าต่างล็อกอินไม่ยอมเด้งขึ้นมา หรือกรอกข้อมูลแล้วเด้งกลับมาหน้าเดิม</p>
+        <p><strong>สาเหตุ:</strong> In-App Browser ของ LINE/FB มีความเข้มงวดสูง บล็อกการเด้ง Popup แบบ Multi-window และไม่แชร์คุกกี้ข้อมูลร่วมกับเบราว์เซอร์หลักของเครื่อง</p>
+        <p><strong>วิธีแก้ไขที่เราใช้ (อัปเดตล่าสุด):</strong></p>
+        <ul>
+            <li><strong>แก้ที่ Code:</strong> เปลี่ยนมาใช้คำสั่ง <code>signInWithPopup()</code> เพื่อให้แสดงผลชัดเจนบนเบราว์เซอร์มาตรฐาน</li>
+            <li><strong>แก้ที่ User Experience:</strong> แนะนำผู้ใช้ให้กดจุด 3 จุดมุมขวาบน เพื่อ <strong>"เปิดในเบราว์เซอร์เริ่มต้น (Open in Chrome/Safari)"</strong> เสมอ</li>
+            <li><strong>แผนสำรอง (Fallback):</strong> เตรียมลิงก์ Google Form เพื่อใช้รับข้อมูลแทนระบบล็อกอิน ในกรณีที่เด็กเปิดเว็บไม่ได้จริงๆ</li>
+        </ul>
+
+        <h3>🔴 ปัญหาที่ 2: ชื่อ URL ไม่ตรงกับชื่อแอป (ความงงของ Project vs App)</h3>
+        <p><strong>อาการ:</strong> สร้างแอปชื่อ Gemini Gem แต่ได้ลิงก์เว็บเป็น owlvyhouseacademy-gate.web.app</p>
+        <p><strong>สาเหตุ:</strong> Firebase นำชื่อโปรเจกต์ (Project ID) มาทำเป็นลิงก์หลัก ไม่ได้นำชื่อแอปลงทะเบียน (App ID) มาใช้</p>
+        <p><strong>วิธีแก้ไขที่เราใช้:</strong> ใช้ฟีเจอร์ <strong>"Add another site"</strong> สร้างซับโดเมนใหม่บนโปรเจกต์เดิม และใช้ไฟล์ <code>firebase.json</code> แยกการ Deploy ไฟล์คนละโฟลเดอร์</p>
+
+        <a href="#top" class="back-to-top">⬆ ย้อนกลับขึ้นด้านบน</a>
+
+
+        <h2 id="section3">3. ประเภทการใช้งาน Firebase: Command Line vs Web Console</h2>
+        <p>การทำงานกับ Firebase จะถูกแบ่งหน้าที่อย่างชัดเจนระหว่าง "การจัดการโค้ด" กับ "การจัดการข้อมูล/การตั้งค่า" ดังนี้:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 50%;">💻 Command Line (Firebase CLI)</th>
+                    <th>🌐 Web (Firebase Console)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>หน้าที่หลัก:</strong> ใช้จัดการ "ไฟล์โค้ด" ในคอมพิวเตอร์ และส่งงานขึ้นเซิร์ฟเวอร์อินเทอร์เน็ต</td>
+                    <td><strong>หน้าที่หลัก:</strong> ใช้จัดการ "ข้อมูลฐานข้อมูล", ดูสถิติ และเปิด-ปิดการตั้งค่าระบบความปลอดภัย</td>
+                </tr>
+                <tr>
+                    <td><strong>คำสั่งที่ใช้บ่อย:</strong><br>
+                        <ul>
+                            <li><code>firebase login</code> : ลงชื่อเข้าใช้บัญชี Google ในคอม</li>
+                            <li><code>firebase init</code> : เริ่มต้นสร้างโปรเจกต์และสร้างไฟล์ firebase.json ในโฟลเดอร์</li>
+                            <li><code>firebase deploy</code> : (ใช้บ่อยสุด) ส่งไฟล์ HTML/JS อัปเดตขึ้นหน้าเว็บจริง</li>
+                            <li><code>firebase target:apply...</code> : ผูกโฟลเดอร์ย่อยเข้ากับ Site ย่อย</li>
+                        </ul>
+                    </td>
+                    <td><strong>ฟังก์ชันที่ใช้บ่อย:</strong><br>
+                        <ul>
+                            <li><strong>Firestore Database:</strong> เข้าไปดู เพิ่ม ลบ หรือแก้ไขข้อมูลเด็กและคะแนนสอบ</li>
+                            <li><strong>Authentication:</strong> ดูรายชื่ออีเมลเด็กที่เข้าสู่ระบบมา และตั้งค่า Authorized domains</li>
+                            <li><strong>Hosting:</strong> กดเพิ่มไซต์ย่อย (Add another site) หรือดูประวัติการ Deploy กดย้อนคืนเวอร์ชันเก่าได้</li>
+                            <li><strong>Project Settings:</strong> ไปคัดลอกโค้ดตั้งค่า (firebaseConfig) มาแปะในไฟล์ JS</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>เปรียบเทียบให้เห็นภาพ:</strong><br>เหมือน "รถบรรทุก" ที่ทำหน้าที่ขนของ (โค้ด) จากโรงเก็บของในบ้านเรา ไปส่งที่โกดังปลายทาง</td>
+                    <td><strong>เปรียบเทียบให้เห็นภาพ:</strong><br>เหมือน "ห้องควบคุม (Control Room)" ที่เอาไว้ดูยอดขาย ดูกล้องวงจรปิด และจัดระเบียบโกดัง</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a href="#top" class="back-to-top">⬆ ย้อนกลับขึ้นด้านบน</a>
+
+        <div style="margin-top: 50px; text-align: center; color: #95a5a6; font-size: 0.9em;">
+            <hr style="border: 0; border-top: 1px solid #eee; margin-bottom: 20px;">
+            &copy; 2024 Owlvy House Academy - System Architecture Document
+        </div>
+    </div>
+</body>
+</html>
