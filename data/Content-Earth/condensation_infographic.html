@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>การควบแน่นของไอน้ำ — Infographic</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #0b2545;
+    --sky-mid: #134074;
+    --sky-bright: #1a6eb5;
+    --ice: #a8d8ea;
+    --mist: #cde6f5;
+    --dew: #56c2d6;
+    --frost: #e0f4ff;
+    --warm: #f4a261;
+    --heat: #e76f51;
+    --gold: #ffc857;
+    --white: #f8fbff;
+    --text: #0d1b2a;
+    --subtle: #6b8cae;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--sky);
+    color: var(--white);
+    line-height: 1.65;
+    font-size: 15px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(160deg, #0b2545 0%, #134074 50%, #0d3a6b 100%);
+    padding: 60px 40px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 2px solid var(--dew);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(86,194,214,.18) 0%, transparent 70%);
+  }
+  .hero-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--dew);
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--white);
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .hero h1 span {
+    color: var(--dew);
+  }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--mist);
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+    opacity: .85;
+  }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section {
+    margin-top: 52px;
+  }
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(86,194,214,.25);
+  }
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--dew);
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  /* ── KEY CONCEPT BOX ── */
+  .key-box {
+    background: linear-gradient(135deg, rgba(26,110,181,.35) 0%, rgba(19,64,116,.5) 100%);
+    border: 1.5px solid var(--dew);
+    border-radius: 12px;
+    padding: 22px 26px;
+    margin-bottom: 16px;
+  }
+  .key-box .khead {
+    font-size: 13px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--dew);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .key-box p {
+    color: var(--frost);
+    font-size: 15px;
+  }
+  .key-box strong {
+    color: var(--gold);
+  }
+
+  /* ── WARNING BOX ── */
+  .warn-box {
+    background: rgba(231,111,81,.12);
+    border-left: 4px solid var(--heat);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+    color: var(--mist);
+    font-size: 14.5px;
+  }
+  .warn-box strong { color: var(--warm); }
+
+  /* ── CARD GRID ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 6px;
+  }
+  .card {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(168,216,234,.2);
+    border-radius: 12px;
+    padding: 20px 20px 18px;
+  }
+  .card .icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .card .ctitle {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ice);
+    margin-bottom: 6px;
+  }
+  .card p {
+    font-size: 13.5px;
+    color: rgba(248,251,255,.75);
+    line-height: 1.6;
+  }
+
+  /* ── COMPARE ROW ── */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 10px;
+  }
+  .compare-cell {
+    border-radius: 10px;
+    padding: 18px;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .compare-cell.hot {
+    background: rgba(244,162,97,.12);
+    border: 1px solid rgba(244,162,97,.35);
+    color: var(--mist);
+  }
+  .compare-cell.cold {
+    background: rgba(86,194,214,.1);
+    border: 1px solid rgba(86,194,214,.3);
+    color: var(--mist);
+  }
+  .compare-cell .clabel {
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+  .compare-cell.hot .clabel { color: var(--warm); }
+  .compare-cell.cold .clabel { color: var(--dew); }
+  .compare-cell strong { color: var(--gold); }
+
+  /* ── PHASE DIAGRAM ── */
+  .phase-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    border: 1px solid rgba(168,216,234,.2);
+  }
+  .phase-step {
+    flex: 1;
+    padding: 16px 14px;
+    text-align: center;
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    position: relative;
+  }
+  .phase-step::after {
+    content: '›';
+    position: absolute;
+    right: -6px;
+    font-size: 20px;
+    color: var(--dew);
+    z-index: 2;
+    line-height: 1;
+  }
+  .phase-step:last-child::after { display: none; }
+  .phase-step .ps-icon { font-size: 22px; }
+  .phase-step .ps-label { font-weight: 700; font-size: 12px; color: var(--ice); }
+  .phase-step .ps-cond { font-size: 11px; color: var(--subtle); }
+  .phase-step.vapor { background: rgba(244,162,97,.15); }
+  .phase-step.liquid { background: rgba(86,194,214,.15); }
+  .phase-step.solid { background: rgba(168,216,234,.1); }
+
+  /* ── EXAMPLE LIST ── */
+  .ex-group {
+    margin-bottom: 18px;
+  }
+  .ex-group-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--dew);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .ex-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ex-list li {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(168,216,234,.2);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: var(--frost);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ex-list li span.tag {
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    background: rgba(86,194,214,.2);
+    color: var(--dew);
+    border-radius: 4px;
+    padding: 1px 5px;
+    letter-spacing: 1px;
+  }
+  .ex-list li span.tag.precip {
+    background: rgba(244,162,97,.2);
+    color: var(--warm);
+  }
+
+  /* ── DEWPOINT VISUAL ── */
+  .dewpoint-visual {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(168,216,234,.2);
+    border-radius: 14px;
+    padding: 24px;
+    margin-top: 10px;
+  }
+  .dewpoint-bar {
+    position: relative;
+    height: 28px;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #a8d8ea 0%, #56c2d6 30%, #1a6eb5 60%, #f4a261 80%, #e76f51 100%);
+    margin: 20px 0 10px;
+    overflow: visible;
+  }
+  .dew-marker {
+    position: absolute;
+    top: -10px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+  .dew-marker .dm-line {
+    width: 2px;
+    height: 48px;
+    background: var(--white);
+    margin-top: 10px;
+  }
+  .dew-marker .dm-label {
+    position: absolute;
+    top: -24px;
+    white-space: nowrap;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--white);
+    background: rgba(11,37,69,.8);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,.2);
+  }
+  .dew-axis {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--subtle);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 6px;
+  }
+
+  /* ── RULE LINE ── */
+  .rule { height: 1px; background: rgba(86,194,214,.15); margin: 40px 0 0; }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 30px 24px 40px;
+    font-size: 12px;
+    color: var(--subtle);
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 580px) {
+    .compare { grid-template-columns: 1fr; }
+    .phase-row { flex-direction: column; }
+    .phase-step::after { display: none; }
+    .hero { padding: 40px 20px 36px; }
+    .container { padding: 0 16px 50px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">Atmospheric Science · Infographic</div>
+  <h1>การ<span>ควบแน่น</span>ของไอน้ำ</h1>
+  <p class="hero-sub">ปัจจัยที่มีผล · กลไก · รูปแบบ · ตัวอย่างในชีวิตประจำวัน</p>
+</div>
+
+<div class="container">
+
+  <!-- ── SECTION 1: CORE CONCEPT ── -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <span class="section-title">หลักการสำคัญ — จุดน้ำค้าง (Dewpoint Temperature)</span>
+    </div>
+
+    <div class="warn-box">
+      <strong>ความเข้าใจผิดที่พบบ่อย:</strong> การลดลงของอุณหภูมิ <em>ไม่ใช่</em> ปัจจัยหลักของการเกิดการควบแน่น
+    </div>
+
+    <div class="key-box">
+      <div class="khead">✦ เงื่อนไขหลักของการควบแน่น</div>
+      <p>อุณหภูมิจะต้องลดลงจนต่ำกว่า <strong>อุณหภูมิจุดน้ำค้าง (Dewpoint Temperature)</strong> ซึ่งเป็นอุณหภูมิที่ไอน้ำในอากาศถูกทำให้อิ่มตัวจนเปลี่ยนสถานะ เพียงแค่อุณหภูมิลดลงแต่ยังสูงกว่าจุดน้ำค้าง การควบแน่นจะ<strong>ไม่เกิดขึ้น</strong></p>
+    </div>
+
+    <!-- dewpoint visual -->
+    <div class="dewpoint-visual">
+      <p style="font-size:13px; color:var(--mist); margin-bottom:4px;">แกนอุณหภูมิสัมพัทธ์ — เส้นแบ่ง "ก่อน" และ "หลัง" จุดน้ำค้าง</p>
+      <div class="dewpoint-bar">
+        <div class="dew-marker" style="left:42%">
+          <div class="dm-label">จุดน้ำค้าง (T<sub>d</sub>)</div>
+          <div class="dm-line"></div>
+        </div>
+      </div>
+      <div class="dew-axis">
+        <span>← เย็นมาก (ต่ำกว่า T<sub>d</sub>) · เกิดการควบแน่น</span>
+        <span>ร้อน (สูงกว่า T<sub>d</sub>) · ไม่เกิด →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 2: FACTORS ── -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <span class="section-title">ปัจจัยที่มีผลต่อการเกิดการควบแน่น</span>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <span class="icon">🌡️</span>
+        <div class="ctitle">อุณหภูมิต่ำกว่าจุดน้ำค้าง</div>
+        <p>เงื่อนไขจำเป็น: อากาศหรือพื้นผิวต้องเย็นลงจนต่ำกว่า T<sub>d</sub> ของอากาศ ณ ขณะนั้น</p>
+      </div>
+      <div class="card">
+        <span class="icon">💧</span>
+        <div class="ctitle">ความชื้นสัมพัทธ์ของอากาศ</div>
+        <p>อากาศที่ชื้น (Relative Humidity สูง) มีจุดน้ำค้างสูงกว่า → เกิดการควบแน่นได้ง่ายกว่าและเร็วกว่า</p>
+      </div>
+      <div class="card">
+        <span class="icon">🔩</span>
+        <div class="ctitle">ลักษณะพื้นผิว</div>
+        <p>พื้นผิวที่เป็นโลหะหรือวัสดุนำความร้อนสูง สูญเสียความร้อนได้เร็ว ทำให้อุณหภูมิพื้นผิวต่ำกว่าจุดน้ำค้างได้ง่าย → โอกาสเกิดการควบแน่นสูง</p>
+      </div>
+      <div class="card">
+        <span class="icon">💨</span>
+        <div class="ctitle">การหมุนเวียนของอากาศ</div>
+        <p>การเคลื่อนที่ของอากาศพัดพาไอน้ำมาสัมผัสพื้นผิวเย็นอย่างต่อเนื่อง ทำให้การควบแน่นเกิดขึ้นได้นาน และสะสมปริมาณได้มากขึ้น</p>
+      </div>
+      <div class="card">
+        <span class="icon">⏰</span>
+        <div class="ctitle">ระยะเวลาที่ต่ำกว่าจุดน้ำค้าง</div>
+        <p>ยิ่งพื้นผิวหรืออากาศอยู่ในอุณหภูมิต่ำกว่า T<sub>d</sub> นานขึ้น ปริมาณการควบแน่นที่สะสมยิ่งมากขึ้น</p>
+      </div>
+      <div class="card">
+        <span class="icon">🧱</span>
+        <div class="ctitle">นิวเคลียสควบแน่น (CCN)</div>
+        <p>อนุภาคฝุ่น เกสรดอกไม้ หรือละอองทะเล ทำหน้าที่เป็นแกนกลางให้ไอน้ำจับตัวและเกิดการควบแน่นในบรรยากาศได้ง่ายขึ้น</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 3: QUANTITY ── -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <span class="section-title">ปัจจัยที่มีผลต่อ<em>ปริมาณ</em>การควบแน่น</span>
+    </div>
+
+    <div class="warn-box">
+      <strong>สิ่งที่มักเข้าใจผิด:</strong> ความแตกต่างของอุณหภูมิ (ΔT) มากหรือน้อย <em>ไม่ใช่</em>ตัวกำหนดหลักว่าการควบแน่นจะมากหรือน้อย
+    </div>
+
+    <div class="key-box">
+      <div class="khead">✦ ปัจจัยหลักด้านปริมาณ</div>
+      <p><strong>อุณหภูมิที่ต่ำกว่าจุดน้ำค้างมากเพียงใด</strong> คือตัวกำหนดปริมาณการควบแน่น ยิ่งต่ำกว่า T<sub>d</sub> มาก อากาศยิ่ง "ล้น" ความจุไอน้ำ ทำให้ควบแน่นออกมามาก</p>
+    </div>
+
+    <div class="key-box" style="border-color:rgba(244,162,97,.4); background:rgba(231,111,81,.08);">
+      <div class="khead" style="color:var(--warm);">↺ บทบาททางอ้อมของ ΔT</div>
+      <p>ΔT มากทำให้กระบวนการเกิดนานขึ้น ซึ่งส่งผลทางอ้อมต่อปริมาณ แต่หากอุณหภูมิไม่ต่ำกว่าจุดน้ำค้าง <strong>ΔT มากแค่ไหนก็ไม่เกิดการควบแน่น</strong></p>
+    </div>
+
+    <!-- Compare high vs low temp range -->
+    <p style="font-size:13px; color:var(--subtle); margin: 18px 0 8px;">เปรียบเทียบจากลักษณะกราฟ Saturation Vapor Pressure</p>
+    <div class="compare">
+      <div class="compare-cell hot">
+        <div class="clabel">🔥 ช่วงอุณหภูมิสูง</div>
+        ความชันของกราฟสูง → <strong>ΔT น้อย แต่ความชื้นสัมบูรณ์ต่างกันมาก</strong><br>
+        โอกาสเกิดการควบแน่นมากขึ้น<br><br>
+        <em>ตัวอย่าง:</em> อากาศร้อนชื้น 35°C เย็นลงเหลือ 28°C ซึ่งต่ำกว่าจุดน้ำค้าง → <strong>เกิดการควบแน่นได้มาก</strong> แม้ΔT แค่ 7°C
+      </div>
+      <div class="compare-cell cold">
+        <div class="clabel">❄️ ช่วงอุณหภูมิต่ำ</div>
+        ความชันของกราฟต่ำ → <strong>ΔT เท่ากัน แต่ความชื้นสัมบูรณ์ต่างกันน้อย</strong><br>
+        โอกาสเกิดการควบแน่นน้อยลง<br><br>
+        <em>ตัวอย่าง:</em> อากาศเย็น 10°C เย็นลงเหลือ 3°C → แม้ต่ำกว่าจุดน้ำค้าง แต่ไอน้ำมีน้อย ปริมาณควบแน่นได้น้อย
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 4: GLASS WALL CASE ── -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <span class="section-title">กรณีพิเศษ: มีกระจกกั้นระหว่างสองอุณหภูมิ</span>
+    </div>
+
+    <div class="key-box">
+      <div class="khead">✦ ตำแหน่งการควบแน่น</div>
+      <p>เมื่อมีกระจกกั้นระหว่างอากาศร้อนและเย็น ไอน้ำจะควบแน่น<strong>บนด้านที่อุณหภูมิสูงกว่า (ด้านอุ่น)</strong> เพราะ<strong>อากาศอุ่นกักเก็บไอน้ำได้มากกว่า</strong> เมื่อกระจกเย็นทำให้อากาศด้านอุ่นที่ติดกระจกเย็นลงต่ำกว่าจุดน้ำค้าง จึงเกิดฝ้าบนกระจกด้านอุ่น</p>
+    </div>
+    <div class="card-grid">
+      <div class="card" style="grid-column: span 1;">
+        <span class="icon">🚗</span>
+        <div class="ctitle">ฝ้ากระจกรถยนต์</div>
+        <p>ในวันฝนตกหรืออากาศชื้น กระจกด้านในเป็นฝ้า เพราะอากาศอุ่นชื้นในรถสัมผัสกระจกที่เย็น → ควบแน่นด้านในกระจก</p>
+      </div>
+      <div class="card" style="grid-column: span 1;">
+        <span class="icon">🪟</span>
+        <div class="ctitle">กระจกหน้าต่างในอาคาร</div>
+        <p>ช่วงฤดูหนาว อากาศอุ่นในอาคารสัมผัสกระจกเย็น → เกิดฝ้าหรือหยดน้ำด้านในอาคาร</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 5: COMMON PHENOMENA ── -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">05</span>
+      <span class="section-title">ปรากฏการณ์ที่พบบ่อยในธรรมชาติ</span>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <span class="icon">🌿</span>
+        <div class="ctitle">น้ำค้าง (Dew)</div>
+        <p>หัวค่ำหรือรุ่งเช้า พื้นดินและพืชพรรณคายความร้อน อุณหภูมิพื้นผิวต่ำกว่าอุณหภูมิอากาศและต่ำกว่าจุดน้ำค้าง → ไอน้ำควบแน่นเป็นหยดน้ำบนพื้นผิว</p>
+      </div>
+      <div class="card">
+        <span class="icon">🌫️</span>
+        <div class="ctitle">หมอก (Fog)</div>
+        <p>เมื่ออากาศทั้งก้อนเย็นลงต่ำกว่าจุดน้ำค้าง ไอน้ำในอากาศจับตัวเป็นละอองน้ำขนาดเล็กลอยอยู่ระดับใกล้ผิวดิน</p>
+      </div>
+      <div class="card">
+        <span class="icon">🔩</span>
+        <div class="ctitle">พื้นผิวโลหะ</div>
+        <p>โลหะนำความร้อนสูง อุณหภูมิพื้นผิวเย็นลงเร็วและต่ำกว่าอากาศโดยรอบ จึงมีโอกาสเกิดการควบแน่นสูงกว่าพื้นผิวอื่น</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 6: PHASE CHANGE ── -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">06</span>
+      <span class="section-title">รูปแบบการเปลี่ยนสถานะตามอุณหภูมิ</span>
+    </div>
+
+    <div class="key-box">
+      <div class="khead">✦ เงื่อนไขอุณหภูมิ ณ เวลาที่เกิดการควบแน่น</div>
+      <p>รูปแบบผลลัพธ์ของการควบแน่นขึ้นอยู่กับว่าอุณหภูมิสูงกว่าหรือต่ำกว่า <strong>0°C (จุดเยือกแข็ง)</strong></p>
+    </div>
+
+    <!-- Phase flow: vapor → ? -->
+    <p style="font-size:13px;color:var(--subtle);margin:12px 0 8px;">ไอน้ำ → ผลลัพธ์ตามอุณหภูมิ</p>
+
+    <div class="phase-row">
+      <div class="phase-step vapor">
+        <span class="ps-icon">💨</span>
+        <span class="ps-label">ไอน้ำ</span>
+        <span class="ps-cond">Water Vapor</span>
+      </div>
+      <div class="phase-step liquid">
+        <span class="ps-icon">💧</span>
+        <span class="ps-label">หยดน้ำ / ละออง</span>
+        <span class="ps-cond">T &gt; 0°C · Condensation</span>
+      </div>
+      <div class="phase-step solid">
+        <span class="ps-icon">❄️</span>
+        <span class="ps-label">เกล็ดน้ำแข็ง</span>
+        <span class="ps-cond">T &lt; 0°C · Frost / Deposition</span>
+      </div>
+    </div>
+
+    <div class="phase-row" style="margin-top:10px;">
+      <div class="phase-step liquid">
+        <span class="ps-icon">💧</span>
+        <span class="ps-label">หยดน้ำ (น้ำค้าง)</span>
+        <span class="ps-cond">เกิดแล้ว T &gt; 0°C</span>
+      </div>
+      <div class="phase-step solid">
+        <span class="ps-icon">🧊</span>
+        <span class="ps-label">น้ำค้างแข็ง</span>
+        <span class="ps-cond">T ลดต่ำกว่า 0°C · Frozen Dew</span>
+      </div>
+    </div>
+
+    <div class="card-grid" style="margin-top:16px;">
+      <div class="card">
+        <span class="icon">❄️</span>
+        <div class="ctitle">Frost (การระเหิดกลับ)</div>
+        <p>ไอน้ำเปลี่ยนสถานะโดยตรงเป็นเกล็ดน้ำแข็ง เมื่ออุณหภูมิพื้นผิวต่ำกว่า 0°C พบในสภาพอากาศหนาวเย็น เช่น <strong>แม่คะนิ้ง, เหมายขาบ</strong></p>
+      </div>
+      <div class="card">
+        <span class="icon">🧊</span>
+        <div class="ctitle">Frozen Dew (น้ำค้างแข็ง)</div>
+        <p>น้ำค้างที่ตกลงบนใบหญ้าอยู่แล้ว เมื่ออุณหภูมิลดต่ำกว่า 0°C ในภายหลัง น้ำค้างเหล่านั้นจะกลายเป็นน้ำค้างแข็ง</p>
+      </div>
+      <div class="card">
+        <span class="icon">🌨️</span>
+        <div class="ctitle">หิมะ (Snow)</div>
+        <p>ไอน้ำในบรรยากาศชั้นสูงเปลี่ยนสถานะโดยตรงเป็นผลึกน้ำแข็ง เมื่ออุณหภูมิในชั้นบรรยากาศต่ำกว่า 0°C</p>
+      </div>
+      <div class="card">
+        <span class="icon">🌩️</span>
+        <div class="ctitle">ลูกเห็บ (Hail)</div>
+        <p>เกิดจากหยดน้ำในเมฆรับเจตพายุถูกพยุงและพัดขึ้นสู่ชั้นอากาศเย็น จนเยือกแข็งเป็นก้อน สะสมชั้นน้ำแข็งซ้ำๆ ก่อนตกลงสู่พื้น</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 7: EXAMPLES ── -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">07</span>
+      <span class="section-title">ตัวอย่างในชีวิตประจำวัน</span>
+    </div>
+
+    <!-- 7A: vapor → solid -->
+    <div class="ex-group">
+      <div class="ex-group-title">❄️ A — ไอน้ำ → ของแข็ง (Deposition / Frost)</div>
+      <ul class="ex-list">
+        <li><span class="tag">ธรรมชาติ</span>แม่คะนิ้ง (ดอยอินทนนท์)</li>
+        <li><span class="tag">ธรรมชาติ</span>เหมายขาบ (ภาคเหนือ)</li>
+        <li><span class="tag">บ้าน</span>เกล็ดน้ำแข็งในช่องแช่แข็งตู้เย็น</li>
+        <li><span class="tag precip">หยาดน้ำฟ้า</span>หิมะ (Snow)</li>
+        <li><span class="tag precip">หยาดน้ำฟ้า</span>Contrail จากเครื่องบิน</li>
+      </ul>
+    </div>
+
+    <!-- 7B: vapor → liquid -->
+    <div class="ex-group">
+      <div class="ex-group-title">💧 B — ไอน้ำ → ของเหลว (Condensation)</div>
+      <ul class="ex-list">
+        <li><span class="tag">ธรรมชาติ</span>น้ำค้างบนใบหญ้ายามเช้า</li>
+        <li><span class="tag">ธรรมชาติ</span>หมอกยามเช้า / ตอนหัวค่ำ</li>
+        <li><span class="tag">บ้าน</span>ฝ้ากระจกห้องน้ำ</li>
+        <li><span class="tag">บ้าน</span>ควันขาวจากเครื่องทำน้ำอุ่น</li>
+        <li><span class="tag">บ้าน</span>หยดน้ำภายนอกขวดเครื่องดื่มเย็น</li>
+        <li><span class="tag precip">หยาดน้ำฟ้า</span>เมฆ (ละอองน้ำลอยได้เพราะความหนาแน่นต่ำ)</li>
+        <li><span class="tag precip">หยาดน้ำฟ้า</span>ฝน (เมื่อหยดน้ำใหญ่พอ)</li>
+      </ul>
+    </div>
+
+    <!-- 7C: liquid → solid -->
+    <div class="ex-group">
+      <div class="ex-group-title">🧊 C — ของเหลว → ของแข็ง (Freezing)</div>
+      <ul class="ex-list">
+        <li><span class="tag">ธรรมชาติ</span>น้ำค้างแข็ง (Frozen Dew) บนใบหญ้า</li>
+        <li><span class="tag">บ้าน</span>น้ำแข็งในช่องแช่แข็ง (ถาดน้ำแข็ง)</li>
+        <li><span class="tag precip">หยาดน้ำฟ้า</span>ลูกเห็บ (Hail)</li>
+        <li><span class="tag precip">หยาดน้ำฟ้า</span>ฝนน้ำแข็ง (Freezing Rain)</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<div class="rule"></div>
+<div class="footer">CONDENSATION INFOGRAPHIC · WATER VAPOR PHASE CHANGE · ATMOSPHERIC SCIENCE</div>
+
+</body>
+</html>
