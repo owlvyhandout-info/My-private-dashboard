@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบร่างกายมนุษย์ — สรุปชีววิทยา ม.ต้น–ม.ปลาย</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap');
+
+  /* ===== THEME VARIABLES ===== */
+  :root {
+    --bg: #f5f7fa;
+    --bg2: #eef1f6;
+    --surface: #ffffff;
+    --surface2: #f0f4fa;
+    --border: #d0dae8;
+    --text: #1a2233;
+    --text2: #4a5568;
+    --text3: #7a8599;
+    --accent: #1a3a5c;
+    --accent2: #2563a8;
+    --accent3: #3b82c4;
+    --gold: #b07d2e;
+    --gold-light: #f5e8c8;
+    --red: #c0392b;
+    --red-light: #fdecea;
+    --green: #1a7a4a;
+    --green-light: #e6f5ed;
+    --purple: #6a3fa0;
+    --purple-light: #f0eafa;
+    --teal: #1a7a7a;
+    --teal-light: #e6f5f5;
+    --shadow: 0 2px 12px rgba(26,58,92,0.08);
+    --shadow-md: 0 4px 24px rgba(26,58,92,0.12);
+    --radius: 12px;
+    --radius-sm: 7px;
+    --transition: 0.25s ease;
+  }
+
+  [data-theme="dark"] {
+    --bg: #0d1520;
+    --bg2: #111d2e;
+    --surface: #162030;
+    --surface2: #1a2840;
+    --border: #1e3050;
+    --text: #e8eef8;
+    --text2: #98aec8;
+    --text3: #5a7090;
+    --accent: #4a90d9;
+    --accent2: #6aaef0;
+    --accent3: #8ec5f5;
+    --gold: #d4a84b;
+    --gold-light: #2a2010;
+    --red: #e05050;
+    --red-light: #2a1010;
+    --green: #3ab870;
+    --green-light: #0d2018;
+    --purple: #9a6fcc;
+    --purple-light: #1a1030;
+    --teal: #2ab8b8;
+    --teal-light: #0d2020;
+    --shadow: 0 2px 12px rgba(0,0,0,0.4);
+    --shadow-md: 0 4px 24px rgba(0,0,0,0.5);
+  }
+
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Sarabun', 'IBM Plex Sans Thai', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+    transition: background var(--transition), color var(--transition);
+  }
+
+  /* ===== HEADER ===== */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    gap: 16px;
+  }
+  .logo {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .logo span { color: var(--text3); font-weight: 400; font-size: 0.85rem; margin-left: 8px; }
+
+  /* Theme Toggle */
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: 50px;
+    padding: 5px 14px 5px 5px;
+    cursor: pointer;
+    transition: all var(--transition);
+    user-select: none;
+    white-space: nowrap;
+  }
+  .theme-toggle:hover { border-color: var(--accent3); }
+  .toggle-knob {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: background var(--transition);
+    flex-shrink: 0;
+  }
+  .toggle-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text2);
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 60%, var(--accent3) 100%);
+    color: #fff;
+    padding: 56px 24px 48px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .hero p { font-size: 1rem; opacity: 0.85; max-width: 560px; margin: 0 auto 24px; }
+  .hero-tags { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .hero-tag {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 50px;
+    padding: 4px 14px;
+    font-size: 0.82rem;
+    font-weight: 500;
+  }
+
+  /* ===== NAV ===== */
+  .chapter-nav {
+    max-width: 1100px;
+    margin: 32px auto 0;
+    padding: 0 24px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .chapter-nav a {
+    text-decoration: none;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 50px;
+    padding: 7px 18px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text2);
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .chapter-nav a:hover { border-color: var(--accent3); color: var(--accent); background: var(--surface2); }
+  .chapter-nav a .ch-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ===== MAIN LAYOUT ===== */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px 24px 80px;
+  }
+
+  /* ===== CHAPTER SECTION ===== */
+  .chapter {
+    margin-bottom: 60px;
+  }
+  .chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+  .ch-icon {
+    width: 52px; height: 52px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .chapter-title h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .chapter-title p {
+    font-size: 0.85rem;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+
+  /* ===== LAYER ACCORDION ===== */
+  .layer {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: box-shadow var(--transition);
+  }
+  .layer:hover { box-shadow: var(--shadow-md); }
+
+  .layer-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-align: left;
+    color: var(--text);
+    transition: background var(--transition);
+  }
+  .layer-toggle:hover { background: var(--surface2); }
+  .layer-toggle.active { background: var(--surface2); }
+
+  .layer-badge {
+    min-width: 80px;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+  }
+  .layer-title {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .layer-subtitle {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text3);
+    display: block;
+    margin-top: 2px;
+  }
+  .layer-chevron {
+    font-size: 1rem;
+    color: var(--text3);
+    transition: transform var(--transition);
+    flex-shrink: 0;
+  }
+  .layer-toggle.active .layer-chevron { transform: rotate(180deg); }
+
+  .layer-body {
+    display: none;
+    padding: 0 22px 22px;
+    border-top: 1px solid var(--border);
+  }
+  .layer-body.open { display: block; }
+
+  /* ===== CONTENT BLOCKS ===== */
+  .content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 18px;
+  }
+  .content-card {
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+  }
+  .card-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .content-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 6px; }
+  .content-card ul { padding-left: 18px; }
+  .content-card li { font-size: 0.9rem; color: var(--text2); margin-bottom: 4px; }
+  .content-card li strong { color: var(--text); }
+
+  /* Full-width prose block */
+  .prose-block {
+    margin-top: 18px;
+  }
+  .prose-block h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .prose-block p, .prose-block li {
+    font-size: 0.9rem;
+    color: var(--text2);
+    line-height: 1.8;
+  }
+  .prose-block ul { padding-left: 20px; margin-bottom: 12px; }
+  .prose-block li { margin-bottom: 3px; }
+
+  /* Alert boxes */
+  .alert {
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin-top: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .alert-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+  .alert-body { flex: 1; }
+  .alert-body strong { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 4px; }
+  .alert-body p, .alert-body li { font-size: 0.87rem; }
+  .alert-body ul { padding-left: 16px; margin-top: 4px; }
+
+  .alert-exam { background: var(--gold-light); border-left: 4px solid var(--gold); }
+  .alert-exam .alert-icon, .alert-exam strong { color: var(--gold); }
+
+  .alert-misconception { background: var(--red-light); border-left: 4px solid var(--red); }
+  .alert-misconception .alert-icon, .alert-misconception strong { color: var(--red); }
+
+  .alert-tip { background: var(--green-light); border-left: 4px solid var(--green); }
+  .alert-tip .alert-icon, .alert-tip strong { color: var(--green); }
+
+  .alert-note { background: var(--purple-light); border-left: 4px solid var(--purple); }
+  .alert-note .alert-icon, .alert-note strong { color: var(--purple); }
+
+  /* Table */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+    font-size: 0.87rem;
+  }
+  .data-table th {
+    background: var(--surface2);
+    color: var(--text);
+    font-weight: 700;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    font-size: 0.82rem;
+  }
+  .data-table td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: top;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--bg2); }
+
+  /* Flow diagram text */
+  .flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 14px 16px;
+    background: var(--bg2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    font-size: 0.87rem;
+  }
+  .flow-step {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .flow-arrow { color: var(--text3); font-size: 1.1rem; }
+
+  /* Sub-section divider */
+  .sub-section {
+    margin-top: 24px;
+  }
+  .sub-section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Organ detail */
+  .organ-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .organ-card {
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+  }
+  .organ-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .organ-card p, .organ-card li { font-size: 0.87rem; color: var(--text2); }
+  .organ-card ul { padding-left: 16px; }
+  .organ-card li { margin-bottom: 3px; }
+
+  /* Color themes per chapter */
+  .ch1 .layer-badge { background: #ffe8e8; color: #c0392b; }
+  [data-theme="dark"] .ch1 .layer-badge { background: #3a0d0d; color: #e07070; }
+  .ch1 .ch-icon { background: #ffe8e8; }
+  [data-theme="dark"] .ch1 .ch-icon { background: #3a0d0d; }
+
+  .ch2 .layer-badge { background: #e8f0ff; color: #2563a8; }
+  [data-theme="dark"] .ch2 .layer-badge { background: #0d1a3a; color: #6aaef0; }
+  .ch2 .ch-icon { background: #e8f0ff; }
+  [data-theme="dark"] .ch2 .ch-icon { background: #0d1a3a; }
+
+  .ch3 .layer-badge { background: #e8f5ed; color: #1a7a4a; }
+  [data-theme="dark"] .ch3 .layer-badge { background: #0d2018; color: #3ab870; }
+  .ch3 .ch-icon { background: #e8f5ed; }
+  [data-theme="dark"] .ch3 .ch-icon { background: #0d2018; }
+
+  .ch4 .layer-badge { background: #f0eafa; color: #6a3fa0; }
+  [data-theme="dark"] .ch4 .layer-badge { background: #1a1030; color: #9a6fcc; }
+  .ch4 .ch-icon { background: #f0eafa; }
+  [data-theme="dark"] .ch4 .ch-icon { background: #1a1030; }
+
+  .ch5 .layer-badge { background: #fff0e8; color: #b05a00; }
+  [data-theme="dark"] .ch5 .layer-badge { background: #2a1500; color: #e09a50; }
+  .ch5 .ch-icon { background: #fff0e8; }
+  [data-theme="dark"] .ch5 .ch-icon { background: #2a1500; }
+
+  /* Expand all btn */
+  .expand-all-btn {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all var(--transition);
+    margin-top: 4px;
+  }
+  .expand-all-btn:hover { border-color: var(--accent3); color: var(--accent); }
+
+  /* ===== FOOTER ===== */
+  footer {
+    text-align: center;
+    color: var(--text3);
+    font-size: 0.82rem;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Highlight keyword */
+  .hl { color: var(--accent); font-weight: 700; }
+  .hl-r { color: var(--red); font-weight: 700; }
+  .hl-g { color: var(--green); font-weight: 700; }
+
+  @media (max-width: 600px) {
+    .content-grid { grid-template-columns: 1fr; }
+    .organ-grid { grid-template-columns: 1fr; }
+    .header-inner { padding: 0 14px; }
+    .main { padding: 24px 14px 60px; }
+    .flow { font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">🧬 ระบบร่างกายมนุษย์ <span>ม.ต้น–ม.ปลาย</span></div>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="สลับธีม">
+      <div class="toggle-knob" id="themeIcon">🌙</div>
+      <span class="toggle-label" id="themeLabel">Dark</span>
+    </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>สรุประบบร่างกายมนุษย์</h1>
+  <p>เนื้อหาสำคัญ + ข้อสอบออกบ่อย + ข้อเข้าใจผิดที่พบบ่อย ระดับ ม.ต้น–ม.ปลาย</p>
+  <div class="hero-tags">
+    <span class="hero-tag">❤️ ระบบหมุนเวียนเลือด</span>
+    <span class="hero-tag">🫁 ระบบหายใจ</span>
+    <span class="hero-tag">🔄 ระบบขับถ่าย</span>
+    <span class="hero-tag">🧠 ระบบประสาท</span>
+    <span class="hero-tag">🌸 ระบบสืบพันธุ์</span>
+  </div>
+</div>
+
+<!-- CHAPTER NAV -->
+<nav class="chapter-nav" aria-label="เลือกบท">
+  <a href="#ch1"><span class="ch-dot" style="background:#c0392b"></span>บทที่ 1 หมุนเวียนเลือด</a>
+  <a href="#ch2"><span class="ch-dot" style="background:#2563a8"></span>บทที่ 2 หายใจ</a>
+  <a href="#ch3"><span class="ch-dot" style="background:#1a7a4a"></span>บทที่ 3 ขับถ่าย</a>
+  <a href="#ch4"><span class="ch-dot" style="background:#6a3fa0"></span>บทที่ 4 ประสาท</a>
+  <a href="#ch5"><span class="ch-dot" style="background:#b05a00"></span>บทที่ 5 สืบพันธุ์</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+<!-- ======================== CHAPTER 1 ======================== -->
+<section class="chapter ch1" id="ch1">
+  <div class="chapter-header">
+    <div class="ch-icon">❤️</div>
+    <div class="chapter-title">
+      <h2>บทที่ 1 — ระบบหมุนเวียนเลือด (Circulatory System)</h2>
+      <p>Cardiovascular System · หัวใจ · หลอดเลือด · เลือด</p>
+    </div>
+    <button class="expand-all-btn" onclick="expandAll('ch1')">펼치기 ทั้งหมด</button>
+  </div>
+
+  <!-- LAYER 1 -->
+  <div class="layer">
+    <button class="layer-toggle" onclick="toggleLayer(this)">
+      <span class="layer-badge">Layer 1</span>
+      <span class="layer-title">
+        อวัยวะ + ความสำคัญ + กลไกภาพรวม
+        <span class="layer-subtitle">อวัยวะที่เกี่ยวข้อง · ลักษณะสำคัญ · กลไกการทำงาน</span>
+      </span>
+      <span class="layer-chevron">▼</span>
+    </button>
+    <div class="layer-body">
+
+      <div class="sub-section">
+        <div class="sub-section-title">🫀 อวัยวะที่เกี่ยวข้อง</div>
+        <div class="organ-grid">
+          <div class="organ-card">
+            <div class="organ-name">❤️ หัวใจ (Heart)</div>
+            <ul>
+              <li>กล้ามเนื้อหัวใจ (cardiac muscle) — บีบตัว ~70 ครั้ง/นาที</li>
+              <li>มี <strong>4 ห้อง</strong>: เอเทรียมซ้าย-ขวา, เวนตริเคิลซ้าย-ขวา</li>
+              <li>ผนังเวนตริเคิลซ้าย <strong>หนากว่า</strong>เวนตริเคิลขวา (สูบฉีดไปทั่วร่างกาย)</li>
+              <li>เพอริคาร์เดียม: เยื่อหุ้มหัวใจ 2 ชั้น มีของเหลวลดแรงเสียดสี</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🩸 หลอดเลือด (Blood Vessels)</div>
+            <ul>
+              <li><strong>Artery (ขนส่งออกจากหัวใจ)</strong> — ผนังหนา มีกล้ามเนื้อมาก</li>
+              <li><strong>Vein (ขนส่งกลับหัวใจ)</strong> — มีลิ้น (valve) กันไหลย้อน</li>
+              <li><strong>Capillary</strong> — ผนังบางมาก (1 เซลล์) แลกเปลี่ยนสาร</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🔴 เลือด (Blood)</div>
+            <ul>
+              <li><strong>พลาสมา ~55%</strong>: น้ำ + โปรตีน + ฮอร์โมน + ของเสีย</li>
+              <li><strong>เม็ดเลือดแดง ~45%</strong>: ขนส่ง O₂ (Hb)</li>
+              <li><strong>เม็ดเลือดขาว</strong>: ป้องกันเชื้อโรค</li>
+              <li><strong>เกล็ดเลือด</strong>: แข็งตัวของเลือด</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">💧 ระบบน้ำเหลือง (Lymphatic)</div>
+            <ul>
+              <li>ดูดน้ำส่วนเกินจากเนื้อเยื่อกลับสู่เลือด</li>
+              <li>ต่อมน้ำเหลือง (Lymph node): กรองเชื้อโรค</li>
+              <li>เชื่อมกับระบบภูมิคุ้มกัน</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🔄 กลไกการไหลเวียนเลือด (2 วงจร)</div>
+        <div class="prose-block">
+          <h4>🫁 วงจรปอด (Pulmonary Circulation)</h4>
+          <div class="flow">
+            <span class="flow-step">เวนตริเคิลขวา</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Pulmonary Artery</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">ปอด (แลก O₂/CO₂)</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Pulmonary Vein</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">เอเทรียมซ้าย</span>
+          </div>
+        </div>
+        <div class="prose-block">
+          <h4>🌍 วงจรร่างกาย (Systemic Circulation)</h4>
+          <div class="flow">
+            <span class="flow-step">เวนตริเคิลซ้าย</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Aorta</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">ทั่วร่างกาย</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Vena Cava</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">เอเทรียมขวา</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-exam">
+        <div class="alert-icon">📝</div>
+        <div class="alert-body">
+          <strong>ออกสอบบ่อย!</strong>
+          <ul>
+            <li>Pulmonary Artery นำเลือด <strong>ดำ</strong> (CO₂ สูง) ไปปอด — ไม่ใช่เลือดแดง!</li>
+            <li>Pulmonary Vein นำเลือด <strong>แดง</strong> (O₂ สูง) กลับหัวใจ</li>
+            <li>ลำดับการไหลเวียนเลือดผ่านห้องหัวใจ 4 ห้อง</li>
+            <li>ความดันโลหิต = แรงที่เลือดกดผนังหลอดเลือด (SBP/DBP)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-misconception">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+          <strong>ข้อเข้าใจผิดที่พบบ่อย</strong>
+          <ul>
+            <li>❌ "Artery = เลือดแดง, Vein = เลือดดำ" — ผิด! Artery/Vein บอกทิศทาง ไม่บอกสีเลือด</li>
+            <li>❌ "เลือดดำ = สีดำ" — ผิด! เลือดดำคือเลือดที่มี O₂ น้อย ยังเป็นสีแดงเข้ม</li>
+            <li>❌ "หัวใจมี 2 ห้อง" — ผิด! มี 4 ห้อง (หัวใจปลาจึงมี 2 ห้อง)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYER 2 -->
+  <div class="layer">
+    <button class="layer-toggle" onclick="toggleLayer(this)">
+      <span class="layer-badge">Layer 2</span>
+      <span class="layer-title">
+        เจาะลึกเนื้อเยื่อ + กลไก
+        <span class="layer-subtitle">เนื้อเยื่อในหัวใจ · ผนังหลอดเลือด · วาล์ว · การนำไฟฟ้าหัวใจ</span>
+      </span>
+      <span class="layer-chevron">▼</span>
+    </button>
+    <div class="layer-body">
+
+      <div class="sub-section">
+        <div class="sub-section-title">🏗️ โครงสร้างผนังหัวใจ (3 ชั้น)</div>
+        <table class="data-table">
+          <tr><th>ชั้น</th><th>ชื่อ</th><th>ลักษณะ</th></tr>
+          <tr><td>นอกสุด</td><td>Epicardium</td><td>เยื่อบาง ล้อมรอบหัวใจ บางส่วนเป็น pericardium ชั้นใน</td></tr>
+          <tr><td>กลาง</td><td>Myocardium</td><td>กล้ามเนื้อหัวใจ (cardiac muscle) ทำให้หัวใจบีบตัว</td></tr>
+          <tr><td>ในสุด</td><td>Endocardium</td><td>เยื่อบุด้านใน เรียบ ป้องกันลิ่มเลือดเกาะ</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🚪 ลิ้นหัวใจ (Heart Valves)</div>
+        <table class="data-table">
+          <tr><th>ลิ้น</th><th>ตำแหน่ง</th><th>หน้าที่</th></tr>
+          <tr><td><strong>Tricuspid</strong> (3 แฉก)</td><td>เอเทรียมขวา → เวนตริเคิลขวา</td><td>กันเลือดไหลย้อนกลับ</td></tr>
+          <tr><td><strong>Pulmonary</strong></td><td>เวนตริเคิลขวา → Pulmonary Artery</td><td>กันเลือดไหลย้อนกลับ</td></tr>
+          <tr><td><strong>Mitral/Bicuspid</strong> (2 แฉก)</td><td>เอเทรียมซ้าย → เวนตริเคิลซ้าย</td><td>กันเลือดไหลย้อนกลับ</td></tr>
+          <tr><td><strong>Aortic</strong></td><td>เวนตริเคิลซ้าย → Aorta</td><td>กันเลือดไหลย้อนกลับ</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">⚡ ระบบนำไฟฟ้าหัวใจ</div>
+        <div class="flow" style="flex-direction:column; align-items:flex-start;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <span class="flow-step">SA Node (Sinoatrial)</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">AV Node (Atrioventricular)</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Bundle of His</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Purkinje Fibers</span>
+          </div>
+          <p style="font-size:0.85rem;color:var(--text2);margin-top:8px;">SA Node = "pacemaker" ตามธรรมชาติ สร้างสัญญาณไฟฟ้าประมาณ 60–100 ครั้ง/นาที</p>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🩺 โครงสร้างผนังหลอดเลือด</div>
+        <table class="data-table">
+          <tr><th>ชั้น</th><th>Artery</th><th>Vein</th><th>Capillary</th></tr>
+          <tr><td>Tunica intima</td><td>เยื่อบุผิว</td><td>เยื่อบุผิว + ลิ้น (valve)</td><td>เซลล์ชั้นเดียว</td></tr>
+          <tr><td>Tunica media</td><td>กล้ามเนื้อเรียบหนา + อีลาสตินมาก</td><td>กล้ามเนื้อเรียบบาง</td><td>ไม่มี</td></tr>
+          <tr><td>Tunica adventitia</td><td>เนื้อเยื่อเกี่ยวพัน</td><td>เนื้อเยื่อเกี่ยวพัน (หนา)</td><td>ไม่มี</td></tr>
+        </table>
+      </div>
+
+      <div class="alert alert-exam">
+        <div class="alert-icon">📝</div>
+        <div class="alert-body">
+          <strong>ออกสอบบ่อย!</strong>
+          <ul>
+            <li>SA Node อยู่ที่ไหน + ทำหน้าที่อะไร</li>
+            <li>เสียงหัวใจ "ลับ-ดับ" เกิดจากลิ้นหัวใจปิด ไม่ใช่กล้ามเนื้อบีบตัว</li>
+            <li>ความดัน Systolic/Diastolic หมายถึงอะไร (ค่าปกติ 120/80 mmHg)</li>
+            <li>Capillary มีผนัง 1 เซลล์ เพื่อให้แลกเปลี่ยนสารได้ง่าย</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-misconception">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+          <strong>ข้อเข้าใจผิดที่พบบ่อย</strong>
+          <ul>
+            <li>❌ "หัวใจเต้นเองไม่ได้ ต้องรอสัญญาณประสาท" — ผิด! SA Node สร้างสัญญาณเองได้ (autorhythmicity)</li>
+            <li>❌ Mitral valve = 3 แฉก — ผิด! มี 2 แฉก (Bicuspid), Tricuspid มี 3 แฉก</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYER 3 -->
+  <div class="layer">
+    <button class="layer-toggle" onclick="toggleLayer(this)">
+      <span class="layer-badge">Layer 3</span>
+      <span class="layer-title">
+        เจาะลึกระดับเซลล์ + กลไกระดับโมเลกุล
+        <span class="layer-subtitle">เม็ดเลือดแดง · เม็ดเลือดขาว · เกล็ดเลือด · Hemoglobin · กลไกแข็งตัว</span>
+      </span>
+      <span class="layer-chevron">▼</span>
+    </button>
+    <div class="layer-body">
+
+      <div class="sub-section">
+        <div class="sub-section-title">🔴 เม็ดเลือดแดง (Erythrocyte / RBC)</div>
+        <div class="content-grid">
+          <div class="content-card">
+            <div class="card-label" style="color:var(--red)">🔬 โครงสร้าง</div>
+            <ul>
+              <li>รูปร่าง: <strong>Biconcave disc</strong> (จานเว้าสองด้าน)</li>
+              <li><strong>ไม่มีนิวเคลียส</strong> เมื่อโตเต็มที่ (เพิ่มพื้นที่ Hb)</li>
+              <li>ไม่มีไมโทคอนเดรีย — ใช้ Anaerobic glycolysis</li>
+              <li>อายุ ~120 วัน สร้างในไขกระดูก</li>
+            </ul>
+          </div>
+          <div class="content-card">
+            <div class="card-label" style="color:var(--red)">🧪 Hemoglobin (Hb)</div>
+            <ul>
+              <li>โปรตีน 4 หน่วยย่อย (4 subunits) + ฮีม 4 หน่วย</li>
+              <li>แต่ละฮีมมี <strong>Fe²⁺</strong> 1 อะตอม จับ O₂ ได้ 1 โมเลกุล</li>
+              <li>Hb จับ O₂ ได้ 4 โมเลกุลต่อ 1 Hb</li>
+              <li>Hb + O₂ → <strong>Oxyhemoglobin</strong> (สีแดงสด)</li>
+              <li>Hb + CO → Carboxyhemoglobin (พิษ CO ดูดแน่นกว่า O₂ มาก)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">⚪ เม็ดเลือดขาว (Leukocyte / WBC)</div>
+        <table class="data-table">
+          <tr><th>ชนิด</th><th>ลักษณะ</th><th>หน้าที่หลัก</th></tr>
+          <tr><td><strong>Neutrophil</strong></td><td>นิวเคลียสหลายพู (~60-70%)</td><td>กินเชื้อโรค (phagocytosis) — ด่านแรก</td></tr>
+          <tr><td><strong>Lymphocyte</strong></td><td>นิวเคลียสใหญ่ (~20-30%)</td><td>สร้างแอนติบอดี (B cell) / ฆ่าเซลล์ติดเชื้อ (T cell)</td></tr>
+          <tr><td><strong>Monocyte</strong></td><td>นิวเคลียสรูปไต (~5-8%)</td><td>กลายเป็น Macrophage กินเชื้อโรคขนาดใหญ่</td></tr>
+          <tr><td><strong>Eosinophil</strong></td><td>นิวเคลียส 2 พู (~2-4%)</td><td>ต่อต้านปรสิต/อาการแพ้</td></tr>
+          <tr><td><strong>Basophil</strong></td><td>น้อยที่สุด (<1%)</td><td>ปล่อย Histamine ในการอักเสบ/แพ้</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🩸 การแข็งตัวของเลือด (Hemostasis)</div>
+        <div class="flow">
+          <span class="flow-step">บาดแผล</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">เกล็ดเลือด (Platelet) มาเกาะ</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Prothrombin → Thrombin</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Fibrinogen → Fibrin</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">ลิ่มเลือด (Clot)</span>
+        </div>
+        <p style="font-size:0.85rem;color:var(--text2);margin-top:8px;">ต้องการ Ca²⁺ และ Vitamin K ในกระบวนการแข็งตัว</p>
+      </div>
+
+      <div class="alert alert-exam">
+        <div class="alert-icon">📝</div>
+        <div class="alert-body">
+          <strong>ออกสอบบ่อย!</strong>
+          <ul>
+            <li>RBC ไม่มีนิวเคลียส → สร้างโปรตีนใหม่ไม่ได้ → อายุสั้น 120 วัน</li>
+            <li>CO จับ Hb แน่นกว่า O₂ ถึง ~240 เท่า → เป็นพิษ</li>
+            <li>กลไกแข็งตัว: Fibrinogen → Fibrin (ไม่ใช่ Fibrin → Fibrinogen)</li>
+            <li>หมู่เลือด ABO ขึ้นกับ Antigen บนผิว RBC และ Antibody ในพลาสมา</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-misconception">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+          <strong>ข้อเข้าใจผิดที่พบบ่อย</strong>
+          <ul>
+            <li>❌ "เกล็ดเลือด = เม็ดเลือดขาวชนิดหนึ่ง" — ผิด! เกล็ดเลือดเป็นเซลล์คนละประเภท (ชิ้นส่วนของ Megakaryocyte)</li>
+            <li>❌ "หมู่เลือด O ให้เลือดใครก็ได้เสมอ" — ผิด! ในทางปฏิบัติต้องตรวจ cross-match ด้วย</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== CHAPTER 2 ======================== -->
+<section class="chapter ch2" id="ch2">
+  <div class="chapter-header">
+    <div class="ch-icon">🫁</div>
+    <div class="chapter-title">
+      <h2>บทที่ 2 — ระบบหายใจ (Respiratory System)</h2>
+      <p>Pulmonary System · ปอด · ถุงลม · การแลกเปลี่ยนแก๊ส</p>
+    </div>
+    <button class="expand-all-btn" onclick="expandAll('ch2')">펼치기 ทั้งหมด</button>
+  </div>
+
+  <!-- LAYER 1 -->
+  <div class="layer">
+    <button class="layer-toggle" onclick="toggleLayer(this)">
+      <span class="layer-badge">Layer 1</span>
+      <span class="layer-title">
+        อวัยวะ + ความสำคัญ + กลไกภาพรวม
+        <span class="layer-subtitle">เส้นทางอากาศ · กลไกหายใจเข้า-ออก</span>
+      </span>
+      <span class="layer-chevron">▼</span>
+    </button>
+    <div class="layer-body">
+
+      <div class="sub-section">
+        <div class="sub-section-title">🗺️ เส้นทางอากาศ (Airway)</div>
+        <div class="flow">
+          <span class="flow-step">จมูก/ปาก</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Pharynx (คอหอย)</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Larynx (กล่องเสียง)</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Trachea (หลอดลม)</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Bronchi</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Bronchioles</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Alveoli (ถุงลม)</span>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🫁 อวัยวะสำคัญ</div>
+        <div class="organ-grid">
+          <div class="organ-card">
+            <div class="organ-name">👃 จมูก (Nasal Cavity)</div>
+            <ul>
+              <li>กรองฝุ่น ด้วยขนจมูกและ cilia</li>
+              <li>ทำให้อากาศอุ่นและชุ่มชื้น</li>
+              <li>Mucus ดักสิ่งแปลกปลอม</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🎤 กล่องเสียง (Larynx)</div>
+            <ul>
+              <li>มี <strong>Epiglottis</strong> ปิดกั้นอาหารไม่ให้ลงหลอดลม</li>
+              <li>Vocal cords สั่นสร้างเสียง</li>
+              <li>กระดูกอ่อน thyroid (ลูกกระเดือก)</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🌬️ หลอดลม (Trachea)</div>
+            <ul>
+              <li>กระดูกอ่อนรูปตัว C ค้ำยัน ไม่ให้แฟบ</li>
+              <li>ยาว ~12 cm เส้นผ่านศูนย์กลาง ~2 cm</li>
+              <li>Cilia โบกฝุ่นขึ้น + mucus ดักฝุ่น</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🍇 ถุงลม (Alveoli)</div>
+            <ul>
+              <li>จำนวน ~700 ล้านถุง → พื้นที่รวม ~70 m²</li>
+              <li>ผนังบางมาก (1–2 µm) ติดกับ capillary</li>
+              <li>Surfactant: สารลดแรงตึงผิว ป้องกันถุงยุบ</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🫁 ปอด (Lung)</div>
+            <ul>
+              <li>ปอดซ้าย: 2 พลีบ (หัวใจอยู่ซ้าย)</li>
+              <li>ปอดขวา: 3 พลีบ (ใหญ่กว่า)</li>
+              <li>หุ้มด้วย Pleura 2 ชั้น มีของเหลว</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🏋️ กะบังลม (Diaphragm)</div>
+            <ul>
+              <li>กล้ามเนื้อรูปโดม ใต้ปอด</li>
+              <li>บีบ → ปอดขยาย → หายใจเข้า</li>
+              <li>คลาย → ปอดหด → หายใจออก</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">⚙️ กลไกการหายใจ (Breathing Mechanism)</div>
+        <table class="data-table">
+          <tr><th></th><th>หายใจเข้า (Inspiration)</th><th>หายใจออก (Expiration)</th></tr>
+          <tr><td>กะบังลม</td><td>หดตัว (แบน)</td><td>คลายตัว (โค้งขึ้น)</td></tr>
+          <tr><td>กล้ามเนื้อซี่โครง</td><td>หดตัว (ยกซี่โครงขึ้น)</td><td>คลายตัว</td></tr>
+          <tr><td>ปริมาตรช่องอก</td><td>เพิ่มขึ้น</td><td>ลดลง</td></tr>
+          <tr><td>ความดันในปอด</td><td>ลดลง (< atm)</td><td>เพิ่มขึ้น (> atm)</td></tr>
+          <tr><td>อากาศ</td><td>ไหลเข้า</td><td>ไหลออก</td></tr>
+        </table>
+      </div>
+
+      <div class="alert alert-exam">
+        <div class="alert-icon">📝</div>
+        <div class="alert-body">
+          <strong>ออกสอบบ่อย!</strong>
+          <ul>
+            <li>กะบังลมหดตัว → ช่องอกขยาย → ความดันลด → อากาศไหลเข้า</li>
+            <li>Epiglottis ปิดเมื่อกลืนอาหาร ถ้าล้มเหลวเกิด "สำลัก"</li>
+            <li>กระดูกอ่อน C-shaped ใน Trachea (ป้องกันการแฟบ)</li>
+            <li>ความจุปอด: Tidal Volume (~500 mL), Vital Capacity (~3-5 L)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-misconception">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+          <strong>ข้อเข้าใจผิดที่พบบ่อย</strong>
+          <ul>
+            <li>❌ "ปอดหดและขยายเองได้" — ผิด! ปอดไม่มีกล้ามเนื้อ การขยาย-หดเกิดจากกะบังลมและซี่โครง</li>
+            <li>❌ "หายใจออกเพราะกล้ามเนื้อดันอากาศออก" — ผิด! การหายใจออกปกติเป็น passive (กล้ามเนื้อคลายตัว)</li>
+            <li>❌ "ปอดซ้าย-ขวา ขนาดเท่ากัน" — ผิด! ปอดขวาใหญ่กว่า มี 3 พลีบ</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYER 2 -->
+  <div class="layer">
+    <button class="layer-toggle" onclick="toggleLayer(this)">
+      <span class="layer-badge">Layer 2</span>
+      <span class="layer-title">
+        เจาะลึกเนื้อเยื่อ + การแลกเปลี่ยนแก๊ส
+        <span class="layer-subtitle">เยื่อบุทางเดินหายใจ · Alveoli wall · Diffusion</span>
+      </span>
+      <span class="layer-chevron">▼</span>
+    </button>
+    <div class="layer-body">
+
+      <div class="sub-section">
+        <div class="sub-section-title">🔬 เนื้อเยื่อเยื่อบุทางเดินหายใจ</div>
+        <table class="data-table">
+          <tr><th>บริเวณ</th><th>ชนิดเยื่อบุผิว</th><th>หน้าที่พิเศษ</th></tr>
+          <tr><td>จมูก–หลอดลม</td><td>Pseudostratified columnar + cilia</td><td>โบก mucus + สิ่งแปลกปลอมขึ้น</td></tr>
+          <tr><td>Bronchioles ปลาย</td><td>Simple cuboidal / columnar</td><td>สร้าง surfactant (Clara cells)</td></tr>
+          <tr><td>Alveoli</td><td>Simple squamous (type I)</td><td>แลกเปลี่ยนแก๊สโดย diffusion</td></tr>
+          <tr><td>Alveoli (type II)</td><td>Cuboidal ขนาดใหญ่</td><td>สร้าง surfactant ป้องกันถุงยุบ</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🔄 การแลกเปลี่ยนแก๊สที่ถุงลม</div>
+        <div class="prose-block">
+          <p>แก๊สแลกเปลี่ยนด้วย <strong>Diffusion</strong> ตาม gradient ความดันบางส่วน (partial pressure)</p>
+          <ul>
+            <li>O₂ ในถุงลม (pO₂ ~100 mmHg) > เลือดใน capillary (pO₂ ~40 mmHg) → O₂ แพร่เข้าเลือด</li>
+            <li>CO₂ ในเลือด (pCO₂ ~46 mmHg) > ถุงลม (pCO₂ ~40 mmHg) → CO₂ แพร่ออกถุงลม</li>
+            <li>ระยะห่างบาง: ผนัง Alveolus + ชั้น fluid + Capillary wall รวม ~1–2 µm</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🧪 Surfactant คืออะไร?</div>
+        <div class="prose-block">
+          <ul>
+            <li>ประกอบด้วย Phospholipid (DPPC หลัก) + Protein</li>
+            <li>ลดแรงตึงผิวในถุงลม → ถุงลมไม่ยุบระหว่างหายใจออก</li>
+            <li>ทารกคลอดก่อนกำหนด: Surfactant ไม่พอ → <strong>Respiratory Distress Syndrome (RDS)</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-exam">
+        <div class="alert-icon">📝</div>
+        <div class="alert-body">
+          <strong>ออกสอบบ่อย!</strong>
+          <ul>
+            <li>การแลกเปลี่ยนแก๊สเกิดที่ Alveoli เท่านั้น ไม่ใช่หลอดลม</li>
+            <li>Surfactant ขาด → ถุงลมยุบ (RDS ในทารกก่อนกำหนด)</li>
+            <li>Cilia + Mucus = mucociliary escalator กำจัดฝุ่น</li>
+            <li>ควันบุหรี่ทำลาย Cilia → เสมหะค้าง → ไอเรื้อรัง</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYER 3 -->
+  <div class="layer">
+    <button class="layer-toggle" onclick="toggleLayer(this)">
+      <span class="layer-badge">Layer 3</span>
+      <span class="layer-title">
+        เจาะลึกระดับเซลล์ + การขนส่งแก๊สในเลือด
+        <span class="layer-subtitle">Pneumocyte · O₂ transport · CO₂ transport · ปัจจัยควบคุมการหายใจ</span>
+      </span>
+      <span class="layer-chevron">▼</span>
+    </button>
+    <div class="layer-body">
+
+      <div class="sub-section">
+        <div class="sub-section-title">🚀 การขนส่ง O₂ ในเลือด</div>
+        <table class="data-table">
+          <tr><th>รูปแบบ</th><th>สัดส่วน</th><th>กลไก</th></tr>
+          <tr><td>จับกับ Hemoglobin (HbO₂)</td><td><strong>~98.5%</strong></td><td>Hb + O₂ → Oxyhemoglobin (ที่ปอด)</td></tr>
+          <tr><td>ละลายในพลาสมา</td><td>~1.5%</td><td>โดยตรง แต่น้อยมาก</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🔄 การขนส่ง CO₂ ในเลือด</div>
+        <table class="data-table">
+          <tr><th>รูปแบบ</th><th>สัดส่วน</th><th>กลไก</th></tr>
+          <tr><td>Bicarbonate ion (HCO₃⁻)</td><td><strong>~70%</strong></td><td>CO₂ + H₂O → H₂CO₃ → H⁺ + HCO₃⁻ (Carbonic anhydrase)</td></tr>
+          <tr><td>จับกับ Hb (Carbaminohemoglobin)</td><td>~23%</td><td>CO₂ + Hb-NH₂ → Hb-NHCOO⁻</td></tr>
+          <tr><td>ละลายในพลาสมา</td><td>~7%</td><td>โดยตรง</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🧠 การควบคุมการหายใจ</div>
+        <div class="prose-block">
+          <ul>
+            <li><strong>Respiratory center</strong> อยู่ที่ Medulla oblongata และ Pons</li>
+            <li>ตัวรับรู้หลัก: <strong>CO₂/H⁺</strong> (Chemoreceptor) ไม่ใช่ O₂</li>
+            <li>CO₂ สูง → H⁺ สูง → หายใจเร็ว/ลึก</li>
+            <li>O₂ ต่ำมากๆ จึงกระตุ้น peripheral chemoreceptor (carotid body)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-exam">
+        <div class="alert-icon">📝</div>
+        <div class="alert-body">
+          <strong>ออกสอบบ่อย!</strong>
+          <ul>
+            <li>CO₂ ขนส่งส่วนใหญ่ในรูป HCO₃⁻ (70%) ไม่ใช่จับ Hb</li>
+            <li>ร่างกายเร่งหายใจเพราะ CO₂ สูง ไม่ใช่ O₂ ต่ำ (ยกเว้นกรณีพิเศษ)</li>
+            <li>Bohr Effect: pH ต่ำ หรือ CO₂ สูง → Hb ปล่อย O₂ ง่ายขึ้น</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-misconception">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+          <strong>ข้อเข้าใจผิดที่พบบ่อย</strong>
+          <ul>
+            <li>❌ "หายใจเร็วเพราะ O₂ ต่ำ" — ผิด! ตัวกระตุ้นหลักคือ CO₂ สูง/pH ต่ำ</li>
+            <li>❌ "CO₂ ทั้งหมดจับ Hb" — ผิด! ส่วนใหญ่ (~70%) อยู่ในรูป HCO₃⁻ ในพลาสมา</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== CHAPTER 3 ======================== -->
+<section class="chapter ch3" id="ch3">
+  <div class="chapter-header">
+    <div class="ch-icon">🔄</div>
+    <div class="chapter-title">
+      <h2>บทที่ 3 — ระบบขับถ่าย (Excretory System)</h2>
+      <p>Urinary System · ไต · Nephron · Osmoregulation</p>
+    </div>
+    <button class="expand-all-btn" onclick="expandAll('ch3')">펼치기 ทั้งหมด</button>
+  </div>
+
+  <div class="layer">
+    <button class="layer-toggle" onclick="toggleLayer(this)">
+      <span class="layer-badge">Layer 1</span>
+      <span class="layer-title">อวัยวะ + ความสำคัญ + กลไกภาพรวม<span class="layer-subtitle">ไต · ท่อไต · กระเพาะปัสสาวะ · ท่อปัสสาวะ</span></span>
+      <span class="layer-chevron">▼</span>
+    </button>
+    <div class="layer-body">
+
+      <div class="sub-section">
+        <div class="sub-section-title">🏥 อวัยวะขับถ่าย (ไม่ใช่แค่ไต!)</div>
+        <div class="organ-grid">
+          <div class="organ-card">
+            <div class="organ-name">🫘 ไต (Kidney)</div>
+            <ul>
+              <li>กรองเลือด ~180 L/วัน → ปัสสาวะ ~1.5 L/วัน</li>
+              <li>กำจัด: ยูเรีย, ครีเอทินิน, ยา, ของเสีย</li>
+              <li>ควบคุม pH และความดันโลหิต</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🌬️ ปอด (Lung)</div>
+            <ul>
+              <li>ขับ CO₂ และ H₂O (ไอน้ำ)</li>
+              <li>ควบคุม pH โดยปรับ CO₂</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">💧 ผิวหนัง (Skin)</div>
+            <ul>
+              <li>ขับน้ำ + เกลือ + ยูเรียเล็กน้อย ทางเหงื่อ</li>
+              <li>ช่วยควบคุมอุณหภูมิ</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🟢 ตับ (Liver)</div>
+            <ul>
+              <li>เปลี่ยน NH₃ → ยูเรีย (Urea cycle)</li>
+              <li>สลาย Hb → Bilirubin → น้ำดี → อุจจาระ</li>
+              <li>กำจัดยาและสารพิษ</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🔄 กระบวนการสร้างปัสสาวะ (3 ขั้นตอน)</div>
+        <div class="flow">
+          <span class="flow-step">1. Filtration (กรอง)</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">2. Reabsorption (ดูดกลับ)</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">3. Secretion (หลั่งเพิ่ม)</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">ปัสสาวะ</span>
+        </div>
+      </div>
+
+      <div class="alert alert-exam">
+        <div class="alert-icon">📝</div>
+        <div class="alert-body">
+          <strong>ออกสอบบ่อย!</strong>
+          <ul>
+            <li>ระบบขับถ่ายมี 4 อวัยวะ (ไต ปอด ผิวหนัง ตับ) ไม่ใช่แค่ไต</li>
+            <li>ตับเปลี่ยน NH₃ → Urea ก่อน → ไตขับ Urea ออกทางปัสสาวะ</li>
+            <li>ร่างกายกรองเลือด ~180 L/วัน แต่ดูดกลับ ~178.5 L → ปัสสาวะ ~1.5 L</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-misconception">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+          <strong>ข้อเข้าใจผิดที่พบบ่อย</strong>
+          <ul>
+            <li>❌ "ขับถ่ายคืออุจจาระอย่างเดียว" — ผิด! อุจจาระเป็น "กำจัดกาก" (elimination) ไม่ใช่ขับถ่าย (excretion) แบบแท้จริง</li>
+            <li>❌ "ตับไม่ใช่อวัยวะขับถ่าย" — ผิด! ตับขับถ่ายสารพิษ ยา บิลิรูบิน</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer">
+    <button class="layer-toggle" onclick="toggleLayer(this)">
+      <span class="layer-badge">Layer 2</span>
+      <span class="layer-title">เจาะลึกโครงสร้างไต + Nephron<span class="layer-subtitle">Cortex · Medulla · Nephron · Loop of Henle</span></span>
+      <span class="layer-chevron">▼</span>
+    </button>
+    <div class="layer-body">
+
+      <div class="sub-section">
+        <div class="sub-section-title">🏗️ โครงสร้างไต</div>
+        <table class="data-table">
+          <tr><th>บริเวณ</th><th>โครงสร้าง</th><th>หน้าที่</th></tr>
+          <tr><td>Renal Cortex (เปลือก)</td><td>Glomerulus, Bowman's capsule, PCT, DCT</td><td>กรอง, ดูดกลับส่วนใหญ่</td></tr>
+          <tr><td>Renal Medulla (ชั้นใน)</td><td>Loop of Henle, Collecting duct</td><td>สร้างความเข้มข้น ควบคุม H₂O</td></tr>
+          <tr><td>Renal Pelvis</td><td>ท่อรวมปัสสาวะ</td><td>รวบรวมปัสสาวะ → ท่อไต</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🔬 Nephron — หน่วยทำงานของไต</div>
+        <div class="flow" style="flex-direction:column;align-items:flex-start;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <span class="flow-step">Glomerulus (กรอง)</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Bowman's Capsule</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">PCT (ดูดกลับมาก)</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Loop of Henle</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">DCT</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Collecting Duct</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">📊 การดูดกลับ (Reabsorption) ที่สำคัญ</div>
+        <table class="data-table">
+          <tr><th>บริเวณ</th><th>สิ่งที่ดูดกลับ</th><th>ฮอร์โมนที่เกี่ยวข้อง</th></tr>
+          <tr><td>PCT</td><td>Glucose 100%, Amino acid, Na⁺, H₂O (65%)</td><td>—</td></tr>
+          <tr><td>Loop of Henle</td><td>Na⁺, Cl⁻, H₂O (ascending ไม่รับ H₂O)</td><td>—</td></tr>
+          <tr><td>DCT + Collecting Duct</td><td>Na⁺, H₂O (ปรับตาม ADH)</td><td>ADH, Aldosterone</td></tr>
+        </table>
+        <div class="prose-block">
+          <ul>
+            <li><strong>ADH (Antidiuretic Hormone)</strong>: เพิ่มการดูดน้ำกลับที่ Collecting Duct → ปัสสาวะเข้มข้น</li>
+            <li><strong>Aldosterone</strong>: เพิ่มการดูด Na⁺ → ดึงน้ำตาม → ความดันโลหิตเพิ่ม</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-exam">
+        <div class="alert-icon">📝</div>
+        <div class="alert-body">
+          <strong>ออกสอบบ่อย!</strong>
+          <ul>
+            <li>Glucose ถูกดูดกลับ 100% ที่ PCT (ปกติปัสสาวะไม่มีน้ำตาล)</li>
+            <li>เบาหวาน: glucose ในเลือดสูง → เกิน renal threshold → น้ำตาลออกทางปัสสาวะ</li>
+            <li>ADH มาก → ปัสสาวะน้อย/เข้มข้น, ADH น้อย → ปัสสาวะมาก/จาง</li>
+            <li>ไตซีสต์ (Nephrotic syndrome): protein รั่วออกปัสสาวะ → บวมน้ำ</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer">
+    <button class="layer-toggle" onclick="toggleLayer(this)">
+      <span class="layer-badge">Layer 3</span>
+      <span class="layer-title">เจาะลึกระดับเซลล์ + กลไกโมเลกุล<span class="layer-subtitle">Podocyte · Aquaporin · Renin-Angiotensin · pH regulation</span></span>
+      <span class="layer-chevron">▼</span>
+    </button>
+    <div class="layer-body">
+
+      <div class="sub-section">
+        <div class="sub-section-title">🔬 เซลล์สำคัญใน Nephron</div>
+        <table class="data-table">
+          <tr><th>เซลล์</th><th>ตำแหน่ง</th><th>หน้าที่</th></tr>
+          <tr><td>Podocyte</td><td>Bowman's capsule</td><td>ช่วยกรอง มี filtration slits ป้องกัน protein ผ่าน</td></tr>
+          <tr><td>Principal cells</td><td>Collecting duct</td><td>มี Aquaporin channel รับ ADH ดูด H₂O</td></tr>
+          <tr><td>Intercalated cells</td><td>Collecting duct</td><td>หลั่ง H⁺ หรือ HCO₃⁻ ควบคุม pH เลือด</td></tr>
+          <tr><td>Juxtaglomerular cells</td><td>Afferent arteriole</td><td>หลั่ง Renin เมื่อความดันต่ำ</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🔗 Renin-Angiotensin-Aldosterone System (RAAS)</div>
+        <div class="flow">
+          <span class="flow-step">ความดันต่ำ</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Renin (ไต)</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Angiotensin I→II</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Aldosterone (ต่อมหมวกไต)</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">ดูด Na⁺+H₂O → ความดันเพิ่ม</span>
+        </div>
+      </div>
+
+      <div class="alert alert-exam">
+        <div class="alert-icon">📝</div>
+        <div class="alert-body">
+          <strong>ออกสอบบ่อย!</strong>
+          <ul>
+            <li>Aquaporin คือช่องน้ำที่ควบคุมโดย ADH — ออกสอบสายวิทย์ระดับสูง</li>
+            <li>RAAS: ไต → สร้าง Renin → ควบคุม Aldosterone → ควบคุมความดัน</li>
+            <li>ไตควบคุม pH เลือด โดย H⁺/HCO₃⁻ (ช้า แต่แม่นยำ กว่าปอด)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== CHAPTER 4 ======================== -->
+<section class="chapter ch4" id="ch4">
+  <div class="chapter-header">
+    <div class="ch-icon">🧠</div>
+    <div class="chapter-title">
+      <h2>บทที่ 4 — ระบบประสาท (Nervous System)</h2>
+      <p>Central / Peripheral · Neuron · Synapse · Reflex</p>
+    </div>
+    <button class="expand-all-btn" onclick="expandAll('ch4')">펼치기 ทั้งหมด</button>
+  </div>
+
+  <div class="layer">
+    <button class="layer-toggle" onclick="toggleLayer(this)">
+      <span class="layer-badge">Layer 1</span>
+      <span class="layer-title">อวัยวะ + ความสำคัญ + กลไกภาพรวม<span class="layer-subtitle">สมอง · ไขสันหลัง · ระบบประสาทส่วนกลาง/ส่วนปลาย</span></span>
+      <span class="layer-chevron">▼</span>
+    </button>
+    <div class="layer-body">
+
+      <div class="sub-section">
+        <div class="sub-section-title">🗂️ แผนภาพระบบประสาท</div>
+        <table class="data-table">
+          <tr><th colspan="3">ระบบประสาทมนุษย์</th></tr>
+          <tr><td><strong>CNS (ส่วนกลาง)</strong></td><td colspan="2">สมอง (Brain) + ไขสันหลัง (Spinal cord)</td></tr>
+          <tr><td><strong>PNS (ส่วนปลาย)</strong></td><td>Somatic (ควบคุมได้): กล้ามเนื้อลาย</td><td>Autonomic (ไม่ควบคุม): อวัยวะภายใน</td></tr>
+          <tr><td></td><td></td><td>Sympathetic (fight/flight) + Parasympathetic (rest/digest)</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🧠 ส่วนต่างๆ ของสมอง</div>
+        <div class="organ-grid">
+          <div class="organ-card">
+            <div class="organ-name">🧠 Cerebrum (สมองใหญ่)</div>
+            <ul>
+              <li>ความคิด ความจำ อารมณ์ การพูด</li>
+              <li>แบ่ง 4 lobe: Frontal, Parietal, Temporal, Occipital</li>
+              <li>Cerebral cortex = เปลือกสมอง (Gray matter)</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🔵 Cerebellum (สมองน้อย)</div>
+            <ul>
+              <li>ควบคุม <strong>การทรงตัว + ประสานกล้ามเนื้อ</strong></li>
+              <li>ไม่ใช่ความคิด</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🟣 Brain Stem (ก้านสมอง)</div>
+            <ul>
+              <li><strong>Medulla oblongata</strong>: ควบคุมหายใจ หัวใจ ความดัน</li>
+              <li><strong>Pons</strong>: เชื่อม cerebellum กับ cerebrum</li>
+              <li><strong>Midbrain</strong>: ควบคุมการมองเห็น การได้ยินพื้นฐาน</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🟡 Diencephalon</div>
+            <ul>
+              <li><strong>Thalamus</strong>: สถานีถ่ายทอดประสาทรับความรู้สึก</li>
+              <li><strong>Hypothalamus</strong>: ควบคุม อุณหภูมิ ความหิว ฮอร์โมน เชื่อมกับ Pituitary</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-exam">
+        <div class="alert-icon">📝</div>
+        <div class="alert-body">
+          <strong>ออกสอบบ่อย!</strong>
+          <ul>
+            <li>Medulla oblongata ควบคุมหายใจและหัวใจ → ถ้าเสียหาย ตายได้ทันที</li>
+            <li>Cerebellum = การทรงตัว/ประสานงาน ไม่ใช่ความคิด</li>
+            <li>Hypothalamus เชื่อมระบบประสาทกับฮอร์โมน (neuroendocrine)</li>
+            <li>Sympathetic: หัวใจเต้นเร็ว, ม่านตาขยาย, ย่อยอาหารช้า</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-misconception">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+          <strong>ข้อเข้าใจผิดที่พบบ่อย</strong>
+          <ul>
+            <li>❌ "สมองน้อย = สมองส่วนคิด" — ผิด! สมองน้อย = ทรงตัว/ประสานงาน</li>
+            <li>❌ "ระบบประสาทอัตโนมัติ = ควบคุมได้" — ผิด! Autonomic = ควบคุมไม่ได้โดยตั้งใจ</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer">
+    <button class="layer-toggle" onclick="toggleLayer(this)">
+      <span class="layer-badge">Layer 2</span>
+      <span class="layer-title">เจาะลึกเนื้อเยื่อ + Synapse + Reflex<span class="layer-subtitle">เนื้อเยื่อประสาท · Gray/White matter · Reflex arc</span></span>
+      <span class="layer-chevron">▼</span>
+    </button>
+    <div class="layer-body">
+
+      <div class="sub-section">
+        <div class="sub-section-title">🔬 เนื้อเยื่อในระบบประสาท</div>
+        <table class="data-table">
+          <tr><th>เนื้อเยื่อ</th><th>ประกอบด้วย</th><th>ตำแหน่ง</th></tr>
+          <tr><td><strong>Gray matter</strong></td><td>ตัวเซลล์ประสาท (cell body) + dendrite</td><td>เปลือกสมอง, ส่วนกลางไขสันหลัง</td></tr>
+          <tr><td><strong>White matter</strong></td><td>Axon มี Myelin sheath หุ้ม</td><td>ส่วนในสมอง, รอบนอกไขสันหลัง</td></tr>
+          <tr><td><strong>Glial cells</strong></td><td>Astrocyte, Oligodendrocyte, Microglia</td><td>ทั่วระบบประสาท (ช่วยค้ำยัน)</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">⚡ Synapse (จุดเชื่อมต่อ)</div>
+        <div class="flow">
+          <span class="flow-step">Action potential มาถึง Terminal</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Ca²⁺ เข้าเซลล์</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Vesicle ปล่อย Neurotransmitter</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">จับ Receptor เซลล์ถัดไป</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">กระตุ้น/ยับยั้ง</span>
+        </div>
+        <div class="prose-block">
+          <ul>
+            <li><strong>Acetylcholine (ACh)</strong>: NMJ, Parasympathetic, CNS</li>
+            <li><strong>Dopamine</strong>: ความพึงพอใจ, การเคลื่อนไหว (ขาด → Parkinson)</li>
+            <li><strong>Serotonin</strong>: อารมณ์ การนอน (ขาด → Depression)</li>
+            <li><strong>GABA</strong>: ยับยั้ง (inhibitory) หลัก</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🔄 Reflex Arc (วงจรรีเฟล็กซ์)</div>
+        <div class="flow">
+          <span class="flow-step">Receptor (รับสิ่งเร้า)</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Sensory neuron</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Spinal cord (Integration)</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Motor neuron</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Effector (ตอบสนอง)</span>
+        </div>
+        <p style="font-size:0.85rem;color:var(--text2);margin-top:8px;">Reflex arc ไม่ผ่านสมอง → ตอบสนองเร็วกว่าการสั่งจากสมอง</p>
+      </div>
+
+      <div class="alert alert-exam">
+        <div class="alert-icon">📝</div>
+        <div class="alert-body">
+          <strong>ออกสอบบ่อย!</strong>
+          <ul>
+            <li>Reflex ผ่านไขสันหลัง ไม่ผ่านสมอง (แต่สมองรับรู้ได้ทีหลัง)</li>
+            <li>Gray matter = cell body, White matter = axon มี myelin</li>
+            <li>Synapse: ข้อมูลไปทิศทางเดียว (Presynaptic → Postsynaptic)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer">
+    <button class="layer-toggle" onclick="toggleLayer(this)">
+      <span class="layer-badge">Layer 3</span>
+      <span class="layer-title">เจาะลึกระดับเซลล์ + Action Potential<span class="layer-subtitle">Neuron · Resting potential · Action potential · Myelin · Ion channels</span></span>
+      <span class="layer-chevron">▼</span>
+    </button>
+    <div class="layer-body">
+
+      <div class="sub-section">
+        <div class="sub-section-title">⚡ Action Potential (กระแสประสาท)</div>
+        <table class="data-table">
+          <tr><th>ขั้นตอน</th><th>ไอออน</th><th>ศักย์ไฟฟ้า</th></tr>
+          <tr><td>Resting potential</td><td>Na⁺ นอก > ใน, K⁺ ใน > นอก</td><td>-70 mV</td></tr>
+          <tr><td>Depolarization</td><td>Na⁺ channel เปิด → Na⁺ ไหลเข้า</td><td>-70 → +30 mV</td></tr>
+          <tr><td>Repolarization</td><td>K⁺ channel เปิด → K⁺ ไหลออก</td><td>+30 → -70 mV</td></tr>
+          <tr><td>Hyperpolarization</td><td>K⁺ ยังไหลออกต่อ</td><td>< -70 mV (ชั่วคราว)</td></tr>
+          <tr><td>Restore</td><td>Na⁺/K⁺ ATPase pump</td><td>คืนสู่ -70 mV</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🧦 Myelin Sheath + Saltatory Conduction</div>
+        <div class="prose-block">
+          <ul>
+            <li>Myelin สร้างโดย Schwann cells (PNS) หรือ Oligodendrocyte (CNS)</li>
+            <li>ช่องว่างระหว่าง Myelin = <strong>Node of Ranvier</strong></li>
+            <li>กระแสกระโดดจาก Node → Node = <strong>Saltatory conduction</strong> (เร็วกว่า)</li>
+            <li>MS (Multiple Sclerosis): Myelin ถูกทำลาย → กระแสประสาทช้า/สับสน</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-exam">
+        <div class="alert-icon">📝</div>
+        <div class="alert-body">
+          <strong>ออกสอบบ่อย!</strong>
+          <ul>
+            <li>Na⁺ เข้าเซลล์ = Depolarization (ศักย์เพิ่ม), K⁺ ออก = Repolarization</li>
+            <li>All-or-none principle: Action potential เกิดหรือไม่เกิด ไม่มีครึ่งๆ</li>
+            <li>Myelin เพิ่มความเร็ว โดยทำให้กระแสกระโดดข้ามแทนไหลตลอด</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-misconception">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+          <strong>ข้อเข้าใจผิดที่พบบ่อย</strong>
+          <ul>
+            <li>❌ "Na⁺ มากในเซลล์ขณะพัก" — ผิด! K⁺ มากในเซลล์, Na⁺ มากนอกเซลล์</li>
+            <li>❌ "Depolarization เกิดเพราะ K⁺ เข้า" — ผิด! Na⁺ เข้าทำให้ Depolarize</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== CHAPTER 5 ======================== -->
+<section class="chapter ch5" id="ch5">
+  <div class="chapter-header">
+    <div class="ch-icon">🌸</div>
+    <div class="chapter-title">
+      <h2>บทที่ 5 — ระบบสืบพันธุ์ (Reproductive System)</h2>
+      <p>Male / Female Anatomy · Gametogenesis · Hormones · Fertilization</p>
+    </div>
+    <button class="expand-all-btn" onclick="expandAll('ch5')">펼치기 ทั้งหมด</button>
+  </div>
+
+  <div class="layer">
+    <button class="layer-toggle" onclick="toggleLayer(this)">
+      <span class="layer-badge">Layer 1</span>
+      <span class="layer-title">อวัยวะ + ความสำคัญ + ภาพรวม<span class="layer-subtitle">อวัยวะสืบพันธุ์ชาย-หญิง · ฮอร์โมนหลัก</span></span>
+      <span class="layer-chevron">▼</span>
+    </button>
+    <div class="layer-body">
+
+      <div class="sub-section">
+        <div class="sub-section-title">♂️ ระบบสืบพันธุ์ชาย</div>
+        <div class="organ-grid">
+          <div class="organ-card">
+            <div class="organ-name">🔵 Testis (อัณฑะ)</div>
+            <ul>
+              <li>สร้างอสุจิ (Spermatogenesis) ที่ Seminiferous tubules</li>
+              <li>สร้าง Testosterone (Leydig cells)</li>
+              <li>อยู่นอกช่องท้อง อุณหภูมิต่ำกว่าร่างกาย 2–3°C (เหมาะสร้างอสุจิ)</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🔵 Epididymis</div>
+            <ul>
+              <li>อสุจิสุกและสะสม (20–24 วัน)</li>
+              <li>เรียนรู้การว่ายน้ำ</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🔵 ต่อมและสารสนับสนุน</div>
+            <ul>
+              <li><strong>Seminal vesicle</strong>: Fructose (พลังงานอสุจิ) + prostaglandin</li>
+              <li><strong>Prostate gland</strong>: น้ำอัลคาไลน์ ปรับ pH ช่องคลอด</li>
+              <li><strong>Bulbourethral gland</strong>: หล่อลื่นท่อปัสสาวะ</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">♀️ ระบบสืบพันธุ์หญิง</div>
+        <div class="organ-grid">
+          <div class="organ-card">
+            <div class="organ-name">🔴 Ovary (รังไข่)</div>
+            <ul>
+              <li>สร้างไข่ (Oogenesis)</li>
+              <li>สร้าง Estrogen + Progesterone</li>
+              <li>Follicle พัฒนาไข่ → Corpus luteum หลังตกไข่</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🔴 Fallopian Tube (ท่อนำไข่)</div>
+            <ul>
+              <li>รับไข่จากรังไข่</li>
+              <li><strong>การปฏิสนธิเกิดที่นี่</strong> (ส่วน Ampulla)</li>
+              <li>Cilia โบกไข่เข้าสู่มดลูก</li>
+            </ul>
+          </div>
+          <div class="organ-card">
+            <div class="organ-name">🔴 Uterus (มดลูก)</div>
+            <ul>
+              <li><strong>Endometrium</strong>: เยื่อบุ หนาขึ้นรับตัวอ่อน / หลุดลอก = ประจำเดือน</li>
+              <li>Myometrium: กล้ามเนื้อ บีบตัวคลอด</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🔃 วงจรประจำเดือน (Menstrual Cycle) ~28 วัน</div>
+        <table class="data-table">
+          <tr><th>ระยะ</th><th>วันที่ (โดยประมาณ)</th><th>เหตุการณ์</th><th>ฮอร์โมน</th></tr>
+          <tr><td>Menstruation</td><td>1–5</td><td>Endometrium หลุดลอก → เลือดออก</td><td>Estrogen + Progesterone ต่ำ</td></tr>
+          <tr><td>Follicular</td><td>6–13</td><td>Follicle พัฒนา, Endometrium หนา</td><td>FSH สูง, Estrogen เพิ่ม</td></tr>
+          <tr><td>Ovulation</td><td>14</td><td>ไข่ตก (ovum ออกจาก follicle)</td><td>LH surge สูง</td></tr>
+          <tr><td>Luteal</td><td>15–28</td><td>Corpus luteum สร้าง Progesterone รอรับตัวอ่อน</td><td>Progesterone สูง</td></tr>
+        </table>
+      </div>
+
+      <div class="alert alert-exam">
+        <div class="alert-icon">📝</div>
+        <div class="alert-body">
+          <strong>ออกสอบบ่อย!</strong>
+          <ul>
+            <li>การปฏิสนธิเกิดที่ Fallopian Tube ไม่ใช่มดลูก</li>
+            <li>LH Surge → กระตุ้นการตกไข่ (Ovulation)</li>
+            <li>ถ้าไม่มีการปฏิสนธิ: Corpus luteum สลาย → Progesterone ลด → ประจำเดือน</li>
+            <li>ถ้ามีการปฏิสนธิ: Embryo หลั่ง hCG → Corpus luteum ยังผลิต Progesterone ต่อ</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-misconception">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+          <strong>ข้อเข้าใจผิดที่พบบ่อย</strong>
+          <ul>
+            <li>❌ "การปฏิสนธิเกิดในมดลูก" — ผิด! เกิดที่ท่อนำไข่ (Ampulla)</li>
+            <li>❌ "ตกไข่วันที่ 14 เสมอ" — ผิด! ขึ้นกับความยาวรอบเดือนของแต่ละคน</li>
+            <li>❌ "Testosterone สร้างที่ Seminiferous tubules" — ผิด! สร้างที่ Leydig cells</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer">
+    <button class="layer-toggle" onclick="toggleLayer(this)">
+      <span class="layer-badge">Layer 2</span>
+      <span class="layer-title">เจาะลึกเนื้อเยื่อ + กระบวนการสร้างเซลล์สืบพันธุ์<span class="layer-subtitle">Spermatogenesis · Oogenesis · Folliculogenesis · Endometrium</span></span>
+      <span class="layer-chevron">▼</span>
+    </button>
+    <div class="layer-body">
+
+      <div class="sub-section">
+        <div class="sub-section-title">🔬 เนื้อเยื่อใน Testis</div>
+        <table class="data-table">
+          <tr><th>เนื้อเยื่อ/เซลล์</th><th>หน้าที่</th></tr>
+          <tr><td>Seminiferous tubules</td><td>หลอดขดสร้างอสุจิ (Spermatogenesis)</td></tr>
+          <tr><td>Sertoli cells</td><td>ห่อหุ้มและบำรุงอสุจิที่กำลังพัฒนา, Blood-testis barrier</td></tr>
+          <tr><td>Leydig cells</td><td>สร้าง Testosterone (กระตุ้นโดย LH)</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🔬 เนื้อเยื่อใน Ovary + กระบวนการ Oogenesis</div>
+        <table class="data-table">
+          <tr><th>โครงสร้าง</th><th>รายละเอียด</th></tr>
+          <tr><td>Primordial follicle</td><td>มีตั้งแต่แรกเกิด ~2 ล้านใบ → เหลือ ~400,000 เมื่อเข้าสู่วัยรุ่น</td></tr>
+          <tr><td>Primary follicle</td><td>เซลล์ Granulosa ล้อมรอบ oocyte</td></tr>
+          <tr><td>Graafian follicle</td><td>ถุงเต็มรูปแบบ พร้อมตกไข่ มี Antrum (โพรงน้ำ)</td></tr>
+          <tr><td>Corpus luteum</td><td>หลัง ovulation → สร้าง Progesterone รอ implantation</td></tr>
+          <tr><td>Corpus albicans</td><td>Corpus luteum ฝ่อ (ถ้าไม่มีปฏิสนธิ)</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">⚖️ Spermatogenesis vs Oogenesis</div>
+        <table class="data-table">
+          <tr><th></th><th>Spermatogenesis</th><th>Oogenesis</th></tr>
+          <tr><td>เริ่มเมื่อ</td><td>วัยแรกรุ่น → ตลอดชีวิต</td><td>ก่อนเกิด, หยุดชั่วคราว → ต่อเมื่อ puberty</td></tr>
+          <tr><td>ผลผลิต</td><td><strong>4 อสุจิ</strong> ต่อ spermatocyte 1 ใบ</td><td><strong>1 ไข่ + 3 polar body</strong></td></tr>
+          <tr><td>Meiosis II</td><td>เสร็จก่อนออกจาก testis</td><td>เสร็จ <strong>หลังปฏิสนธิ</strong> เท่านั้น</td></tr>
+          <tr><td>จำนวนที่ผลิต</td><td>ล้านตัว/วัน</td><td>1 ใบ/เดือน (~400 ตลอดชีวิต)</td></tr>
+        </table>
+      </div>
+
+      <div class="alert alert-exam">
+        <div class="alert-icon">📝</div>
+        <div class="alert-body">
+          <strong>ออกสอบบ่อย!</strong>
+          <ul>
+            <li>Spermatogenesis → 4 เซลล์, Oogenesis → 1 ไข่ + 3 polar body</li>
+            <li>Meiosis II ของไข่เสร็จหลังปฏิสนธิ (Secondary oocyte ถูกปฏิสนธิ ไม่ใช่ mature ovum)</li>
+            <li>Sertoli cells สร้าง Blood-testis barrier ปกป้องอสุจิจากภูมิคุ้มกัน</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer">
+    <button class="layer-toggle" onclick="toggleLayer(this)">
+      <span class="layer-badge">Layer 3</span>
+      <span class="layer-title">เจาะลึกระดับเซลล์ + ฮอร์โมน + การปฏิสนธิ<span class="layer-subtitle">HPG axis · Acrosome reaction · Implantation · hCG</span></span>
+      <span class="layer-chevron">▼</span>
+    </button>
+    <div class="layer-body">
+
+      <div class="sub-section">
+        <div class="sub-section-title">🔗 Hypothalamus–Pituitary–Gonad (HPG) Axis</div>
+        <div class="flow">
+          <span class="flow-step">Hypothalamus → GnRH</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Anterior Pituitary → FSH + LH</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Gonad (Testis/Ovary)</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Testosterone / Estrogen</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Feedback ยับยั้ง</span>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🐟 กระบวนการปฏิสนธิ (Fertilization)</div>
+        <div class="flow" style="flex-direction:column; align-items:flex-start;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <span class="flow-step">อสุจิว่ายถึงไข่ที่ Ampulla</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Acrosome reaction (ปล่อยเอนไซม์เจาะ Zona pellucida)</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">เยื่อหุ้มรวมกัน</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Cortical reaction (ป้องกันอสุจิอื่น)</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Zygote</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-section-title">🧬 หลังปฏิสนธิ → Implantation</div>
+        <table class="data-table">
+          <tr><th>ระยะ</th><th>วันหลังปฏิสนธิ</th><th>เหตุการณ์</th></tr>
+          <tr><td>Zygote</td><td>0</td><td>เซลล์ 1 ใบ (2n)</td></tr>
+          <tr><td>Morula</td><td>3–4</td><td>กลุ่มเซลล์ตัน ~16 เซลล์</td></tr>
+          <tr><td>Blastocyst</td><td>5–6</td><td>มีโพรงน้ำ แบ่ง Inner cell mass + Trophoblast</td></tr>
+          <tr><td>Implantation</td><td>6–10</td><td>ฝังใน Endometrium → Trophoblast หลั่ง hCG</td></tr>
+        </table>
+        <div class="prose-block">
+          <ul>
+            <li><strong>hCG (Human Chorionic Gonadotropin)</strong>: ฮอร์โมนที่ตรวจสอบ "การตั้งครรภ์" ใน pregnancy test</li>
+            <li>hCG กระตุ้น Corpus luteum ให้ผลิต Progesterone ต่อ → ไม่มีประจำเดือน</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-exam">
+        <div class="alert-icon">📝</div>
+        <div class="alert-body">
+          <strong>ออกสอบบ่อย!</strong>
+          <ul>
+            <li>Pregnancy test ตรวจ hCG ในปัสสาวะ (ไม่ใช่ Progesterone)</li>
+            <li>Acrosome = organelle ที่ปลายอสุจิ มีเอนไซม์เจาะ Zona pellucida</li>
+            <li>Cortical reaction ป้องกัน polyspermy (อสุจิหลายตัวปฏิสนธิพร้อมกัน)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert alert-misconception">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+          <strong>ข้อเข้าใจผิดที่พบบ่อย</strong>
+          <ul>
+            <li>❌ "ไข่เริ่มแบ่งตัวในรังไข่" — ผิด! ไข่เริ่มแบ่งเป็น Morula/Blastocyst ใน Fallopian Tube ระหว่างเดินทางสู่มดลูก</li>
+            <li>❌ "Pregnancy test ตรวจ Progesterone" — ผิด! ตรวจ hCG</li>
+            <li>❌ "FSH ทำหน้าที่เหมือนกันในชาย-หญิง" — ผิด! ชาย: FSH กระตุ้น Sertoli cell / หญิง: FSH กระตุ้น Follicle</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>📚 สรุปเนื้อหาชีววิทยา ม.ต้น–ม.ปลาย · ระบบร่างกายมนุษย์ · เนื้อหาถูกต้องตามหลักวิชาการ</p>
+</footer>
+
+<script>
+  // ===== THEME TOGGLE =====
+  let dark = false;
+  function toggleTheme() {
+    dark = !dark;
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    document.getElementById('themeIcon').textContent = dark ? '☀️' : '🌙';
+    document.getElementById('themeLabel').textContent = dark ? 'Light' : 'Dark';
+  }
+
+  // ===== LAYER TOGGLE =====
+  function toggleLayer(btn) {
+    const body = btn.nextElementSibling;
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    btn.classList.toggle('active', !isOpen);
+  }
+
+  // ===== EXPAND ALL =====
+  function expandAll(chapterId) {
+    const chapter = document.getElementById(chapterId);
+    const bodies = chapter.querySelectorAll('.layer-body');
+    const btns = chapter.querySelectorAll('.layer-toggle');
+    const anyOpen = Array.from(bodies).some(b => b.classList.contains('open'));
+    bodies.forEach(b => b.classList.toggle('open', !anyOpen));
+    btns.forEach(b => b.classList.toggle('active', !anyOpen));
+    // Update button text
+    const expandBtn = chapter.querySelector('.expand-all-btn');
+    if (expandBtn) expandBtn.textContent = anyOpen ? '펼치기 ทั้งหมด' : 'ซ่อนทั้งหมด';
+  }
+
+  // Smooth scroll offset for sticky header
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        const offset = 80;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
