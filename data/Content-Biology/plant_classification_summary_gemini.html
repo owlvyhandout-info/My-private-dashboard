@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIO-สรุปเนื้อหา: คลังข้อมูลการจำแนกอาณาจักรพืช (Plant Kingdom)</title>
+    <style>
+        /* Base Palette & Variables */
+        :root {
+            --bg-body: #f8fafc;
+            --bg-container: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --badge-bg-flow: #dbeafe;
+            --badge-text-flow: #1e40af;
+            --badge-bg-seedless: #fef3c7;
+            --badge-text-seedless: #92400e;
+        }
+
+        body.dark-theme {
+            --bg-body: #0b1329;
+            --bg-container: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #38bdf8;
+            --secondary: #0284c7;
+            --accent-green: #34d399;
+            --accent-amber: #fbbf24;
+            --accent-red: #f87171;
+            --border-color: #334155;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+            --badge-bg-flow: #1e3a8a;
+            --badge-text-flow: #93c5fd;
+            --badge-bg-seedless: #78350f;
+            --badge-text-seedless: #fde68a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Header & Navigation styling */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: var(--bg-container);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 20px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .toggle-btn {
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        body.dark-theme .toggle-btn {
+            background-color: #ffffff;
+            color: #0b1329;
+        }
+
+        /* Section Global Layout */
+        section {
+            background-color: var(--bg-container);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-left: 5px solid var(--secondary);
+            padding-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        h3 {
+            font-size: 15px;
+            color: var(--secondary);
+            margin: 15px 0 8px 0;
+        }
+
+        p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        /* Grid System for Groups */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(48%, 1fr));
+            gap: 20px;
+        }
+
+        /* Cards for Plant Classifications */
+        .plant-card {
+            background-color: var(--bg-body);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .plant-card h3 {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 5px;
+            margin-top: 0;
+        }
+
+        .meta-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .meta-list li {
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .meta-list li strong {
+            min-width: 100px;
+            color: var(--text-main);
+            display: inline-block;
+        }
+
+        .example-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 5px;
+        }
+
+        .tag {
+            background-color: var(--border-color);
+            color: var(--text-main);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Exam Trap Badges */
+        .badge-flow {
+            background-color: var(--badge-bg-flow);
+            color: var(--badge-text-flow);
+            font-weight: bold;
+        }
+
+        .badge-seedless {
+            background-color: var(--badge-bg-seedless);
+            color: var(--badge-text-seedless);
+            font-weight: bold;
+        }
+
+        /* Tables for Monocot / Dicot */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--border-color);
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* Callout Box styling */
+        .callout-box {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 15px;
+        }
+
+        .callout-box.warn {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--accent-amber);
+        }
+
+        /* Group Lists for Memory */
+        .memory-group {
+            background-color: var(--bg-body);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .memory-title {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <header>
+        <h1>BIO-สรุปเนื้อหา: คลังข้อมูลการจำแนกอาณาจักรพืช (Plant Kingdom)</h1>
+        <button class="toggle-btn" id="theme-toggle">🌙 Deep Blue Navy Mode</button>
+    </header>
+
+    <!-- SECTION 1: วิธีการสังเกตพืชดอกฉบับใช้งานจริง -->
+    <section>
+        <h2>📌 วิธีการสังเกตพืชดอก ฉบับใช้งานจริง (Field Guide Checklist)</h2>
+        <p>หลักเกณฑ์ 3 ข้อสากลสำหรับใช้พิจารณาความสัมพันธ์และจำแนกกลุ่มพืชดอกเมื่อเจอข้อสอบหลอกหรือพืชในธรรมชาติ:</p>
+        
+        <div class="plant-card">
+            <ul class="meta-list">
+                <li>
+                    <strong>1. การมีดอก :</strong> 
+                    <span>มีอวัยวะสืบพันธุ์คือ "ดอก" แต่พืชดอกหลายชนิดในธรรมชาติ <strong>มองเห็นดอกไม่ชัดเจน</strong> หรือ <strong>ออกดอกตามฤดูกาลเท่านั้น</strong> <br>
+                    <small>💡 <em>ตัวอย่าง:</em> แหน, ไข่น้ำ (ผำ) มีดอกขนาดจิ๋วเท่าเข็มหมุด, ตะบองเพชร ออกดอกเฉพาะฤดูชื้นหรืออุณหภูมิเหมาะสม, ไผ่ ออกดอกยากมากก่อนจะตาย (ออกดอกสะพรั่ง)</small></span>
+                </li>
+                <li>
+                    <strong>2. การมีผล :</strong> 
+                    <span>หากพบโครงสร้างที่เป็น <strong>"ผล"</strong> ยืนยันได้ 100% ว่าเป็นพืชดอก เนื่องจากผลเจริญเติบโตมาจากรังไข่ (Ovary) ซึ่งพบเฉพาะในพืชดอกเท่านั้น <br>
+                    <small>💡 <em>ตัวอย่างพืชไม้ใบ/ผัก:</em> พริก, มะเขือ, ฟักทอง (ทางชีววิทยาคือผล) รวมถึงกลุ่มไม้ใบประดับ เช่น <strong>โกสน</strong>, พลูด่าง, สาวน้อยประแป้ง ก็นับเป็นพืชดอกเช่นกัน (ดอกลดรูปและมักออกยาก)</small></span>
+                </li>
+                <li>
+                    <strong>3. การระบุระบบใบเลี้ยง :</strong> 
+                    <span>หากพืชชนิดนั้นสามารถจำแนกได้ชัดเจนว่าเป็น <strong>"พืชใบเลี้ยงเดี่ยว"</strong> หรือ <strong>"พืชใบเลี้ยงคู่"</strong> (ตามโครงสร้างราก ลำต้น หรือเส้นใบ) พืชชนิดนั้นจะจัดอยู่ในกลุ่ม <strong>"พืชดอก"</strong> แน่นอน เพราะพืชเมล็ดเปลือยและพืชไม่มีท่อลำเลียงไม่มีระบบใบเลี้ยงนี้</span>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- SECTION 2: เกณฑ์การจำแนกพืช 4 กลุ่มหลัก -->
+    <section>
+        <h2>🌿 เกณฑ์การจำแนกพืช 4 กลุ่มหลัก (สรุปลักษณะเด่นและการขยายพันธุ์)</h2>
+        
+        <div class="grid-2">
+            <!-- กลุ่มที่ 1: ไม่มีท่อลำเลียง -->
+            <div class="plant-card">
+                <h3>1. พืชไม่มีท่อลำเลียง (Non-Vascular Plants)</h3>
+                <ul class="meta-list">
+                    <li><strong>ลักษณะเด่น:</strong> ไม่มีราก ลำต้น ใบที่แท้จริง มีโครงสร้างคล้ายรากเรียกว่า ไรซอยด์ (Rhizoid) ช่วยยึดเกาะ ขนาดเล็กมาก ไม่มีท่อลำเลียงน้ำ/อาหาร (Xylem/Phloem) ระยะแกมีโทไฟต์ (เด่น) เด่นชัดกว่าสปอโรไฟต์</li>
+                    <li><strong>การขยายพันธุ์:</strong> อาศัยน้ำหรือความชื้นสูงเพื่อให้สเปิร์มว่ายไปปฏิสนธิกับไข่ สร้างสปอร์ในการแพร่พันธุ์</li>
+                    <li><strong>การสังเกต:</strong> เจริญเติบโตหนาแน่นรวมกันเป็นกลุ่มเหมือนพรมสีเขียวตามบริเวณที่ชื้นแฉะ โขดหิน หรือน้ำตก</li>
+                    <li><strong>ตัวอย่างพืช:</strong></li>
+                </ul>
+                <div class="example-tags">
+                    <span class="tag">มอส (Moss)</span>
+                    <span class="tag">ลิเวอร์เวิร์ต (Liverwort)</span>
+                    <span class="tag">ฮอร์นเวิร์ต (Hornwort)</span>
+                    <span class="tag">ข้าวตอกฤาษี (Sphagnum Moss)</span>
+                </div>
+            </div>
+
+            <!-- กลุ่มที่ 2: มีท่อลำเลียง แต่ไม่มีเมล็ด -->
+            <div class="plant-card">
+                <h3>2. พืชมีท่อลำเลียง ไม่มีเมล็ด (Vascular Seedless Plants)</h3>
+                <ul class="meta-list">
+                    <li><strong>ลักษณะเด่น:</strong> มีท่อลำเลียงแล้ว ลำต้นและใบเริ่มพัฒนาชัดเจน (ยกเว้นหวายทะนอยไม่มีรากและใบแท้จริง) ต้นสปอโรไฟต์เด่นชัด มีใบอ่อนม้วนงอคล้ายหัวม้วน (Circinate vernation) ในกลุ่มเฟิร์น</li>
+                    <li><strong>การขยายพันธุ์:</strong> สร้างอับสปอร์ (Sporangium) รวมเป็นกลุ่มสปอร์ (Sorus) อยู่ใต้ใบ หรือปลายกิ่ง ยังคงต้องอาศัยน้ำในการปฏิสนธิ</li>
+                    <li><strong>การสังเกต:</strong> พลิกดูใต้ใบจะเห็นจุดสีน้ำตาลหรือดำ (Sorus) เรียงตัวเป็นระเบียบ ใบอ่อนม้วนงอชัดเจน</li>
+                    <li><strong>ตัวอย่างพืช:</strong></li>
+                </ul>
+                <div class="example-tags">
+                    <span class="tag">หวายทะนอย</span>
+                    <span class="tag">ผักแว่น</span>
+                    <span class="tag">แหนแดง</span>
+                    <span class="tag">จอกหูหนู</span>
+                    <span class="tag">ข้าหลวงหลังลาย</span>
+                    <span class="tag">ชายผ้าสีดา</span>
+                </div>
+            </div>
+
+            <!-- กลุ่มที่ 3: มีท่อลำเลียง เมล็ดเปลือย -->
+            <div class="plant-card">
+                <h3>3. พืชเมล็ดเปลือย (Gymnosperms)</h3>
+                <ul class="meta-list">
+                    <li><strong>ลักษณะเด่น:</strong> มีท่อลำเลียงเจริญดี มีเมล็ด แต่ <strong>ไม่มีรังไข่ห่อหุ้มเมล็ด</strong> เมล็ดจึงติดอยู่บนกิ่งหรือแผ่นกิ่งที่เปลี่ยนสภาพไปเป็นอวัยวะสืบพันธุ์รูปกรวย (Cone หรือ Strobilus) ไม่สร้างดอกและผลที่แท้จริง</li>
+                    <li><strong>การขยายพันธุ์:</strong> สร้างโคนเพศผู้และโคนเพศเมีย แยกต้นหรืออยู่ร่วมต้น อาศัยลมในการพัดพาละอองเรณู</li>
+                    <li><strong>การสังเกต:</strong> ใบมักเรียวเล็กคล้ายเข็ม (สน) หรือเป็นแผ่นคล้ายใบมะพร้าวแต่แข็ง (ปรง) หรือใบรูปพัด (แป๊ะก๊วย) พบโคนแห้งตามโคนต้น</li>
+                    <li><strong>ตัวอย่างพืช:</strong></li>
+                </ul>
+                <div class="example-tags">
+                    <span class="tag">สนเขา</span>
+                    <span class="tag">สนสองใบ</span>
+                    <span class="tag">สนสามใบ</span>
+                    <span class="tag">ปรง</span>
+                    <span class="tag">แป๊ะก๊วย</span>
+                </div>
+            </div>
+
+            <!-- กลุ่มที่ 4: พืชดอก -->
+            <div class="plant-card">
+                <h3>4. พืชดอก / เมล็ดมีผลห่อหุ้ม (Angiosperms)</h3>
+                <ul class="meta-list">
+                    <li><strong>ลักษณะเด่น:</strong> มีท่อลำเลียงสมบูรณ์ที่สุด มีราก ลำต้น ใบแท้จริง มีดอกเป็นอวัยวะสืบพันธุ์ <strong>มีรังไข่ห่อหุ้มเมล็ด</strong> เมื่อปฏิสนธิแล้ว รังไข่จะเจริญเป็นผล และออวุลเจริญเป็นเมล็ดอยู่ภายในผล</li>
+                    <li><strong>การขยายพันธุ์:</strong> มีการปฏิสนธิซ้อน (Double Fertilization) อาศัยแมลง ลม หรือน้ำ ในการถ่ายเรณู ขยายพันธุ์ด้วยเมล็ด</li>
+                    <li><strong>การสังเกต:</strong> สังเกตโครงสร้างดอกชัดเจน มีส่วนประกอบกลีบเลี้ยง กลีบดอก เกสร แยกเป็นกลุ่มใบเลี้ยงเดี่ยว/คู่</li>
+                    <li><strong>ตัวอย่างพืช:</strong> พืชส่วนใหญ่รอบตัว (แบ่งย่อยเป็นใบเลี้ยงเดี่ยวและใบเลี้ยงคู่)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: กลุ่มพืชที่มักสับสนในข้อสอบบ่อยมาก -->
+    <section>
+        <h2>⚠️ กลุ่มพืชที่มักสับสนในข้อสอบ (High-Yield Exam Pitfalls)</h2>
+        <p>รวบรวมกลุ่มพืชที่ชื่อเรียกหรือลักษณะภายนอกชวนให้จำแนกผิดกลุ่ม เพื่อใช้เป็นฐานข้อมูลหลักในการจำจำลองภาพ</p>
+        
+        <div class="grid-2">
+            <!-- หมวดพืชดอกที่หน้าตาไม่เหมือนพืชดอก -->
+            <div class="plant-card">
+                <h3 style="color:var(--accent-green);">🌸 กลุ่มพืชดอก (แต่หน้าตา/ชื่อชวนสับสน)</h3>
+                <p>กลุ่มนี้มีดอกและผลจริง แต่ลดรูปจนมองยาก หรือมีคำว่า "สาหร่าย/สน" นำหน้าให้หลอกตา</p>
+                
+                <div class="memory-group">
+                    <div class="memory-title"><span class="tag badge-flow">พืชดอก</span> จอก และ แหน</div>
+                    <p>พืชน้ำลอยผิวๆ มีดอกขนาดเล็กมาก ออกดอกยาก จัดเป็นพืชดอก</p>
+                </div>
+                
+                <div class="memory-group">
+                    <div class="memory-title"><span class="tag badge-flow">พืชดอก</span> แหนเป็ด (ทีเด็ดพืชดอก!)</div>
+                    <p>มักออกข้อสอบบ่อย เป็นพืชดอกขนาดเล็ก โครงสร้างเรียบง่าย ไม่มีใบแยกชัดเจนแต่คือพืชดอก</p>
+                </div>
+
+                <div class="memory-group">
+                    <div class="memory-title"><span class="tag badge-flow">พืชดอก</span> สาหร่ายหางกระรอก & สาหร่ายข้าวเหนียว</div>
+                    <p>ไม่ใช่สาหร่ายแท้ (Algae) แต่เป็นพืชดอกที่อาศัยอยู่ใต้น้ำ สามารถออกดอกชูพ้นน้ำเพื่อผสมพันธุ์ได้</p>
+                </div>
+
+                <div class="memory-group">
+                    <div class="memory-title"><span class="tag badge-flow">พืชดอก</span> ไข่น้ำ (ผำ / Wolffia)</div>
+                    <p>พืชดอกที่มีขนาดเล็กที่สุดในโลก หน้าตาคล้ายเม็ดทรายสีเขียวลอยน้ำ ไม่มีราก แต่มีดอกจิ๋วลดรูป</p>
+                </div>
+
+                <div class="memory-group">
+                    <div class="memory-title"><span class="tag badge-flow">พืชดอก</span> สนทะเล & สนปฏิพัทธ์</div>
+                    <p>ไม่ใช่พืชเมล็ดเปลือย (Gymnosperm) เหมือนสนเขา แต่เป็นพืชดอกที่มีการลดรูปของใบให้กลายเป็นข้อๆ คล้ายกิ่งสน</p>
+                </div>
+            </div>
+
+            <!-- หมวดพืชไม่มีเมล็ดจำพวกเฟิร์น -->
+            <div class="plant-card">
+                <h3 style="color:var(--accent-amber);">🍂 กลุ่มพืชไม่มีเมล็ด / จำพวกเฟิร์น (ชื่อชวนสับสน)</h3>
+                <p>กลุ่มนี้ไม่มีดอก ไม่มีเมล็ด ขยายพันธุ์ด้วยสปอร์ แต่ชื่อดันไปคล้ายพืชดอกหรือพืชเมล็ดเปลือย</p>
+
+                <div class="memory-group">
+                    <div class="memory-title"><span class="tag badge-seedless">เฟิร์น</span> จอกหูหนู & แหนแดง</div>
+                    <p>เป็น "เฟิร์นน้ำ" ลอยผิว ไม่ใช่พืชดอก (แหนแดงมีจุดเด่นคือมีอนาเบนาอาศัยอยู่ช่วยตรึงไนโตรเจน)</p>
+                </div>
+
+                <div class="memory-group">
+                    <div class="memory-title"><span class="tag badge-seedless">เฟิร์น</span> ย่านลิเภา</div>
+                    <p>เฟิร์นเลื้อย ลำต้นเหนียวทนทาน นิยมนำมาจักสาน ไม่ใช่พืชดอก</p>
+                </div>
+
+                <div class="memory-group">
+                    <div class="memory-title"><span class="tag badge-seedless">เฟิร์น</span> ผักกูด & ผักแว่น</div>
+                    <p>ผักกูดเป็นเฟิร์นบก ผักแว่นเป็นเฟิร์นน้ำ ทั้งคู่ไม่มีดอกและเมล็ด ขยายพันธุ์ด้วยสปอร์ใต้ใบ</p>
+                </div>
+
+                <div class="memory-group">
+                    <div class="memory-title"><span class="tag badge-seedless">เฟิร์น</span> ปรงไข่ & ปรงน้ำ</div>
+                    <p>จำให้ดี! ไม่ใช่ต้น "ปรง" ที่เป็นพืชเมล็ดเปลือย แต่พวกนี้จัดเป็น <strong>"เฟิร์น"</strong> ขนาดใหญ่ที่ชอบขึ้นตามป่าชายเลนหรือที่ชื้นแฉะ</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: เกณฑ์การจำแนกพืชใบเลี้ยงเดี่ยว และใบเลี้ยงคู่ -->
+    <section>
+        <h2>📊 เกณฑ์การจำแนกพืชใบเลี้ยงเดี่ยว vs ใบเลี้ยงคู่ (Monocot vs Dicot)</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ลักษณะโครงสร้าง</th>
+                    <th>🌱 พืชใบเลี้ยงเดี่ยว (Monocotyledon)</th>
+                    <th>🌳 พืชใบเลี้ยงคู่ (Dicotyledon)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>จำนวนใบเลี้ยง</strong></td>
+                    <td>มีใบเลี้ยง 1 ใบในระยะงอก</td>
+                    <td>มีใบเลี้ยง 2 ใบในระยะงอก</td>
+                </tr>
+                <tr>
+                    <td><strong>ระบบเส้นใบ</strong></td>
+                    <td>เส้นใบขนาน (Parallel venation)</td>
+                    <td>เส้นใบเป็นร่างแห (Reticulate venation)</td>
+                </tr>
+                <tr>
+                    <td><strong>ระบบราก</strong></td>
+                    <td>ระบบรากฝอย (Fibrous root system)</td>
+                    <td>ระบบรากแก้ว (Tap root system)</td>
+                </tr>
+                <tr>
+                    <td><strong>ท่อลำเลียง (ลำต้น)</strong></td>
+                    <td>กระจัดกระจายทั่วลำต้น (Scattered)</td>
+                    <td>เรียงตัวเป็นระเบียบเป็นวงรอบลำต้น (Ring)</td>
+                </tr>
+                <tr>
+                    <td><strong>ส่วนประกอบดอก</strong></td>
+                    <td>ทวีคูณของ 3 (เช่น มีกลีบดอก 3, 6, 9 กลีบ)</td>
+                    <td>ทวีคูณของ 4 หรือ 5 (เช่น 4, 5, 8, 10 กลีบ)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="grid-2" style="margin-top:20px;">
+            <!-- สรุปกลุ่มพืชใบเลี้ยงเดี่ยว -->
+            <div class="plant-card" style="border-top: 4px solid var(--secondary);">
+                <h3>🌾 กลุ่มพืชใบเลี้ยงเดี่ยว (จำง่ายแยกตามการใช้สอย)</h3>
+                
+                <div class="memory-group">
+                    <div class="memory-title">🍳 กลุ่มอาหาร / เครื่องปรุงในครัว</div>
+                    <p>กล้วย, ข้าว, กระเทียม, ขิง, ข่า, ขมิ้น, หอมใหญ่, หอมแดง</p>
+                </div>
+
+                <div class="memory-group">
+                    <div class="memory-title">🌸 กลุ่มไม้ประดับ และอื่นๆ</div>
+                    <p>กล้วยไม้, พุทธรักษา, พลับพลึง, หญ้าชนิดต่างๆ, ตะไคร่</p>
+                </div>
+
+                <div class="memory-group">
+                    <div class="memory-title">🥔 กลุ่มสะสมอาหารใต้ดิน (ลำต้น / ราก)</div>
+                    <p><strong>เผือก</strong> (ลำต้นสะสมอาหาร), <strong>แห้ว</strong> (ลำต้นสะสมอาหาร), <strong>กระชาย</strong> (รากสะสมอาหาร)</p>
+                </div>
+            </div>
+
+            <!-- สรุปกลุ่มพืชใบเลี้ยงคู่ -->
+            <div class="plant-card" style="border-top: 4px solid var(--accent-green);">
+                <h3>🌳 กลุ่มพืชใบเลี้ยงคู่ (จำง่ายแยกตามการใช้สอย)</h3>
+                
+                <div class="memory-group">
+                    <div class="memory-title">🍳 กลุ่มอาหาร / เครื่องปรุงในครัว</div>
+                    <p>พริก, มะนาว, กะเพรา, โหระพา, มะเขือ, ถั่วฝักยาว, มะม่วง, ส้ม</p>
+                </div>
+
+                <div class="memory-group">
+                    <div class="memory-title">🌸 กลุ่มไม้ประดับ และอื่นๆ</div>
+                    <p>กุหลาบ, ดาวเรือง, มะลิ, เฟื่องฟ้า, ชบา, โกสน (ไม้ใบแต่เป็นพืชใบเลี้ยงคู่)</p>
+                </div>
+
+                <div class="memory-group">
+                    <div class="memory-title">🍠 กลุ่มสะสมอาหารที่ราก (รากสะสมอาหารแท้จริง)</div>
+                    <p>มันแกว, มันเทศ, มันสำปะหลัง, ผักกาดหัว (หัวไชเท้า), บีต, แครอท <br>
+                    <small style="color:var(--accent-red);">⚠️ <em>ระวังข้อสอบหลอก:</em> มันฝรั่ง เป็นพืชใบเลี้ยงคู่แต่สะสมอาหารที่ "ลำต้นใต้ดิน" ส่วนมันเทศ/มันสำปะหลังสะสมที่ "ราก"</small></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    const toggleBtn = document.getElementById('theme-toggle');
+    
+    // Check local storage or defaults to dark theme initially if preferred, but let's toggle naturally
+    toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+        if (document.body.classList.contains('dark-theme')) {
+            toggleBtn.innerHTML = '☀️ Light Mode';
+        } else {
+            toggleBtn.innerHTML = '🌙 Deep Blue Navy Mode';
+        }
+    });
+</script>
+
+</body>
+</html>

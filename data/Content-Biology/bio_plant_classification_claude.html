@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIO — การจำแนกพืช</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #f5f3ee;
+    --bg2: #eceae3;
+    --surface: #ffffff;
+    --border: #d4d0c8;
+    --text: #2a2621;
+    --text2: #6b6660;
+    --accent: #2d6e4e;
+    --accent2: #1a4a33;
+    --gold: #b88a2e;
+    --red: #c0392b;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Sarabun', sans-serif;
+    --radius: 8px;
+  }
+
+  [data-theme="dark"] {
+    --bg: #0d1b2a;
+    --bg2: #112233;
+    --surface: #162840;
+    --border: #1e3a55;
+    --text: #d8e8f0;
+    --text2: #7fa8c4;
+    --accent: #3fa87a;
+    --accent2: #2dd4a0;
+    --gold: #f0c060;
+    --red: #ff7b6b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ── TOP BAR ── */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 24px;
+  }
+  header h1 {
+    font-family: var(--mono);
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .theme-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    cursor: pointer;
+    color: var(--text2);
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+  .theme-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* ── MAIN ── */
+  main { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 32px;
+  }
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .hero h2 { font-size: 1.6rem; font-weight: 700; line-height: 1.3; margin-bottom: 12px; }
+  .hero p { color: var(--text2); font-size: 0.95rem; }
+
+  /* ── FLOW CHART ── */
+  .flow {
+    display: flex; flex-direction: column; gap: 0;
+    margin-bottom: 40px;
+  }
+  .flow-step {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .flow-step:hover { border-color: var(--accent); }
+  .flow-arrow {
+    display: flex; justify-content: center; align-items: center;
+    height: 28px; color: var(--text2); font-size: 1.2rem;
+  }
+  .flow-head {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .flow-num {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 4px;
+    padding: 2px 7px;
+    flex-shrink: 0;
+  }
+  .flow-title { font-weight: 600; font-size: 1rem; }
+  .flow-sub { font-size: 0.85rem; color: var(--text2); margin-top: 4px; margin-left: 44px; }
+
+  /* ── SECTION ── */
+  .section { margin-bottom: 40px; }
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    background: var(--accent);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .section-tag.no-pipe { background: var(--red); }
+  .section-tag.naked-seed { background: var(--gold); color: #1a1000; }
+  .section-tag.flower { background: #6a3db8; }
+  .section-tag.compare { background: #1a6bb5; }
+  .section-title { font-size: 1.1rem; font-weight: 700; }
+
+  /* ── CARD GRID ── */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .card-title {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .card ul { padding-left: 18px; font-size: 0.9rem; }
+  .card ul li { margin-bottom: 4px; }
+  .card p { font-size: 0.9rem; }
+
+  /* ── PLANT TAGS ── */
+  .plant-list {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 12px;
+  }
+  .ptag {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.82rem;
+    cursor: default;
+  }
+  .ptag:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .ptag.confused { border-color: var(--red); color: var(--red); }
+  .ptag.confused:hover { background: var(--red); color: #fff; }
+
+  /* ── COMPARE TABLE ── */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .compare-table th {
+    background: var(--bg2);
+    padding: 10px 12px;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--text2);
+    border-bottom: 2px solid var(--border);
+  }
+  .compare-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table .feature { font-weight: 600; color: var(--text2); font-size: 0.82rem; }
+  .tick { color: var(--accent); font-weight: 700; }
+  .cross { color: var(--red); font-weight: 700; }
+
+  /* ── ALERT BOX ── */
+  .alert {
+    background: var(--bg2);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 0.88rem;
+  }
+  .alert strong { color: var(--gold); }
+  .alert.red { border-color: var(--red); }
+  .alert.red strong { color: var(--red); }
+  .alert.green { border-color: var(--accent); }
+  .alert.green strong { color: var(--accent); }
+
+  /* ── GROUP MEMORY ── */
+  .memory-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 600px) { .memory-grid { grid-template-columns: 1fr; } }
+  .memory-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+  .memory-card .group-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .memory-card .group-label.mono { color: var(--gold); }
+  .memory-card .group-label.di { color: #7c5cbf; }
+  .subgroup { margin-bottom: 10px; }
+  .subgroup-name { font-size: 0.8rem; font-weight: 600; color: var(--text2); margin-bottom: 4px; }
+
+  /* ── OBSERVATION TIPS ── */
+  .tip-row {
+    display: flex; gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+  .tip-num {
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+    width: 28px;
+  }
+  .tip-content { font-size: 0.9rem; }
+  .tip-content strong { display: block; margin-bottom: 4px; font-size: 0.95rem; }
+  .tip-note { font-size: 0.82rem; color: var(--text2); margin-top: 4px; }
+
+  /* full-width card */
+  .card-full {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    font-size: 0.9rem;
+  }
+  .card-full .card-title { margin-bottom: 8px; }
+
+  hr.divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+</style>
+</head>
+<body data-theme="light">
+
+<header>
+  <h1>BIO // การจำแนกพืช</h1>
+  <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark Navy</button>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-label">สรุปสำหรับสอบ · Plant Classification</div>
+    <h2>เกณฑ์การจำแนกพืช 4 กลุ่มหลัก</h2>
+    <p>ใช้เส้นทางการแบ่ง: ท่อลำเลียง → เมล็ด → ผลหุ้ม เป็นกุญแจหลักในการจำแนก</p>
+  </div>
+
+  <!-- FLOW CHART -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">Overview</span>
+      <span class="section-title">แผนผังการจำแนก (Decision Tree)</span>
+    </div>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-head">
+          <span class="flow-num">01</span>
+          <span class="flow-title">ไม่มีท่อลำเลียง (Non-vascular)</span>
+        </div>
+        <div class="flow-sub">→ ไบรโอไฟต์ : มอส, ลิเวอร์เวิร์ต, ฮอร์นเวิร์ต, ข้าวตอกฤาษี</div>
+      </div>
+      <div class="flow-arrow">↓ มีท่อลำเลียง</div>
+      <div class="flow-step">
+        <div class="flow-head">
+          <span class="flow-num">02</span>
+          <span class="flow-title">มีท่อลำเลียง ไม่มีเมล็ด (Seedless Vascular)</span>
+        </div>
+        <div class="flow-sub">→ ไลโคไฟต์ + เทอริโดไฟต์ : หวายทะนอย, เฟิร์น, ผักแว่น, แหนแดง, จอกหูหนู</div>
+      </div>
+      <div class="flow-arrow">↓ มีเมล็ด</div>
+      <div class="flow-step">
+        <div class="flow-head">
+          <span class="flow-num">03</span>
+          <span class="flow-title">มีเมล็ดเปลือย — Gymnosperm</span>
+        </div>
+        <div class="flow-sub">→ สนเขา, สนสองใบ, สนสามใบ, ปรง, แป๊ะก๊วย</div>
+      </div>
+      <div class="flow-arrow">↓ มีผลหุ้มเมล็ด</div>
+      <div class="flow-step">
+        <div class="flow-head">
+          <span class="flow-num">04</span>
+          <span class="flow-title">พืชดอก — Angiosperm</span>
+        </div>
+        <div class="flow-sub">→ ใบเลี้ยงเดี่ยว (Monocot) หรือ ใบเลี้ยงคู่ (Dicot)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GROUP 1: NON-VASCULAR -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag no-pipe">กลุ่ม 1</span>
+      <span class="section-title">ไม่มีท่อลำเลียง — Bryophytes</span>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">ลักษณะเด่น</div>
+        <ul>
+          <li>ไม่มี xylem / phloem</li>
+          <li>รับน้ำและแร่ธาตุผ่านผนังเซลล์โดยตรง</li>
+          <li>ต้องการความชื้นสูง</li>
+          <li>ขนาดเล็ก ไม่มีราก ลำต้น ใบแท้จริง</li>
+          <li>สลับรุ่น: สปอโรไฟต์ ขึ้นอยู่กับ แกมีโตไฟต์</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">การขยายพันธุ์ & การสังเกต</div>
+        <ul>
+          <li>ขยายพันธุ์ด้วย <strong>สปอร์</strong></li>
+          <li>พบในที่ชื้น ร่มเงา เปลือกไม้ หิน</li>
+          <li>มอส: ดูฟูเหมือนพรม ลำต้นและใบชัดเจน</li>
+          <li>ลิเวอร์เวิร์ต: แผ่แบน มีแฉก เหมือนใบตับ</li>
+          <li>ฮอร์นเวิร์ต: มีโครงสร้างคล้ายเขาสัตว์ยืนตรงขึ้น</li>
+        </ul>
+      </div>
+    </div>
+    <div class="plant-list">
+      <span class="ptag">🌿 มอส (Moss)</span>
+      <span class="ptag">🍃 ลิเวอร์เวิร์ต</span>
+      <span class="ptag">🌱 ฮอร์นเวิร์ต</span>
+      <span class="ptag">🌾 ข้าวตอกฤาษี</span>
+    </div>
+    <div class="alert">
+      <strong>⚠️ จุดสับสน:</strong> ข้าวตอกฤาษี (Riccia) คือลิเวอร์เวิร์ต ไม่ใช่ข้าว ไม่ใช่พืชดอก — พบลอยอยู่บนน้ำ แต่ไม่มีท่อลำเลียง
+    </div>
+  </div>
+
+  <!-- GROUP 2: SEEDLESS VASCULAR -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">กลุ่ม 2</span>
+      <span class="section-title">มีท่อลำเลียง ไม่มีเมล็ด — Seedless Vascular</span>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">ลักษณะเด่น</div>
+        <ul>
+          <li>มีท่อ xylem และ phloem แล้ว</li>
+          <li>สืบพันธุ์ด้วย <strong>สปอร์</strong> (ยังไม่มีเมล็ด)</li>
+          <li>สลับรุ่น: สปอโรไฟต์เด่น</li>
+          <li>ราก ลำต้น ใบแท้จริงครบ</li>
+          <li>เฟิร์นมีใบอ่อนที่ม้วนงอ (fiddlehead)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">การสังเกต</div>
+        <ul>
+          <li>หลังใบมีกลุ่มสปอร์ (sori) = จุดสีน้ำตาล</li>
+          <li>หวายทะนอย: ลำต้นคืบ มีข้อ มีใบเล็กเกล็ดรอบๆ</li>
+          <li>จอกหูหนู, แหนแดง: ลอยน้ำ แต่เป็นเฟิร์น ไม่ใช่พืชดอก</li>
+          <li>ผักแว่น: ใบกลมเหมือนเหรียญ 4 แฉก</li>
+        </ul>
+      </div>
+    </div>
+    <div class="plant-list">
+      <span class="ptag">🌿 หวายทะนอย</span>
+      <span class="ptag">🌿 ชายผ้าสีดา</span>
+      <span class="ptag">🌿 ข้าหลวงหลังลาย</span>
+      <span class="ptag ptag confused">❗ จอกหูหนู (เฟิร์น!)</span>
+      <span class="ptag ptag confused">❗ แหนแดง (เฟิร์น!)</span>
+      <span class="ptag ptag confused">❗ ผักแว่น (เฟิร์น!)</span>
+      <span class="ptag ptag confused">❗ ปรงไข่ / ปรงน้ำ (เฟิร์น!)</span>
+      <span class="ptag ptag confused">❗ ย่านลิเภา (เฟิร์น!)</span>
+      <span class="ptag ptag confused">❗ ผักกูด (เฟิร์น!)</span>
+    </div>
+    <div class="alert red">
+      <strong>🚨 ข้อสอบหลอกบ่อย:</strong> จอกหูหนู, แหนแดง, ผักแว่น ดูเหมือนพืชน้ำทั่วไป แต่ทั้งหมดเป็น <strong>เฟิร์น</strong> — ขยายพันธุ์ด้วยสปอร์ ไม่ใช่ดอก/เมล็ด
+    </div>
+  </div>
+
+  <!-- GROUP 3: GYMNOSPERM -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag naked-seed">กลุ่ม 3</span>
+      <span class="section-title">เมล็ดเปลือย — Gymnosperm</span>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">ลักษณะเด่น</div>
+        <ul>
+          <li>มีเมล็ด แต่ <strong>ไม่มีผลหุ้ม</strong></li>
+          <li>เมล็ดอยู่บนเกล็ดโคน (cone) หรือโครงสร้างเปิดเผย</li>
+          <li>ไม่มีดอกแท้จริง (ไม่มีกลีบดอก)</li>
+          <li>มีท่อลำเลียงครบ</li>
+          <li>ส่วนใหญ่ไม้ยืนต้น เขตหนาว</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">การสังเกต</div>
+        <ul>
+          <li>สน: ใบเป็นเข็ม เกาะเป็นกระจุก (2 หรือ 3 ใบ)</li>
+          <li>ปรง: ใบใหญ่คล้ายมะพร้าว มีลักษณะดึกดำบรรพ์</li>
+          <li>แป๊ะก๊วย: ใบรูปพัด ผลมีกลิ่นฉุน</li>
+          <li>สนเขา: ใบสั้น เตี้ย</li>
+          <li>สนสองใบ / สนสามใบ: นับใบที่กาบได้เลย</li>
+        </ul>
+      </div>
+    </div>
+    <div class="plant-list">
+      <span class="ptag">🌲 สนเขา</span>
+      <span class="ptag">🌲 สนสองใบ</span>
+      <span class="ptag">🌲 สนสามใบ</span>
+      <span class="ptag ptag confused">❗ ปรง (ไม่ใช่เฟิร์น!)</span>
+      <span class="ptag">🍃 แป๊ะก๊วย</span>
+    </div>
+    <div class="alert">
+      <strong>⚠️ ปรง vs เฟิร์น:</strong> ปรง (Cycas) = Gymnosperm มีเมล็ดเปลือย / ปรงไข่, ปรงน้ำ = เฟิร์น ไม่มีเมล็ด — ชื่อคล้ายกันแต่ต่างกลุ่มกัน!
+    </div>
+    <div class="alert red">
+      <strong>🚨 สนทะเล / สนปฏิพัทธ์ = พืชดอก!</strong> ไม่ใช่ Gymnosperm แม้ชื่อขึ้นต้นว่าสน ใบเป็นเส้นเล็กคล้ายเข็ม แต่จัดเป็น Angiosperm
+    </div>
+  </div>
+
+  <!-- GROUP 4: ANGIOSPERM -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag flower">กลุ่ม 4</span>
+      <span class="section-title">พืชดอก — Angiosperm</span>
+    </div>
+
+    <div class="card-full">
+      <div class="card-title">วิธีสังเกตว่าเป็นพืชดอก (ฉบับใช้งานจริง)</div>
+    </div>
+
+    <div class="tip-row">
+      <span class="tip-num">1</span>
+      <div class="tip-content">
+        <strong>มีดอก</strong>
+        บางชนิดดอกเล็กมากหรือออกตามฤดูกาล เห็นยาก เช่น หญ้า ข้าว แหน (Wolffia) ที่มีดอกเล็กที่สุดในโลก
+        <div class="tip-note">✦ ตัวอย่างที่ไม่เห็นดอกชัด: แหนเป็ด (Lemna), หญ้า, ไผ่ออกดอกนานๆ ครั้ง</div>
+      </div>
+    </div>
+    <div class="tip-row">
+      <span class="tip-num">2</span>
+      <div class="tip-content">
+        <strong>มีผล (Fruit)</strong> — เพราะผลเจริญจากรังไข่ของพืชดอกเท่านั้น
+        <div class="tip-note">✦ ผล = สิ่งที่เจริญจากรังไข่หลังการปฏิสนธิ ครอบคลุมทั้งผลไม้ ผัก เมล็ดต่างๆ เช่น มะเขือเทศ ถั่ว ข้าวโพด ก็คือ "ผล" ทั้งสิ้น</div>
+        <div class="tip-note">✦ โกสน (Codiaeum) ไม้ใบสวย ก็เป็นพืชดอก แม้ปลูกเพื่อใบไม่ใช่ดอก</div>
+        <div class="tip-note">✦ สาหร่ายหางกระรอก, สาหร่ายข้าวเหนียว = พืชดอกใต้น้ำ มีดอกและผล!</div>
+      </div>
+    </div>
+    <div class="tip-row">
+      <span class="tip-num">3</span>
+      <div class="tip-content">
+        <strong>ระบุใบเลี้ยงได้ = พืชดอกแน่นอน</strong>
+        ถ้ารู้ว่าเป็นพืชใบเลี้ยงเดี่ยว หรือใบเลี้ยงคู่ → ยืนยันได้ทันทีว่าเป็น Angiosperm
+      </div>
+    </div>
+
+    <div class="alert green">
+      <strong>💡 จอก vs แหน:</strong> แหนเป็ด (Lemna) = พืชดอก / จอกหูหนู (Salvinia) = เฟิร์น ชื่อคล้ายกัน แต่ต่างกลุ่มกันสิ้นเชิง!
+    </div>
+
+    <hr class="divider">
+
+    <!-- MONOCOT vs DICOT TABLE -->
+    <div class="section-header" style="margin-top: 24px;">
+      <span class="section-tag compare">เปรียบเทียบ</span>
+      <span class="section-title">ใบเลี้ยงเดี่ยว vs ใบเลี้ยงคู่</span>
+    </div>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>ลักษณะ</th>
+          <th>🌾 ใบเลี้ยงเดี่ยว (Monocot)</th>
+          <th>🌿 ใบเลี้ยงคู่ (Dicot)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="feature">ใบเลี้ยง</td>
+          <td>1 ใบ</td>
+          <td>2 ใบ</td>
+        </tr>
+        <tr>
+          <td class="feature">เส้นใบ</td>
+          <td>ขนานกัน (parallel venation)</td>
+          <td>ร่างแห (reticulate venation)</td>
+        </tr>
+        <tr>
+          <td class="feature">ท่อลำเลียงในลำต้น</td>
+          <td>กระจัดกระจาย (scattered)</td>
+          <td>เรียงเป็นวง (ring)</td>
+        </tr>
+        <tr>
+          <td class="feature">รากแรก</td>
+          <td>รากฝอย (fibrous)</td>
+          <td>รากแก้ว (taproot)</td>
+        </tr>
+        <tr>
+          <td class="feature">กลีบดอก</td>
+          <td>3 หรือ 6 (multiple of 3)</td>
+          <td>4, 5 หรือ multiple of 4/5</td>
+        </tr>
+        <tr>
+          <td class="feature">แคมเบียม</td>
+          <td><span class="cross">✗ ไม่มี</span></td>
+          <td><span class="tick">✓ มี</span> (ขยายขนาดลำต้นได้)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MONOCOT MEMORY GROUPS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag" style="background: var(--gold); color: #1a1000;">Monocot</span>
+      <span class="section-title">พืชใบเลี้ยงเดี่ยว — จำแนกตามกลุ่ม</span>
+    </div>
+    <div class="memory-grid">
+      <div class="memory-card">
+        <div class="group-label mono">🍳 ใช้ในครัว / เครื่องปรุง</div>
+        <div class="plant-list">
+          <span class="ptag">ข้าว</span>
+          <span class="ptag">ข้าวโพด</span>
+          <span class="ptag">กล้วย</span>
+          <span class="ptag">กระเทียม</span>
+          <span class="ptag">หอมใหญ่</span>
+          <span class="ptag">หอมแดง</span>
+          <span class="ptag">ขิง</span>
+          <span class="ptag">ข่า</span>
+          <span class="ptag">ขมิ้น</span>
+          <span class="ptag">ตะไคร้</span>
+          <span class="ptag">อ้อย</span>
+        </div>
+      </div>
+      <div class="memory-card">
+        <div class="group-label mono">🌸 ไม้ประดับ</div>
+        <div class="plant-list">
+          <span class="ptag">กล้วยไม้</span>
+          <span class="ptag">พุทธรักษา</span>
+          <span class="ptag">พลับพลึง</span>
+          <span class="ptag">ว่านหางจระเข้</span>
+          <span class="ptag">ปาล์ม</span>
+          <span class="ptag">มะพร้าว</span>
+          <span class="ptag">หญ้า</span>
+          <span class="ptag">ไผ่</span>
+        </div>
+      </div>
+      <div class="memory-card">
+        <div class="group-label mono">🥔 สะสมอาหารที่ลำต้น/ราก</div>
+        <div class="plant-list">
+          <span class="ptag">เผือก (ลำต้นใต้ดิน)</span>
+          <span class="ptag">แห้ว</span>
+          <span class="ptag">กระชาย (ราก)</span>
+          <span class="ptag">กระเจียว</span>
+        </div>
+      </div>
+      <div class="memory-card">
+        <div class="group-label mono">💧 พืชน้ำ Monocot</div>
+        <div class="plant-list">
+          <span class="ptag ptag confused">แหนเป็ด (Lemna) ⚠️</span>
+          <span class="ptag ptag confused">ไข่น้ำ ⚠️</span>
+          <span class="ptag">บัว</span>
+          <span class="ptag ptag confused">สาหร่ายหางกระรอก ⚠️</span>
+        </div>
+        <div class="tip-note" style="margin-top:8px; font-size:0.8rem;">⚠️ = พืชน้ำที่หลายคนเข้าใจผิด แต่ทั้งหมดเป็นพืชดอก</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DICOT MEMORY GROUPS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag" style="background: #6a3db8;">Dicot</span>
+      <span class="section-title">พืชใบเลี้ยงคู่ — จำแนกตามกลุ่ม</span>
+    </div>
+    <div class="memory-grid">
+      <div class="memory-card">
+        <div class="group-label di">🍽️ ผัก / ผลไม้ / เครื่องปรุง</div>
+        <div class="plant-list">
+          <span class="ptag">มะเขือเทศ</span>
+          <span class="ptag">พริก</span>
+          <span class="ptag">มะนาว</span>
+          <span class="ptag">ฝรั่ง</span>
+          <span class="ptag">มะม่วง</span>
+          <span class="ptag">มะพร้าว — ❌</span>
+          <span class="ptag">ถั่วต่างๆ</span>
+          <span class="ptag">ผักชี</span>
+          <span class="ptag">กะเพรา</span>
+          <span class="ptag">โหระพา</span>
+          <span class="ptag">พริกไทย</span>
+        </div>
+      </div>
+      <div class="memory-card">
+        <div class="group-label di">🌳 ไม้ประดับ / ไม้ยืนต้น</div>
+        <div class="plant-list">
+          <span class="ptag">กุหลาบ</span>
+          <span class="ptag">ดาวเรือง</span>
+          <span class="ptag">บานชื่น</span>
+          <span class="ptag ptag confused">โกสน ⚠️</span>
+          <span class="ptag">ชบา</span>
+          <span class="ptag">ทานตะวัน</span>
+          <span class="ptag ptag confused">สนทะเล ⚠️</span>
+          <span class="ptag ptag confused">สนปฏิพัทธ์ ⚠️</span>
+        </div>
+        <div class="tip-note" style="margin-top:8px; font-size:0.8rem;">⚠️ โกสน, สนทะเล = พืชดอกใบเลี้ยงคู่ แม้ชื่อหรือลักษณะทำให้สับสน</div>
+      </div>
+      <div class="memory-card">
+        <div class="group-label di">🥕 สะสมอาหารที่ราก</div>
+        <div class="plant-list">
+          <span class="ptag">มันแกว</span>
+          <span class="ptag">มันเทศ</span>
+          <span class="ptag">มันสำปะหลัง</span>
+          <span class="ptag">แครอท</span>
+          <span class="ptag">หัวไชเท้า</span>
+          <span class="ptag">บีต</span>
+        </div>
+      </div>
+      <div class="memory-card">
+        <div class="group-label di">🌿 ไม้ยืนต้น / ป่า</div>
+        <div class="plant-list">
+          <span class="ptag">ยางพารา</span>
+          <span class="ptag">สัก</span>
+          <span class="ptag">กาแฟ</span>
+          <span class="ptag">โกโก้</span>
+          <span class="ptag">ทุเรียน</span>
+          <span class="ptag">มังคุด</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFUSION TABLE -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag" style="background: var(--red);">⚠️ สับสน</span>
+      <span class="section-title">พืชที่ออกข้อสอบแล้วหลอกบ่อย</span>
+    </div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>ชื่อพืช</th>
+          <th>กลุ่มจริง</th>
+          <th>ทำไมถึงสับสน</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>แหนเป็ด (Lemna)</strong></td>
+          <td><span class="tick">🌸 พืชดอก Monocot</span></td>
+          <td>ลอยน้ำ ตัวเล็ก เหมือนไม่มีดอก — แต่มีดอกเล็กที่สุดในโลก</td>
+        </tr>
+        <tr>
+          <td><strong>จอกหูหนู (Salvinia)</strong></td>
+          <td><span class="cross">🌿 เฟิร์น (ไม่มีเมล็ด)</span></td>
+          <td>ลอยน้ำ ใบสวย คล้ายพืชดอกน้ำ แต่ขยายพันธุ์ด้วยสปอร์</td>
+        </tr>
+        <tr>
+          <td><strong>แหนแดง (Azolla)</strong></td>
+          <td><span class="cross">🌿 เฟิร์น (ไม่มีเมล็ด)</span></td>
+          <td>ชื่อขึ้นต้นแหน แต่เป็นเฟิร์น มีซีอาโนแบคทีเรียอยู่ในใบ</td>
+        </tr>
+        <tr>
+          <td><strong>ผักแว่น (Marsilea)</strong></td>
+          <td><span class="cross">🌿 เฟิร์น (ไม่มีเมล็ด)</span></td>
+          <td>ใบกลม 4 แฉก ดูเหมือนพืชดอก แต่เป็นเฟิร์นน้ำ</td>
+        </tr>
+        <tr>
+          <td><strong>ปรง (Cycas)</strong></td>
+          <td><span class="tick">🌲 Gymnosperm (เมล็ดเปลือย)</span></td>
+          <td>ใบดูคล้ายเฟิร์นมาก แต่มีเมล็ดเปลือย</td>
+        </tr>
+        <tr>
+          <td><strong>ปรงไข่, ปรงน้ำ</strong></td>
+          <td><span class="cross">🌿 เฟิร์น (ไม่มีเมล็ด)</span></td>
+          <td>ชื่อ "ปรง" แต่เป็นเฟิร์น — สับสนกับปรง (Cycas)</td>
+        </tr>
+        <tr>
+          <td><strong>สนทะเล / สนปฏิพัทธ์</strong></td>
+          <td><span class="tick">🌸 พืชดอก Dicot</span></td>
+          <td>ชื่อขึ้นต้นว่าสน แต่ไม่ใช่ Gymnosperm</td>
+        </tr>
+        <tr>
+          <td><strong>ไข่น้ำ</strong></td>
+          <td><span class="tick">🌸 พืชดอก Monocot</span></td>
+          <td>พืชน้ำขนาดเล็ก บางคนเข้าใจผิดว่าเป็นสาหร่าย</td>
+        </tr>
+        <tr>
+          <td><strong>สาหร่ายหางกระรอก / ข้าวเหนียว</strong></td>
+          <td><span class="tick">🌸 พืชดอก (ใต้น้ำ)</span></td>
+          <td>อยู่ใต้น้ำ ชื่อสาหร่าย แต่แท้จริงเป็นพืชดอก</td>
+        </tr>
+        <tr>
+          <td><strong>ย่านลิเภา</strong></td>
+          <td><span class="cross">🌿 เฟิร์น</span></td>
+          <td>เถาวัลย์ใช้สานตะกร้า ดูเหมือนพืชดอก แต่เป็นเฟิร์น</td>
+        </tr>
+        <tr>
+          <td><strong>โกสน</strong></td>
+          <td><span class="tick">🌸 พืชดอก Dicot</span></td>
+          <td>ปลูกเพื่อใบสวย ไม่ค่อยเห็นดอก แต่จัดเป็นพืชดอก</td>
+        </tr>
+        <tr>
+          <td><strong>ข้าวตอกฤาษี</strong></td>
+          <td><span class="cross">🌿 ลิเวอร์เวิร์ต (Bryophyte)</span></td>
+          <td>ลอยน้ำ ชื่อคล้ายข้าว แต่ไม่มีท่อลำเลียง</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="text-align:center; font-family: var(--mono); font-size: 0.75rem; color: var(--text2); margin-top: 48px; letter-spacing: 0.1em;">
+    BIO PLANT CLASSIFICATION // สรุปสำหรับสอบ
+  </div>
+
+</main>
+
+<script>
+  function toggleTheme() {
+    const body = document.body;
+    const btn = document.getElementById('themeBtn');
+    if (body.getAttribute('data-theme') === 'light') {
+      body.setAttribute('data-theme', 'dark');
+      btn.textContent = '☀️ Light';
+    } else {
+      body.setAttribute('data-theme', 'light');
+      btn.textContent = '🌙 Dark Navy';
+    }
+  }
+</script>
+</body>
+</html>
