@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบหมุนเวียนเลือดและสูบฉีดโลหิต | BIO สรุปเนื้อหา</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Prompt:wght@400;600;700&display=swap');
+
+    :root {
+      --navy: #0a1628;
+      --navy-mid: #112240;
+      --navy-card: #1a3357;
+      --navy-light: #243b5e;
+      --accent-blue: #4fc3f7;
+      --accent-teal: #26c6da;
+      --accent-red: #ef5350;
+      --accent-gold: #ffca28;
+      --accent-green: #66bb6a;
+      --accent-purple: #ab47bc;
+      --text-primary: #e8f4fd;
+      --text-secondary: #b0cce4;
+      --text-muted: #7fa8c9;
+      --border: rgba(79,195,247,0.2);
+      --glow: 0 0 20px rgba(79,195,247,0.15);
+    }
+
+    /* LIGHT MODE */
+    .light {
+      --navy: #f0f6ff;
+      --navy-mid: #e2eeff;
+      --navy-card: #ffffff;
+      --navy-light: #cddeff;
+      --accent-blue: #1565c0;
+      --accent-teal: #00838f;
+      --accent-red: #c62828;
+      --accent-gold: #f57f17;
+      --accent-green: #2e7d32;
+      --accent-purple: #6a1b9a;
+      --text-primary: #0d1b2a;
+      --text-secondary: #1e3a5f;
+      --text-muted: #3b6490;
+      --border: rgba(21,101,192,0.2);
+      --glow: 0 2px 12px rgba(21,101,192,0.10);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: var(--navy);
+      color: var(--text-primary);
+      line-height: 1.7;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--navy-mid);
+      border-bottom: 2px solid var(--border);
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--glow);
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 0;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .header-title {
+      font-family: 'Prompt', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      letter-spacing: 0.02em;
+    }
+    .header-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* TOGGLE */
+    .toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--navy-card);
+      border: 1.5px solid var(--border);
+      border-radius: 30px;
+      padding: 0.45rem 1rem;
+      cursor: pointer;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: all 0.25s;
+      user-select: none;
+    }
+    .toggle-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+    .toggle-icon { font-size: 1.1rem; }
+
+    /* NAV TABS */
+    .nav-tabs {
+      background: var(--navy-mid);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
+      overflow-x: auto;
+    }
+    .nav-tabs-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0;
+    }
+    .nav-tab {
+      padding: 0.75rem 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .nav-tab:hover { color: var(--text-primary); }
+    .nav-tab.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
+
+    /* MAIN */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* SECTIONS */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* HERO BANNER */
+    .hero {
+      background: linear-gradient(135deg, var(--navy-mid) 0%, var(--navy-card) 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem 2rem 1.8rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '❤';
+      position: absolute;
+      right: 2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 5rem;
+      opacity: 0.07;
+      animation: heartbeat 1.4s ease-in-out infinite;
+    }
+    @keyframes heartbeat {
+      0%,100% { transform: translateY(-50%) scale(1); }
+      14% { transform: translateY(-50%) scale(1.15); }
+      28% { transform: translateY(-50%) scale(1); }
+      42% { transform: translateY(-50%) scale(1.1); }
+    }
+    .hero-tag {
+      display: inline-block;
+      background: var(--accent-blue);
+      color: var(--navy);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      margin-bottom: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+    .light .hero-tag { color: #fff; }
+    .hero h1 {
+      font-family: 'Prompt', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+    .hero p { color: var(--text-secondary); font-size: 1rem; max-width: 600px; }
+
+    /* CARD */
+    .card {
+      background: var(--navy-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--glow);
+      transition: box-shadow 0.2s;
+    }
+    .card:hover { box-shadow: 0 0 28px rgba(79,195,247,0.18); }
+    .light .card:hover { box-shadow: 0 4px 20px rgba(21,101,192,0.13); }
+
+    /* SECTION HEADER */
+    .sec-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.2rem;
+    }
+    .sec-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .icon-red { background: rgba(239,83,80,0.18); }
+    .icon-blue { background: rgba(79,195,247,0.18); }
+    .icon-green { background: rgba(102,187,106,0.18); }
+    .icon-gold { background: rgba(255,202,40,0.18); }
+    .icon-purple { background: rgba(171,71,188,0.18); }
+    .icon-teal { background: rgba(38,198,218,0.18); }
+
+    .sec-title {
+      font-family: 'Prompt', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .sec-subtitle { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* GRID */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    @media(max-width: 700px) {
+      .grid-2,.grid-3,.grid-4 { grid-template-columns: 1fr; }
+    }
+
+    /* MINI CARD */
+    .mini-card {
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem;
+    }
+    .mini-card h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .mini-card p { font-size: 0.85rem; color: var(--text-secondary); }
+
+    /* BADGE */
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-right: 0.3rem;
+      margin-bottom: 0.2rem;
+    }
+    .badge-red { background: rgba(239,83,80,0.2); color: #ef9a9a; }
+    .badge-blue { background: rgba(79,195,247,0.2); color: var(--accent-blue); }
+    .badge-green { background: rgba(102,187,106,0.2); color: #a5d6a7; }
+    .badge-gold { background: rgba(255,202,40,0.2); color: #ffe082; }
+    .badge-purple { background: rgba(171,71,188,0.2); color: #ce93d8; }
+    .light .badge-red { background: rgba(198,40,40,0.12); color: #c62828; }
+    .light .badge-blue { background: rgba(21,101,192,0.12); color: #1565c0; }
+    .light .badge-green { background: rgba(46,125,50,0.12); color: #2e7d32; }
+    .light .badge-gold { background: rgba(245,127,23,0.12); color: #e65100; }
+    .light .badge-purple { background: rgba(106,27,154,0.12); color: #6a1b9a; }
+
+    /* FLOW DIAGRAM */
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      padding: 1rem 0;
+    }
+    .flow-node {
+      background: var(--navy-light);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .flow-node.red { border-color: var(--accent-red); color: #ef9a9a; background: rgba(239,83,80,0.1); }
+    .flow-node.blue { border-color: var(--accent-blue); color: var(--accent-blue); background: rgba(79,195,247,0.1); }
+    .flow-node.green { border-color: var(--accent-green); color: #a5d6a7; background: rgba(102,187,106,0.1); }
+    .light .flow-node.red { color: #c62828; background: rgba(198,40,40,0.08); }
+    .light .flow-node.blue { color: #1565c0; background: rgba(21,101,192,0.08); }
+    .light .flow-node.green { color: #2e7d32; background: rgba(46,125,50,0.08); }
+    .flow-arrow { color: var(--text-muted); font-size: 1.1rem; }
+
+    /* TABLE */
+    .tbl-wrap { overflow-x: auto; margin: 1rem 0; border-radius: 10px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th {
+      background: var(--navy-light);
+      color: var(--accent-blue);
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.82rem;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(79,195,247,0.04); }
+    .light tr:hover td { background: rgba(21,101,192,0.04); }
+    .td-highlight { color: var(--text-primary); font-weight: 600; }
+
+    /* CASE STUDY */
+    .case-study {
+      background: linear-gradient(135deg, rgba(79,195,247,0.08) 0%, rgba(38,198,218,0.05) 100%);
+      border: 1px solid rgba(79,195,247,0.25);
+      border-left: 4px solid var(--accent-blue);
+      border-radius: 0 10px 10px 0;
+      padding: 1.1rem 1.3rem;
+      margin: 1.2rem 0;
+    }
+    .light .case-study {
+      background: rgba(21,101,192,0.05);
+      border-color: rgba(21,101,192,0.3);
+      border-left-color: var(--accent-blue);
+    }
+    .case-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+    }
+    .case-study h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-primary); }
+    .case-study p { font-size: 0.87rem; color: var(--text-secondary); }
+
+    /* MECHANISM BOX */
+    .mechanism {
+      background: var(--navy-light);
+      border-radius: 10px;
+      padding: 1.2rem;
+      margin: 1rem 0;
+    }
+    .mechanism h4 {
+      color: var(--accent-gold);
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .light .mechanism h4 { color: var(--accent-gold); }
+    .step-list { list-style: none; }
+    .step-list li {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.87rem;
+      color: var(--text-secondary);
+      align-items: flex-start;
+    }
+    .step-num {
+      background: var(--accent-blue);
+      color: var(--navy);
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .light .step-num { color: #fff; }
+
+    /* KEY POINT */
+    .key-point {
+      border-left: 3px solid var(--accent-gold);
+      padding: 0.5rem 0.9rem;
+      margin: 0.5rem 0;
+      font-size: 0.87rem;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+    .key-point strong { color: var(--text-primary); font-style: normal; }
+
+    /* DIVIDER */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.5rem 0;
+    }
+
+    /* HEART DIAGRAM (CSS) */
+    .heart-diagram {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      max-width: 380px;
+      margin: 1rem auto;
+    }
+    .chamber {
+      border-radius: 10px;
+      padding: 0.9rem;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .ch-ra { background: rgba(239,83,80,0.15); border: 2px solid rgba(239,83,80,0.4); color: #ef9a9a; }
+    .ch-la { background: rgba(79,195,247,0.15); border: 2px solid rgba(79,195,247,0.4); color: var(--accent-blue); }
+    .ch-rv { background: rgba(239,83,80,0.1); border: 2px solid rgba(239,83,80,0.3); color: #ef9a9a; }
+    .ch-lv { background: rgba(79,195,247,0.1); border: 2px solid rgba(79,195,247,0.3); color: var(--accent-blue); border-width: 3px; }
+    .light .ch-ra { color: #c62828; }
+    .light .ch-la { color: #1565c0; }
+    .light .ch-rv { color: #c62828; }
+    .light .ch-lv { color: #1565c0; }
+    .chamber .ch-name { font-size: 0.78rem; font-weight: 800; margin-bottom: 0.3rem; }
+    .chamber .ch-desc { font-size: 0.72rem; opacity: 0.85; }
+    .chamber .ch-blood { font-size: 0.68rem; margin-top: 0.4rem; font-style: italic; }
+
+    /* COLLAPSIBLE */
+    .collapsible-btn {
+      width: 100%;
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.8rem 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.4rem;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .collapsible-btn:hover { border-color: var(--accent-blue); }
+    .collapsible-btn .chevron { transition: transform 0.25s; color: var(--text-muted); }
+    .collapsible-btn.open .chevron { transform: rotate(180deg); }
+    .collapsible-content {
+      display: none;
+      padding: 0.9rem 1.1rem 0.5rem;
+      background: var(--navy-card);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      margin-top: -0.4rem;
+      margin-bottom: 0.7rem;
+      font-size: 0.87rem;
+      color: var(--text-secondary);
+    }
+    .collapsible-content.open { display: block; }
+
+    /* BLOOD COMPONENT VISUAL */
+    .blood-donut {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+    .donut-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    .legend-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* MNEMONIC */
+    .mnemonic {
+      background: rgba(171,71,188,0.12);
+      border: 1px solid rgba(171,71,188,0.25);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      font-size: 0.87rem;
+      color: var(--text-secondary);
+      margin: 0.8rem 0;
+    }
+    .light .mnemonic {
+      background: rgba(106,27,154,0.06);
+      border-color: rgba(106,27,154,0.2);
+    }
+    .mnemonic strong { color: var(--accent-purple); }
+    .light .mnemonic strong { color: var(--accent-purple); }
+
+    /* PRESSURE SCALE */
+    .pressure-bar {
+      margin: 0.5rem 0;
+    }
+    .pressure-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+    .pressure-track {
+      height: 8px;
+      background: var(--navy-light);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .pressure-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s;
+    }
+
+    /* DISEASE TABLE */
+    .disease-row { border-radius: 8px; overflow: hidden; }
+
+    /* RESPONSIVE */
+    @media(max-width: 500px) {
+      .hero h1 { font-size: 1.35rem; }
+      .heart-diagram { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="header-title">🫀 ระบบหมุนเวียนเลือดและสูบฉีดโลหิต</div>
+      <div class="header-sub">BIO · ระดับมัธยมต้น–ปลาย · สรุปเนื้อหาฉบับสมบูรณ์</div>
+    </div>
+    <button class="toggle-btn" onclick="toggleTheme()">
+      <span class="toggle-icon" id="theme-icon">☀️</span>
+      <span id="theme-label">Light Mode</span>
+    </button>
+  </div>
+</header>
+
+<div class="nav-tabs">
+  <div class="nav-tabs-inner">
+    <div class="nav-tab active" onclick="switchTab('heart')">❤️ หัวใจ</div>
+    <div class="nav-tab" onclick="switchTab('circulation')">🔄 การหมุนเวียนเลือด</div>
+    <div class="nav-tab" onclick="switchTab('vessels')">🩸 หลอดเลือด</div>
+    <div class="nav-tab" onclick="switchTab('pulse')">📊 ชีพจรและความดัน</div>
+    <div class="nav-tab" onclick="switchTab('blood')">🔬 องค์ประกอบเลือด</div>
+    <div class="nav-tab" onclick="switchTab('disease')">⚕️ โรคและความผิดปกติ</div>
+  </div>
+</div>
+
+<main>
+
+<!-- ===================== TAB 1: หัวใจ ===================== -->
+<div class="section active" id="sec-heart">
+  <div class="hero">
+    <div class="hero-tag">SECTION 01</div>
+    <h1>หัวใจ (Heart)</h1>
+    <p>ปั๊มเลือดของร่างกาย — อวัยวะกล้ามเนื้อที่ทำงานตลอด 24 ชั่วโมง ไม่หยุดพัก สูบฉีดเลือดไปทั่วร่างกายกว่า 100,000 ครั้งต่อวัน</p>
+  </div>
+
+  <!-- โครงสร้างหัวใจ -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-red">❤️</div>
+      <div>
+        <div class="sec-title">โครงสร้างและ 4 ห้องหัวใจ</div>
+        <div class="sec-subtitle">Cardiac Chambers</div>
+      </div>
+    </div>
+
+    <div class="heart-diagram">
+      <div class="chamber ch-ra">
+        <div class="ch-name">RA · หัวใจห้องบนขวา</div>
+        <div class="ch-desc">Right Atrium</div>
+        <div class="ch-blood">รับ "เลือดดำ" จากร่างกาย (Vena Cava)</div>
+      </div>
+      <div class="chamber ch-la">
+        <div class="ch-name">LA · หัวใจห้องบนซ้าย</div>
+        <div class="ch-desc">Left Atrium</div>
+        <div class="ch-blood">รับ "เลือดแดง" จากปอด (Pulmonary Vein)</div>
+      </div>
+      <div class="chamber ch-rv">
+        <div class="ch-name">RV · หัวใจห้องล่างขวา</div>
+        <div class="ch-desc">Right Ventricle</div>
+        <div class="ch-blood">ส่งเลือดไปฟอกที่ปอด (Pulmonary Artery)</div>
+      </div>
+      <div class="chamber ch-lv">
+        <div class="ch-name">LV · หัวใจห้องล่างซ้าย ⭐</div>
+        <div class="ch-desc">Left Ventricle (ผนังหนาที่สุด)</div>
+        <div class="ch-blood">ส่งเลือดออกทั่วร่างกาย (Aorta)</div>
+      </div>
+    </div>
+
+    <div class="key-point"><strong>⭐ ทำไมผนัง LV หนาที่สุด?</strong> เพราะต้องสูบฉีดเลือดส่งไปทั่วร่างกายด้วยแรงดันสูง ในขณะที่ RV ส่งเลือดระยะใกล้ไปแค่ปอดเท่านั้น</div>
+
+    <div class="case-study">
+      <div class="case-label">🏋️ กรณีศึกษาชีวิตประจำวัน</div>
+      <h4>นักกีฬามาราธอน vs คนทั่วไป</h4>
+      <p>นักกีฬาที่ออกกำลังกายหนักมานาน หัวใจห้องล่างซ้าย (LV) จะมีขนาดใหญ่ขึ้นและผนังหนาขึ้น ทำให้สูบฉีดเลือดได้มากขึ้นต่อครั้ง อัตราการเต้นของหัวใจขณะพักจึงต่ำกว่าคนทั่วไป (อาจ 40–50 ครั้ง/นาที เทียบกับ 60–80 ครั้ง/นาที)</p>
+    </div>
+  </div>
+
+  <!-- กลไกการทำงาน -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-gold">⚙️</div>
+      <div>
+        <div class="sec-title">กลไกการบีบและคลายตัวของหัวใจ</div>
+        <div class="sec-subtitle">Cardiac Cycle — Systole &amp; Diastole</div>
+      </div>
+    </div>
+
+    <div class="mechanism">
+      <h4>⚡ วงจรการเต้นของหัวใจ (1 รอบ ≈ 0.8 วินาที)</h4>
+      <ul class="step-list">
+        <li><div class="step-num">1</div><span><strong>Diastole (คลายตัว):</strong> ห้องบนและล่างคลายตัว เลือดจากหลอดเลือดดำไหลเข้าสู่ห้องบน ลิ้นหัวใจระหว่างห้องบน-ล่างเปิด</span></li>
+        <li><div class="step-num">2</div><span><strong>Atrial Systole (ห้องบนบีบ):</strong> ห้องบนบีบตัว ดันเลือดลงห้องล่าง</span></li>
+        <li><div class="step-num">3</div><span><strong>Ventricular Systole (ห้องล่างบีบ):</strong> ห้องล่างบีบตัว ดันเลือดออกไปปอด (ขวา) และทั่วร่างกาย (ซ้าย) ลิ้นระหว่างห้องบน-ล่างปิด</span></li>
+        <li><div class="step-num">4</div><span><strong>วนซ้ำ:</strong> ห้องล่างคลายตัว ลิ้นเอออร์ตาและพัลโมนารีปิด กลับสู่ขั้นตอนที่ 1</span></li>
+      </ul>
+    </div>
+
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>🔒 ลิ้นหัวใจ (Heart Valves)</h4>
+        <p>ป้องกันการไหลย้อนกลับของเลือด มี 4 ลิ้น:</p>
+        <p style="margin-top:0.5rem; font-size:0.82rem;">• <strong>Tricuspid</strong> — กั้น RA/RV<br>• <strong>Pulmonary</strong> — RV/หลอดเลือดปอด<br>• <strong>Mitral (Bicuspid)</strong> — กั้น LA/LV<br>• <strong>Aortic</strong> — LV/เอออร์ตา</p>
+      </div>
+      <div class="mini-card">
+        <h4>📏 ขนาดและน้ำหนัก</h4>
+        <p>หัวใจผู้ใหญ่มีขนาดประมาณกำปั้นของเจ้าของ น้ำหนัก ~300 g เต้น 60–100 ครั้ง/นาที ตลอดชีวิต ในอายุ 70 ปี จะเต้นรวมกว่า <strong>2.5 พันล้านครั้ง</strong></p>
+      </div>
+    </div>
+
+    <div class="case-study">
+      <div class="case-label">⚠️ กรณีศึกษา: CPR (การนวดหัวใจ)</div>
+      <h4>เมื่อหัวใจหยุดเต้น ต้องทำอย่างไร?</h4>
+      <p>การกดหน้าอกในการทำ CPR จำลองการบีบตัวของหัวใจ — กดหน้าอกยุบลง ≥5 cm ด้วยอัตรา 100 ครั้ง/นาที เลือดจะถูกดันออกจากหัวใจผ่านหลอดเลือดแดง หลังจากนั้นต้องปล่อยให้หน้าอกคืนตัวเต็มที่เพื่อให้เลือดไหลกลับเข้าหัวใจผ่านหลอดเลือดดำ หลักการนี้เลียนแบบ Systole (กด) และ Diastole (ปล่อย) นั่นเอง</p>
+    </div>
+  </div>
+
+  <!-- เลือดในห้องหัวใจ -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-blue">🔵</div>
+      <div>
+        <div class="sec-title">เลือดแดง vs เลือดดำ ในห้องหัวใจ</div>
+        <div class="sec-subtitle">Oxygenated vs Deoxygenated Blood</div>
+      </div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ห้องหัวใจ</th>
+            <th>ชนิดเลือด</th>
+            <th>ปริมาณ O₂</th>
+            <th>ปริมาณ CO₂</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="td-highlight">RA (บนขวา)</td><td><span class="badge badge-red">เลือดดำ</span></td><td>ต่ำ</td><td>สูง</td></tr>
+          <tr><td class="td-highlight">RV (ล่างขวา)</td><td><span class="badge badge-red">เลือดดำ</span></td><td>ต่ำ</td><td>สูง</td></tr>
+          <tr><td class="td-highlight">LA (บนซ้าย)</td><td><span class="badge badge-blue">เลือดแดง</span></td><td>สูง</td><td>ต่ำ</td></tr>
+          <tr><td class="td-highlight">LV (ล่างซ้าย)</td><td><span class="badge badge-blue">เลือดแดง</span></td><td>สูง</td><td>ต่ำ</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mnemonic">
+      <strong>🧠 จำง่าย:</strong> ซ้าย = สะอาด (เลือดแดง มี O₂ สูง) | ขวา = ของเสีย (เลือดดำ มี CO₂ สูง)<br>
+      "ซ้าย-สะอาด / ขวา-เสีย" — ไม่ว่าจะห้องบนหรือล่าง ฝั่งเดิมก็มีเลือดชนิดเดิมเสมอ
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TAB 2: การหมุนเวียนเลือด ===================== -->
+<div class="section" id="sec-circulation">
+  <div class="hero">
+    <div class="hero-tag">SECTION 02</div>
+    <h1>การหมุนเวียนเลือดในร่างกาย</h1>
+    <p>ระบบสองวงจรที่ทำงานพร้อมกัน — วงจรปอดและวงจรทั่วร่างกาย</p>
+  </div>
+
+  <!-- สองวงจรหลัก -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-blue">🔄</div>
+      <div>
+        <div class="sec-title">วงจรหมุนเวียนเลือด 2 วงจร (Double Circulation)</div>
+        <div class="sec-subtitle">Pulmonary Circuit &amp; Systemic Circuit</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <h4 style="color:var(--accent-red); margin-bottom:0.8rem; font-size:0.95rem;">🫁 วงจรปอด (Pulmonary Circuit)</h4>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.8rem;">เลือดดำ → ปอด → ฟอกออกซิเจน → เลือดแดง</p>
+        <div class="flow" style="flex-direction:column; align-items:flex-start;">
+          <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+            <div class="flow-node red">RV (ล่างขวา)</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node red">Pulmonary Artery</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node green">ปอด (แลกเปลี่ยนแก๊ส)</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node blue">Pulmonary Vein</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node blue">LA (บนซ้าย)</div>
+          </div>
+        </div>
+        <div class="key-point" style="margin-top:0.8rem;"><strong>⚠️ ข้อยกเว้น!</strong> Pulmonary Artery = เลือดดำ (ชื่อ "แดง" แต่ออกซิเจนต่ำ), Pulmonary Vein = เลือดแดง (ชื่อ "ดำ" แต่ออกซิเจนสูง)</div>
+      </div>
+      <div>
+        <h4 style="color:var(--accent-blue); margin-bottom:0.8rem; font-size:0.95rem;">🌐 วงจรทั่วร่างกาย (Systemic Circuit)</h4>
+        <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.8rem;">เลือดแดง → ทั่วร่างกาย → ส่งออกซิเจน → เลือดดำ</p>
+        <div class="flow" style="flex-direction:column; align-items:flex-start;">
+          <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+            <div class="flow-node blue">LV (ล่างซ้าย)</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node blue">Aorta</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node green">อวัยวะ/เนื้อเยื่อ</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node red">Vena Cava</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-node red">RA (บนขวา)</div>
+          </div>
+        </div>
+        <div class="key-point" style="margin-top:0.8rem;"><strong>Vena Cava</strong> = หลอดเลือดดำใหญ่ที่นำเลือดดำกลับสู่หัวใจ (Superior = จากศีรษะ, Inferior = จากส่วนล่าง)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- เส้นทางการไหลเวียนฉบับสมบูรณ์ -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-teal">🗺️</div>
+      <div>
+        <div class="sec-title">เส้นทางการไหลเวียนเลือดฉบับสมบูรณ์</div>
+        <div class="sec-subtitle">Full Blood Flow Path</div>
+      </div>
+    </div>
+    <div class="mechanism">
+      <h4>🔴 เริ่มจากเลือดดำ กลับมาเป็นเลือดแดง</h4>
+      <ul class="step-list">
+        <li><div class="step-num">1</div><span>เลือดดำจากทั่วร่างกาย → <strong>Vena Cava</strong> → <strong>RA (ห้องบนขวา)</strong></span></li>
+        <li><div class="step-num">2</div><span>RA → ลิ้น Tricuspid → <strong>RV (ห้องล่างขวา)</strong></span></li>
+        <li><div class="step-num">3</div><span>RV → ลิ้น Pulmonary → <strong>Pulmonary Artery</strong> → <strong>ปอด</strong> (รับ O₂, ปล่อย CO₂)</span></li>
+        <li><div class="step-num">4</div><span>ปอด → <strong>Pulmonary Vein</strong> → <strong>LA (ห้องบนซ้าย)</strong> (ตอนนี้เป็นเลือดแดงแล้ว)</span></li>
+        <li><div class="step-num">5</div><span>LA → ลิ้น Mitral → <strong>LV (ห้องล่างซ้าย)</strong></span></li>
+        <li><div class="step-num">6</div><span>LV → ลิ้น Aortic → <strong>Aorta</strong> → กระจายไปทั่วร่างกาย</span></li>
+        <li><div class="step-num">7</div><span>ที่เนื้อเยื่อ: ส่ง O₂ + สารอาหาร รับ CO₂ + ของเสีย → <strong>หลอดเลือดดำ</strong> → กลับ RA</span></li>
+      </ul>
+    </div>
+
+    <div class="case-study">
+      <div class="case-label">🍽️ กรณีศึกษา: กลูโคสในเลือดหลังรับประทานอาหาร</div>
+      <h4>หลังกินข้าว กลูโคสสูงที่สุดที่ไหน?</h4>
+      <p>เมื่อกินอาหาร กลูโคสถูกดูดซึมที่ลำไส้เล็ก → ไหลเข้าสู่ <strong>หลอดเลือดดำพอร์ทัล (Portal Vein)</strong> → ตับ (ตับเก็บบางส่วนเป็น Glycogen) → หัวใจ → ทั่วร่างกาย<br>ดังนั้น <strong>หลอดเลือดที่นำเลือดออกจากลำไส้เล็กไปสู่ตับ</strong> จะมีกลูโคสสูงที่สุดทันทีหลังกินอาหาร</p>
+    </div>
+
+    <div class="case-study">
+      <div class="case-label">🏔️ กรณีศึกษา: คนอยู่ที่ระดับความสูง</div>
+      <h4>ทำไมคนบนภูเขาสูงมีเม็ดเลือดแดงมากขึ้น?</h4>
+      <p>บนพื้นที่สูง อากาศเบาบาง O₂ น้อย ร่างกายตอบสนองโดยผลิตเม็ดเลือดแดง (RBC) มากขึ้นเพื่อชดเชย ซึ่งหมายถึงการหมุนเวียนเลือดต้องทำงานหนักขึ้นเพื่อขนส่ง O₂ ให้เพียงพอ</p>
+    </div>
+  </div>
+
+  <!-- เปรียบเทียบหัวใจสัตว์ -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-green">🐟</div>
+      <div>
+        <div class="sec-title">เปรียบเทียบหัวใจในสัตว์ต่างชนิด</div>
+        <div class="sec-subtitle">Comparative Anatomy</div>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>สัตว์</th><th>จำนวนห้อง</th><th>ลักษณะการหมุนเวียน</th><th>ตัวอย่าง</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-highlight">ปลา</td>
+            <td>2 ห้อง (1A + 1V)</td>
+            <td>วงจรเดียว (เลือดดำอย่างเดียวในหัวใจ)</td>
+            <td>ปลาทอง, ปลาตะเพียน</td>
+          </tr>
+          <tr>
+            <td class="td-highlight">กบ, สัตว์ครึ่งบกครึ่งน้ำ</td>
+            <td>3 ห้อง (2A + 1V)</td>
+            <td>เลือดแดง-ดำ ผสมกันในห้องล่าง</td>
+            <td>กบ, คางคก</td>
+          </tr>
+          <tr>
+            <td class="td-highlight">สัตว์เลื้อยคลาน</td>
+            <td>3–4 ห้อง (ผนังไม่สมบูรณ์)</td>
+            <td>เลือดผสมบางส่วน</td>
+            <td>งู, จระเข้ (4 ห้อง)</td>
+          </tr>
+          <tr>
+            <td class="td-highlight">นก + สัตว์เลี้ยงลูกด้วยนม</td>
+            <td>4 ห้อง (2A + 2V) ✅</td>
+            <td>สองวงจรแยกกันสมบูรณ์ ไม่ผสมกัน</td>
+            <td>มนุษย์, สุนัข, นก</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="key-point"><strong>หัวใจ 4 ห้อง</strong>ของมนุษย์และสัตว์เลี้ยงลูกด้วยนม ทำให้เลือดแดง-ดำแยกกันสมบูรณ์ ร่างกายจึงได้รับ O₂ เต็มที่ทุกเซลล์</div>
+  </div>
+</div>
+
+<!-- ===================== TAB 3: หลอดเลือด ===================== -->
+<div class="section" id="sec-vessels">
+  <div class="hero">
+    <div class="hero-tag">SECTION 03</div>
+    <h1>หลอดเลือด (Blood Vessels)</h1>
+    <p>เครือข่ายท่อส่งเลือดกว่า 100,000 กิโลเมตรในร่างกาย — ยาวพอจะพันรอบโลกได้ 2.5 รอบ</p>
+  </div>
+
+  <!-- ตารางเปรียบเทียบ -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-red">📊</div>
+      <div>
+        <div class="sec-title">เปรียบเทียบหลอดเลือด 3 ชนิด</div>
+        <div class="sec-subtitle">Artery · Capillary · Vein</div>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ลักษณะ</th>
+            <th>🔴 Artery (แดง)</th>
+            <th>🩸 Capillary (ฝอย)</th>
+            <th>🔵 Vein (ดำ)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ทิศทางเลือด</td>
+            <td class="td-highlight">ออกจากหัวใจ</td>
+            <td>เชื่อม arteriole → venule</td>
+            <td class="td-highlight">เข้าสู่หัวใจ</td>
+          </tr>
+          <tr>
+            <td>ผนังหลอดเลือด</td>
+            <td class="td-highlight">หนาที่สุด + ยืดหยุ่นสูง</td>
+            <td>บางที่สุด (1 ชั้นเซลล์)</td>
+            <td>บางกว่าแดง</td>
+          </tr>
+          <tr>
+            <td>ลิ้น (Valve)</td>
+            <td>❌ ไม่มี</td>
+            <td>❌ ไม่มี</td>
+            <td>✅ มี (ป้องกันไหลย้อน)</td>
+          </tr>
+          <tr>
+            <td>ความดันเลือด</td>
+            <td class="td-highlight">สูงที่สุด</td>
+            <td>ปานกลาง</td>
+            <td class="td-highlight">ต่ำที่สุด</td>
+          </tr>
+          <tr>
+            <td>ความเร็วเลือด</td>
+            <td class="td-highlight">เร็วที่สุด</td>
+            <td>ช้าที่สุด ✅</td>
+            <td>ปานกลาง</td>
+          </tr>
+          <tr>
+            <td>พื้นที่หน้าตัดรวม</td>
+            <td>น้อยที่สุด</td>
+            <td class="td-highlight">มากที่สุด</td>
+            <td>ปานกลาง</td>
+          </tr>
+          <tr>
+            <td>มองเห็นจากภายนอก</td>
+            <td>❌ ไม่เห็น</td>
+            <td>❌ ไม่เห็น</td>
+            <td>✅ เห็น (เช่น ที่ข้อมือ)</td>
+          </tr>
+          <tr>
+            <td>ปริมาณเลือดสะสม</td>
+            <td>~10%</td>
+            <td>~5%</td>
+            <td class="td-highlight">~60–70%</td>
+          </tr>
+          <tr>
+            <td>ชนิดเลือดทั่วไป</td>
+            <td><span class="badge badge-blue">มี O₂ มาก</span></td>
+            <td>มีทั้งสองชนิด</td>
+            <td><span class="badge badge-red">มี CO₂ มาก</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mnemonic">
+      <strong>🧠 Mnemonic:</strong> "เจาะจากดำ — คลำจากแดง" <br>
+      เจาะเลือด/บริจาคเลือด → เส้นเลือดดำ (Vein) ผนังบาง ความดันต่ำ ปลอดภัย มองเห็นชัด<br>
+      วัดชีพจร (Pulse) → เส้นเลือดแดง (Artery) รู้สึกได้ถึงการเต้นของหัวใจ
+    </div>
+  </div>
+
+  <!-- กลไกการไหลในหลอดเวน -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-gold">⚙️</div>
+      <div>
+        <div class="sec-title">กลไกพิเศษ: ทำไมเลือดไหลในหลอดเลือดดำได้?</div>
+        <div class="sec-subtitle">Venous Return Mechanism</div>
+      </div>
+    </div>
+    <div class="mechanism">
+      <h4>🔍 เลือดในหลอดเลือดดำมีความดันต่ำมาก แต่ยังไหลกลับหัวใจได้ เพราะ...</h4>
+      <ul class="step-list">
+        <li><div class="step-num">1</div><span><strong>ลิ้นหัวใจในหลอดเวน (Venous Valve):</strong> ป้องกันไม่ให้เลือดไหลย้อนกลับ ทำให้เลือดไหลทิศเดียวเสมอ</span></li>
+        <li><div class="step-num">2</div><span><strong>การบีบตัวของกล้ามเนื้อ:</strong> เมื่อเราเดิน วิ่ง หรือขยับแขนขา กล้ามเนื้อบีบหลอดเลือดดำ ดันเลือดขึ้นไปยังหัวใจ</span></li>
+        <li><div class="step-num">3</div><span><strong>การหายใจ:</strong> เมื่อสูดหายใจเข้า ความดันในทรวงอกลดลง ดูดเลือดเข้าหัวใจ</span></li>
+      </ul>
+    </div>
+
+    <div class="case-study">
+      <div class="case-label">🧍 กรณีศึกษา: ยืนนานเกินไป</div>
+      <h4>ทำไมเท้าบวมเมื่อยืนนาน?</h4>
+      <p>เมื่อยืนนาน กล้ามเนื้อขาไม่ค่อยขยับ เลือดดำไหลกลับสู่หัวใจได้ช้าลง เลือดขังที่ขาส่วนล่าง ส่งผลให้ของเหลวรั่วออกจากหลอดเลือดฝอยไปยังเนื้อเยื่อ → เท้าบวม (Edema) การเดินหรือขยับเท้าช่วยกระตุ้นให้เลือดไหลกลับได้</p>
+    </div>
+
+    <div class="case-study">
+      <div class="case-label">🩺 กรณีศึกษา: การบริจาคเลือด</div>
+      <h4>ทำไมเจาะเลือดที่ข้อพับข้อศอก?</h4>
+      <p>บริเวณข้อพับมีหลอดเลือดดำอยู่ไม่ลึก มองเห็นชัด ความดันต่ำ และผนังบาง — เจาะง่าย ไม่อันตราย ต่างจากหลอดเลือดแดงที่มีความดันสูง ถ้าเจาะผิดอาจเลือดพุ่งหยุดยาก คนปกติมีเลือด 4–6 ลิตร บริจาคได้ 350–450 ml ทุก 3 เดือน</p>
+    </div>
+  </div>
+
+  <!-- กราฟความดัน-ความเร็ว -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-purple">📈</div>
+      <div>
+        <div class="sec-title">ความสัมพันธ์ระหว่างความดัน ความเร็ว และพื้นที่หน้าตัด</div>
+        <div class="sec-subtitle">Blood Pressure · Velocity · Cross-sectional Area</div>
+      </div>
+    </div>
+
+    <p style="font-size:0.87rem; color:var(--text-secondary); margin-bottom:1rem;">ใช้กฎ: Q = Av (อัตราการไหล = ความเร็ว × พื้นที่หน้าตัด) เมื่อ Q คงที่ พื้นที่หน้าตัดมากขึ้น ความเร็วจะลดลง</p>
+
+    <div class="pressure-bar">
+      <div class="pressure-label"><span>💨 ความเร็วเลือด</span></div>
+      <div style="margin-bottom:0.5rem;">
+        <div class="pressure-label"><span style="color:#ef9a9a;">Aorta (เร็วที่สุด)</span><span>100 cm/s</span></div>
+        <div class="pressure-track"><div class="pressure-fill" style="width:100%; background:var(--accent-red);"></div></div>
+      </div>
+      <div style="margin-bottom:0.5rem;">
+        <div class="pressure-label"><span style="color:#b0cce4;">Vena Cava</span><span>~30 cm/s</span></div>
+        <div class="pressure-track"><div class="pressure-fill" style="width:30%; background:var(--text-muted);"></div></div>
+      </div>
+      <div style="margin-bottom:0.5rem;">
+        <div class="pressure-label"><span style="color:var(--accent-green);">Capillary (ช้าที่สุด)</span><span>0.1 cm/s</span></div>
+        <div class="pressure-track"><div class="pressure-fill" style="width:5%; background:var(--accent-green);"></div></div>
+      </div>
+    </div>
+
+    <div class="key-point" style="margin-top:0.5rem;"><strong>✅ เลือดไหลช้าในหลอดเลือดฝอย</strong> เพื่อให้มีเวลาแลกเปลี่ยน O₂, CO₂, สารอาหาร และของเสียกับเซลล์ได้เต็มที่ — นี่คือเหตุผลที่ผนังบางมากและความเร็วต่ำ</div>
+  </div>
+</div>
+
+<!-- ===================== TAB 4: ชีพจรและความดัน ===================== -->
+<div class="section" id="sec-pulse">
+  <div class="hero">
+    <div class="hero-tag">SECTION 04</div>
+    <h1>ชีพจรและความดันโลหิต</h1>
+    <p>ตัวบ่งชี้สุขภาพหัวใจที่วัดได้ง่ายและสำคัญที่สุด</p>
+  </div>
+
+  <!-- ชีพจร -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-red">💓</div>
+      <div>
+        <div class="sec-title">ชีพจร (Pulse)</div>
+        <div class="sec-subtitle">Heart Rate Measurement</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <h4 style="font-size:0.9rem; margin-bottom:0.6rem; color:var(--text-primary);">ชีพจรคืออะไร?</h4>
+        <p style="font-size:0.87rem; color:var(--text-secondary);">การเต้นเป็นจังหวะของหลอดเลือดแดง ที่เกิดจากการบีบ-คลายตัวของหัวใจ จังหวะชีพจร = จังหวะการบีบตัวของหัวใจ</p>
+        <div class="mini-card" style="margin-top:0.8rem;">
+          <h4>📍 ตำแหน่งวัดชีพจร</h4>
+          <p>• ข้อมือ (Radial artery) — พบบ่อยที่สุด<br>• คอ (Carotid artery)<br>• ขาหนีบ (Femoral artery)<br>• ขมับ (Temporal artery)</p>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-size:0.9rem; margin-bottom:0.6rem; color:var(--text-primary);">อัตราการเต้นปกติ</h4>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>กลุ่ม</th><th>ครั้ง/นาที</th></tr></thead>
+            <tbody>
+              <tr><td>ผู้ใหญ่ทั่วไป</td><td class="td-highlight">60–100</td></tr>
+              <tr><td>เด็ก</td><td class="td-highlight">70–120</td></tr>
+              <tr><td>นักกีฬา</td><td class="td-highlight">40–60</td></tr>
+              <tr><td>ขณะออกกำลังกาย</td><td class="td-highlight">สูงถึง 180+</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="case-study">
+      <div class="case-label">🏃 กรณีศึกษา: ชีพจรกับการออกกำลังกาย</div>
+      <h4>วิ่งมากขึ้น ชีพจรเร็วขึ้น</h4>
+      <p>ข้อมูลจากการทดลอง: วิ่ง 50m → 70 ครั้ง/นาที | 100m → 84 | 150m → 105 | 200m → 160 ครั้ง/นาที เมื่อออกกำลังกายมากขึ้น กล้ามเนื้อต้องการ O₂ มากขึ้น หัวใจต้องสูบเลือดเร็วขึ้นเพื่อส่ง O₂ ให้ทัน ชีพจรจึงเพิ่มขึ้นตามระยะทาง</p>
+    </div>
+  </div>
+
+  <!-- ความดันโลหิต -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-blue">🩺</div>
+      <div>
+        <div class="sec-title">ความดันโลหิต (Blood Pressure)</div>
+        <div class="sec-subtitle">Systolic &amp; Diastolic Pressure</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4 style="color:var(--accent-red);">🔺 ความดันตัวบน (Systolic BP)</h4>
+        <p>ความดันเลือดสูงสุด <strong>ขณะหัวใจห้องล่างบีบตัว</strong><br>ค่าปกติ: &lt;120 mmHg</p>
+      </div>
+      <div class="mini-card">
+        <h4 style="color:var(--accent-blue);">🔻 ความดันตัวล่าง (Diastolic BP)</h4>
+        <p>ความดันเลือดต่ำสุด <strong>ขณะหัวใจห้องล่างคลายตัว</strong><br>ค่าปกติ: &lt;80 mmHg</p>
+      </div>
+    </div>
+
+    <div class="tbl-wrap" style="margin-top:1rem;">
+      <table>
+        <thead><tr><th>ระดับความดัน</th><th>ตัวบน (SBP)</th><th>ตัวล่าง (DBP)</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-green">✅ ปกติ</span></td><td>&lt;120</td><td>&lt;80</td></tr>
+          <tr><td><span class="badge badge-gold">⚠️ สูงเล็กน้อย</span></td><td>120–139</td><td>80–89</td></tr>
+          <tr><td><span class="badge badge-red">🔴 ความดันสูง</span></td><td>≥140</td><td>≥90</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mnemonic">
+      <strong>🧠 Mnemonic: "Miss ซิส-สูง(ศักดิ์)-บีบ"</strong><br>
+      <strong>SYS</strong>tolic = <strong>สูง</strong> = ขณะ<strong>บีบ</strong>ตัว | <strong>DIA</strong>stolic = <strong>ต่ำ</strong> = ขณะ<strong>คลาย</strong>ตัว
+    </div>
+
+    <div class="case-study">
+      <div class="case-label">😰 กรณีศึกษา: ความดันโลหิตสูง (Hypertension)</div>
+      <h4>ความดันสูงอันตรายอย่างไร?</h4>
+      <p>ความดันสูงทำให้หัวใจต้องทำงานหนักขึ้น ผนังหลอดเลือดแดงรับแรงมากเกินไปจนอาจแตกหรือตีบตัน เพิ่มความเสี่ยงโรคหัวใจ อัมพฤกษ์ และไตวาย สาเหตุหลักคือ ไขมันสะสมในหลอดเลือด (Atherosclerosis) อาหารเค็มจัด ขาดการออกกำลังกาย และความเครียด</p>
+    </div>
+
+    <div class="case-study">
+      <div class="case-label">🧘 กรณีศึกษา: ความดันกับท่าทางร่างกาย</div>
+      <h4>นอนราบ ความดันเท่ากันทุกส่วน</h4>
+      <p>เมื่อนอนราบ แรงโน้มถ่วงไม่มีผลต่อความดันเลือด ตำแหน่งที่มีความดันสูงสุดคือตำแหน่งที่ใกล้หัวใจมากที่สุด (บริเวณคอ/ทรวงอก) แต่เมื่อยืน ปลายเท้าจะมีความดันสูงกว่าศีรษะเพราะน้ำหนักเลือดกดทับลงมา</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TAB 5: องค์ประกอบเลือด ===================== -->
+<div class="section" id="sec-blood">
+  <div class="hero">
+    <div class="hero-tag">SECTION 05</div>
+    <h1>องค์ประกอบของเลือด (Blood Components)</h1>
+    <p>ของเหลวพิเศษที่ทำหน้าที่ขนส่ง ป้องกัน และซ่อมแซมร่างกาย</p>
+  </div>
+
+  <!-- ภาพรวมองค์ประกอบ -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-red">🔬</div>
+      <div>
+        <div class="sec-title">ส่วนประกอบหลักของเลือด</div>
+        <div class="sec-subtitle">Blood Composition</div>
+      </div>
+    </div>
+
+    <div class="blood-donut">
+      <div>
+        <svg viewBox="0 0 120 120" width="120" height="120">
+          <!-- Plasma 55% -->
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#ffca28" stroke-width="20"
+            stroke-dasharray="172 314" stroke-dashoffset="0"/>
+          <!-- RBC 44% -->
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#ef5350" stroke-width="20"
+            stroke-dasharray="138 314" stroke-dashoffset="-172"/>
+          <!-- WBC+Plt 1% -->
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#66bb6a" stroke-width="20"
+            stroke-dasharray="4 314" stroke-dashoffset="-310"/>
+          <text x="60" y="55" text-anchor="middle" fill="var(--text-primary)" font-size="10" font-family="Sarabun">เลือด</text>
+          <text x="60" y="68" text-anchor="middle" fill="var(--text-muted)" font-size="8" font-family="Sarabun">Blood</text>
+        </svg>
+      </div>
+      <div class="donut-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#ffca28;"></div><span><strong>พลาสมา</strong> ~55% (ของเหลว)</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ef5350;"></div><span><strong>เม็ดเลือดแดง (RBC)</strong> ~44%</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#66bb6a;"></div><span><strong>เม็ดเลือดขาว (WBC) + เกล็ดเลือด</strong> ~1%</span></div>
+      </div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>องค์ประกอบ</th><th>ลักษณะพิเศษ</th><th>หน้าที่</th><th>สร้าง/ทำลายที่</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-highlight">🟡 พลาสมา (Plasma)</td>
+            <td>น้ำ 90%, โปรตีน, สารอาหาร, ฮอร์โมน</td>
+            <td>ลำเลียงสารต่าง ๆ, บัฟเฟอร์ pH</td>
+            <td>ตับ (โปรตีนพลาสมา)</td>
+          </tr>
+          <tr>
+            <td class="td-highlight">🔴 เม็ดเลือดแดง (RBC)</td>
+            <td>ไม่มีนิวเคลียส, กลมแบน, มีฮีโมโกลบิน (Hb)</td>
+            <td>ลำเลียง O₂ และ CO₂</td>
+            <td>สร้าง: ไขกระดูก | ทำลาย: ม้าม</td>
+          </tr>
+          <tr>
+            <td class="td-highlight">⚪ เม็ดเลือดขาว (WBC)</td>
+            <td>มีนิวเคลียส, ไม่มีสี, จำนวนน้อยที่สุด</td>
+            <td>ภูมิคุ้มกัน กำจัดเชื้อโรค</td>
+            <td>ไขกระดูก, ต่อมน้ำเหลือง</td>
+          </tr>
+          <tr>
+            <td class="td-highlight">💜 เกล็ดเลือด (Platelet)</td>
+            <td>เศษเซลล์ขนาดเล็ก ไม่มีนิวเคลียส</td>
+            <td>ห้ามเลือด ทำให้เลือดแข็งตัว</td>
+            <td>ไขกระดูก</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- เม็ดเลือดแดง -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-red">🔴</div>
+      <div>
+        <div class="sec-title">เม็ดเลือดแดง (RBC) — ฮีโรแห่งการขนส่งออกซิเจน</div>
+        <div class="sec-subtitle">Red Blood Cells &amp; Hemoglobin</div>
+      </div>
+    </div>
+
+    <div class="mechanism">
+      <h4>🔍 ทำไมเม็ดเลือดแดงถึงไม่มีนิวเคลียส?</h4>
+      <ul class="step-list">
+        <li><div class="step-num">1</div><span>เม็ดเลือดแดงตอนเป็นเซลล์ต้นกำเนิด (ในไขกระดูก) <strong>มีนิวเคลียส</strong></span></li>
+        <li><div class="step-num">2</div><span>เมื่อเจริญเต็มที่ <strong>นิวเคลียสจะสลายหายไป</strong> เพื่อเพิ่มพื้นที่บรรจุฮีโมโกลบิน</span></li>
+        <li><div class="step-num">3</div><span>รูปร่างกลมแบน (Biconcave disc) ช่วยเพิ่มพื้นที่ผิวในการแลกเปลี่ยนแก๊ส และยืดหยุ่นผ่านหลอดเลือดฝอยแคบได้</span></li>
+        <li><div class="step-num">4</div><span>อายุ ~120 วัน จากนั้น <strong>ม้าม</strong>จะทำลาย</span></li>
+      </ul>
+    </div>
+
+    <div class="grid-2">
+      <div class="mini-card">
+        <h4>ฮีโมโกลบิน (Hemoglobin)</h4>
+        <p>โปรตีนสีแดงในเม็ดเลือดแดง จับกับแก๊สได้ตามลำดับความสัมพันธ์:<br>
+        <span class="badge badge-red">CO สูงสุด</span>
+        <span class="badge badge-blue">O₂ สูง</span>
+        <span class="badge badge-green">CO₂ ต่ำกว่า</span><br>
+        <strong>⚠️ CO (ควันพิษ)</strong> จับ Hb ได้แน่นกว่า O₂ ถึง 200+ เท่า — อันตรายมาก!</p>
+      </div>
+      <div class="mini-card">
+        <h4>ปริมาณ RBC ปกติ</h4>
+        <p>ชาย: ~5 ล้านเซลล์/mm³<br>หญิง: ~4.5 ล้านเซลล์/mm³<br>WBC: ~5,000–10,000/mm³<br><br><strong>ถ้า RBC น้อยเกินไป:</strong> โลหิตจาง (Anemia) — เหนื่อยง่าย หน้ามืด ผิวซีด</p>
+      </div>
+    </div>
+
+    <div class="case-study">
+      <div class="case-label">🚬 กรณีศึกษา: ผู้สูบบุหรี่</div>
+      <h4>CO ในบุหรี่แย่งที่ O₂ บน Hb</h4>
+      <p>ควันบุหรี่มี CO สูง เมื่อหายใจเข้า CO จับกับ Hb แทน O₂ ทำให้เลือดพาออกซิเจนไปเลี้ยงร่างกายได้น้อยลง ผู้สูบบุหรี่จึงเหนื่อยง่ายกว่าปกติ และในระยะยาวหัวใจต้องทำงานหนักขึ้น เสี่ยงโรคหัวใจและหลอดเลือด</p>
+    </div>
+  </div>
+
+  <!-- หมู่เลือด -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-purple">🧬</div>
+      <div>
+        <div class="sec-title">หมู่เลือด ABO System</div>
+        <div class="sec-subtitle">Blood Types</div>
+      </div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>หมู่เลือด</th><th>Antigen บน RBC</th><th>Antibody ในพลาสมา</th><th>รับเลือดได้จาก</th><th>ให้เลือดได้แก่</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="td-highlight">A</td><td>A</td><td>Anti-B</td><td>A, O</td><td>A, AB</td></tr>
+          <tr><td class="td-highlight">B</td><td>B</td><td>Anti-A</td><td>B, O</td><td>B, AB</td></tr>
+          <tr><td class="td-highlight">AB (ผู้รับสากล)</td><td>A + B</td><td>ไม่มี</td><td>A, B, AB, O ✅</td><td>AB เท่านั้น</td></tr>
+          <tr><td class="td-highlight">O (ผู้ให้สากล)</td><td>ไม่มี</td><td>Anti-A + Anti-B</td><td>O เท่านั้น</td><td>A, B, AB, O ✅</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="key-point"><strong>หลักการถ่ายเลือด:</strong> แอนติเจน (Ag) บน RBC ของผู้ให้ ต้องไม่ตรงกับแอนติบอดี (Ab) ในพลาสมาของผู้รับ มิฉะนั้น RBC จะจับตัวเป็นก้อน (Agglutination) อันตรายถึงชีวิต</div>
+
+    <div class="case-study">
+      <div class="case-label">🏥 กรณีศึกษา: เหตุฉุกเฉิน ไม่รู้หมู่เลือด</div>
+      <h4>ทำไมใช้เลือดหมู่ O ในกรณีฉุกเฉิน?</h4>
+      <p>หมู่ O ไม่มีแอนติเจน A หรือ B บนผิว RBC จึงไม่เกิดปฏิกิริยากับแอนติบอดีในพลาสมาของผู้รับหมู่ใดก็ได้ ในกรณีฉุกเฉินที่ไม่รู้หมู่เลือดผู้ป่วย แพทย์จะใช้เลือดหมู่ O ก่อนเป็นลำดับแรก</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TAB 6: โรคและความผิดปกติ ===================== -->
+<div class="section" id="sec-disease">
+  <div class="hero">
+    <div class="hero-tag">SECTION 06</div>
+    <h1>โรคและความผิดปกติของระบบหมุนเวียนเลือด</h1>
+    <p>เข้าใจโรคเพื่อป้องกันและดูแลสุขภาพหัวใจในชีวิตประจำวัน</p>
+  </div>
+
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-red">⚕️</div>
+      <div>
+        <div class="sec-title">โรคสำคัญของระบบหมุนเวียนเลือด</div>
+        <div class="sec-subtitle">Cardiovascular Diseases</div>
+      </div>
+    </div>
+
+    <div class="collapsible-btn" onclick="toggleCollapse(this)">
+      <span>❤️‍🩹 โลหิตจาง (Anemia) — เม็ดเลือดแดงน้อย</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="collapsible-content">
+      <p><strong>สาเหตุ:</strong> ขาด Fe (ธาตุเหล็ก), ขาด B12, เม็ดเลือดแดงแตกผิดปกติ หรือ RBC ถูกผลิตน้อยเกินไป</p>
+      <p><strong>อาการ:</strong> เหนื่อยง่าย หน้ามืด ผิวซีด ใจสั่น</p>
+      <p><strong>ผล:</strong> เลือดพา O₂ ได้น้อย เนื้อเยื่อขาดออกซิเจน CO₂ และของเสียสะสม</p>
+      <div class="case-study" style="margin:0.8rem 0 0;">
+        <div class="case-label">🍖 ชีวิตประจำวัน</div>
+        <p>สาวที่มีประจำเดือนมากหรือผู้กินมังสวิรัติที่ไม่ระวังอาจขาดธาตุเหล็ก → เม็ดเลือดแดงน้อย → โลหิตจาง กินอาหารที่มีธาตุเหล็กสูง เช่น เนื้อแดง ตับ ผักใบเขียวเข้ม ช่วยป้องกันได้</p>
+      </div>
+    </div>
+
+    <div class="collapsible-btn" onclick="toggleCollapse(this)">
+      <span>🩸 ฮีโมฟีเลีย (Hemophilia) — เลือดไหลไม่หยุด</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="collapsible-content">
+      <p><strong>สาเหตุ:</strong> โรคทางพันธุกรรม ความผิดปกติบน Chromosome X ขาดแฟคเตอร์แข็งตัวของเลือด</p>
+      <p><strong>อาการ:</strong> เลือดออกนานกว่าปกติ แม้แผลเล็กน้อย อาจมีเลือดออกในข้อ</p>
+      <p><strong>หมายเหตุ:</strong> ต่างจากเลือดแข็งตัวช้า (ขาด Vit K) และเลือดจาง (ขาด Vit B12)</p>
+    </div>
+
+    <div class="collapsible-btn" onclick="toggleCollapse(this)">
+      <span>🔴 ไขมันอุดตันในหลอดเลือด (Atherosclerosis)</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="collapsible-content">
+      <div class="mechanism">
+        <h4>⚙️ กลไกการเกิดหลอดเลือดตีบ</h4>
+        <ul class="step-list">
+          <li><div class="step-num">1</div><span>ไขมัน LDL สะสมที่ผนังหลอดเลือดแดง</span></li>
+          <li><div class="step-num">2</div><span>เกิดคราบ Plaque หนาขึ้นเรื่อย ๆ</span></li>
+          <li><div class="step-num">3</div><span>ช่องหลอดเลือดแคบลง เลือดไหลน้อยลง</span></li>
+          <li><div class="step-num">4</div><span>ถ้า Plaque แตก เกล็ดเลือดจับตัว → ลิ่มเลือด → อุดตันหัวใจ (Heart Attack) หรือสมอง (Stroke)</span></li>
+        </ul>
+      </div>
+      <div class="case-study" style="margin:0;">
+        <div class="case-label">🍔 กรณีศึกษา: อาหารกับหลอดเลือด</div>
+        <p>คนที่กินอาหารไขมันสูง (ฟาสต์ฟู้ด, อาหารทอด) เป็นประจำ โดยไม่ออกกำลังกาย ไขมัน LDL สะสมในหลอดเลือดแดง เพิ่มความเสี่ยงโรคหัวใจ ออกกำลังกายช่วยเพิ่ม HDL (ไขมันดี) ที่ช่วยกำจัด LDL</p>
+      </div>
+    </div>
+
+    <div class="collapsible-btn" onclick="toggleCollapse(this)">
+      <span>💔 ลิ้นหัวใจผิดปกติ (Valve Disorder)</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="collapsible-content">
+      <p><strong>กรณีที่ 1: ผนังกั้นห้องล่างมีรูรั่ว</strong> — เลือดแดงและดำไหลปนกัน ทำให้เลือดที่ส่งไปทั่วร่างกายมี O₂ ต่ำกว่าปกติ แต่มี CO₂ สูงกว่าปกติ (Cyanosis — ตัวเขียว)</p>
+      <p style="margin-top:0.6rem;"><strong>กรณีที่ 2: ลิ้นระหว่างบนซ้าย-ล่างซ้าย (Mitral) ผิดปกติ</strong> — เลือดไหลย้อนกลับ ทำให้ความดันในปอดเพิ่มขึ้น</p>
+    </div>
+
+    <div class="collapsible-btn" onclick="toggleCollapse(this)">
+      <span>🫀 หัวใจขาดเลือดเฉียบพลัน (Heart Attack)</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="collapsible-content">
+      <p><strong>สาเหตุ:</strong> ลิ่มเลือดอุดตันหลอดเลือดแดงโคโรนารี (เส้นเลือดที่เลี้ยงหัวใจเอง)</p>
+      <p><strong>อาการเตือน:</strong> เจ็บหน้าอกแน่น ปวดร้าวแขนซ้าย เหงื่อออก หน้ามืด</p>
+      <p><strong>เมื่อหัวใจหยุดเต้น:</strong> ต้องทำ CPR ทันที กดหน้าอก ≥100 ครั้ง/นาที ลึก ≥5 cm เพื่อรักษาการหมุนเวียนเลือดชั่วคราว</p>
+    </div>
+  </div>
+
+  <!-- ตารางสรุปโรค -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-gold">📋</div>
+      <div>
+        <div class="sec-title">ตารางสรุปโรคและวิตามินที่เกี่ยวข้อง</div>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>โรค/ภาวะ</th><th>สาเหตุ</th><th>อาการ</th><th>ส่วนที่ผิดปกติ</th></tr></thead>
+        <tbody>
+          <tr><td class="td-highlight">โลหิตจาง (Anemia)</td><td>ขาด Fe, B12</td><td>ซีด, เหนื่อยง่าย</td><td>RBC น้อย</td></tr>
+          <tr><td class="td-highlight">ฮีโมฟีเลีย</td><td>พันธุกรรม (X)</td><td>เลือดหยุดช้า</td><td>แฟคเตอร์แข็งตัว</td></tr>
+          <tr><td class="td-highlight">เลือดแข็งตัวช้า</td><td>ขาด Vit K</td><td>เลือดหยุดช้า</td><td>Prothrombin</td></tr>
+          <tr><td class="td-highlight">หลอดเลือดตีบ</td><td>ไขมัน LDL สูง</td><td>เจ็บหน้าอก</td><td>ผนังหลอดเลือดแดง</td></tr>
+          <tr><td class="td-highlight">ความดันโลหิตสูง</td><td>หลายสาเหตุ</td><td>ปวดหัว, เวียน</td><td>ความดัน ≥140/90</td></tr>
+          <tr><td class="td-highlight">มะเร็งเม็ดเลือดขาว</td><td>ยีนผิดปกติ</td><td>WBC เพิ่มมาก</td><td>เม็ดเลือดขาว</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tips สุขภาพ -->
+  <div class="card">
+    <div class="sec-header">
+      <div class="sec-icon icon-green">💚</div>
+      <div>
+        <div class="sec-title">วิธีดูแลระบบหัวใจและหลอดเลือด</div>
+        <div class="sec-subtitle">Cardiovascular Health Tips</div>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="mini-card">
+        <h4>🏃 ออกกำลังกาย</h4>
+        <p>อย่างน้อย 150 นาที/สัปดาห์ ทำให้หัวใจแข็งแรง หลอดเลือดยืดหยุ่น ความดันลดลง</p>
+      </div>
+      <div class="mini-card">
+        <h4>🥗 อาหาร</h4>
+        <p>ลดไขมันอิ่มตัว เพิ่มผัก ผลไม้ ธัญพืช ลดเกลือ ช่วยลดความเสี่ยง Atherosclerosis</p>
+      </div>
+      <div class="mini-card">
+        <h4>🚫 หลีกเลี่ยง</h4>
+        <p>บุหรี่ (CO แย่งที่ O₂ บน Hb), แอลกอฮอล์เกินขนาด, ความเครียดเรื้อรัง</p>
+      </div>
+      <div class="mini-card">
+        <h4>🩺 ตรวจสุขภาพ</h4>
+        <p>วัดความดันสม่ำเสมอ ตรวจเลือดหาไขมัน น้ำตาล อย่างน้อยปีละครั้ง</p>
+      </div>
+      <div class="mini-card">
+        <h4>😴 พักผ่อน</h4>
+        <p>นอนหลับ 7–9 ชม./คืน หัวใจจะทำงานช้าลงขณะหลับ ช่วยฟื้นฟูระบบได้</p>
+      </div>
+      <div class="mini-card">
+        <h4>📱 รู้จัก CPR</h4>
+        <p>ทักษะ CPR เบื้องต้น กด 100–120 ครั้ง/นาที ลึก 5 cm ช่วยชีวิตคนได้ในกรณีฉุกเฉิน</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+  // Tab switching
+  function switchTab(id) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelector(`[onclick="switchTab('${id}')"]`).classList.add('active');
+    document.getElementById('sec-' + id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Theme toggle
+  let isDark = true;
+  function toggleTheme() {
+    isDark = !isDark;
+    document.body.classList.toggle('light', !isDark);
+    document.getElementById('theme-icon').textContent = isDark ? '☀️' : '🌙';
+    document.getElementById('theme-label').textContent = isDark ? 'Light Mode' : 'Dark Mode';
+  }
+
+  // Collapsible
+  function toggleCollapse(btn) {
+    btn.classList.toggle('open');
+    const content = btn.nextElementSibling;
+    content.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
