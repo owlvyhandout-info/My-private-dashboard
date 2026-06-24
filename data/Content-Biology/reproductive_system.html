@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบสืบพันธุ์เพศหญิง</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #1B2A4A;
+    --teal: #0F7B8C;
+    --teal-lt: #E0F4F5;
+    --rose: #C0395A;
+    --rose-lt: #F2D7DE;
+    --gold: #E8A838;
+    --white: #FFFFFF;
+    --offwhite: #F7F9FC;
+    --gray: #5A6476;
+    --ltgray: #D1D8E0;
+    --purple: #4A1060;
+    --slide-w: 960px;
+    --slide-h: 540px;
+  }
+
+  html, body {
+    background: #1a1a2e;
+    font-family: 'Sarabun', sans-serif;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* ── Shell ── */
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  /* ── Top bar ── */
+  #topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 20px;
+    background: #111122;
+    flex-shrink: 0;
+  }
+  #topbar .title {
+    color: #9aa8c0;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+  #progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  #slide-counter {
+    color: #9aa8c0;
+    font-size: 13px;
+    min-width: 48px;
+    text-align: right;
+  }
+  .dot-nav { display: flex; gap: 6px; }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #334;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .dot.active { background: var(--gold); }
+
+  /* ── Stage ── */
+  #stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ── Slides ── */
+  .slide-deck {
+    position: relative;
+    width: var(--slide-w);
+    height: var(--slide-h);
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity .35s ease, transform .35s ease;
+    pointer-events: none;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+  }
+  .slide.prev {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+
+  /* ── Bottom bar ── */
+  #bottombar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 12px;
+    background: #111122;
+    flex-shrink: 0;
+  }
+  .nav-btn {
+    background: #222244;
+    border: 1px solid #334;
+    color: #ccd;
+    border-radius: 8px;
+    padding: 8px 24px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .nav-btn:hover { background: #2a2a55; }
+  .nav-btn:disabled { opacity: .3; cursor: default; }
+
+  /* ── Shared slide parts ── */
+  .slide-bg-offwhite { background: var(--offwhite); }
+  .slide-bg-navy { background: var(--navy); }
+
+  .s-title-bar {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 56px;
+    display: flex; align-items: center;
+    padding: 0 28px;
+    justify-content: space-between;
+  }
+  .s-title-bar h2 {
+    font-size: 20px; font-weight: 700; color: var(--white);
+  }
+  .s-title-bar .en {
+    font-size: 12px; color: rgba(255,255,255,.55); font-style: italic;
+  }
+
+  /* ── Shared card ── */
+  .card {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--ltgray);
+    box-shadow: 0 4px 16px rgba(0,0,0,.06);
+  }
+  .card-hd {
+    border-radius: 11px 11px 0 0;
+    padding: 10px 16px;
+    font-size: 13px; font-weight: 700; color: var(--white);
+    text-align: center;
+  }
+  .card-body { padding: 14px 16px; }
+
+  .tip-bar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 32px;
+    display: flex; align-items: center;
+    padding: 0 20px;
+    font-size: 11px; font-weight: 600;
+  }
+
+  /* ══════════════════════════════
+     SLIDE 1 — Title
+  ══════════════════════════════ */
+  #s1 { background: var(--navy); }
+  #s1 .deco {
+    position: absolute; border-radius: 50%;
+    pointer-events: none;
+  }
+  #s1 .tag {
+    position: absolute; top: 88px; left: 52px;
+    background: var(--teal);
+    color: var(--white);
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 6px;
+  }
+  #s1 h1 {
+    position: absolute; top: 118px; left: 48px; right: 48px;
+    font-size: 48px; font-weight: 700; color: var(--white); line-height: 1.15;
+  }
+  #s1 .sub-en {
+    position: absolute; top: 248px; left: 50px;
+    font-size: 20px; color: var(--ltgray); font-style: italic;
+  }
+  #s1 .covers {
+    position: absolute; top: 300px; left: 50px; right: 50px;
+    font-size: 13px; color: #b0bcc8; line-height: 1.8;
+  }
+  #s1 .covers strong { color: var(--gold); }
+  #s1 .bottom-line {
+    position: absolute; bottom: 38px; left: 50px; right: 50px;
+    border-top: 1px solid var(--teal);
+    padding-top: 8px;
+    font-size: 11px; color: #7a8fa0;
+  }
+
+  /* ══════════════════════════════
+     SLIDE 2 — Brain control
+  ══════════════════════════════ */
+  #s2 .s-title-bar { background: var(--navy); }
+  #s2 .flow {
+    position: absolute; top: 72px; left: 16px; right: 16px;
+    display: flex; gap: 0;
+    align-items: stretch;
+  }
+  #s2 .flow-box {
+    flex: 1;
+    border-radius: 10px;
+    padding: 20px 18px 22px;
+    display: flex; flex-direction: column;
+    position: relative;
+    margin: 0 6px;
+  }
+  #s2 .flow-num {
+    font-size: 26px; font-weight: 700; color: rgba(255,255,255,.9);
+  }
+  #s2 .flow-name {
+    font-size: 17px; font-weight: 700; color: #fff; margin-top: 6px;
+  }
+  #s2 .flow-en {
+    font-size: 11px; color: rgba(255,255,255,.6); font-style: italic;
+    border-top: 1px solid rgba(255,255,255,.2); margin-top: 8px; padding-top: 8px;
+  }
+  #s2 .flow-desc {
+    font-size: 13px; color: rgba(255,255,255,.85); margin-top: 10px; line-height: 1.7;
+  }
+  #s2 .arrow {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; color: var(--gold);
+    align-self: center; flex-shrink: 0; width: 28px;
+  }
+  #s2 .feedback {
+    position: absolute; bottom: 10px; left: 16px; right: 16px;
+    background: var(--teal-lt); border: 1px solid var(--teal);
+    border-radius: 8px; padding: 9px 16px;
+    font-size: 12px; color: var(--navy);
+  }
+  #s2 .feedback strong { color: var(--teal); }
+
+  /* ══════════════════════════════
+     SLIDE 3 — Cycle & Ovulation
+  ══════════════════════════════ */
+  #s3 .s-title-bar { background: var(--rose); }
+  #s3 .timeline {
+    position: absolute; top: 62px; left: 16px; right: 16px;
+  }
+  #s3 .phases {
+    display: flex; gap: 2px; height: 36px;
+  }
+  #s3 .phase-block {
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #s3 .phase-labels {
+    display: flex; gap: 2px; margin-top: 4px;
+  }
+  #s3 .phase-label {
+    font-size: 10px; color: var(--gray); text-align: center; line-height: 1.4;
+  }
+  #s3 .cols {
+    position: absolute; top: 160px; left: 16px; right: 16px;
+    display: flex; gap: 12px;
+  }
+  #s3 .trigger-card {
+    flex: 1; background: var(--rose-lt); border: 1px solid var(--rose);
+    border-radius: 10px; padding: 14px 16px;
+  }
+  #s3 .trigger-card h3 {
+    font-size: 14px; font-weight: 700; color: var(--rose); margin-bottom: 10px;
+  }
+  #s3 .trigger-item { margin-bottom: 10px; }
+  #s3 .trigger-item .ti-name {
+    font-size: 12.5px; font-weight: 700; color: var(--navy);
+  }
+  #s3 .trigger-item .ti-desc {
+    font-size: 12px; color: var(--gray); line-height: 1.5;
+  }
+  #s3 .calc-card {
+    flex: 1; background: var(--teal-lt); border: 1px solid var(--teal);
+    border-radius: 10px; padding: 14px 16px;
+  }
+  #s3 .calc-card h3 {
+    font-size: 14px; font-weight: 700; color: var(--teal); margin-bottom: 10px;
+  }
+  #s3 .formula {
+    background: var(--teal); color: var(--white);
+    border-radius: 6px; padding: 8px 12px;
+    font-size: 12px; font-weight: 700; text-align: center; margin-bottom: 10px;
+  }
+  #s3 .example-text {
+    font-size: 12px; color: var(--gray); line-height: 1.8;
+  }
+  #s3 .example-text strong { color: var(--rose); }
+  #s3 .tip-bar { background: var(--rose-lt); border-top: 1px solid var(--rose); color: var(--rose); font-size: 11px; }
+
+  /* ══════════════════════════════
+     SLIDE 4 — Embryogenesis
+  ══════════════════════════════ */
+  #s4 .s-title-bar { background: var(--teal); }
+  #s4 .stages {
+    position: absolute; top: 62px; left: 8px; right: 8px;
+    display: flex; gap: 4px;
+  }
+  #s4 .stage-col {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+  }
+  #s4 .stage-num {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700; color: var(--white); margin-bottom: 6px;
+  }
+  #s4 .stage-card {
+    width: 100%; border-radius: 10px; overflow: hidden;
+    border: 1px solid var(--ltgray); flex: 1; display: flex; flex-direction: column;
+  }
+  #s4 .stage-card .sc-hd {
+    padding: 8px 10px; font-size: 12px; font-weight: 700; color: var(--white); text-align: center;
+  }
+  #s4 .stage-card .sc-en {
+    font-size: 10px; color: var(--gray); font-style: italic; text-align: center; padding: 4px 8px;
+  }
+  #s4 .stage-card .sc-where {
+    font-size: 11px; font-weight: 700; text-align: center; padding: 4px 8px;
+  }
+  #s4 .stage-card .sc-desc {
+    font-size: 11px; color: var(--gray); text-align: center; padding: 6px 10px; line-height: 1.6; flex: 1;
+  }
+  #s4 .stage-arrow {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ltgray); font-size: 18px; padding-top: 28px; flex-shrink: 0; width: 12px;
+  }
+  #s4 .tip-bar { background: var(--teal-lt); border-top: 1px solid var(--teal); color: var(--teal); }
+
+  /* ══════════════════════════════
+     SLIDE 5 — HCG
+  ══════════════════════════════ */
+  #s5 .s-title-bar { background: var(--navy); }
+  #s5 .two-col {
+    position: absolute; top: 62px; left: 14px; right: 14px; bottom: 38px;
+    display: flex; gap: 12px;
+  }
+  #s5 .hcg-col {
+    flex: 1; background: var(--teal-lt); border: 1px solid var(--teal);
+    border-radius: 10px; padding: 12px 14px;
+    display: flex; flex-direction: column;
+  }
+  #s5 .hcg-col h3 { font-size: 13px; font-weight: 700; color: var(--teal); margin-bottom: 10px; text-align: center; }
+  #s5 .no-col {
+    flex: 1; background: var(--rose-lt); border: 1px solid var(--rose);
+    border-radius: 10px; padding: 12px 14px;
+    display: flex; flex-direction: column;
+  }
+  #s5 .no-col h3 { font-size: 13px; font-weight: 700; color: var(--rose); margin-bottom: 10px; text-align: center; }
+  .step-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 9px; }
+  .step-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: var(--white); flex-shrink: 0; margin-top: 1px;
+  }
+  .step-text .st-main { font-size: 12.5px; font-weight: 700; color: var(--navy); }
+  .step-text .st-sub { font-size: 11.5px; color: var(--gray); line-height: 1.5; }
+  #s5 .tip-bar { background: #fffbea; border-top: 1px solid var(--gold); color: #7a5b00; }
+
+  /* ══════════════════════════════
+     SLIDE 6 — Contraceptive & Abnormalities
+  ══════════════════════════════ */
+  #s6 .s-title-bar { background: var(--purple); }
+  #s6 .two-col {
+    position: absolute; top: 62px; left: 14px; right: 14px; bottom: 38px;
+    display: flex; gap: 12px;
+  }
+  #s6 .pill-col {
+    flex: 1; background: var(--white); border: 1px solid #c084e0;
+    border-radius: 10px; display: flex; flex-direction: column; overflow: hidden;
+  }
+  #s6 .pill-hd { background: #7B2DA0; padding: 10px 14px; font-size: 13px; font-weight: 700; color: var(--white); text-align: center; }
+  #s6 .pill-body { padding: 12px 14px; flex: 1; }
+  #s6 .pill-item { margin-bottom: 12px; }
+  #s6 .pill-item .pi-main { font-size: 12.5px; font-weight: 700; color: #5A1A80; }
+  #s6 .pill-item .pi-sub { font-size: 12px; color: var(--gray); }
+  #s6 .abn-col {
+    flex: 1; background: var(--white); border: 1px solid var(--rose);
+    border-radius: 10px; display: flex; flex-direction: column; overflow: hidden;
+  }
+  #s6 .abn-hd { background: var(--rose); padding: 10px 14px; font-size: 13px; font-weight: 700; color: var(--white); text-align: center; }
+  #s6 .abn-body { padding: 12px 14px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  #s6 .abn-card {
+    border-radius: 8px; padding: 10px 12px; flex: 1;
+  }
+  #s6 .abn-card h4 { font-size: 12.5px; font-weight: 700; text-align: center; margin-bottom: 6px; }
+  #s6 .abn-card p { font-size: 11.5px; color: var(--gray); line-height: 1.6; text-align: center; }
+  #s6 .ectopic-card { background: var(--rose-lt); border: 1px solid var(--rose); }
+  #s6 .ectopic-card h4 { color: var(--rose); }
+  #s6 .meno-card { background: var(--teal-lt); border: 1px solid var(--teal); }
+  #s6 .meno-card h4 { color: var(--teal); }
+  #s6 .tip-bar { background: var(--teal-lt); border-top: 1px solid var(--teal); color: var(--teal); }
+
+  /* ══════════════════════════════
+     SLIDE 7 — Vocabulary
+  ══════════════════════════════ */
+  #s7 { background: var(--navy); }
+  #s7 .s-title-bar { background: var(--gold); }
+  #s7 .s-title-bar h2 { color: var(--navy); }
+  #s7 .s-title-bar .en { color: rgba(0,0,0,.5); }
+  #s7 .vocab-grid {
+    position: absolute; top: 62px; left: 14px; right: 14px; bottom: 14px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 8px;
+  }
+  #s7 .vcard {
+    background: #1E3A52;
+    border: 1px solid var(--teal);
+    border-radius: 10px; padding: 10px 12px;
+    display: flex; flex-direction: column;
+  }
+  #s7 .v-en { font-size: 13px; font-weight: 700; color: var(--gold); }
+  #s7 .v-th { font-size: 11px; color: #7ecfe0; font-style: italic; margin-top: 2px; }
+  #s7 .v-div { border-top: 1px solid #2e5a70; margin: 6px 0; }
+  #s7 .v-def { font-size: 11px; color: #ccddee; line-height: 1.5; }
+
+  /* ── Keyboard hint ── */
+  #keyhint {
+    position: fixed; bottom: 56px; right: 16px;
+    color: #445; font-size: 11px;
+    pointer-events: none;
+    transition: opacity 1s;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div id="topbar">
+    <span class="title">ระบบสืบพันธุ์เพศหญิง — Female Reproductive System</span>
+    <div id="progress-wrap">
+      <div class="dot-nav" id="dots"></div>
+      <span id="slide-counter">1 / 7</span>
+    </div>
+  </div>
+
+  <div id="stage">
+    <div class="slide-deck" id="deck">
+
+      <!-- ═══ SLIDE 1 ═══ -->
+      <div class="slide" id="s1">
+        <div class="deco" style="width:220px;height:220px;top:-60px;left:-60px;background:rgba(15,123,140,.18)"></div>
+        <div class="deco" style="width:180px;height:180px;bottom:-40px;right:-30px;background:rgba(192,57,90,.18)"></div>
+        <div class="deco" style="width:90px;height:90px;top:-10px;right:90px;background:rgba(232,168,56,.15)"></div>
+        <span class="tag">วิทยาศาสตร์ชีววิทยา</span>
+        <h1>ระบบสืบพันธุ์<br>เพศหญิง</h1>
+        <div class="sub-en">Female Reproductive System</div>
+        <div class="covers">
+          <strong>ครอบคลุม:</strong> วงจรฮอร์โมน &nbsp;•&nbsp; การตกไข่ &nbsp;•&nbsp; การปฏิสนธิ<br>
+          พัฒนาการตัวอ่อน &nbsp;•&nbsp; ยาคุมกำเนิด &nbsp;•&nbsp; ภาวะผิดปกติ
+        </div>
+        <div class="bottom-line">คู่มือเนื้อหาระบบสืบพันธุ์ฉบับสมบูรณ์ &nbsp;|&nbsp; 7 สไลด์</div>
+      </div>
+
+      <!-- ═══ SLIDE 2 ═══ -->
+      <div class="slide slide-bg-offwhite" id="s2">
+        <div class="s-title-bar" style="background:var(--navy)">
+          <h2>🧠 ผู้กำกับระบบสืบพันธุ์</h2>
+          <span class="en">Hypothalamus &amp; Pituitary Gland</span>
+        </div>
+        <div class="flow">
+          <div class="flow-box" style="background:var(--navy)">
+            <div class="flow-num">1</div>
+            <div class="flow-name">ไฮโปทาลามัส</div>
+            <div class="flow-en">Hypothalamus</div>
+            <div class="flow-desc">หลั่ง GnRH กระตุ้นต่อมใต้สมองให้ทำงาน</div>
+          </div>
+          <div class="arrow">▶</div>
+          <div class="flow-box" style="background:var(--teal)">
+            <div class="flow-num">2</div>
+            <div class="flow-name">ต่อมใต้สมอง</div>
+            <div class="flow-en">Pituitary Gland</div>
+            <div class="flow-desc">หลั่ง FSH และ LH ไปกระตุ้นรังไข่</div>
+          </div>
+          <div class="arrow">▶</div>
+          <div class="flow-box" style="background:var(--rose)">
+            <div class="flow-num">3</div>
+            <div class="flow-name">รังไข่ &amp; มดลูก</div>
+            <div class="flow-en">Ovaries &amp; Uterus</div>
+            <div class="flow-desc">ตอบสนองต่อฮอร์โมน เกิดการเปลี่ยนแปลงรอบเดือน</div>
+          </div>
+        </div>
+        <div class="feedback">
+          <strong>หลักการ Feedback:</strong> ฮอร์โมนจากรังไข่ (เอสโตรเจน / โปรเจสเตอโรน) ส่งสัญญาณย้อนกลับควบคุมการทำงานของสมอง
+        </div>
+      </div>
+
+      <!-- ═══ SLIDE 3 ═══ -->
+      <div class="slide slide-bg-offwhite" id="s3">
+        <div class="s-title-bar" style="background:var(--rose)">
+          <h2>📅 รอบเดือนและการคำนวณวันตกไข่</h2>
+          <span class="en">Menstrual Cycle &amp; Ovulation</span>
+        </div>
+        <div class="timeline">
+          <div class="phases">
+            <div class="phase-block" style="flex:1.4;background:#C0395A"></div>
+            <div class="phase-block" style="flex:2.4;background:#E07A90"></div>
+            <div class="phase-block" style="flex:1.1;background:var(--gold)"></div>
+            <div class="phase-block" style="flex:2.8;background:var(--teal)"></div>
+            <div class="phase-block" style="flex:1.8;background:var(--navy)"></div>
+          </div>
+          <div class="phase-labels">
+            <div class="phase-label" style="flex:1.4">ระยะมีประจำเดือน<br>(วันที่ 1–5)</div>
+            <div class="phase-label" style="flex:2.4">ระยะฟอลลิเคิล<br>(วันที่ 6–13)</div>
+            <div class="phase-label" style="flex:1.1">การตกไข่<br>(วันที่ 14)</div>
+            <div class="phase-label" style="flex:2.8">ระยะลูเทียล<br>(วันที่ 15–28)</div>
+            <div class="phase-label" style="flex:1.8">ประจำเดือน<br>รอบถัดไป</div>
+          </div>
+        </div>
+        <div class="cols">
+          <div class="trigger-card">
+            <h3>⚡ ตัวกระตุ้นการตกไข่</h3>
+            <div class="trigger-item">
+              <div class="ti-name">LH Surge</div>
+              <div class="ti-desc">ฮอร์โมน LH พุ่งสูงรวดเร็ว กระตุ้นให้ฟอลลิเคิลแตกออก</div>
+            </div>
+            <div class="trigger-item">
+              <div class="ti-name">เซลล์เม็ดเลือดขาว</div>
+              <div class="ti-desc">หลั่งเอนไซม์ย่อยผนังถุงไข่ให้แตก</div>
+            </div>
+            <div class="trigger-item">
+              <div class="ti-name" style="color:var(--teal)">Corpus Luteum</div>
+              <div class="ti-desc">ฟอลลิเคิลกลายเป็นต่อมหลั่งโปรเจสเตอโรน</div>
+            </div>
+          </div>
+          <div class="calc-card">
+            <h3>🧮 สูตรคำนวณวันตกไข่</h3>
+            <div class="formula">วันตกไข่ = ประจำเดือนครั้งถัดไป − 14 วัน</div>
+            <div class="example-text">
+              <strong style="color:var(--navy)">ตัวอย่าง:</strong> รอบเดือน 35 วัน<br>
+              ประจำเดือนรอบถัดไปมาวันที่ 36<br>
+              นับย้อนไป 14 วัน<br>
+              → ไข่ตก<strong>วันที่ 22 ของรอบเดือน</strong>
+            </div>
+          </div>
+        </div>
+        <div class="tip-bar">
+          💡 อสุจิมีชีวิต 3–5 วัน &nbsp;|&nbsp; เซลล์ไข่มีอายุเพียง 12–24 ชั่วโมง &nbsp;|&nbsp; มูกปากมดลูกใส ลื่น ยืดหยุ่นสูงในวันตกไข่
+        </div>
+      </div>
+
+      <!-- ═══ SLIDE 4 ═══ -->
+      <div class="slide slide-bg-offwhite" id="s4">
+        <div class="s-title-bar" style="background:var(--teal)">
+          <h2>🔬 พัฒนาการตัวอ่อน (Embryogenesis)</h2>
+          <span class="en"></span>
+        </div>
+        <div class="stages">
+          <!-- Stage 1 -->
+          <div class="stage-col">
+            <div class="stage-num" style="background:var(--navy)">①</div>
+            <div class="stage-card">
+              <div class="sc-hd" style="background:var(--navy)">ปฏิสนธิ</div>
+              <div class="sc-en">Fertilization</div>
+              <div class="sc-where" style="color:var(--navy)">📍 ท่อนำไข่</div>
+              <div class="sc-desc">อสุจิเจาะผ่าน Cumulus cells และ Zona pellucida ของไข่</div>
+            </div>
+          </div>
+          <div class="stage-arrow">›</div>
+          <!-- Stage 2 -->
+          <div class="stage-col">
+            <div class="stage-num" style="background:#1A5C6E">②</div>
+            <div class="stage-card">
+              <div class="sc-hd" style="background:#1A5C6E">ไซโกต → คลีเวจ</div>
+              <div class="sc-en">Zygote → Cleavage</div>
+              <div class="sc-where" style="color:#1A5C6E">📍 ท่อนำไข่</div>
+              <div class="sc-desc">แบ่งเซลล์เร็วโดยไม่เพิ่มขนาด เซลล์เล็กลงเรื่อยๆ</div>
+            </div>
+          </div>
+          <div class="stage-arrow">›</div>
+          <!-- Stage 3 -->
+          <div class="stage-col">
+            <div class="stage-num" style="background:var(--teal)">③</div>
+            <div class="stage-card">
+              <div class="sc-hd" style="background:var(--teal)">มอรูลา</div>
+              <div class="sc-en">Morula</div>
+              <div class="sc-where" style="color:var(--teal)">📍 ท่อนำไข่</div>
+              <div class="sc-desc">เซลล์อัดแน่นเป็นก้อนตัน คล้ายผลน้อยหน่า</div>
+            </div>
+          </div>
+          <div class="stage-arrow">›</div>
+          <!-- Stage 4 -->
+          <div class="stage-col">
+            <div class="stage-num" style="background:var(--rose)">④</div>
+            <div class="stage-card">
+              <div class="sc-hd" style="background:var(--rose)">บลาสโตซิสต์</div>
+              <div class="sc-en">Blastocyst</div>
+              <div class="sc-where" style="color:var(--rose)">📍 มดลูก (วันที่ 6–7)</div>
+              <div class="sc-desc">มีช่องว่างบรรจุของเหลว พร้อมฝังตัวในมดลูก</div>
+            </div>
+          </div>
+          <div class="stage-arrow">›</div>
+          <!-- Stage 5 -->
+          <div class="stage-col">
+            <div class="stage-num" style="background:#8B1A34">⑤</div>
+            <div class="stage-card">
+              <div class="sc-hd" style="background:#8B1A34">การฝังตัว</div>
+              <div class="sc-en">Implantation</div>
+              <div class="sc-where" style="color:#8B1A34">📍 ผนังมดลูก</div>
+              <div class="sc-desc">Trophoblast เจาะเยื่อบุมดลูก → เริ่มต้นการตั้งครรภ์</div>
+            </div>
+          </div>
+        </div>
+        <div class="tip-bar" style="background:var(--teal-lt);border-top:1px solid var(--teal);color:var(--teal)">
+          💡 การตั้งครรภ์ทางการแพทย์เริ่มต้นเมื่อบลาสโตซิสต์ฝังตัวที่ผนังมดลูก — ไม่ใช่วินาทีที่ปฏิสนธิ
+        </div>
+      </div>
+
+      <!-- ═══ SLIDE 5 ═══ -->
+      <div class="slide slide-bg-offwhite" id="s5">
+        <div class="s-title-bar" style="background:var(--navy)">
+          <h2>🔄 ฮอร์โมน HCG และจุดจบของรอบเดือน</h2>
+          <span class="en"></span>
+        </div>
+        <div class="two-col">
+          <div class="hcg-col">
+            <h3>✅ เมื่อมีการตั้งครรภ์</h3>
+            <div class="step-row">
+              <div class="step-num" style="background:var(--teal)">1</div>
+              <div class="step-text"><div class="st-main">บลาสโตซิสต์ฝังตัว</div><div class="st-sub">ที่ผนังมดลูก</div></div>
+            </div>
+            <div class="step-row">
+              <div class="step-num" style="background:var(--teal)">2</div>
+              <div class="step-text"><div class="st-main">หลั่ง HCG</div><div class="st-sub">(Human Chorionic Gonadotropin)</div></div>
+            </div>
+            <div class="step-row">
+              <div class="step-num" style="background:var(--teal)">3</div>
+              <div class="step-text"><div class="st-main">HCG กระตุ้น Corpus Luteum</div><div class="st-sub">ให้สร้างโปรเจสเตอโรนต่อไป</div></div>
+            </div>
+            <div class="step-row">
+              <div class="step-num" style="background:var(--teal)">4</div>
+              <div class="step-text"><div class="st-main">รักษาเยื่อบุมดลูก</div><div class="st-sub">→ ไม่มีประจำเดือน</div></div>
+            </div>
+            <div class="step-row">
+              <div class="step-num" style="background:var(--teal)">5</div>
+              <div class="step-text"><div class="st-main">Trophoblast</div><div class="st-sub">เจริญเป็นรก (Placenta)</div></div>
+            </div>
+          </div>
+          <div class="no-col">
+            <h3>❌ เมื่อไม่มีการตั้งครรภ์</h3>
+            <div class="step-row">
+              <div class="step-num" style="background:var(--rose)">1</div>
+              <div class="step-text"><div class="st-main">Corpus Luteum สลายตัว</div><div class="st-sub"></div></div>
+            </div>
+            <div class="step-row">
+              <div class="step-num" style="background:var(--rose)">2</div>
+              <div class="step-text"><div class="st-main">โปรเจสเตอโรนลดลงรวดเร็ว</div><div class="st-sub"></div></div>
+            </div>
+            <div class="step-row">
+              <div class="step-num" style="background:var(--rose)">3</div>
+              <div class="step-text"><div class="st-main">ส่งสัญญาณให้เยื่อบุมดลูกลอก</div><div class="st-sub"></div></div>
+            </div>
+            <div class="step-row">
+              <div class="step-num" style="background:var(--rose)">4</div>
+              <div class="step-text"><div class="st-main">เกิดประจำเดือน (Menstruation)</div><div class="st-sub">เยื่อบุ + หลอดเลือดฉีกขาด</div></div>
+            </div>
+            <div class="step-row">
+              <div class="step-num" style="background:var(--rose)">5</div>
+              <div class="step-text"><div class="st-main">รอบเดือนใหม่เริ่มต้น</div><div class="st-sub">→ FSH เพิ่มขึ้น</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="tip-bar" style="background:#fffbea;border-top:1px solid var(--gold);color:#7a5b00">
+          💡 HCG คือฮอร์โมนที่ตรวจพบในการทดสอบการตั้งครรภ์ — ระดับสูงขึ้นอย่างรวดเร็วหลังฝังตัว
+        </div>
+      </div>
+
+      <!-- ═══ SLIDE 6 ═══ -->
+      <div class="slide slide-bg-offwhite" id="s6">
+        <div class="s-title-bar" style="background:var(--purple)">
+          <h2>💊 ยาคุมกำเนิด &amp; ภาวะผิดปกติ</h2>
+          <span class="en"></span>
+        </div>
+        <div class="two-col">
+          <div class="pill-col">
+            <div class="pill-hd">ยาคุมกำเนิดแบบฮอร์โมนรวม</div>
+            <div class="pill-body">
+              <div class="pill-item">
+                <div class="pi-main">▸ ยับยั้ง FSH และ LH</div>
+                <div class="pi-sub">→ รังไข่ไม่ตกไข่</div>
+              </div>
+              <div class="pill-item">
+                <div class="pi-main">▸ ทำให้มูกปากมดลูกข้น</div>
+                <div class="pi-sub">→ อสุจิผ่านได้ยาก</div>
+              </div>
+              <div class="pill-item">
+                <div class="pi-main">▸ เยื่อบุมดลูกบางลง</div>
+                <div class="pi-sub">→ ตัวอ่อนฝังตัวได้ยาก</div>
+              </div>
+              <div class="pill-item">
+                <div class="pi-main">▸ ฮอร์โมนในยา</div>
+                <div class="pi-sub">เอสโตรเจน + โปรเจสติน</div>
+              </div>
+            </div>
+          </div>
+          <div class="abn-col">
+            <div class="abn-hd">ภาวะผิดปกติที่สำคัญ</div>
+            <div class="abn-body">
+              <div class="abn-card ectopic-card">
+                <h4>⚠️ ท้องนอกมดลูก (Ectopic Pregnancy)</h4>
+                <p>ตัวอ่อนฝังในท่อนำไข่ (ผิดที่)<br>ท่อไม่รองรับการโตของตัวอ่อน → แตก → ตกเลือด<br>อันตรายถึงชีวิตหากไม่รักษา</p>
+              </div>
+              <div class="abn-card meno-card">
+                <h4>🌸 วัยทอง (Menopause)</h4>
+                <p>รังไข่หมดจำนวนฟอลลิเคิล → ไม่สร้างฮอร์โมนได้อีก<br>→ หมดประจำเดือนถาวร<br>มักเกิดช่วงอายุ 45–55 ปี</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tip-bar" style="background:var(--teal-lt);border-top:1px solid var(--teal);color:var(--teal)">
+          💡 ยาคุมฉุกเฉิน (แผน B) ทำงานหลักโดยยับยั้งการตกไข่ ไม่ใช่การทำลายตัวอ่อนที่ฝังตัวแล้ว
+        </div>
+      </div>
+
+      <!-- ═══ SLIDE 7 ═══ -->
+      <div class="slide" id="s7">
+        <div class="s-title-bar" style="background:var(--gold)">
+          <h2 style="color:var(--navy)">📖 คำศัพท์สำคัญ (Key Vocabulary)</h2>
+          <span class="en" style="color:rgba(0,0,0,.45)">Key Terms</span>
+        </div>
+        <div class="vocab-grid">
+          <div class="vcard"><div class="v-en">Menstruation</div><div class="v-th">ประจำเดือน</div><div class="v-div"></div><div class="v-def">เยื่อบุมดลูกลอกหลุด เนื่องจากโปรเจสเตอโรนต่ำ</div></div>
+          <div class="vcard"><div class="v-en">Corpus Luteum</div><div class="v-th">คอร์ปัสลูเทียม</div><div class="v-div"></div><div class="v-def">ฟอลลิเคิลหลังไข่ตก → หลั่งโปรเจสเตอโรน</div></div>
+          <div class="vcard"><div class="v-en">Cleavage</div><div class="v-th">คลีเวจ</div><div class="v-div"></div><div class="v-def">แบ่งเซลล์เร็ว ไม่เพิ่มขนาด → เซลล์เล็กลง</div></div>
+          <div class="vcard"><div class="v-en">Morula</div><div class="v-th">มอรูลา</div><div class="v-div"></div><div class="v-def">กลุ่มเซลล์อัดแน่น คล้ายผลน้อยหน่า</div></div>
+          <div class="vcard"><div class="v-en">Blastocyst</div><div class="v-th">บลาสโตซิสต์</div><div class="v-div"></div><div class="v-def">มีช่องว่างของเหลว → พร้อมฝังตัว</div></div>
+          <div class="vcard"><div class="v-en">Trophoblast</div><div class="v-th">โทรโฟบลาสต์</div><div class="v-div"></div><div class="v-def">ชั้นนอกของบลาสโตซิสต์ → เจริญเป็นรก</div></div>
+          <div class="vcard"><div class="v-en">HCG</div><div class="v-th">ฮอร์โมนตั้งครรภ์</div><div class="v-div"></div><div class="v-def">กระตุ้น Corpus Luteum รักษาผนังมดลูก</div></div>
+          <div class="vcard"><div class="v-en">Ectopic Pregnancy</div><div class="v-th">ท้องนอกมดลูก</div><div class="v-div"></div><div class="v-def">ตัวอ่อนฝังผิดที่ → อันตรายสูง</div></div>
+          <div class="vcard"><div class="v-en">Menopause</div><div class="v-th">วัยทอง</div><div class="v-div"></div><div class="v-def">ฟอลลิเคิลหมด → หยุดประจำเดือนถาวร</div></div>
+        </div>
+      </div>
+
+    </div><!-- /deck -->
+  </div><!-- /stage -->
+
+  <div id="bottombar">
+    <button class="nav-btn" id="btn-prev">← ก่อนหน้า</button>
+    <button class="nav-btn" id="btn-next">ถัดไป →</button>
+  </div>
+</div>
+
+<div id="keyhint">← → หรือ Space เพื่อเลื่อนสไลด์</div>
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let cur = 0;
+  let prev = -1;
+
+  const dotsEl = document.getElementById('dots');
+  const counterEl = document.getElementById('slide-counter');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+
+  // build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.onclick = () => go(i);
+    dotsEl.appendChild(d);
+  });
+
+  function go(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('prev');
+    setTimeout(() => { if(slides[cur]) slides[cur].classList.remove('prev'); }, 380);
+    cur = n;
+    slides[cur].classList.add('active');
+    update();
+  }
+
+  function update() {
+    const dots = dotsEl.querySelectorAll('.dot');
+    dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+    counterEl.textContent = (cur + 1) + ' / ' + total;
+    btnPrev.disabled = cur === 0;
+    btnNext.disabled = cur === total - 1;
+  }
+
+  btnPrev.onclick = () => go(cur - 1);
+  btnNext.onclick = () => go(cur + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') go(cur + 1);
+    if (e.key === 'ArrowLeft') go(cur - 1);
+  });
+
+  // scale slides to fit viewport
+  function scale() {
+    const deck = document.getElementById('deck');
+    const stage = document.getElementById('stage');
+    const sw = stage.clientWidth - 32;
+    const sh = stage.clientHeight - 16;
+    const sx = sw / 960;
+    const sy = sh / 540;
+    const s = Math.min(sx, sy, 1);
+    deck.style.transform = 'scale(' + s + ')';
+    deck.style.transformOrigin = 'center center';
+  }
+  window.addEventListener('resize', scale);
+  scale();
+
+  // hide key hint after 4s
+  setTimeout(() => {
+    const kh = document.getElementById('keyhint');
+    if(kh) kh.style.opacity = '0';
+  }, 4000);
+
+  // init
+  slides[0].classList.add('active');
+  update();
+})();
+</script>
+</body>
+</html>
