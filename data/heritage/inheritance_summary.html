@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สรุปกรณีมรดกที่ดิน — แนวทางปฏิบัติ</title>
+<style>
+  :root {
+    --ink: #2b2520;
+    --paper: #faf7f2;
+    --paper-raised: #ffffff;
+    --rust: #b5572b;
+    --rust-deep: #8c3f1c;
+    --gold: #a8823a;
+    --line: #ddd4c4;
+    --line-soft: #ebe4d6;
+    --green-ok: #4a6b4d;
+    --red-risk: #9b3b3b;
+    --amber: #a8742a;
+    --mono: "JetBrains Mono", "Courier New", monospace;
+    --serif: "Noto Serif Thai", "Sarabun", serif;
+    --sans: "Sarabun", "Noto Sans Thai", sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.65;
+    font-size: 16px;
+  }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 48px 24px 100px;
+  }
+
+  /* ---------- Header ---------- */
+  header.masthead {
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 28px;
+    margin-bottom: 40px;
+    position: relative;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rust-deep);
+    margin-bottom: 10px;
+  }
+  h1.title {
+    font-family: var(--serif);
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 700;
+    margin: 0 0 12px;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+  .subtitle {
+    font-size: 17px;
+    color: #5a5043;
+    max-width: 720px;
+  }
+  .case-tag-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 5px 12px;
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    color: #6b6052;
+    background: var(--paper-raised);
+  }
+
+  /* ---------- Nav ---------- */
+  nav.toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 56px;
+    padding: 18px 20px;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  nav.toc a {
+    font-size: 13.5px;
+    color: var(--rust-deep);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.15s ease;
+    font-weight: 600;
+  }
+  nav.toc a:hover { background: #f3e8df; }
+  nav.toc .toc-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #9b9182;
+    align-self: center;
+    margin-right: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ---------- Section ---------- */
+  section.block {
+    margin-bottom: 64px;
+    scroll-margin-top: 24px;
+  }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 14px;
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--rust);
+    background: #f3e3d6;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  h2.section-title {
+    font-family: var(--serif);
+    font-size: 26px;
+    margin: 0;
+    color: var(--ink);
+  }
+  .section-desc {
+    color: #6b6052;
+    font-size: 14.5px;
+    margin: 10px 0 28px;
+  }
+
+  /* ---------- Case overview diagram ---------- */
+  .deed-diagram {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 28px;
+  }
+  .deed-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .deed-card {
+    flex: 1;
+    min-width: 220px;
+    border: 1.5px dashed var(--line);
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+    position: relative;
+  }
+  .deed-card.active { border-color: var(--green-ok); background: #f3f7f1; }
+  .deed-card.expired { border-color: var(--red-risk); background: #faf1f1; }
+  .deed-card .role {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #8a8071;
+    margin-bottom: 6px;
+  }
+  .deed-card .who {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 700;
+  }
+  .deed-card .note {
+    font-size: 12.5px;
+    color: #786f60;
+    margin-top: 6px;
+  }
+  .deed-arrow {
+    font-size: 22px;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  /* ---------- Cards Grid ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+  }
+  .card {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px;
+  }
+  .card h3 {
+    font-family: var(--serif);
+    font-size: 17.5px;
+    margin: 0 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card p, .card li { font-size: 14.5px; color: #4a4338; }
+  .card ul { margin: 8px 0 0; padding-left: 20px; }
+
+  .dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .dot.risk-high { background: var(--red-risk); }
+  .dot.risk-med { background: var(--amber); }
+  .dot.risk-low { background: var(--green-ok); }
+
+  /* ---------- Risk badge ---------- */
+  .risk-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .risk-badge.high { background: #f5dede; color: var(--red-risk); }
+  .risk-badge.med  { background: #f3e6cf; color: var(--amber); }
+  .risk-badge.low  { background: #e1ecdf; color: var(--green-ok); }
+
+  /* ---------- Timeline / Steps ---------- */
+  .timeline {
+    position: relative;
+    padding-left: 36px;
+    border-left: 2px solid var(--line);
+    margin: 8px 0 0 10px;
+  }
+  .tl-step {
+    position: relative;
+    padding-bottom: 30px;
+  }
+  .tl-step:last-child { padding-bottom: 0; }
+  .tl-step::before {
+    content: "";
+    position: absolute;
+    left: -42px;
+    top: 2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--rust);
+    border: 3px solid var(--paper);
+    box-shadow: 0 0 0 2px var(--rust);
+  }
+  .tl-step .tl-head {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .tl-step .tl-time {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--rust-deep);
+    background: #f3e3d6;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .tl-step p { font-size: 14.5px; color: #4a4338; margin: 4px 0 0; }
+  .tl-step ul { font-size: 14px; color: #4a4338; margin: 8px 0 0; padding-left: 18px; }
+
+  /* ---------- Table ---------- */
+  .tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--paper-raised); }
+  thead th {
+    background: #2b2520;
+    color: #f3ece1;
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line-soft);
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: #f7f2ea; }
+
+  /* ---------- People involved ---------- */
+  .people-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .person {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px;
+    border-top: 4px solid var(--gold);
+  }
+  .person.role-manager { border-top-color: var(--rust); }
+  .person.role-heir { border-top-color: var(--green-ok); }
+  .person.role-other { border-top-color: var(--amber); }
+  .person .p-role {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    color: #8a8071;
+    letter-spacing: 0.05em;
+  }
+  .person .p-name {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 700;
+    margin: 4px 0 6px;
+  }
+  .person .p-detail { font-size: 13px; color: #5a5043; }
+
+  /* ---------- Documents checklist ---------- */
+  .doc-group {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+  }
+  .doc-group h4 {
+    font-family: var(--serif);
+    font-size: 15.5px;
+    margin: 0 0 12px;
+    color: var(--rust-deep);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .doc-list { list-style: none; margin: 0; padding: 0; }
+  .doc-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 7px 0;
+    font-size: 14px;
+    border-bottom: 1px dashed var(--line-soft);
+  }
+  .doc-list li:last-child { border-bottom: none; }
+  .doc-check {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--gold);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ---------- Alert boxes ---------- */
+  .alert {
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin: 20px 0;
+    font-size: 14.5px;
+    border-left: 4px solid;
+  }
+  .alert.warn { background: #faf1e6; border-color: var(--amber); }
+  .alert.danger { background: #faeded; border-color: var(--red-risk); }
+  .alert.info { background: #eef3ee; border-color: var(--green-ok); }
+  .alert strong { display: block; margin-bottom: 6px; font-family: var(--serif); font-size: 15px; }
+
+  /* ---------- Pull quote / principle ---------- */
+  .principle {
+    font-family: var(--serif);
+    font-size: 20px;
+    line-height: 1.5;
+    color: var(--rust-deep);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 24px 0;
+    margin: 24px 0;
+    text-align: center;
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    margin-top: 80px;
+    padding-top: 28px;
+    border-top: 3px solid var(--ink);
+    font-size: 13px;
+    color: #8a8071;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 32px 16px 80px; }
+    nav.toc { gap: 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">เอกสารสรุป · เพื่อการศึกษาส่วนบุคคล ไม่ใช่คำแนะนำทางกฎหมาย</div>
+    <h1 class="title">มรดกที่ดิน: โฉนดร่วมชื่อบิดา–น้องชาย</h1>
+    <p class="subtitle">สรุปกรณี ประเด็นความเสี่ยง ขั้นตอนปฏิบัติ ผู้เกี่ยวข้อง และเอกสารที่ต้องใช้ทั้งหมด สำหรับกรณีบิดาเสียชีวิตโดยไม่มีพินัยกรรม และโฉนดที่ดินมีชื่อร่วมกับน้องชาย (น้องบิดา)</p>
+    <div class="case-tag-row">
+      <span class="tag">ไม่มีพินัยกรรม</span>
+      <span class="tag">โฉนดมีเจ้าของร่วม</span>
+      <span class="tag">ผู้จัดการมรดกร่วม</span>
+      <span class="tag">อายุความ 10 ปี</span>
+      <span class="tag">เจ้าบ้าน vs เจ้าของโฉนด</span>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <span class="toc-label">ไปยัง:</span>
+    <a href="#overview">① ภาพรวมกรณี</a>
+    <a href="#issues">② ประเด็นความเสี่ยง</a>
+    <a href="#steps">③ ขั้นตอนปฏิบัติ</a>
+    <a href="#people">④ ผู้เกี่ยวข้อง</a>
+    <a href="#documents">⑤ เอกสารที่ต้องใช้</a>
+    <a href="#costs">⑥ ค่าใช้จ่าย</a>
+    <a href="#houseregistration">⑦ เจ้าบ้าน vs โฉนด</a>
+    <a href="#principles">⑧ หลักการสำคัญ</a>
+  </nav>
+
+  <!-- ============ 1. OVERVIEW ============ -->
+  <section class="block" id="overview">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <h2 class="section-title">ภาพรวมกรณี</h2>
+    </div>
+    <p class="section-desc">โครงสร้างกรรมสิทธิ์ในโฉนดก่อนและหลังการดำเนินการ — หัวใจของสถานการณ์ทั้งหมด</p>
+
+    <div class="deed-diagram">
+      <div class="deed-row">
+        <div class="deed-card expired">
+          <div class="role">สถานะปัจจุบัน</div>
+          <div class="who">โฉนด: บิดา + น้องชาย</div>
+          <div class="note">บิดาเสียชีวิต — ไม่มีพินัยกรรม<br>ส่วนของบิดาตกเป็นมรดกทันที แต่ชื่อในโฉนดยังไม่เปลี่ยน</div>
+        </div>
+        <div class="deed-arrow">→</div>
+        <div class="deed-card active">
+          <div class="role">สถานะเป้าหมาย</div>
+          <div class="who">โฉนด: น้องชาย + ทายาททุกคน</div>
+          <div class="note">น้องชายคงชื่อเดิม ไม่มีการแก้ไข<br>เพิ่มชื่อทายาททุกคนแทนชื่อบิดา (กรรมสิทธิ์รวม ไม่ระบุสัดส่วน)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3><span class="dot risk-low"></span>ครอบครัว</h3>
+        <p>ทายาทโดยธรรม: มารดา (คู่สมรส) + บุตรหลายคน</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot risk-low"></span>น้องชายของผู้ตาย</h3>
+        <p>มีชื่อในโฉนดร่วมอยู่แล้ว สนิทกับครอบครัว ไม่มีบุตร เสนอตัวเป็นผู้จัดการมรดกร่วม</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot risk-med"></span>ทรัพย์มรดกหลัก</h3>
+        <p>ที่ดินพร้อมบ้าน — เป็นทรัพย์สินที่มีมูลค่ามากที่สุดในกองมรดก</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot risk-med"></span>ข้อตกลงร่วม</h3>
+        <p>ทายาทตกลงจะไม่ขายที่ดินตราบที่ยังมีคนอยู่อาศัย หากขายในอนาคตจะแบ่งรายได้เท่ากันทุกคน</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. KEY ISSUES ============ -->
+  <section class="block" id="issues">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <h2 class="section-title">ประเด็นความเสี่ยงหลัก</h2>
+    </div>
+    <p class="section-desc">เรียงตามระดับความเร่งด่วน — สิ่งที่ต้องระวังตลอดกระบวนการ</p>
+
+    <div class="grid">
+      <div class="card">
+        <h3><span class="risk-badge high">เสี่ยงสูง</span></h3>
+        <p><strong>โฉนดค้างชื่อบิดา = ช่องโหว่ใหญ่ที่สุด</strong></p>
+        <ul>
+          <li>ตราบใดที่ยังไม่เปลี่ยนชื่อ ผู้จัดการมรดกยังมีอำนาจเต็ม</li>
+          <li>อาจโอนหรือขายได้ก่อนทายาทอื่นรู้ตัว</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="risk-badge high">เสี่ยงสูง</span></h3>
+        <p><strong>อายุความเรียกมรดก 10 ปี</strong></p>
+        <ul>
+          <li>เริ่มนับจากวันบิดาเสียชีวิต ไม่ใช่จากวันรู้ว่ามีปัญหา</li>
+          <li>ทายาทที่ไม่มีชื่อในโฉนดเสี่ยงเสียสิทธิถาวรเมื่อครบ 10 ปี</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="risk-badge med">เสี่ยงปานกลาง</span></h3>
+        <p><strong>ครอบครองปรปักษ์ (มาตรา 1382)</strong></p>
+        <ul>
+          <li>น้องชายครอบครองที่ดินจริง + มีชื่อในโฉนด</li>
+          <li>หากปล่อยไว้ครบ 10 ปี อาจอ้างสิทธิเหนือส่วนของบิดาได้</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="risk-badge med">เสี่ยงปานกลาง</span></h3>
+        <p><strong>ส่วนได้เสียของผู้จัดการมรดก</strong></p>
+        <ul>
+          <li>น้องชายมีชื่อในโฉนด = มีส่วนได้เสียตาม ม.1722</li>
+          <li>ต้องแจ้งศาลตรงไปตรงมา + ขอเงื่อนไขป้องกันเพิ่ม</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="risk-badge med">เสี่ยงปานกลาง</span></h3>
+        <p><strong>บัญชีเครือญาติพึ่งพาผู้ยื่นกรอกเอง</strong></p>
+        <ul>
+          <li>เจ้าหน้าที่ที่ดินไม่มีระบบตรวจสอบทายาทอิสระ</li>
+          <li>เสี่ยงปิดบังทายาทหากไม่ระมัดระวัง</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="risk-badge low">เสี่ยงต่ำ–จัดการได้</span></h3>
+        <p><strong>ระเบียบอำเภอผูกเจ้าบ้านกับโฉนด</strong></p>
+        <ul>
+          <li>เจ้าบ้านเดิมเสียชีวิต + โฉนดมีเจ้าของร่วม → อำเภอระงับการเปลี่ยนเจ้าบ้าน</li>
+          <li>ต้องโอนโฉนดให้เสร็จก่อน จึงเปลี่ยนเจ้าบ้านได้</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alert danger">
+      <strong>จุดเสี่ยงที่ทับซ้อนกันในกรณีนี้</strong>
+      ทายาทส่วนใหญ่ไม่มีชื่อในทะเบียนบ้าน ขณะที่ระเบียบอำเภอกำหนดให้ต้องโอนโฉนดก่อนจึงเปลี่ยนเจ้าบ้านได้ และแบบฟอร์มยินยอมเป็นเจ้าบ้านต้องใช้ลายเซ็นของผู้ที่มีชื่อในทะเบียนบ้านอยู่แล้วเท่านั้น — ทำให้การโอนโฉนดกลายเป็น "ด่านแรก" ที่ต้องผ่านก่อนทุกเรื่อง
+    </div>
+  </section>
+
+  <!-- ============ 3. STEPS / TIMELINE ============ -->
+  <section class="block" id="steps">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <h2 class="section-title">ขั้นตอนปฏิบัติ (ลำดับที่แนะนำ)</h2>
+    </div>
+    <p class="section-desc">เรียงตามลำดับเวลาที่ควรทำจริง ตั้งแต่วันที่บิดาเสียชีวิต</p>
+
+    <div class="timeline">
+      <div class="tl-step">
+        <div class="tl-time">วันที่ 0 – ทำทันที</div>
+        <div class="tl-head">ป้องกันก่อนเริ่มกระบวนการ</div>
+        <p>แจ้งบันทึกคำคัดค้านที่สำนักงานที่ดิน เพื่อป้องกันการโอนโดยไม่ได้รับความยินยอม และตรวจสอบสลักหลังโฉนดว่ามีการเปลี่ยนแปลงใดแล้วหรือยัง</p>
+      </div>
+
+      <div class="tl-step">
+        <div class="tl-time">สัปดาห์ที่ 1–2</div>
+        <div class="tl-head">ทายาทตกลงกัน + เตรียมเอกสาร</div>
+        <ul>
+          <li>ขอบัญชีเครือญาติจากอำเภอ เพื่อยืนยันทายาทครบทุกคน</li>
+          <li>ตกลงเลือกผู้จัดการมรดกร่วม (เช่น น้องชาย + ลูกหนึ่งคน)</li>
+          <li>ทำหนังสือยินยอมจากทายาททุกคน ระบุรับทราบว่าน้องชายมีส่วนได้เสียในโฉนด</li>
+        </ul>
+      </div>
+
+      <div class="tl-step">
+        <div class="tl-time">สัปดาห์ที่ 2–3</div>
+        <div class="tl-head">ยื่นคำร้องตั้งผู้จัดการมรดกต่อศาล</div>
+        <ul>
+          <li>ยื่นต่อศาลที่บิดามีภูมิลำเนาขณะเสียชีวิต (ยื่นเอง e-Filing หรือผ่านทนาย)</li>
+          <li>แจ้งสถานะส่วนได้เสียของน้องชายอย่างตรงไปตรงมา</li>
+          <li>ขอให้ศาลกำหนดเงื่อนไข: เซ็นร่วมกันทุกนิติกรรม + โอนให้ทายาทครบภายใน 90 วัน</li>
+        </ul>
+      </div>
+
+      <div class="tl-step">
+        <div class="tl-time">45–60 วัน</div>
+        <div class="tl-head">ศาลประกาศและไต่สวน</div>
+        <p>ศาลประกาศหนังสือพิมพ์ให้ทายาทอื่นทราบและคัดค้านได้ หากไม่มีผู้คัดค้านและเอกสารครบ ศาลมีคำสั่งตั้งผู้จัดการมรดกร่วมในวันไต่สวน</p>
+      </div>
+
+      <div class="tl-step">
+        <div class="tl-time">+1 เดือน</div>
+        <div class="tl-head">รอคำสั่งถึงที่สุด</div>
+        <p>รอ 1 เดือนเผื่อมีผู้อุทธรณ์ จากนั้นขอ "หนังสือรับรองคดีถึงที่สุด" (1–2 สัปดาห์) — เอกสารนี้ต้องใช้คู่กับคำสั่งศาลเสมอ</p>
+      </div>
+
+      <div class="tl-step">
+        <div class="tl-head">ดำเนินการที่สำนักงานที่ดิน</div>
+        <div class="tl-time">ภายใน 90 วันตามเงื่อนไขศาล</div>
+        <ul>
+          <li>ผู้จัดการมรดกร่วมทั้ง 2 คน + น้องชาย (เจ้าของร่วม) ต้องไปพร้อมกัน หรือมอบอำนาจให้ผู้อื่นที่ไม่ใช่ผู้จัดการมรดก</li>
+          <li>ทายาททุกคนควรไปด้วย เพื่อตรวจสอบชื่อและความถูกต้องด้วยตนเอง</li>
+          <li>น้องชายคงชื่อเดิมในโฉนด ไม่มีการแก้ไข — เพิ่มเฉพาะชื่อทายาทแทนชื่อบิดา (กรรมสิทธิ์รวม ไม่ระบุสัดส่วน)</li>
+          <li>หากโฉนดเดิมชำรุด ขอใบแทนพร้อมกันในคราวเดียว</li>
+        </ul>
+      </div>
+
+      <div class="tl-step">
+        <div class="tl-head">หลังโฉนดเรียบร้อย</div>
+        <div class="tl-time">ขั้นตอนสุดท้าย</div>
+        <ul>
+          <li>ทำบันทึกข้อตกลงระหว่างเจ้าของร่วม (ไม่ขายตราบที่มีคนอยู่ / แบ่งเงินเท่ากันหากขาย / ผู้รับผิดชอบภาษีรายปี)</li>
+          <li>ทายาทที่จะเป็นเจ้าบ้านย้ายชื่อเข้าทะเบียนบ้าน (ถ้ายังไม่มี)</li>
+          <li>ดำเนินการเปลี่ยนเจ้าบ้านที่อำเภอ</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. PEOPLE INVOLVED ============ -->
+  <section class="block" id="people">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <h2 class="section-title">ผู้เกี่ยวข้องและบทบาท</h2>
+    </div>
+    <p class="section-desc">ใครต้องทำอะไร ในขั้นตอนใด</p>
+
+    <div class="people-grid">
+      <div class="person role-manager">
+        <div class="p-role">ผู้จัดการมรดกร่วม 1</div>
+        <div class="p-name">น้องชายผู้ตาย</div>
+        <div class="p-detail">มีชื่อในโฉนดเดิม (คงไว้ไม่แก้ไข) · เป็นกลาง ไม่มีบุตร · ต้องแจ้งศาลว่ามีส่วนได้เสีย</div>
+      </div>
+      <div class="person role-manager">
+        <div class="p-role">ผู้จัดการมรดกร่วม 2</div>
+        <div class="p-name">บุตรคนหนึ่ง (ทายาท)</div>
+        <div class="p-detail">ถ่วงดุลอำนาจกับน้องชาย · ต้องเซ็นร่วมกันทุกนิติกรรม</div>
+      </div>
+      <div class="person role-heir">
+        <div class="p-role">ทายาทผู้รับมรดก</div>
+        <div class="p-name">มารดา (คู่สมรส)</div>
+        <div class="p-detail">มีสิทธิรับมรดกร่วมกับบุตรทุกคน · ควรไปวันโอนโฉนดด้วย</div>
+      </div>
+      <div class="person role-heir">
+        <div class="p-role">ทายาทผู้รับมรดก</div>
+        <div class="p-name">บุตรทุกคน</div>
+        <div class="p-detail">รับโอนกรรมสิทธิ์รวมเท่ากันทุกคน · ควรไปวันโอนโฉนดเพื่อตรวจสอบความถูกต้อง</div>
+      </div>
+      <div class="person role-other">
+        <div class="p-role">หน่วยงาน</div>
+        <div class="p-name">ศาล (แพ่ง/จังหวัด)</div>
+        <div class="p-detail">มีคำสั่งตั้งผู้จัดการมรดก · กำหนดเงื่อนไขการโอนภายในกรอบเวลา</div>
+      </div>
+      <div class="person role-other">
+        <div class="p-role">หน่วยงาน</div>
+        <div class="p-name">สำนักงานที่ดิน</div>
+        <div class="p-detail">โอนกรรมสิทธิ์ · บันทึกคำคัดค้าน · ออกใบแทนโฉนด (ถ้าจำเป็น)</div>
+      </div>
+      <div class="person role-other">
+        <div class="p-role">หน่วยงาน</div>
+        <div class="p-name">สำนักทะเบียนอำเภอ</div>
+        <div class="p-detail">เปลี่ยนเจ้าบ้าน · ระเบียบภายในอาจผูกเงื่อนไขกับสถานะโฉนด</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. DOCUMENTS ============ -->
+  <section class="block" id="documents">
+    <div class="section-head">
+      <span class="section-num">05</span>
+      <h2 class="section-title">เอกสารที่ต้องใช้ แบ่งตามขั้นตอน</h2>
+    </div>
+    <p class="section-desc">รวบรวมจากทุกขั้นตอนของกระบวนการ</p>
+
+    <div class="doc-group">
+      <h4>① ยื่นคำร้องตั้งผู้จัดการมรดกร่วม (ต่อศาล)</h4>
+      <ul class="doc-list">
+        <li><span class="doc-check"></span>ใบมรณบัตรของบิดา (เจ้ามรดก)</li>
+        <li><span class="doc-check"></span>ทะเบียนบ้านของบิดา + ทะเบียนบ้านผู้ร้องขอเป็นผู้จัดการมรดก</li>
+        <li><span class="doc-check"></span>ทะเบียนสมรสของบิดา-มารดา</li>
+        <li><span class="doc-check"></span>สูติบัตรของบุตรทุกคน</li>
+        <li><span class="doc-check"></span>บัตรประชาชนของผู้ร้อง (ผู้จัดการมรดกร่วมทั้ง 2 คน)</li>
+        <li><span class="doc-check"></span>บัญชีเครือญาติ (ขอจากอำเภอ)</li>
+        <li><span class="doc-check"></span>หนังสือยินยอมจากทายาททุกคน — ระบุรับทราบว่าน้องชายมีส่วนได้เสียในโฉนด</li>
+      </ul>
+    </div>
+
+    <div class="doc-group">
+      <h4>② โอนโฉนดที่สำนักงานที่ดิน</h4>
+      <ul class="doc-list">
+        <li><span class="doc-check"></span>คำสั่งศาลตั้งผู้จัดการมรดกร่วม</li>
+        <li><span class="doc-check"></span>หนังสือรับรองคดีถึงที่สุด (ขอได้หลังพ้น 1 เดือนจากคำสั่งศาล)</li>
+        <li><span class="doc-check"></span>โฉนดที่ดินตัวจริง (เดิมชื่อบิดา + น้องชาย)</li>
+        <li><span class="doc-check"></span>บัญชีเครือญาติ</li>
+        <li><span class="doc-check"></span>บัตรประชาชน + ทะเบียนบ้านของทายาททุกคนและน้องชาย</li>
+        <li><span class="doc-check"></span>หนังสือแบ่งปันมรดก (ระบุกรรมสิทธิ์รวม ไม่ระบุสัดส่วน)</li>
+        <li><span class="doc-check"></span>คำขอออกใบแทนโฉนด (เฉพาะกรณีโฉนดเดิมชำรุด — ทำพร้อมกันได้)</li>
+      </ul>
+    </div>
+
+    <div class="doc-group">
+      <h4>③ เปลี่ยนเจ้าบ้าน (ที่อำเภอ — ทำหลังโฉนดเรียบร้อย)</h4>
+      <ul class="doc-list">
+        <li><span class="doc-check"></span>ทะเบียนบ้านฉบับจริง</li>
+        <li><span class="doc-check"></span>บัตรประชาชนของผู้ยื่นคำร้อง</li>
+        <li><span class="doc-check"></span>ใบมรณบัตรของเจ้าบ้านเดิม (บิดา)</li>
+        <li><span class="doc-check"></span>หนังสือยินยอมให้เป็นเจ้าบ้าน (ลงนามโดยผู้ที่มีชื่อในทะเบียนบ้านอยู่แล้วเท่านั้น)</li>
+        <li><span class="doc-check"></span>สำเนาบัตรประชาชน + ทะเบียนบ้านของผู้มีชื่อทุกคน พร้อมรับรองสำเนา</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 6. COSTS ============ -->
+  <section class="block" id="costs">
+    <div class="section-head">
+      <span class="section-num">06</span>
+      <h2 class="section-title">ค่าใช้จ่ายโดยสรุป</h2>
+    </div>
+    <p class="section-desc">เฉพาะส่วนของบิดาที่โอนให้ทายาท — ไม่กระทบส่วนของน้องชาย</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>รายการ</th><th>เมื่อไหร่</th><th>อัตรา / จำนวน</th><th>หมายเหตุ</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>ค่าคำร้องศาล</td><td>ยื่นตั้งผู้จัดการมรดก</td><td>200 บาท</td><td>ครั้งเดียว</td></tr>
+          <tr><td>ค่าทนาย (ถ้าใช้)</td><td>ยื่นตั้งผู้จัดการมรดก</td><td>10,000–30,000 บาท</td><td>ไม่บังคับ ทำเอง (e-Filing) ได้ฟรี</td></tr>
+          <tr><td>ค่าธรรมเนียมโอนมรดก</td><td>โอนโฉนด</td><td>0.5% ของราคาประเมินส่วนบิดา</td><td>เฉพาะส่วนบิดา ไม่รวมส่วนน้องชาย</td></tr>
+          <tr><td>ค่าใบแทนโฉนด (ถ้าชำรุด)</td><td>โอนโฉนด</td><td>~65 บาท</td><td>คำขอ + ประกาศ + ใบแทน</td></tr>
+          <tr><td>ภาษีที่ดินรายปี</td><td>ทุกเดือนเมษายน</td><td>0% หากมีคนอยู่จริง + มูลค่าไม่เกิน 50 ล้าน</td><td>0.3–3% หากปล่อยรกร้าง (เพิ่มทุก 3 ปี)</td></tr>
+          <tr><td>ภาษีโรงเรือน</td><td>—</td><td>ยกเลิกแล้วตั้งแต่ปี 2563</td><td>แทนที่ด้วยภาษีที่ดินและสิ่งปลูกสร้าง</td></tr>
+          <tr><td>ค่าธรรมเนียม + ภาษีเมื่อขาย (อนาคต)</td><td>วันที่ขายจริง</td><td>รวม ~2.8–5.8%</td><td>หักจากเงินขายก่อนแบ่งเท่ากันทุกคน</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 7. HOUSE REGISTRATION VS DEED ============ -->
+  <section class="block" id="houseregistration">
+    <div class="section-head">
+      <span class="section-num">07</span>
+      <h2 class="section-title">เจ้าบ้าน vs เจ้าของโฉนด</h2>
+    </div>
+    <p class="section-desc">สองระบบที่แยกกันตามกฎหมาย แต่ในทางปฏิบัติอำเภออาจผูกเงื่อนไขเข้าด้วยกัน</p>
+
+    <div class="grid">
+      <div class="card">
+        <h3>หลักกฎหมาย</h3>
+        <p>เจ้าบ้าน (ทะเบียนราษฎร) ≠ เจ้าของกรรมสิทธิ์ (โฉนด) — กฎหมายห้ามอ้างทะเบียนบ้านเพื่อแสดงสิทธิในที่ดิน</p>
+      </div>
+      <div class="card">
+        <h3>ระเบียบที่พบจริงจากอำเภอ</h3>
+        <p>เจ้าบ้านเดิมเสียชีวิต + โฉนดมีเจ้าของร่วม → อำเภอระงับการเปลี่ยนเจ้าบ้านจนกว่าจะใส่ชื่อทายาทในโฉนดก่อน (ไม่เผยแพร่เป็นทางการ ควรขอยืนยันลายลักษณ์อักษรจากอำเภอที่ใช้บริการ)</p>
+      </div>
+      <div class="card">
+        <h3>ผู้ลงนามในแบบฟอร์มยินยอม</h3>
+        <p>ต้องเป็น "ผู้ที่มีชื่อในทะเบียนบ้านอยู่แล้ว" เท่านั้น ไม่ใช่ทายาททุกคนโดยอัตโนมัติ — หากทายาทไม่มีชื่อในทะเบียนบ้าน ต้องย้ายเข้าก่อน</p>
+      </div>
+    </div>
+
+    <div class="alert warn">
+      <strong>ผลที่ตามมาสำหรับกรณีนี้</strong>
+      เนื่องจากทายาทส่วนใหญ่ไม่มีชื่อในทะเบียนบ้าน การเปลี่ยนเจ้าบ้านจึงต้องรอให้โอนโฉนดเสร็จก่อน แล้วจึงย้ายชื่อเข้าทะเบียนบ้าน ก่อนจะยื่นขอเป็นเจ้าบ้านได้ — ควรสอบถามอำเภอเป็นลายลักษณ์อักษรเพื่อยืนยันเงื่อนไขที่แท้จริงก่อนวางแผน
+    </div>
+  </section>
+
+  <!-- ============ 8. KEY PRINCIPLES ============ -->
+  <section class="block" id="principles">
+    <div class="section-head">
+      <span class="section-num">08</span>
+      <h2 class="section-title">หลักการสำคัญที่ควรยึดถือ</h2>
+    </div>
+
+    <div class="principle">"ใส่ชื่อให้ครบก่อน ตัดสินใจทีหลัง"</div>
+
+    <div class="grid">
+      <div class="card">
+        <h3><span class="dot risk-low"></span>ผู้จัดการมรดกร่วม ไม่ใช่คนเดียว</h3>
+        <p>ถ่วงดุลอำนาจ ลดโอกาสทุจริต แม้จะลดความคล่องตัวลงบ้าง</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot risk-low"></span>ขอศาลกำหนดกรอบเวลา</h3>
+        <p>ระบุในคำสั่งว่าต้องโอนให้ทายาทครบภายใน 90 วัน ป้องกันการยื้อเวลา</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot risk-low"></span>รีบโอนโฉนด อย่ารอจนจะขาย</h3>
+        <p>อายุความเดินตลอดเวลา ไม่ว่าจะมีผู้จัดการมรดกหรือไม่ก็ตาม</p>
+      </div>
+      <div class="card">
+        <h3><span class="dot risk-low"></span>ทายาททุกคนไปวันโอนพร้อมกัน</h3>
+        <p>ตรวจสอบชื่อและความถูกต้องด้วยตาตนเอง ก่อนรับโฉนดคืน</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>สรุปจากบทสนทนาเพื่อใช้ศึกษาแนวทางปฏิบัติเบื้องต้น</span>
+    <span>ไม่ใช่คำแนะนำทางกฎหมาย — ควรปรึกษาทนายความสำหรับการตัดสินใจจริง</span>
+  </footer>
+
+</div>
+</body>
+</html>
