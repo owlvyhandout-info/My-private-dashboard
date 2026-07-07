@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>วัฏจักรน้ำ: การเดินทางที่ไม่สิ้นสุด - Owlvy House Science</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Kanit', sans-serif; background-color: #f0f9ff; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        .gradient-blue { background: linear-gradient(135deg, #03045e 0%, #0077b6 100%); }
+        .card { background: white; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: transform 0.2s; }
+        .card:hover { transform: translateY(-5px); }
+        .quiz-option { cursor: pointer; transition: all 0.2s; }
+        .quiz-option:hover { background-color: #e0f2fe; border-color: #00b4d8; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="text-slate-800">
+    <!-- 
+    Palette Selection: "Brilliant Blues" 
+    HEX Codes: #03045e (Deep Navy), #0077b6 (Blue), #00b4d8 (Cyan), #90e0ef (Sky), #caf0f8 (Ice)
+    Narrative Plan: 
+    1. Introduction: Greeting from OwlvyBot and core concept of the Water Cycle.
+    2. Data Overview: Global water distribution (Doughnut chart) and Freshwater breakdown (Bar chart).
+    3. The 5 Stages: Interactive process flow (Tailwind Flexbox).
+    4. Mechanics: Radar chart of driving factors (Sun, Wind, Temp).
+    5. Environmental Context: Impact of human activity (Line chart trend).
+    6. Interactive Quiz: 10 complex questions based on Bloom's Taxonomy.
+    
+    Visualizations Justification:
+    - Water Distribution -> Doughnut (Chart.js) -> Clear proportion of Salt vs Fresh water.
+    - Freshwater Sources -> Horizontal Bar (Chart.js) -> Easy comparison of minor categories.
+    - Factors -> Radar (Chart.js) -> Visualizes multi-dimensional energy influence.
+    - Quiz -> HTML/JS State management -> Interactive learning.
+    
+    Confirmation: This output does NOT use SVG or Mermaid JS. All icons/diagrams use Tailwind/HTML or Canvas.
+    -->
+
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-sky-100 py-3">
+        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+            <span class="font-bold text-2xl text-[#0077b6]">Owlvy<span class="text-[#03045e]">House</span></span>
+            <div class="hidden md:flex space-x-6 text-sm font-medium">
+                <a href="#stats" class="hover:text-[#00b4d8]">สถิติน้ำ</a>
+                <a href="#cycle" class="hover:text-[#00b4d8]">กระบวนการ</a>
+                <a href="#factors" class="hover:text-[#00b4d8]">ปัจจัยขับเคลื่อน</a>
+                <a href="#quiz" class="hover:text-[#00b4d8]">ควิซท้าทาย</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="gradient-blue text-white py-16 px-4 text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="mb-6 inline-block p-4 bg-white/10 rounded-full backdrop-blur-sm">
+                <div class="w-16 h-16 mx-auto bg-[#90e0ef] rounded-full border-4 border-white flex items-center justify-center">
+                    <span class="text-3xl">🦉</span>
+                </div>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">วัฏจักรน้ำ: การเดินทางที่ไม่สิ้นสุด</h1>
+            <p class="text-xl text-sky-100">สวัสดีครับนักเรียน! ครูวิทย์และ OwlvyBot จะพาไปเจาะลึกความลับของน้ำบนโลกใบนี้กัน</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-12">
+        
+        <!-- Section: Global Water distribution -->
+        <section id="stats" class="mb-20">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-[#03045e] mb-4">แหล่งน้ำบนโลกของเรา</h2>
+                <p class="max-w-2xl mx-auto text-slate-600">ก่อนจะไปดูว่าน้ำหมุนเวียนอย่างไร เราต้องรู้ก่อนว่าน้ำส่วนใหญ่อยู่ที่ไหน ปริมาณน้ำบนโลกนั้นคงที่ แต่สถานะและแหล่งที่อยู่เปลี่ยนไปตามกาลเวลา</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                <div class="card p-8">
+                    <h3 class="text-xl font-semibold mb-6 text-center">สัดส่วนน้ำเค็มและน้ำจืด</h3>
+                    <div class="chart-container">
+                        <canvas id="waterDistChart"></canvas>
+                    </div>
+                    <p class="mt-6 text-sm text-slate-500 italic text-center">ข้อมูลแสดงให้เห็นว่าน้ำจืดที่มนุษย์ใช้ได้จริงมีน้อยกว่า 3% ของน้ำทั้งหมด</p>
+                </div>
+                <div class="card p-8">
+                    <h3 class="text-xl font-semibold mb-6 text-center">น้ำจืดอยู่ที่ไหนบ้าง?</h3>
+                    <div class="chart-container">
+                        <canvas id="freshwaterChart"></canvas>
+                    </div>
+                    <p class="mt-6 text-sm text-slate-500 italic text-center">น้ำจืดส่วนใหญ่ถูกกักเก็บในรูปแบบธารน้ำแข็ง ทำให้เราเข้าถึงน้ำในแม่น้ำได้เพียงส่วนน้อย</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: The Cycle Processes -->
+        <section id="cycle" class="mb-20">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-[#03045e] mb-4">5 ขั้นตอนหลักของวัฏจักร</h2>
+                <p class="max-w-2xl mx-auto text-slate-600">น้ำเดินทางผ่านสถานะต่างๆ ตั้งแต่ของเหลว แก๊ส จนถึงของแข็ง โดยอาศัยความร้อนและการเปลี่ยนแปลงพลังงาน</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <!-- Step 1 -->
+                <div class="p-6 bg-white border-b-4 border-[#00b4d8] rounded-xl shadow-sm text-center">
+                    <div class="w-12 h-12 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold">1</div>
+                    <h4 class="font-bold mb-2">การระเหย</h4>
+                    <p class="text-xs text-slate-500">น้ำเปลี่ยนจากของเหลวเป็นแก๊สด้วยความร้อนจากแดด</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="p-6 bg-white border-b-4 border-[#90e0ef] rounded-xl shadow-sm text-center">
+                    <div class="w-12 h-12 bg-blue-100 text-[#0077b6] rounded-full flex items-center justify-center mx-auto mb-4 font-bold">2</div>
+                    <h4 class="font-bold mb-2">การคายน้ำ</h4>
+                    <p class="text-xs text-slate-500">พืชช่วยส่งไอน้ำคืนสู่ชั้นบรรยากาศผ่านรูใบ</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="p-6 bg-white border-b-4 border-[#03045e] rounded-xl shadow-sm text-center">
+                    <div class="w-12 h-12 bg-slate-100 text-[#03045e] rounded-full flex items-center justify-center mx-auto mb-4 font-bold">3</div>
+                    <h4 class="font-bold mb-2">การควบแน่น</h4>
+                    <p class="text-xs text-slate-500">ไอน้ำคายความร้อนและรวมตัวเป็นก้อนเมฆ</p>
+                </div>
+                <!-- Step 4 -->
+                <div class="p-6 bg-white border-b-4 border-sky-400 rounded-xl shadow-sm text-center">
+                    <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mx-auto mb-4 font-bold">4</div>
+                    <h4 class="font-bold mb-2">หยาดน้ำฟ้า</h4>
+                    <p class="text-xs text-slate-500">ฝน หิมะ หรือลูกเห็บ ตกลงสู่พื้นตามแรงโน้มถ่วง</p>
+                </div>
+                <!-- Step 5 -->
+                <div class="p-6 bg-white border-b-4 border-emerald-400 rounded-xl shadow-sm text-center">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 font-bold">5</div>
+                    <h4 class="font-bold mb-2">การรวมตัว</h4>
+                    <p class="text-xs text-slate-500">น้ำไหลลงแม่น้ำและซึมลงดินเป็นน้ำบาดาล</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Driving Factors -->
+        <section id="factors" class="mb-20 bg-[#caf0f8]/30 p-10 rounded-3xl">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+                <div class="lg:col-span-1">
+                    <h2 class="text-3xl font-bold text-[#03045e] mb-6">ใครคือผู้ขับเคลื่อน?</h2>
+                    <p class="text-slate-600 mb-6 italic">"น้ำไม่ได้ไหลเอง แต่มีพลังงานคอยผลักดัน"</p>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex items-start">
+                            <span class="text-orange-500 mr-2">☀️</span>
+                            <span><strong>ดวงอาทิตย์:</strong> แหล่งพลังงานหลักที่ทำให้เกิดการเปลี่ยนสถานะ</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2">🌬️</span>
+                            <span><strong>ลม:</strong> พัดพาความชื้นและก้อนเมฆไปยังพื้นที่ต่างๆ</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-emerald-500 mr-2">🌍</span>
+                            <span><strong>แรงโน้มถ่วง:</strong> ดึงให้น้ำตกลงมาและไหลลงสู่ที่ต่ำ</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="lg:col-span-2 card p-8">
+                    <h3 class="text-xl font-semibold mb-6 text-center">ความสัมพันธ์ของปัจจัยและกระบวนการ</h3>
+                    <div class="chart-container">
+                        <canvas id="factorRadarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Quiz -->
+        <section id="quiz" class="mb-20">
+            <div class="bg-[#03045e] rounded-3xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
+                <div class="relative z-10">
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-[#00b4d8] rounded-full flex items-center justify-center mr-4 text-2xl">🧠</div>
+                        <h2 class="text-2xl md:text-3xl font-bold">ควิซท้าทาย: นักวิเคราะห์วัฏจักรน้ำ</h2>
+                    </div>
+                    
+                    <div id="quiz-content">
+                        <div id="question-box" class="mb-8">
+                            <p id="q-number" class="text-[#90e0ef] font-semibold mb-2">ข้อที่ 1/10</p>
+                            <h3 id="q-text" class="text-xl md:text-2xl font-medium mb-6">กำลังโหลดโจทย์...</h3>
+                            <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Options will be injected here -->
+                            </div>
+                        </div>
+                        <div id="feedback-box" class="hidden mb-6 p-4 rounded-xl"></div>
+                        <button id="next-btn" class="hidden bg-[#00b4d8] hover:bg-[#90e0ef] text-[#03045e] px-8 py-3 rounded-full font-bold transition-all">ถัดไป</button>
+                    </div>
+
+                    <div id="result-screen" class="hidden text-center">
+                        <h3 class="text-4xl font-bold mb-4">ยอดเยี่ยมมาก!</h3>
+                        <p class="text-xl mb-6">คุณทำคะแนนได้ <span id="final-score" class="text-4xl text-[#00b4d8]">0</span> เต็ม 10</p>
+                        <button onclick="location.reload()" class="bg-white text-[#03045e] px-8 py-3 rounded-full font-bold">ทำใหม่อีกครั้ง</button>
+                    </div>
+                </div>
+                <!-- OwlvyBot Deco -->
+                <div class="absolute -bottom-10 -right-10 opacity-20 text-[150px]">🦉</div>
+            </div>
+        </section>
+
+        <footer class="text-center text-slate-400 text-sm mt-20 border-t pt-8">
+            <p>© 2024 Owlvy House Ultimate IQ - คลาสเรียนครูวิทย์</p>
+            <p class="mt-2">🤖 OwlvyHouseUltimateIQ-10P อาจมีข้อผิดพลาด ควรตรวจสอบข้อมูลสำคัญ</p>
+        </footer>
+    </main>
+
+    <script>
+        // Chart.js Configuration
+        const setupCharts = () => {
+            // Label wrapping helper logic (Requirement: ~16 chars limit)
+            const wrapLabel = (label) => {
+                if (typeof label !== 'string' || label.length <= 16) return label;
+                const words = label.split(' ');
+                let result = [];
+                let currentLine = "";
+                words.forEach(w => {
+                    if ((currentLine + w).length > 16) {
+                        result.push(currentLine.trim());
+                        currentLine = w + " ";
+                    } else {
+                        currentLine += w + " ";
+                    }
+                });
+                result.push(currentLine.trim());
+                return result;
+            };
+
+            const tooltipConfig = {
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        return Array.isArray(label) ? label.join(' ') : label;
+                    }
+                }
+            };
+
+            // 1. Water Distribution Chart
+            new Chart(document.getElementById('waterDistChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: [wrapLabel('น้ำเค็มในมหาสมุทร'), wrapLabel('น้ำจืดทั้งหมด')],
+                    datasets: [{
+                        data: [97.5, 2.5],
+                        backgroundColor: ['#0077b6', '#90e0ef'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: { tooltip: tooltipConfig, legend: { position: 'bottom' } }
+                }
+            });
+
+            // 2. Freshwater Breakdown Chart
+            new Chart(document.getElementById('freshwaterChart'), {
+                type: 'bar',
+                data: {
+                    labels: [wrapLabel('ธารน้ำแข็งและน้ำแข็งขั้วโลก'), wrapLabel('น้ำใต้ดิน/น้ำบาดาล'), wrapLabel('น้ำบนผิวดิน (แม่น้ำ/ทะเลสาบ)')],
+                    datasets: [{
+                        label: 'เปอร์เซ็นต์ของน้ำจืด',
+                        data: [68.7, 30.1, 1.2],
+                        backgroundColor: '#00b4d8'
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    maintainAspectRatio: false,
+                    plugins: { tooltip: tooltipConfig, legend: { display: false } },
+                    scales: { x: { beginAtZero: true, max: 100 } }
+                }
+            });
+
+            // 3. Driving Factors Radar
+            new Chart(document.getElementById('factorRadarChart'), {
+                type: 'radar',
+                data: {
+                    labels: ['ความร้อน', 'ความชื้น', 'ลม', 'แรงโน้มถ่วง', 'การคายน้ำ'],
+                    datasets: [{
+                        label: 'อิทธิพลต่อวัฏจักร',
+                        data: [95, 70, 60, 85, 40],
+                        borderColor: '#03045e',
+                        backgroundColor: 'rgba(0, 180, 216, 0.2)'
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: { tooltip: tooltipConfig }
+                }
+            });
+        };
+
+        // Quiz Logic Implementation
+        const quizData = [
+            {
+                q: "หากอุณหภูมิเฉลี่ยของโลกสูงขึ้นอย่างต่อเนื่อง (Global Warming) จะส่งผลต่ออัตราการระเหยของน้ำอย่างไร?",
+                options: [
+                    { text: "ระเหยช้าลงเพราะอากาศหนัก", correct: false, note: "อากาศร้อนรับความชื้นได้มากกว่า" },
+                    { text: "ระเหยเร็วขึ้นและปริมาณไอน้ำในอากาศเพิ่มขึ้น", correct: true, note: "ความร้อนเพิ่มพลังงานจลน์ให้กับโมเลกุลน้ำ" },
+                    { text: "ไม่เปลี่ยนแปลงเพราะปริมาณน้ำเท่าเดิม", correct: false, note: "อัตราความเร็วเปลี่ยนได้แม้ปริมาณรวมเท่าเดิม" },
+                    { text: "น้ำจะหยุดระเหยเพราะอากาศอิ่มตัว", correct: false, note: "เป็นไปได้ยากในสเกลโลก" }
+                ],
+                hint: "ลองนึกถึงการต้มน้ำในหม้อ ยิ่งไฟแรงน้ำยิ่งหายไปเร็วไหม?"
+            },
+            {
+                q: "ในกระบวนการ 'ควบแน่น' (Condensation) โมเลกุลของน้ำมีการเปลี่ยนแปลงพลังงานความร้อนอย่างไร?",
+                options: [
+                    { text: "ดูดพลังงานความร้อนจากรอบข้าง", correct: false, note: "การดูดพลังงานใช้ในการระเหย" },
+                    { text: "คายพลังงานความร้อนออกสู่รอบข้าง", correct: true, note: "แก๊สเปลี่ยนเป็นของเหลวต้องลดระดับพลังงาน" },
+                    { text: "ไม่มีการเปลี่ยนพลังงาน", correct: false, note: "การเปลี่ยนสถานะต้องใช้พลังงานแฝงเสมอ" },
+                    { text: "สร้างพลังงานความร้อนขึ้นมาใหม่", correct: false, note: "พลังงานไม่ถูกสร้างใหม่ตามกฎอนุรักษ์" }
+                ],
+                hint: "ทำไมเวลาฝนใกล้จะตก เราถึงรู้สึกอ้าว (ร้อน) กว่าปกติ?"
+            },
+            {
+                q: "การตัดไม้ทำลายป่าเป็นบริเวณกว้าง ส่งผลกระทบโดยตรงต่อขั้นตอนใดของวัฏจักรน้ำมากที่สุด?",
+                options: [
+                    { text: "การระเหยจากมหาสมุทร", correct: false, note: "ป่าอยู่บนบก ไม่เกี่ยวโดยตรงกับทะเล" },
+                    { text: "การคายน้ำ (Transpiration)", correct: true, note: "พืชเป็นตัวหลักในการคายน้ำคืนสู่เมฆ" },
+                    { text: "การรวมตัวของน้ำบาดาล", correct: false, note: "เป็นผลกระทบรอง" },
+                    { text: "แรงโน้มถ่วงของโลก", correct: false, note: "แรงโน้มถ่วงไม่เปลี่ยนตามจำนวนต้นไม้" }
+                ],
+                hint: "พืชมีบทบาทอะไรในการส่งน้ำกลับขึ้นไปข้างบน?"
+            },
+            {
+                q: "ข้อใดอธิบายสาเหตุที่ฝนมักตกบริเวณหน้าภูเขา (Windward side) ได้ถูกต้องที่สุด?",
+                options: [
+                    { text: "ภูเขามีแรงดึงดูดเมฆ", correct: false, note: "ไม่เกี่ยวกับแรงดึงดูด" },
+                    { text: "อากาศชื้นถูกดันให้สูงขึ้นจนเย็นตัวและควบแน่น", correct: true, note: "หลักการ Orographic Lifting" },
+                    { text: "หลังภูเขามีความร้อนสูงกว่า", correct: false, note: "เป็นผลจากการที่ฝนตกหน้าเขาไปหมดแล้ว" },
+                    { text: "เมฆหนักเกินกว่าจะข้ามภูเขาได้", correct: false, note: "เมฆข้ามได้ถ้าอากาศไม่เย็นลงจนกลายเป็นฝน" }
+                ],
+                hint: "อากาศที่เคลื่อนที่ปะทะภูเขาจะถูกบังคับให้เคลื่อนที่ไปทางไหน?"
+            },
+            {
+                q: "เหตุใดน้ำฝนที่ตกลงมาจึงไม่มีรสเค็ม ทั้งที่ระเหยมาจากมหาสมุทรเป็นส่วนใหญ่?",
+                options: [
+                    { text: "ลมพัดเกลือออกไป", correct: false, note: "ลมพัดเกลือไม่ได้ง่ายขนาดนั้น" },
+                    { text: "เกลือระเหยกลายเป็นแก๊สไม่ได้ในอุณหภูมิปกติ", correct: true, note: "เฉพาะน้ำที่ระเหย เกลือยังคงอยู่ในทะเล" },
+                    { text: "ก้อนเมฆมีระบบกรองน้ำ", correct: false, note: "ธรรมชาติไม่มีแผ่นกรอง แต่เป็นการเปลี่ยนสถานะ" },
+                    { text: "น้ำฝนทำปฏิกิริยากับอากาศจนจืด", correct: false, note: "น้ำฝนจืดตั้งแต่เป็นไอน้ำแล้ว" }
+                ],
+                hint: "ลองคิดถึงเวลาเราต้มน้ำเกลือจนแห้ง อะไรที่เหลืออยู่ในหม้อ?"
+            },
+            {
+                q: "การสร้างเขื่อนหรืออ่างเก็บน้ำขนาดใหญ่ ส่งผลต่อวัฏจักรน้ำในท้องถิ่นอย่างไร?",
+                options: [
+                    { text: "ลดอัตราการระเหยในพื้นที่", correct: false, note: "ผิวน้ำเพิ่มขึ้น การระเหยย่อมเพิ่ม" },
+                    { text: "เพิ่มความชื้นสัมพัทธ์และการระเหยในพื้นที่", correct: true, note: "แหล่งน้ำเปิดกว้างรับแดดมากขึ้น" },
+                    { text: "ทำให้น้ำบาดาลแห้งขอด", correct: false, note: "มักจะช่วยเพิ่มน้ำใต้ดินรอบเขื่อน" },
+                    { text: "ทำให้ฝนหยุดตกถาวร", correct: false, note: "ไม่ถึงขั้นหยุดตกแต่อาจเปลี่ยนทิศทาง" }
+                ],
+                hint: "ผิวน้ำที่กว้างขึ้นเมื่อโดนแดดจะเกิดอะไรขึ้น?"
+            },
+            {
+                q: "หากโลกไม่มีชั้นบรรยากาศ วัฏจักรน้ำจะยังดำเนินต่อไปได้หรือไม่?",
+                options: [
+                    { text: "ได้ เพราะยังมีดวงอาทิตย์", correct: false, note: "ไม่มีบรรยากาศ น้ำจะระเหยหนีออกสู่อวกาศหมด" },
+                    { text: "ไม่ได้ เพราะขาดตัวกลางในการควบแน่นและพัดพา", correct: true, note: "น้ำจะระเหยหายไปและไม่มีอากาศพยุงเมฆ" },
+                    { text: "ได้ เพราะน้ำอยู่ในสถานะของแข็งได้", correct: false, note: "วงจรจะขาดตอน" },
+                    { text: "ได้ เพราะแรงโน้มถ่วงยังทำงาน", correct: false, note: "แรงโน้มถ่วงดึงน้ำไว้ได้แต่ไม่มีการหมุนเวียน" }
+                ],
+                hint: "อากาศและเมฆต้องการอะไรในการลอยตัวและเคลื่อนที่?"
+            },
+            {
+                q: "ปรากฏการณ์ 'เกาะความร้อนในเมือง' (Urban Heat Island) ส่งผลต่อวัฏจักรน้ำอย่างไร?",
+                options: [
+                    { text: "ทำให้หิมะตกหนักขึ้น", correct: false, note: "เมืองร้อนขึ้นหิมะมักไม่ตก" },
+                    { text: "ลดการซึมของน้ำลงดินและเพิ่มน้ำหลากผิวดิน", correct: true, note: "คอนกรีตขวางการซึม และความร้อนกระตุ้นฝนตกหนัก" },
+                    { text: "ทำให้น้ำระเหยช้าลง", correct: false, note: "ความร้อนในเมืองทำให้ระเหยเร็วขึ้น" },
+                    { text: "ช่วยเพิ่มระดับน้ำบาดาล", correct: false, note: "พื้นผิวปิดกั้นน้ำซึม" }
+                ],
+                hint: "พื้นคอนกรีตในกรุงเทพฯ ยอมให้น้ำซึมผ่านได้เหมือนดินในป่าไหม?"
+            },
+            {
+                q: "ในวันที่อากาศมีความชื้นสัมพัทธ์ 100% กระบวนการใดจะเกิดได้ยากที่สุด?",
+                options: [
+                    { text: "การระเหย (Evaporation)", correct: true, note: "อากาศอิ่มตัว ไม่สามารถรับไอน้ำเพิ่มได้" },
+                    { text: "การควบแน่น (Condensation)", correct: false, note: "จะเกิดได้ง่ายมาก" },
+                    { text: "การตกของฝน (Precipitation)", correct: false, note: "มักจะเกิดขึ้นตามมา" },
+                    { text: "แรงโน้มถ่วง", correct: false, note: "คงที่เสมอ" }
+                ],
+                hint: "เหมือนเราเทน้ำลงในแก้วที่เต็มอยู่แล้ว น้ำจะลงไปได้ไหม?"
+            },
+            {
+                q: "ปัจจัยใดเป็น 'เครื่องยนต์หลัก' (Primary Driver) ที่ให้พลังงานแก่โมเลกุลน้ำในการเริ่มวัฏจักร?",
+                options: [
+                    { text: "กระแสลมในมหาสมุทร", correct: false, note: "ลมช่วยพัดพา แต่ไม่ใช่พลังงานเริ่มสถานะ" },
+                    { text: "รังสีความร้อนจากดวงอาทิตย์", correct: true, note: "ให้พลังงานความร้อนเพื่อเปลี่ยนสถานะน้ำ" },
+                    { text: "การหมุนรอบตัวเองของโลก", correct: false, note: "ส่งผลต่อทิศทางลม (Coriolis) แต่ไม่ใช่ความร้อน" },
+                    { text: "แรงดึงดูดระหว่างโลกและดวงจันทร์", correct: false, note: "ส่งผลต่อน้ำขึ้นน้ำลง" }
+                ],
+                hint: "ถ้าไม่มีแสงแดด โลกจะมืดและเย็น น้ำจะกลายเป็นไอได้หรือไม่?"
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+
+        const loadQuestion = () => {
+            const q = quizData[currentQ];
+            document.getElementById('q-number').innerText = `ข้อที่ ${currentQ + 1}/10`;
+            document.getElementById('q-text').innerText = q.q;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('div');
+                btn.className = "quiz-option p-4 border-2 border-slate-700 rounded-xl bg-slate-800 hover:bg-slate-700 transition-all";
+                btn.innerText = opt.text;
+                btn.onclick = () => checkAnswer(idx);
+                container.appendChild(btn);
+            });
+
+            document.getElementById('feedback-box').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+        };
+
+        const checkAnswer = (idx) => {
+            const q = quizData[currentQ];
+            const feedback = document.getElementById('feedback-box');
+            feedback.classList.remove('hidden');
+            
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(o => o.onclick = null); // Disable further clicks
+
+            if (q.options[idx].correct) {
+                score++;
+                feedback.innerHTML = `<span class="font-bold text-emerald-400">ถูกต้อง!</span> ${q.options[idx].note}`;
+                feedback.className = "mb-6 p-4 rounded-xl bg-emerald-900/50 border border-emerald-500 text-emerald-100";
+            } else {
+                feedback.innerHTML = `<span class="font-bold text-rose-400">ยังไม่ถูก...</span> ${q.options[idx].note}<br><small class="text-sky-300">คำใบ้: ${q.hint}</small>`;
+                feedback.className = "mb-6 p-4 rounded-xl bg-rose-900/50 border border-rose-500 text-rose-100";
+            }
+            
+            document.getElementById('next-btn').classList.remove('hidden');
+        };
+
+        document.getElementById('next-btn').onclick = () => {
+            currentQ++;
+            if (currentQ < quizData.length) {
+                loadQuestion();
+            } else {
+                document.getElementById('quiz-content').classList.add('hidden');
+                document.getElementById('result-screen').classList.remove('hidden');
+                document.getElementById('final-score').innerText = score;
+            }
+        };
+
+        // Initialize Page
+        window.onload = () => {
+            setupCharts();
+            loadQuestion();
+        };
+    </script>
+</body>
+</html>

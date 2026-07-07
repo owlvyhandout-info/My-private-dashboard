@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Physics: แรงเสียดทาน ม.ต้น</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts: Kanit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #F8FAFC;
+        }
+        .bg-slate-primary { background-color: #1E293B; }
+        .text-slate-primary { color: #1E293B; }
+        .bg-amber-secondary { background-color: #F97316; }
+        .text-amber-secondary { color: #F97316; }
+        .border-amber-secondary { border-color: #F97316; }
+    </style>
+</head>
+<body class="text-slate-800 antialiased">
+
+    <!-- Header Banner -->
+    <header class="bg-slate-primary text-white py-10 px-4 shadow-md relative overflow-hidden">
+        <div class="absolute right-0 top-0 opacity-10 transform translate-x-10 -translate-y-10">
+            <span class="text-9xl font-bold">F=μN</span>
+        </div>
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <span class="bg-amber-secondary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">บทเรียนออนไลน์วิทยาศาสตร์ ม.ต้น</span>
+            <h1 class="text-3xl md:text-5xl font-bold mt-3 mb-2 tracking-wide">💡 เรื่อง "แรงเสียดทาน (Friction)"</h1>
+            <p class="text-slate-300 text-sm md:text-base max-w-2xl mx-auto font-light">
+                ร่วมเดินทางท่องโลกฟิสิกส์ไปกับ พี่แรคคูน "ไซน์-ร็อค" และ "ดร. ฟิสิก้า" เพื่อเรียนรู้แรงลึกลับที่อยู่รอบตัวเรา!
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto px-4 py-8 space-y-12">
+
+        <!-- Section 1: Introduction -->
+        <section class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100">
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-3 h-8 bg-amber-secondary rounded-full"></div>
+                <h2 class="text-2xl font-bold text-slate-primary">1. แรงเสียดทานคืออะไร?</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="space-y-4 text-slate-600 leading-relaxed">
+                    <p>
+                        <strong class="text-slate-900 text-lg">แรงเสียดทาน (Friction)</strong> คือ แรงที่เกิดขึ้นระหว่างผิวสัมผัสของวัตถุสองชิ้น โดยมีทิศทาง <span class="text-amber-secondary font-semibold underline">ตรงกันข้าม</span> กับทิศทางการเคลื่อนที่ หรือทิศทางของแรงที่พยายามทำให้วัตถุเคลื่อนที่เสมอ
+                    </p>
+                    <div class="bg-slate-50 p-4 rounded-xl border-l-4 border-slate-primary">
+                        <p class="text-sm font-medium text-slate-700">📌 กฎเหล็กของแรงเสียดทาน:</p>
+                        <p class="text-xs text-slate-500 mt-1">คอยขัดขวางและต้านทานการเคลื่อนที่ ช่วยให้เราเดินได้โดยไม่ลื่น และช่วยให้รถหยุดได้เมื่อเหยียบเบรก!</p>
+                    </div>
+                </div>
+
+                <!-- Simulation/Diagram Container -->
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 flex flex-col items-center">
+                    <span class="text-xs font-semibold text-slate-400 mb-4 uppercase tracking-wider">แผนภาพแสดงทิศทางของแรง</span>
+                    
+                    <div class="w-full max-w-xs bg-white border-2 border-slate-300 p-6 rounded-lg shadow-inner relative my-6 text-center font-bold text-slate-700">
+                        📦 วัตถุ (ตู้เสื้อผ้า)
+                        
+                        <!-- Force Arrows -->
+                        <div class="absolute -right-12 top-1/2 transform -translate-y-1/2 flex items-center">
+                            <span class="text-amber-secondary text-xl font-bold mr-1">←</span>
+                            <span class="bg-amber-secondary text-white text-xxs px-1.5 py-0.5 rounded text-[10px]">แรงเสียดทาน (f)</span>
+                        </div>
+                        <div class="absolute -left-12 top-1/2 transform -translate-y-1/2 flex items-center">
+                            <span class="bg-slate-primary text-white text-xxs px-1.5 py-0.5 rounded text-[10px]">แรงผลัก (F)</span>
+                            <span class="text-slate-primary text-xl font-bold ml-1">→</span>
+                        </div>
+                    </div>
+                    
+                    <div class="w-full h-3 bg-slate-400 rounded-full mt-2"></div>
+                    <span class="text-xs text-slate-500 mt-2">พื้นผิวสัมผัสที่มีความฝืด</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Types of Friction -->
+        <section class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100">
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-3 h-8 bg-amber-secondary rounded-full"></div>
+                <h2 class="text-2xl font-bold text-slate-primary">2. ประเภทของแรงเสียดทาน</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-6 leading-relaxed">
+                แรงเสียดทานแบ่งออกเป็น 2 ประเภทหลักๆ คือ <strong class="text-slate-900">แรงเสียดทานสถิต (Static Friction)</strong> ซึ่งเกิดขึ้นเมื่อวัตถุยังอยู่นิ่ง และ <strong class="text-slate-900">แรงเสียดทานจลน์ (Kinetic Friction)</strong> ซึ่งเกิดขึ้นขณะที่วัตถุกำลังเคลื่อนที่
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="h-64 relative">
+                    <canvas id="frictionTypeChart"></canvas>
+                </div>
+                <div class="space-y-4">
+                    <div class="p-4 rounded-xl bg-orange-50 border border-orange-100">
+                        <h3 class="font-bold text-orange-800 text-sm flex items-center">
+                            <span class="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                            แรงเสียดทานสถิตสูงสุด (Max f<sub>s</sub>)
+                        </h3>
+                        <p class="text-xs text-orange-700 mt-1">
+                            มีค่าสูงที่สุด! เกิดขึ้นในจังหวะสุดท้ายที่วัตถุ "กำลังจะเริ่มเคลื่อนที่พอดี" ซึ่งต้องใช้แรงดึงหรือแรงผลักเยอะที่สุดเพื่อเอาชนะมัน
+                        </p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-blue-50 border border-blue-100">
+                        <h3 class="font-bold text-blue-800 text-sm flex items-center">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                            แรงเสียดทานจลน์ (f<sub>k</sub>)
+                        </h3>
+                        <p class="text-xs text-blue-700 mt-1">
+                            มีค่าคงที่และ <span class="font-bold text-slate-900">น้อยกว่า</span> แรงเสียดทานสถิตสูงสุดเสมอ เกิดขึ้นหลังจากที่วัตถุเคลื่อนที่ไถลไปบนพื้นแล้ว ทำให้ออกแรงเข็นน้อยลง
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Factors Affecting Friction -->
+        <section class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100">
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-3 h-8 bg-amber-secondary rounded-full"></div>
+                <h2 class="text-2xl font-bold text-slate-primary">3. ปัจจัยที่มีผลต่อแรงเสียดทาน</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-6 leading-relaxed">
+                แรงเสียดทานจะมากหรือน้อย ขึ้นอยู่กับปัจจัยหลัก 2 ประการ ได้แก่ <strong>น้ำหนักกดทับลงบนพื้นผิว (N)</strong> และ <strong>ชนิด/ลักษณะของผิวสัมผัส (สัมประสิทธิ์แรงเสียดทาน - &mu;)</strong>
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <span class="text-amber-secondary font-bold text-lg">01</span>
+                        <h3 class="font-semibold text-slate-800 mt-1">น้ำหนักหรือแรงกดวัตถุ</h3>
+                        <p class="text-xs text-slate-500 mt-2 leading-relaxed">ยิ่งวัตถุมีน้ำหนักมาก แรงกดแนวตั้งฉาก (N) ก็จะยิ่งมาก ส่งผลให้เกิดแรงเสียดทานเพิ่มขึ้นตามไปด้วย</p>
+                    </div>
+                </div>
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <span class="text-amber-secondary font-bold text-lg">02</span>
+                        <h3 class="font-semibold text-slate-800 mt-1">ลักษณะของผิวสัมผัส</h3>
+                        <p class="text-xs text-slate-500 mt-2 leading-relaxed">ผิวขรุขระ/หยาบ จะมีแรงเสียดทานมากกว่าผิวเรียบ/มันลื่น แผนภูมิด้านล่างแสดงความฝืดเชิงเปรียบเทียบ</p>
+                    </div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-center">
+                    <div class="w-full h-40">
+                        <canvas id="surfaceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Benefits and Drawbacks -->
+        <section class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100">
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-3 h-8 bg-amber-secondary rounded-full"></div>
+                <h2 class="text-2xl font-bold text-slate-primary">4. การใช้ประโยชน์จากแรงเสียดทาน</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- การเพิ่มแรงเสียดทาน -->
+                <div class="border-2 border-dashed border-orange-200 rounded-xl p-5 bg-orange-50/30">
+                    <span class="bg-orange-500 text-white text-xxs font-bold px-2 py-0.5 rounded">➕ การเพิ่มแรงเสียดทาน</span>
+                    <h3 class="font-semibold text-slate-800 mt-2 mb-1">เพื่อความปลอดภัยและการยึดเกาะ</h3>
+                    <ul class="text-xs text-slate-600 space-y-2 list-disc list-inside">
+                        <li><strong>ดอกยางรถยนต์:</strong> ช่วยรีดน้ำและเกาะถนนได้ดีขึ้นป้องกันการลื่นไถล</li>
+                        <li><strong>พื้นรองเท้ากีฬา:</strong> ออกแบบลวดลายปุ่มพลาสติกหรือยางเพื่อช่วยเพิ่มการยึดเกาะขณะวิ่ง</li>
+                        <li><strong>การปูยางมะตอย/ทำพื้นถนนให้ขรุขระ:</strong> ช่วยเพิ่มแรงเสียดทานให้ล้อรถ</li>
+                    </ul>
+                </div>
+                <!-- การลดแรงเสียดทาน -->
+                <div class="border-2 border-dashed border-blue-200 rounded-xl p-5 bg-blue-50/30">
+                    <span class="bg-blue-500 text-white text-xxs font-bold px-2 py-0.5 rounded">➖ การลดแรงเสียดทาน</span>
+                    <h3 class="font-semibold text-slate-800 mt-2 mb-1">เพื่อความลื่นไหลและถนอมวัสดุ</h3>
+                    <ul class="text-xs text-slate-600 space-y-2 list-disc list-inside">
+                        <li><strong>น้ำมันหล่อลื่น / จาระบี:</strong> ทาบริเวณโซ่หรือตลับลูกปืนในเครื่องจักรเพื่อลดความร้อนและการสึกหรอ</li>
+                        <li><strong>ระบบตลับลูกปืน (Bearing):</strong> เปลี่ยนความเสียดทานแบบไถลให้เป็นแบบกลิ้ง</li>
+                        <li><strong>การออกแบบรูปทรงเพรียวลม:</strong> ในรถแข่งเพื่อลดแรงต้านของอากาศ</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Interactive Quiz -->
+        <section class="bg-slate-primary text-white rounded-2xl p-6 md:p-8 shadow-xl relative">
+            <div class="flex items-center space-x-3 mb-6 border-b border-slate-700 pb-4">
+                <div class="w-3 h-8 bg-amber-secondary rounded-full"></div>
+                <h2 class="text-2xl font-bold text-white">🏆 ควิซประเมินผลความรู้เรื่องแรงเสียดทาน</h2>
+            </div>
+
+            <!-- Character Intro Panel -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 text-xs bg-slate-800/60 p-4 rounded-xl border border-slate-700">
+                <div class="flex items-start space-x-3">
+                    <div class="bg-amber-secondary p-2 rounded-lg text-lg">🦝</div>
+                    <div>
+                        <h4 class="font-bold text-amber-400">พี่แรคคูน "ไซน์-ร็อค" (Sci-Roc)</h4>
+                        <p class="text-slate-300 mt-0.5">จอมซนคนชอบทดลอง คอยแอบบอกใบ้ความรู้เด็ดๆ ให้ในแต่ละข้อ!</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="bg-blue-500 p-2 rounded-lg text-lg">👵</div>
+                    <div>
+                        <h4 class="font-bold text-blue-400">ดร. ฟิสิก้า (Dr. Physica)</h4>
+                        <p class="text-slate-300 mt-0.5">คุณยายนักฟิสิกส์ใจดี คอยสรุปหลักการที่ถูกต้องแบบเข้าใจง่ายหลังจากตอบเสร็จ</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Play Box -->
+            <div id="quiz-container" class="space-y-6">
+                <!-- Progress Header -->
+                <div class="flex justify-between items-center text-xs text-slate-400">
+                    <span id="quiz-level-indicator" class="bg-slate-800 px-3 py-1 rounded-full border border-slate-700 text-amber-400">ระดับความคิด: -</span>
+                    <span id="quiz-progress-text">ข้อที่ 1 จาก 5</span>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+                    <div id="quiz-progress-bar" class="bg-amber-secondary h-full transition-all duration-300" style="width: 20%"></div>
+                </div>
+
+                <!-- Question -->
+                <h3 id="quiz-question" class="text-lg md:text-xl font-medium leading-relaxed text-slate-100">
+                    กำลังโหลดคำถาม...
+                </h3>
+
+                <!-- Options -->
+                <div id="quiz-options" class="grid grid-cols-1 gap-3">
+                    <!-- Dynamic Generation -->
+                </div>
+
+                <!-- Feedback Area (Hint / Note) -->
+                <div id="quiz-feedback" class="hidden space-y-3 pt-2">
+                    <!-- Hint Widget -->
+                    <div id="hint-box" class="bg-amber-950/40 border border-amber-900/60 text-amber-200 text-xs p-4 rounded-xl flex items-start space-x-3">
+                        <span class="text-lg">🦝</span>
+                        <p id="quiz-hint-text"></p>
+                    </div>
+                    <!-- Note Widget -->
+                    <div id="note-box" class="hidden bg-slate-800/80 border border-slate-700 text-slate-200 text-xs p-4 rounded-xl flex items-start space-x-3">
+                        <span class="text-lg">👵</span>
+                        <p id="quiz-note-text"></p>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <div class="flex justify-end pt-4">
+                    <button id="quiz-action-btn" onclick="handleQuizAction()" class="bg-amber-secondary text-white font-medium text-sm px-6 py-2.5 rounded-lg hover:bg-orange-600 transition shadow-md cursor-pointer">
+                        ตรวจสอบคำตอบ
+                    </button>
+                </div>
+            </div>
+
+            <!-- Score / Summary Box (Hidden by default) -->
+            <div id="quiz-summary" class="hidden text-center py-8 space-y-4">
+                <span class="text-5xl">🎉</span>
+                <h3 class="text-2xl font-bold text-white">สิ้นสุดการทดสอบความรู้!</h3>
+                <p class="text-slate-300 text-sm max-w-md mx-auto">คุณทำคะแนนไปได้ทั้งหมด</p>
+                <div class="inline-block bg-slate-800 border-2 border-amber-secondary rounded-2xl px-8 py-4">
+                    <span id="final-score" class="text-4xl font-bold text-amber-400">0</span>
+                    <span class="text-slate-400 text-lg"> / 5 คะแนน</span>
+                </div>
+                <div>
+                    <button onclick="restartQuiz()" class="mt-4 border border-slate-500 text-slate-300 text-xs px-4 py-2 rounded-lg hover:bg-slate-800 transition cursor-pointer">
+                        ทำใหม่อีกครั้ง
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-500 text-center py-6 text-xs border-t border-slate-800 mt-12">
+        &copy; OwlvyHouseInfoQuiz - สื่อการเรียนรู้ปฏิสัมพันธ์วิชาฟิสิกส์ มัธยมศึกษาตอนต้น
+    </footer>
+
+    <!-- JavaScript Data and Logic -->
+    <script>
+        // 1. Data Setup
+        const quizData = [
+          {
+            "id": 1,
+            "level": "Understanding (ความเข้าใจ)",
+            "question": "ถ้าเราผลักตู้เสื้อผ้าขนาดใหญ่แล้วตู้นั้นยังคงอยู่นิ่งไม่ยอมขยับ แรงเสียดทานที่เกิดขึ้นในขณะนั้นคือแรงเสียดทานประเภทใด และมีทิศทางไหน?",
+            "options": [
+              "แรงเสียดทานจลน์ มีทิศทางเดียวกับแรงผลัก",
+              "แรงเสียดทานสถิต มีทิศทางเดียวกับแรงผลัก",
+              "แรงเสียดทานจลน์ มีทิศทางตรงข้ามกับแรงผลัก",
+              "แรงเสียดทานสถิต มีทิศทางตรงข้ามกับแรงผลัก"
+            ],
+            "answer": 3,
+            "hint": "พี่ไซน์-ร็อค ใบ้ให้: วัตถุ 'ยังอยู่นิ่ง' นะครับ! และแรงเสียดทานขึ้นชื่อว่า 'เสียดทาน' มันต้องคอยขัดขวางเราสิ!",
+            "note": "ดร. ฟิสิก้า อธิบาย: แรงเสียดทานสถิต (Static Friction) จะเกิดขึ้นเมื่อมีแรงมากระทำแต่เคลื่อนที่ยังไม่สำเร็จ และจะมีทิศทางตรงกันข้ามกับทิศทางของแรงที่พยายามจะทำให้วัตถุเคลื่อนที่เสมอค่ะ"
+          },
+          {
+            "id": 2,
+            "level": "Analysis (การวิเคราะห์)",
+            "question": "นักเรียนคนหนึ่งทดลองลากกล่องไม้ไปบนพื้นผิว 3 ชนิดด้วยแรงที่เท่ากัน พบว่ากล่องเคลื่อนที่บนพื้นหญ้าได้ยากที่สุด รองลงมาคือพื้นปูน และเคลื่อนที่ได้ง่ายที่สุดบนพื้นกระเบื้อง ข้อใดสรุปเกี่ยวกับ 'สัมประสิทธิ์ของแรงเสียดทาน' ได้ถูกต้อง?",
+            "options": [
+              "พื้นหญ้า > พื้นปูน > พื้นกระเบื้อง",
+              "พื้นกระเบื้อง > พื้นปูน > พื้นหญ้า",
+              "พื้นปูน > พื้นหญ้า > พื้นกระเบื้อง",
+              "ทุกพื้นผิวมีค่าสัมประสิทธิ์แรงเสียดทานเท่ากันเพราะใช้กล่องใบเดิม"
+            ],
+            "answer": 0,
+            "hint": "พี่ไซน์-ร็อค ใบ้ให้: ยิ่งเคลื่อนที่ 'ยาก' แปลว่าแรงต้านยิ่งเยอะ แรงต้านเยอะแปลว่าผิวหยาบฝืดมากๆ เลยนะ!",
+            "note": "ดร. ฟิสิก้า อธิบาย: สัมประสิทธิ์ของแรงเสียดทาน (Coefficient of Friction) เป็นค่าที่แสดงถึงความฝืดของผิวสัมผัส ยิ่งผิวฝืดมาก (เคลื่อนที่ยาก) ค่านี้ก็จะยิ่งสูงค่ะ"
+          },
+          {
+            "id": 3,
+            "level": "Application (การประยุกต์ใช้)",
+            "question": "ในวันที่มีฝนตกหนักและถนนลื่น การกระทำในข้อใดเป็นการ 'เพิ่มแรงเสียดทาน' เพื่อความปลอดภัยในการขับขี่รถยนต์ที่เหมาะสมที่สุด?",
+            "options": [
+              "การเปลี่ยนไปใช้ยางรถยนต์ที่มีดอกยางลึกและรีดน้ำได้ดี",
+              "การเติมลมยางให้แข็งมากกว่าปกติเพื่อให้หน้ายางสัมผัสพื้นน้อยลง",
+              "การเหยียบเบรกอย่างกระทันหันด้วยความเร็วสูง",
+              "การทาน้ำมันหล่อลื่นที่บริเวณผ้าเบรก"
+            ],
+            "answer": 0,
+            "hint": "พี่ไซน์-ร็อค ใบ้ให้: เราต้องการให้ล้อเกาะถนนแน่นๆ ไม่ลื่นไถล ลองดูสิว่าโครงสร้างไหนของยางที่ช่วยตะกุยน้ำและพื้นดินได้ดี?",
+            "note": "ดร. ฟิสิก้า อธิบาย: ดอกยางลึกช่วยรีดน้ำและเพิ่มพื้นที่สัมผัสที่แห้งระหว่างยางกับถนน ทำให้เพิ่มแรงเสียดทานป้องกันการลื่นไถล ส่วนน้ำมันหล่อลื่นนั้นเป็นการลดแรงเสียดทาน ซึ่งห้ามใช้กับเบรกเด็ดขาดนะคะ!"
+          },
+          {
+            "id": 4,
+            "level": "Analysis (การวิเคราะห์เชิงเปรียบเทียบ)",
+            "question": "เมื่อเราออกแรงผลักวัตถุชิ้นหนึ่งให้เริ่มเคลื่อนที่ จากนั้นวัตถุก็ไถลไปบนพื้นด้วยความเร็วคงที่ ข้อใดต่อไปนี้อธิบายขนาดของแรงเสียดทานสถิตสูงสุด และแรงเสียดทานจลน์ได้ถูกต้อง?",
+            "options": [
+              "แรงเสียดทานสถิตสูงสุด มีค่าน้อยกว่า แรงเสียดทานจลน์ เสมอ",
+              "แรงเสียดทานสถิตสูงสุด มีค่าเท่ากับ แรงเสียดทานจลน์ เสมอ",
+              "แรงเสียดทานสถิตสูงสุด มีค่ามากกว่า แรงเสียดทานจลน์ เสมอ",
+              "ขึ้นอยู่กับความเร็วในการผลักวัตถุ"
+            ],
+            "answer": 2,
+            "hint": "พี่ไซน์-ร็อค ใบ้ให้: ลองนึกถึงตอนเข็นรถเข็นสิ ตอนที่ต้องออกแรงเฮือกแรกให้รถ 'เริ่มขยับ' กับตอนที่รถ 'ขยับไปแล้ว' ตอนไหนเหนื่อยกว่ากัน?",
+            "note": "ดร. ฟิสิก้า อธิบาย: ในทางฟิสิกส์ แรงเสียดทานสถิตสูงสุด (Maximum Static Friction) จะมีค่ามากกว่าแรงเสียดทานจลน์ (Kinetic Friction) เสมอค่ะ เพราะการทำลายแรงยึดเหนี่ยวระหวังผิวสัมผัสตอนอยู่นิ่งต้องใช้แรงมากกว่าตอนที่มันไถลไปแล้ว"
+          },
+          {
+            "id": 5,
+            "level": "Evaluation (การประเมินค่า)",
+            "question": "หากโลกนี้ 'ไม่มีแรงเสียดทาน' เกิดขึ้นเลยแม้แต่น้อย ข้อใดคือเหตุการณ์ที่จะเกิดขึ้นจริง?",
+            "options": [
+              "มนุษย์จะเดินได้เร็วขึ้นเพราะไม่มีแรงมาต้านขา",
+              "รถยนต์จะเบรกได้อย่างปลอดภัยและนุ่มนวลขึ้น",
+              "วัตถุทุกอย่างที่กำลังเคลื่อนที่จะไม่มีวันหยุดนิ่งจนกว่าจะมีแรงอื่นมากระทำ",
+              "ตะปูที่ตอกอยู่บนฝาผนังจะยึดแน่นหนากว่าเดิม"
+            ],
+            "answer": 2,
+            "hint": "พี่ไซน์-ร็อค ใบ้ให้: ถ้าไม่มีแรงเสียดทาน ทุกอย่างจะลื่นไหลไปหมด ไม่มีอะไรเกาะกันอยู่ได้เลยนะ ลองคิดดูดีๆ!",
+            "note": "ดร. ฟิสิก้า อธิบาย: แรงเสียดทานเป็นสิ่งสำคัญในการหยุดวัตถุและการยึดเกาะ หากไม่มีแรงเสียดทาน เราจะไม่สามารถเดินได้ (จะลื่นอยู่กับที่) รถจะเบรกไม่ได้ และวัตถุที่เคลื่อนที่อยู่ก็จะเคลื่อนที่ไปเรื่อยๆ ตามกฎความเฉื่อยค่ะ"
+          }
+        ];
+
+        let currentIdx = 0;
+        let score = 0;
+        let selectedOptionIdx = null;
+        let hasChecked = false;
+
+        // 2. Initialize Charts
+        window.onload = function() {
+            // Chart 1: Friction Type Chart
+            const ctx1 = document.getElementById('frictionTypeChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['แรงเริ่มผลัก (นิ่ง)', 'กำลังจะเคลื่อนที่ (สถิตสูงสุด)', 'ขณะเคลื่อนที่ (แรงเสียดทานจลน์)'],
+                    datasets: [{
+                        label: 'ขนาดของแรงเสียดทาน (นิวตัน)',
+                        data: [15, 45, 30],
+                        backgroundColor: ['#94A3B8', '#F97316', '#3B82F6'],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // Chart 2: Surface Friction Chart (Radar/Polar-like or Horizontal Bar for better space)
+            const ctx2 = document.getElementById('surfaceChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['กระจกมัน', 'คอนกรีต', 'พื้นหญ้า'],
+                    datasets: [{
+                        data: [0.1, 0.6, 0.85],
+                        backgroundColor: ['#38BDF8', '#64748B', '#22C55E'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        title: { display: true, text: 'สัมประสิทธิ์ความฝืด (μ)', font: { size: 10, family: 'Kanit' } }
+                    },
+                    scales: { x: { max: 1, beginAtZero: true } }
+                }
+            });
+
+            // Load first question
+            loadQuestion();
+        };
+
+        // 3. Quiz Management Logic
+        function loadQuestion() {
+            const currentQuestion = quizData[currentIdx];
+            selectedOptionIdx = null;
+            hasChecked = false;
+
+            // Elements update
+            document.getElementById('quiz-level-indicator').innerText = `ระดับความคิด: ${currentQuestion.level}`;
+            document.getElementById('quiz-progress-text').innerText = `ข้อที่ ${currentIdx + 1} จาก ${quizData.length}`;
+            document.getElementById('quiz-progress-bar').style.width = `${((currentIdx + 1) / quizData.length) * 100}%`;
+            document.getElementById('quiz-question').innerText = currentQuestion.question;
+            
+            // Build Options
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            currentQuestion.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-slate-700 bg-slate-800 text-xs md:text-sm hover:bg-slate-700 transition flex items-center justify-between cursor-pointer group text-slate-200";
+                btn.id = `opt-${index}`;
+                btn.onclick = () => selectOption(index);
+                
+                btn.innerHTML = `
+                    <span>${opt}</span>
+                    <span class="w-4 h-4 rounded-full border border-slate-500 inline-block group-hover:border-amber-400 shrink-0 ml-2" id="circle-${index}"></span>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+
+            // Feedback and Action Button Reset
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('hint-box').classList.remove('hidden');
+            document.getElementById('note-box').classList.add('hidden');
+            document.getElementById('quiz-hint-text').innerText = currentQuestion.hint;
+            
+            const actionBtn = document.getElementById('quiz-action-btn');
+            actionBtn.innerText = "ตรวจสอบคำตอบ";
+            actionBtn.className = "bg-amber-secondary text-white font-medium text-sm px-6 py-2.5 rounded-lg hover:bg-orange-600 transition shadow-md cursor-pointer";
+        }
+
+        function selectOption(index) {
+            if (hasChecked) return; // Disallow changes after checking
+            
+            // Clear previous selections
+            quizData[currentIdx].options.forEach((_, idx) => {
+                const btn = document.getElementById(`opt-${idx}`);
+                const circle = document.getElementById(`circle-${idx}`);
+                btn.className = "w-full text-left p-4 rounded-xl border border-slate-700 bg-slate-800 text-xs md:text-sm hover:bg-slate-700 transition flex items-center justify-between cursor-pointer group text-slate-200";
+                circle.className = "w-4 h-4 rounded-full border border-slate-500 inline-block shrink-0 ml-2";
+            });
+
+            // Apply selected styling
+            selectedOptionIdx = index;
+            const targetBtn = document.getElementById(`opt-${index}`);
+            const targetCircle = document.getElementById(`circle-${index}`);
+            targetBtn.className = "w-full text-left p-4 rounded-xl border-2 border-amber-secondary bg-slate-800 text-xs md:text-sm flex items-center justify-between cursor-pointer text-white font-medium shadow-md";
+            targetCircle.className = "w-4 h-4 rounded-full bg-amber-secondary inline-block shrink-0 ml-2";
+
+            // Reveal Hint automatically when an option is selected
+            document.getElementById('quiz-feedback').classList.remove('hidden');
+        }
+
+        function handleQuizAction() {
+            if (selectedOptionIdx === null) {
+                alert("โปรดเลือกคำตอบก่อนส่งนะครับ!");
+                return;
+            }
+
+            const currentQuestion = quizData[currentIdx];
+
+            if (!hasChecked) {
+                // Perform check answer
+                hasChecked = true;
+                
+                // Show Dr. Physica note
+                document.getElementById('note-box').classList.remove('hidden');
+                document.getElementById('quiz-note-text').innerText = currentQuestion.note;
+
+                // Color code right/wrong options
+                const correctIdx = currentQuestion.answer;
+                
+                if (selectedOptionIdx === correctIdx) {
+                    score++;
+                    const btn = document.getElementById(`opt-${selectedOptionIdx}`);
+                    btn.className = "w-full text-left p-4 rounded-xl border-2 border-green-500 bg-green-950/30 text-xs md:text-sm flex items-center justify-between text-white font-medium";
+                } else {
+                    const wrongBtn = document.getElementById(`opt-${selectedOptionIdx}`);
+                    wrongBtn.className = "w-full text-left p-4 rounded-xl border-2 border-red-500 bg-red-950/30 text-xs md:text-sm flex items-center justify-between text-white font-medium";
+                    
+                    const rightBtn = document.getElementById(`opt-${correctIdx}`);
+                    rightBtn.className = "w-full text-left p-4 rounded-xl border-2 border-green-500 bg-green-950/20 text-xs md:text-sm flex items-center justify-between text-slate-300";
+                }
+
+                // Change Action button state
+                const actionBtn = document.getElementById('quiz-action-btn');
+                if (currentIdx < quizData.length - 1) {
+                    actionBtn.innerText = "ข้อถัดไป ➔";
+                    actionBtn.className = "bg-blue-600 text-white font-medium text-sm px-6 py-2.5 rounded-lg hover:bg-blue-700 transition shadow-md cursor-pointer";
+                } else {
+                    actionBtn.innerText = "ดูคะแนนสรุป ➔";
+                    actionBtn.className = "bg-emerald-600 text-white font-medium text-sm px-6 py-2.5 rounded-lg hover:bg-emerald-700 transition shadow-md cursor-pointer";
+                }
+            } else {
+                // Move to next or show summary
+                if (currentIdx < quizData.length - 1) {
+                    currentIdx++;
+                    loadQuestion();
+                } else {
+                    showSummary();
+                }
+            }
+        }
+
+        function showSummary() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('quiz-summary').classList.remove('hidden');
+            document.getElementById('final-score').innerText = score;
+        }
+
+        function restartQuiz() {
+            currentIdx = 0;
+            score = 0;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('quiz-summary').classList.add('hidden');
+            loadQuestion();
+        }
+    </script>
+</body>
+</html>
