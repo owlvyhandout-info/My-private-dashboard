@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang='th'><head><meta charset='utf-8'>
+<title>คู่มือ Deploy My-public-dashboard</title>
+<style>
+body{font-family:Segoe UI,Tahoma,sans-serif;max-width:900px;margin:40px auto;line-height:1.7;padding:20px}
+code,pre{background:#f4f4f4;padding:2px 6px;border-radius:4px}pre{padding:12px}
+h1,h2{color:#0b5cad}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:8px}
+</style></head><body>
+<h1>คู่มือ Deploy My-public-dashboard (GitHub Pages)</h1>
+<p>เอกสารนี้สรุปขั้นตอนติดตั้งและตั้งค่า เพื่อใช้ทบทวนหรือติดตั้งใหม่ในอนาคต</p>
+
+<h2>1. สร้าง Repository</h2>
+<ul>
+<li>Repository: <b>My-public-dashboard</b></li>
+<li>Visibility: <b>Public</b></li>
+<li>Default Branch: <b>main</b></li>
+</ul>
+
+<h2>2. โครงสร้างไฟล์</h2>
+<pre>My-public-dashboard/
+│
+├── index.html
+├── data/
+│   ├── Biology/
+│   ├── Chemistry/
+│   ├── Hardware-Spec/
+│   └── Software-Spec/
+└── README.md</pre>
+
+<h2>3. Upload</h2>
+<ol>
+<li>เปลี่ยนชื่อไฟล์ Dashboard เป็น <code>index.html</code></li>
+<li>อัปโหลด <code>index.html</code> และโฟลเดอร์ <code>data/</code></li>
+<li>Commit changes</li>
+</ol>
+
+<h2>4. เปิด GitHub Pages</h2>
+<ul>
+<li>Settings → Pages</li>
+<li>Deploy from a branch</li>
+<li>Branch: <b>main</b></li>
+<li>Folder: <b>/ (root)</b></li>
+<li>Save</li>
+</ul>
+
+<h2>5. URL</h2>
+<pre>https://owlvyhouse-academy.github.io/My-public-dashboard/</pre>
+
+<h2>6. ตั้งค่าใน Dashboard (ครั้งแรก)</h2>
+<table>
+<tr><th>ช่อง</th><th>ค่า</th></tr>
+<tr><td>GitHub Username</td><td>owlvyhouse-academy</td></tr>
+<tr><td>Repository</td><td>My-public-dashboard</td></tr>
+<tr><td>GitHub Token</td><td>เว้นว่าง (Public Repository)</td></tr>
+</table>
+
+<h2>7. เพิ่มไฟล์ใหม่</h2>
+<ol>
+<li>เพิ่มไฟล์ HTML ลงใน <code>data/</code></li>
+<li>Commit ไปยัง GitHub</li>
+<li>กลับมาที่ Dashboard</li>
+<li>กด <b>Sync GitHub</b></li>
+</ol>
+
+<h2>8. ตรวจสอบเมื่อมีปัญหา</h2>
+<ul>
+<li>Repository เป็น Public</li>
+<li>Branch = main</li>
+<li>มีไฟล์ index.html ที่ Root</li>
+<li>ไฟล์ทั้งหมดอยู่ใน data/</li>
+<li>Username = owlvyhouse-academy</li>
+<li>Repository = My-public-dashboard</li>
+</ul>
+
+<h2>Checklist</h2>
+<ul>
+<li>☐ GitHub Pages เปิดใช้งานแล้ว</li>
+<li>☐ เปิด URL ได้</li>
+<li>☐ Dashboard Sync สำเร็จ</li>
+<li>☐ ไฟล์ใน data/ แสดงครบ</li>
+</ul>
+</body></html>
