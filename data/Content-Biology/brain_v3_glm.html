@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One-Stop-Learning: สมองและระบบประสาท</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --text-color: #1a1a1a;
+            --card-bg: #ffffff;
+            --primary-color: #0056b3;
+            --secondary-color: #e9ecef;
+            --warning-bg: #fff3cd;
+            --warning-text: #856404;
+            --warning-border: #ffeeba;
+            --correct-bg: #d4edda;
+            --correct-text: #155724;
+            --wrong-bg: #f8d7da;
+            --wrong-text: #721c24;
+            --nav-bg: #ffffff;
+            --svg-fill: #f8f9fa;
+            --svg-stroke: #333;
+            --svg-hover: #ffc107;
+            --table-border: #dee2e6;
+        }
+
+        .dark-mode {
+            --bg-color: #0a192f;
+            --text-color: #ccd6f6;
+            --card-bg: #112240;
+            --primary-color: #64ffda;
+            --secondary-color: #233554;
+            --warning-bg: #332702;
+            --warning-text: #ffc107;
+            --warning-border: #ffc107;
+            --correct-bg: #0d3320;
+            --correct-text: #64ffda;
+            --wrong-bg: #3d1216;
+            --wrong-text: #ff6b6b;
+            --nav-bg: #112240;
+            --svg-fill: #233554;
+            --svg-stroke: #ccd6f6;
+            --svg-hover: #64ffda;
+            --table-border: #495670;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background-color: var(--nav-bg);
+            border-bottom: 1px solid var(--secondary-color);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar h1 { font-size: 1.5rem; color: var(--primary-color); }
+
+        .theme-toggle {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+        }
+
+        .content-section {
+            display: none;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .content-section.active { display: block; }
+
+        h2, h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            margin-top: 25px;
+        }
+
+        h2:first-child { margin-top: 0; }
+        p, li { margin-bottom: 10px; }
+        ul, ol { padding-left: 25px; }
+
+        .misconception-box {
+            background-color: var(--warning-bg);
+            border-left: 5px solid var(--warning-border);
+            color: var(--warning-text);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .misconception-box strong { display: block; margin-bottom: 5px; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid var(--table-border);
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        /* Brain Simulation Styles */
+        .brain-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .brain-svg { width: 100%; max-width: 400px; height: auto; }
+
+        .brain-part {
+            fill: var(--svg-fill);
+            stroke: var(--svg-stroke);
+            stroke-width: 2;
+            cursor: pointer;
+            transition: fill 0.3s ease, transform 0.1s ease;
+            transform-origin: center;
+        }
+
+        .brain-part:hover { fill: var(--svg-hover); transform: scale(1.02); }
+        .brain-part.active { fill: var(--svg-hover); transform: scale(1.02); }
+
+        .brain-info {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--secondary-color);
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 150px;
+            border: 2px solid var(--primary-color);
+        }
+
+        /* Matching Game Styles */
+        .match-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .match-col {
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .match-item {
+            padding: 12px;
+            background-color: var(--secondary-color);
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .match-item:hover { background-color: var(--card-bg); }
+        .match-item.selected { border-color: var(--primary-color); background-color: var(--card-bg); transform: scale(1.05); }
+        .match-item.correct-match { border-color: var(--correct-text); background-color: var(--correct-bg); pointer-events: none; color: var(--correct-text); }
+        .match-item.wrong-match { border-color: var(--wrong-text); background-color: var(--wrong-bg); color: var(--wrong-text); animation: shake 0.5s; }
+
+        .match-feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            min-height: 30px;
+            text-align: center;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Reflex Animation Styles */
+        .reflex-path {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .reflex-node {
+            background-color: var(--secondary-color);
+            padding: 15px;
+            border-radius: 10px;
+            width: 90px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+            z-index: 2;
+            border: 1px solid var(--table-border);
+        }
+
+        .reflex-line {
+            flex: 1;
+            height: 4px;
+            background-color: var(--secondary-color);
+            position: relative;
+            min-width: 30px;
+        }
+
+        .reflex-pulse {
+            width: 12px;
+            height: 12px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            position: absolute;
+            top: -4px;
+            left: 0;
+            animation: pulseMove 2s infinite linear;
+        }
+
+        @keyframes pulseMove {
+            0% { left: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { left: 100%; opacity: 0; }
+        }
+
+        /* Quiz Styles */
+        .question-card {
+            background-color: var(--secondary-color);
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .question-text { font-weight: bold; margin-bottom: 15px; }
+
+        .options { display: flex; flex-direction: column; gap: 10px; }
+
+        .option-btn {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            padding: 10px 15px;
+            border: 1px solid var(--secondary-color);
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .option-btn:hover:not(:disabled) { background-color: var(--primary-color); color: var(--bg-color); }
+        .option-btn.selected-option { background-color: var(--primary-color); color: var(--bg-color); border-color: var(--primary-color); }
+        .option-btn.correct { background-color: var(--correct-bg) !important; color: var(--correct-text) !important; border-color: var(--correct-text) !important; }
+        .option-btn.wrong { background-color: var(--wrong-bg) !important; color: var(--wrong-text) !important; border-color: var(--wrong-text) !important; }
+
+        .quiz-btn {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h1>One-Stop-Learning: สมองและระบบประสาท</h1>
+        <button class="theme-toggle" onclick="toggleTheme()">สลับโทนสี Navy/Light</button>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('content', this)">เนื้อหา</button>
+            <button class="tab-btn" onclick="switchTab('simulation', this)">Simulation/Animation</button>
+            <button class="tab-btn" onclick="switchTab('quiz', this)">Quiz 30 ข้อ</button>
+        </div>
+
+        <!-- เนื้อหา -->
+        <div id="content" class="content-section active">
+            <h2>บทที่ 0: วิวัฒนาการของระบบประสาท (ภาพรวมโดยย่อ)</h2>
+            <p>ความซับซ้อนของระบบประสาทเพิ่มขึ้นตามความซับซ้อนของสิ่งมีชีวิต ก่อนเข้าสู่รายละเอียดของมนุษย์:</p>
+            <ul>
+                <li><strong>ฟองน้ำ:</strong> ยังไม่มีระบบประสาทที่แท้จริง</li>
+                <li><strong>ไฮดรา:</strong> ระบบประสาทแบบร่างแห (Nerve net) กระจายทั่วตัว ยังไม่มีสมอง</li>
+                <li><strong>พลานาเรีย:</strong> เริ่มมีปมประสาท (Ganglion) และเส้นประสาทตามยาวคล้ายบันได</li>
+                <li><strong>ไส้เดือน/แมลง:</strong> ปมประสาทด้านหน้ารวมตัวคล้ายสมองอย่างง่าย</li>
+                <li><strong>ปลา กบ สัตว์เลี้ยงลูกด้วยนม:</strong> สัตว์มีกระดูกสันหลัง เริ่มมีสมองแบ่งเป็นส่วน ๆ ชัดเจนขึ้นตามลำดับ</li>
+                <li><strong>มนุษย์:</strong> สมองซับซ้อนที่สุด โดยเฉพาะซีรีบรัมที่ขยายใหญ่ ทำให้มีความคิด การใช้เหตุผล และภาษา</li>
+            </ul>
+
+            <h2>บทที่ 1: ทำไมสิ่งมีชีวิตต้องมีระบบประสาท</h2>
+            <p>หลักการพื้นฐานที่สุดของระบบประสาทคือ การรับและตอบสนองต่อสิ่งเร้า</p>
+            <ul>
+                <li><strong>สิ่งเร้า (Stimulus):</strong> คือสิ่งที่มากระตุ้นร่างกาย</li>
+                <li><strong>การตอบสนอง (Response):</strong> คือปฏิกิริยาที่ร่างกายแสดงออกมา</li>
+                <li><strong>ทำไมต้องตอบสนองรวดเร็ว:</strong> เพื่อป้องกันอันตรายและรักษาชีวิต (เช่น ของร้อน, เสียงดัง, แสงจ้า, ลูกบอลพุ่งเข้าตัว)</li>
+            </ul>
+
+            <h2>บทที่ 2: การรับข้อมูลจากสิ่งแวดล้อม</h2>
+            <p>จัดไว้ก่อนเรื่องเซลล์ประสาท เพื่อให้เข้าใจก่อนว่า “ข้อมูล/กระแสประสาทเริ่มต้นมาจากไหน”</p>
+            <ul>
+                <li><strong>อวัยวะรับความรู้สึก (Sense organs):</strong> ตา (รับแสง), หู (รับเสียงและการทรงตัว), จมูก (รับกลิ่น), ลิ้น (รับรส), ผิวหนัง (รับสัมผัส แรงกด ความร้อน-เย็น และความเจ็บปวด)</li>
+                <li><strong>ตัวรับความรู้สึก (Receptor):</strong> ทำหน้าที่หลักคือ: <strong>รับสิ่งเร้า → เปลี่ยนเป็นกระแสประสาท</strong></li>
+            </ul>
+
+            <h2>บทที่ 3: เซลล์ประสาท (Neuron) — หน่วยพื้นฐานของระบบประสาท</h2>
+            <h3>3.1 โครงสร้างเซลล์ประสาท</h3>
+            <ul>
+                <li><strong>เดนไดรต์ (Dendrite):</strong> รับกระแสประสาทเข้าสู่ตัวเซลล์</li>
+                <li><strong>ตัวเซลล์ (Cell body):</strong> มีนิวเคลียสอยู่เสมอตลอดชีวิต</li>
+                <li><strong>แอกซอน (Axon):</strong> นำกระแสประสาทออกจากตัวเซลล์ไปยังเซลล์ถัดไปหรือหน่วยปฏิบัติงาน</li>
+            </ul>
+            
+            <div class="misconception-box">
+                <strong>⚠️ ประเด็นที่มักเข้าใจผิด</strong>
+                เซลล์ประสาทเมื่อโตเต็มวัยแล้วจะไม่มีนิวเคลียส และมักวาดภาพมีผนังเซลล์<br>
+                ✔️ <strong>ความจริง:</strong> เซลล์ประสาทมีนิวเคลียสในตัวเซลล์ตลอดชีวิต และเป็นเซลล์สัตว์ จึงไม่มีทั้งผนังเซลล์และคลอโรพลาสต์
+            </div>
+
+            <h3>3.2 ทิศทางการเดินทางของกระแสประสาทในเซลล์เดียว</h3>
+            <p>เดนไดรต์ → ตัวเซลล์ → แอกซอน → (ไซแนปส์ไปเซลล์ถัดไป)</p>
+
+            <h3>3.3 ชนิดของเซลล์ประสาทตามหน้าที่ (3 ชนิด)</h3>
+            <table>
+                <tr><th>ชนิดเซลล์ประสาท</th><th>หน้าที่</th><th>ตำแหน่งการเชื่อมต่อ</th></tr>
+                <tr><td>เซลล์ประสาทรับความรู้สึก (Sensory)</td><td>รับกระแสประสาทจากอวัยวะรับความรู้สึก ส่งเข้าสู่ไขสันหลัง/สมอง</td><td>เชื่อมต่อกับอวัยวะรับความรู้สึกโดยตรง</td></tr>
+                <tr><td>เซลล์ประสาทประสานงาน (Interneuron)</td><td>เชื่อมโยงและประมวลผลสัญญาณ</td><td>อยู่ตรงกลางวงจร ไม่เชื่อมกับอวัยวะรับหรือหน่วยปฏิบัติงานโดยตรง</td></tr>
+                <tr><td>เซลล์ประสาทสั่งการ (Motor)</td><td>นำกระแสประสาทจากศูนย์ประสาทไปยังหน่วยปฏิบัติงาน</td><td>เชื่อมต่อกับหน่วยปฏิบัติงานโดยตรง</td></tr>
+            </table>
+
+            <div class="misconception-box">
+                <strong>⚠️ ประเด็นที่มักเข้าใจผิด</strong>
+                เซลล์ประสาทประสานงาน (Interneuron) พบได้เฉพาะในสมองเท่านั้น<br>
+                ✔️ <strong>ความจริง:</strong> พบได้ทั้งในสมองและไขสันหลัง โดยเฉพาะในวงจรรีเฟล็กซ์
+            </div>
+
+            <h2>บทที่ 4: การเดินทางของกระแสประสาททั้งระบบ</h2>
+            <p><strong>Stimulus → Receptor → Sensory neuron → CNS → Motor neuron → Effector → Response</strong></p>
+
+            <h2>บทที่ 5: การจัดระบบประสาทของร่างกาย</h2>
+            <table>
+                <tr><th>ประเภท</th><th>ควบคุมอวัยวะ</th><th>ลักษณะการทำงาน</th><th>ตัวอย่าง</th></tr>
+                <tr><td>ระบบประสาทโซมาติก</td><td>กล้ามเนื้อลาย</td><td>อยู่ใต้อำนายจิตใจ (รีเฟล็กซ์บางชนิดก็อยู่ในกลุ่มนี้)</td><td>ชักมือหนีของร้อน, ขากระตุก</td></tr>
+                <tr><td>ระบบประสาทอัตโนวัติ</td><td>กล้ามเนื้อเรียบ กล้ามเนื้อหัวใจ ต่อม</td><td>ทำงานนอกอำนายจิตใจ ควบคุมโดยไม่รู้ตัว</td><td>ขนลุก, รูม่านตาเปลี่ยนขนาด, หลั่งน้ำลาย</td></tr>
+            </table>
+
+            <div class="misconception-box">
+                <strong>⚠️ ประเด็นที่มักเข้าใจผิด</strong>
+                การตอบสนอง “อัตโนมัติ” ล้วนถูกจัดเป็นระบบประสาทอัตโนวัติ<br>
+                ✔️ <strong>ความจริง:</strong> ตัวชี้วัดคือ “ชนิดของกล้ามเนื้อ” ถ้าเป็นกล้ามเนื้อลาย (ชักมือหนี) แม้อัตโนมัติก็ยังจัดเป็นโซมาติก
+            </div>
+
+            <h2>บทที่ 6: สมอง — โครงสร้าง กลีบสมอง และหน้าที่โดยละเอียด</h2>
+            <table>
+                <tr><th>กลีบสมอง</th><th>ตำแหน่ง</th><th>หน้าที่หลัก</th></tr>
+                <tr><td>กลีบหน้า (Frontal)</td><td>ด้านหน้าสุด หลังหน้าผาก</td><td>คิด วางแผน ตัดสินใจ ควบคุมการเคลื่อนไหวตั้งใจ บุคลิกภาพ อารมณ์</td></tr>
+                <tr><td>กลีบข้าง (Parietal)</td><td>กลางศีรษะค่อนไปด้านบน</td><td>รับและแปลผลความรู้สึก (สัมผัส แรงกด ร้อน-เย็น เจ็บปวด)</td></tr>
+                <tr><td>กลีบขมับ (Temporal)</td><td>ด้านข้าง เหนือใบหู</td><td>การได้ยิน แปลผลเสียง ความเข้าใจภาษา ความจำ</td></tr>
+                <tr><td>กลีบท้ายทอย (Occipital)</td><td>ด้านหลังสุด บริเวณท้ายทอย</td><td>การมองเห็นและแปลผลภาพ</td></tr>
+            </table>
+
+            <div class="misconception-box">
+                <strong>⚠️ ประเด็นที่มักเข้าใจผิด</strong>
+                1. ทาลามัสและไฮโปทาลามัสทำหน้าที่เหมือนกัน<br>
+                ✔️ <strong>ความจริง:</strong> ทาลามัสเป็นสถานีถ่ายทอดสัญญาณ ส่วนไฮโปทาลามัสควบคุมความต้องการพื้นฐานและฮอร์โมน<br><br>
+                2. ซีรีเบลลัม (สมองน้อย) ทำหน้าที่คิดวิเคราะห์<br>
+                ✔️ <strong>ความจริง:</strong> ซีรีเบลลัมควบคุมการทรงตัวและประสานงานการเคลื่อนไหว ส่วนคิดวิเคราะห์เป็นหน้าที่ของซีรีบรัม<br><br>
+                3. แต่ละกลีบสมองทำงานแยกขาดจากกันโดยสิ้นเชิง<br>
+                ✔️ <strong>ความจริง:</strong> สมองทำงานประสานกันเป็นเครือข่ายเสมอ
+            </div>
+
+            <h2>บทที่ 7: ไขสันหลังและปฏิกิริยารีเฟล็กซ์ (Reflex Arc)</h2>
+            <p>สิ่งเร้า → อวัยวะรับความรู้สึก → เซลล์รับความรู้สึก → <strong>ไขสันหลัง</strong> → เซลล์สั่งการ → กล้ามเนื้อ → การตอบสนอง</p>
+            
+            <div class="misconception-box">
+                <strong>⚠️ ประเด็นที่มักเข้าใจผิด</strong>
+                ขณะเกิดรีเฟล็กซ์ สมองไม่รับรู้อะไรเลย<br>
+                ✔️ <strong>ความจริง:</strong> ไขสันหลังสั่งการทันทีเพื่อให้กล้ามเนื้อหนี แต่สัญญาณความเจ็บปวดยังถูกส่งขึ้นสมองพร้อมกัน เพียงแต่สมองรับรู้ช้ากว่าการตอบสนองของกล้ามเนื้อ
+            </div>
+        </div>
+
+        <!-- Simulation / Animation (แก้ไขแล้ว) -->
+        <div id="simulation" class="content-section">
+            <h2>Simulation: กลีบสมองและหน้าที่ (Interactive Brain - Lateral View)</h2>
+            <p>ลองเลื่อนเมาส์หรือคลิกที่กลีบสมองต่างๆ ในภาพด้านข้าง (Lateral View) เพื่อดูหน้าที่ของกลีบนั้นๆ</p>
+            
+            <div class="brain-container">
+                <!-- ปรับโครงสร้าง SVG ให้เป็นแบบ Lateral View (มองจากด้านข้าง) ตามหลักวิชาการ -->
+                <svg class="brain-svg" viewBox="0 0 300 250">
+                    <!-- ขอบเขตสมองโดยรวม -->
+                    <defs>
+                        <clipPath id="brainClip">
+                            <path d="M 30,190 C 20,100 70,20 150,20 C 230,20 280,70 270,130 C 290,180 260,240 190,240 C 150,240 100,220 30,190 Z"/>
+                        </clipPath>
+                    </defs>
+                    
+                    <!-- พื้นหลังสมอง -->
+                    <path d="M 30,190 C 20,100 70,20 150,20 C 230,20 280,70 270,130 C 290,180 260,240 190,240 C 150,240 100,220 30,190 Z" fill="var(--svg-fill)" stroke="var(--svg-stroke)" stroke-width="3"/>
+
+                    <!-- แบ่งกลีบสมองตามร่อง (Sulci) ที่ถูกต้อง -->
+                    <g clip-path="url(#brainClip)">
+                        <!-- กลีบหน้า (Frontal Lobe) -->
+                        <path id="lobe-frontal" class="brain-part" d="M 30,190 C 20,100 70,20 150,20 L 150,120 L 140,160 Z" onclick="showBrainInfo('frontal')"/>
+                        
+                        <!-- กลีบข้าง (Parietal Lobe) -->
+                        <path id="lobe-parietal" class="brain-part" d="M 150,20 C 230,20 280,70 270,130 L 190,160 L 150,120 Z" onclick="showBrainInfo('parietal')"/>
+                        
+                        <!-- กลีบขมับ (Temporal Lobe) -->
+                        <path id="lobe-temporal" class="brain-part" d="M 30,190 L 140,160 L 150,160 L 150,200 C 110,210 60,210 30,190 Z" onclick="showBrainInfo('temporal')"/>
+                        
+                        <!-- กลีบท้ายทอย (Occipital Lobe) -->
+                        <path id="lobe-occipital" class="brain-part" d="M 270,130 C 290,180 260,240 190,240 L 150,200 L 150,160 L 190,160 Z" onclick="showBrainInfo('occipital')"/>
+                    </g>
+
+                    <!-- เส้นร่องสมอง (Sulci) เพื่อความชัดเจน -->
+                    <path d="M 150,20 L 150,120 L 140,160" fill="none" stroke="var(--svg-stroke)" stroke-width="2" stroke-dasharray="5,5"/> <!-- Central Sulcus -->
+                    <path d="M 30,190 L 140,160 L 150,160 L 190,160" fill="none" stroke="var(--svg-stroke)" stroke-width="2" stroke-dasharray="5,5"/> <!-- Lateral Fissure -->
+
+                    <!-- ป้ายชื่อกลีบสมอง -->
+                    <text x="80" y="110" fill="var(--text-color)" font-size="14" font-weight="bold" pointer-events="none">Frontal</text>
+                    <text x="190" y="90" fill="var(--text-color)" font-size="14" font-weight="bold" pointer-events="none">Parietal</text>
+                    <text x="60" y="195" fill="var(--text-color)" font-size="14" font-weight="bold" pointer-events="none">Temporal</text>
+                    <text x="200" y="200" fill="var(--text-color)" font-size="14" font-weight="bold" pointer-events="none">Occipital</text>
+                </svg>
+
+                <div class="brain-info" id="brain-info-box">
+                    <h3 id="brain-title">โปรดเลือกกลีบสมอง</h3>
+                    <p id="brain-desc">คลิกหรือเลื่อนเมาส์ไปที่กลีบสมองในภาพเพื่อดูรายละเอียดหน้าที่ของกลีบนั้นๆ</p>
+                </div>
+            </div>
+
+            <hr style="margin: 40px 0; border-color: var(--secondary-color);">
+
+            <h2>เกมจับคู่: กลีบสมองกับกิจกรรม</h2>
+            <p>เลือก 1 กลีบสมอง และ 1 กิจกรรมที่สัมพันธ์กัน ระบบจะแจ้งผลลัพธ์ให้ว่าถูกต้องหรือไม่</p>
+            <div class="match-container">
+                <div class="match-col" id="match-col-lobe">
+                    <div class="match-item" data-match="1" onclick="selectMatch(this, 'lobe')">กลีบหน้า (Frontal)</div>
+                    <div class="match-item" data-match="2" onclick="selectMatch(this, 'lobe')">กลีบข้าง (Parietal)</div>
+                    <div class="match-item" data-match="3" onclick="selectMatch(this, 'lobe')">กลีบขมับ (Temporal)</div>
+                    <div class="match-item" data-match="4" onclick="selectMatch(this, 'lobe')">กลีบท้ายทอย (Occipital)</div>
+                </div>
+                <div class="match-col" id="match-col-activity">
+                    <div class="match-item" data-match="3" onclick="selectMatch(this, 'activity')">ฟังเพลงและเข้าใจเนื้อร้อง</div>
+                    <div class="match-item" data-match="4" onclick="selectMatch(this, 'activity')">ดูภาพยนตร์และรับรู้ภาพ</div>
+                    <div class="match-item" data-match="1" onclick="selectMatch(this, 'activity')">วางแผนการบ้านและตัดสินใจ</div>
+                    <div class="match-item" data-match="2" onclick="selectMatch(this, 'activity')">รู้สึกเจ็บเมื่อโดนหนาม</div>
+                </div>
+            </div>
+            <!-- เพิ่มกล่องแสดงผลลัพธ์การจับคู่ -->
+            <div class="match-feedback" id="match-feedback"></div>
+
+            <hr style="margin: 40px 0; border-color: var(--secondary-color);">
+
+            <h2>Animation: วงจรรีเฟล็กซ์ (Reflex Arc)</h2>
+            <p>สังเกตการวิ่งของกระแสประสาทแบบทิศทางเดียวในวงจรรีเฟล็กซ์</p>
+            <div class="reflex-path">
+                <div class="reflex-node">สิ่งเร้า<br>(หนาม)</div>
+                <div class="reflex-line"><div class="reflex-pulse"></div></div>
+                <div class="reflex-node">ตัวรับ<br>(ผิวหนัง)</div>
+                <div class="reflex-line"><div class="reflex-pulse" style="animation-delay: 0.5s;"></div></div>
+                <div class="reflex-node">เซลล์รับ<br>ความรู้สึก</div>
+                <div class="reflex-line"><div class="reflex-pulse" style="animation-delay: 1s;"></div></div>
+                <div class="reflex-node">ไขสันหลัง<br>(ประสานงาน)</div>
+                <div class="reflex-line"><div class="reflex-pulse" style="animation-delay: 1.5s;"></div></div>
+                <div class="reflex-node">เซลล์<br>สั่งการ</div>
+                <div class="reflex-line"><div class="reflex-pulse" style="animation-delay: 2s;"></div></div>
+                <div class="reflex-node">กล้ามเนื้อ<br>(ชักหนี)</div>
+            </div>
+        </div>
+
+        <!-- Quiz -->
+        <div id="quiz" class="content-section">
+            <h2>แบบทดสอบ 30 ข้อ</h2>
+            <div id="quiz-container"></div>
+            <button class="quiz-btn" id="submit-quiz-btn" onclick="submitQuiz()">ส่งคำตอบและตรวจสอบ</button>
+            
+            <div class="result-box" id="result-box"></div>
+            
+            <button class="quiz-btn" id="retry-wrong-btn" onclick="retryWrongQuiz()" style="display:none;">ทบทวนเฉพาะข้อที่ทำผิด (Retry Wrong Answers)</button>
+            <button class="quiz-btn" id="reset-quiz-btn" onclick="resetQuiz()" style="display:none;">เริ่มทำแบบทดสอบใหม่ทั้งหมด</button>
+        </div>
+    </div>
+
+    <script>
+        var allQuestions = [
+            { q: "1. สิ่งมีชีวิตใดที่ยังไม่มีระบบประสาทที่แท้จริง?", opts: ["ไฮดรา", "ฟองน้ำ", "พลานาเรีย", "ไส้เดือน"], ans: 1 },
+            { q: "2. ระบบประสาทแบบร่างแห (Nerve net) พบได้ในสิ่งมีชีวิตใด?", opts: ["แมลง", "ไฮดรา", "ปลา", "พลานาเรีย"], ans: 1 },
+            { q: "3. ข้อใดคือหน้าที่หลักของตัวรับความรู้สึก (Receptor)?", opts: ["ผลิตฮอร์โมน", "รับสิ่งเร้าและเปลี่ยนเป็นกระแสประสาท", "สั่งการให้กล้ามเนื้อทำงาน", "ประสานงานระหว่างสมองกับไขสันหลัง"], ans: 1 },
+            { q: "4. โครงสร้างใดของเซลล์ประสาททำหน้าที่รับกระแสประสาทเข้าสู่เซลล์?", opts: ["แอกซอน", "ตัวเซลล์", "เดนไดรต์", "นิวเคลียส"], ans: 2 },
+            { q: "5. เซลล์ประสาทเมื่อโตเต็มวัยจะไม่มีอะไร (ข้อใดถูกต้องที่สุด)?", opts: ["นิวเคลียส", "เดนไดรต์", "ไซโทพลาสซึม", "ไม่มีข้อถูกต้อง เซลล์ประสาทมีนิวเคลียสตลอดชีวิต"], ans: 3 },
+            { q: "6. เซลล์ประสาทเป็นเซลล์สัตว์ จึงไม่ควรมีโครงสร้างใด?", opts: ["เยื่อหุ้มเซลล์", "ไมโทคอนเดรีย", "ผนังเซลล์", "ไรโบโซม"], ans: 2 },
+            { q: "7. เซลล์ประสาทใดที่พบได้ทั้งในสมองและไขสันหลัง?", opts: ["เซลล์รับความรู้สึก", "เซลล์สั่งการ", "เซลล์ประสานงาน (Interneuron)", "เซลล์ประสาทสั่งการอัตโนวัติ"], ans: 2 },
+            { q: "8. ลำดับการเดินทางของกระแสประสาทที่ถูกต้องคือข้อใด?", opts: ["เดนไดรต์ -> แอกซอน -> ตัวเซลล์", "แอกซอน -> ตัวเซลล์ -> เดนไดรต์", "ตัวเซลล์ -> เดนไดรต์ -> แอกซอน", "เดนไดรต์ -> ตัวเซลล์ -> แอกซอน"], ans: 3 },
+            { q: "9. วงจรการทำงานของระบบประสาทเริ่มจากอะไรเป็นอันดับแรก?", opts: ["เซลล์สั่งการ", "หน่วยปฏิบัติงาน", "สิ่งเร้า (Stimulus)", "ศูนย์ประสาท"], ans: 2 },
+            { q: "10. ไซแนปส์ (Synapse) คืออะไร?", opts: ["ศูนย์ควบคุมการทรงตัว", "จุดเชื่อมต่อระหว่างเซลล์ประสาท", "ส่วนของสมองที่ควบคุมฮอร์โมน", "เส้นประสาทที่เชื่อมสมองกับไขสันหลัง"], ans: 1 },
+            { q: "11. ระบบประสาทส่วนกลาง (CNS) ประกอบด้วยอะไร?", opts: ["สมองและไขสันหลัง", "สมองและเส้นประสาทรอบนอน", "ไขสันหลังและอวัยวะรับความรู้สึก", "เส้นประสาทโซมาติกและอัตโนวัติ"], ans: 0 },
+            { q: "12. การชักมือหนีเมื่อโดนของร้อนจัดเป็นระบบประสาทประเภทใด?", opts: ["อัตโนวัติ เพราะทำโดยไม่ตั้งใจ", "โซมาติก เพราะควบคุมกล้ามเนื้อลาย", "อัตโนวัติ เพราะควบคุมกล้ามเนื้อเรียบ", "โซมาติก เพราะอยู่ใต้อำนายจิตใจโดยสมบูรณ์"], ans: 1 },
+            { q: "13. ข้อใดอยู่ภายใต้การควบคุมของระบบประสาทอัตโนวัติ?", opts: ["การกระพริบตา", "การเคี้ยวอาหาร", "การเต้นของหัวใจ", "การเดิน"], ans: 2 },
+            { q: "14. ทาลามัส (Thalamus) ทำหน้าที่หลักอย่างไร?", opts: ["ควบคุมความหิวและอุณหภูมิ", "เป็นสถานีถ่ายทอดสัญญาณประสาท", "ควบคุมการทรงตัว", "ควบคุมการหายใจ"], ans: 1 },
+            { q: "15. โครงสร้างใดควบคุมความต้องการพื้นฐาน เช่น ความหิว และการหลั่งฮอร์โมน?", opts: ["ทาลามัส", "ไฮโปทาลามัส", "ซีรีเบลลัม", "พอนส์"], ans: 1 },
+            { q: "16. กลีบสมองใดทำหน้าที่ควบคุมการวางแผนและตัดสินใจ?", opts: ["กลีบข้าง", "กลีบขมับ", "กลีบหน้า", "กลีบท้ายทอย"], ans: 2 },
+            { q: "17. หากได้รับบาดเจ็บที่กลีบท้ายทอย (Occipital lobe) จะมีปัญหาในด้านใดมากที่สุด?", opts: ["การได้ยิน", "การมองเห็น", "การรับรส", "การทรงตัว"], ans: 1 },
+            { q: "18. การรู้สึกเจ็บปวดเมื่อโดนหนาม เป็นหน้าที่หลักของกลีบสมองใด?", opts: ["กลีบหน้า", "กลีบข้าง", "กลีบขมับ", "กลีบท้ายทอย"], ans: 1 },
+            { q: "19. ซีรีเบลลัม (Cerebellum) หรือสมองน้อย ทำหน้าที่หลักอย่างไร?", opts: ["คิดวิเคราะห์", "ควบคุมการทรงตัวและประสานงานการเคลื่อนไหว", "ควบคุมการหายใจ", "รับความรู้สึก"], ans: 1 },
+            { q: "20. หากสมองส่วนกลาง (Midbrain) เสียหาย จะเกิดอาการใด?", opts: ["เสียการทรงตัว", "รูม่านตาไม่ตอบสนองต่อแสง", "ควบคุมการหายใจเองไม่ได้", "สูญเสียความจำ"], ans: 1 },
+            { q: "21. ก้านสมอง (Medulla oblongata) ควบคุมการทำงานอัตโนมัติที่จำเป็นต่อชีวิตข้อใด?", opts: ["การเคลื่อนไหวของลูกตา", "การหายใจและการเต้นของหัวใจ", "การกระพริบตา", "การทรงตัว"], ans: 1 },
+            { q: "22. ข้อใดคือจุดสำคัญของวงจรรีเฟล็กซ์ (Reflex Arc)?", opts: ["ต้องผ่านสมองก่อนเสมอ", "ไม่จำเป็นต้องผ่านสมอง ทำให้ตอบสนองรวดเร็ว", "ควบคุมโดยระบบประสาทอัตโนวัติเท่านั้น", "กระแสประสาทสามารถวิ่งย้อนกลับได้"], ans: 1 },
+            { q: "23. เมื่อเกิดรีเฟล็กซ์ชักมือหนีของร้อน กระแสประสาทความเจ็บไปถึงสมองเมื่อใด?", opts: ["ก่อนที่กล้ามเนื้อจะชักตัว", "ในเวลาเดียวกันกับที่กล้ามเนื้อชักตัว", "หลังจากที่กล้ามเนื้อชักตัวไปแล้ว", "สมองไม่ได้รับรู้ความเจ็บปวดแต่อย่างใด"], ans: 2 },
+            { q: "24. การเคาะใต้กระดูกสะบ้าแล้วขากระตุก จัดเป็นระบบประสาทประเภทใด?", opts: ["อัตโนวัติ เพราะทำเองโดยไม่รู้ตัว", "โซมาติก เพราะควบคุมกล้ามเนื้อลาย", "อัตโนวัติ เพราะไม่อยู่ใต้อำนายจิตใจ", "โซมาติก เพราะผ่านการคิดวิเคราะห์จากสมอง"], ans: 1 },
+            { q: "25. ข้อใดคือประเด็นที่มักเข้าใจผิดเกี่ยวกับกลีบสมอง?", opts: ["แต่ละกลีบมีหน้าที่เฉพาะ", "กลีบท้ายทอยทำหน้าที่เกี่ยวกับการมองเห็น", "แต่ละกลีบทำงานแยกขาดจากกันโดยสิ้นเชิง", "กลีบหน้าเกี่ยวข้องกับบุคลิกภาพ"], ans: 2 },
+            { q: "26. ระบบประสาทซิมพาเทติกและพาราซิมพาเทติกทำงานอย่างไร?", opts: ["ทำงานตรงข้ามและเสริมกันเพื่อสมดุลของร่างกาย", "ซิมพาเทติกดีกว่าพาราซิมพาเทติก", "พาราซิมพาเทติกทำงานเฉพาะเวลาฉุกเฉิน", "ทั้งสองระบบทำงานพร้อมกันในทิศทางเดียวกันเสมอ"], ans: 0 },
+            { q: "27. หากบุคคลเสียการทรงตัว เดินเซ หกล้มบ่อย สมองส่วนใดน่าจะได้รับความเสียหาย?", opts: ["ซีรีบรัม", "ซีรีเบลลัม", "เมดัลลาออบลองกาตา", "ไฮโปทาลามัส"], ans: 1 },
+            { q: "28. การที่รูม่านตาหดตัวเมื่อส่องไฟฉาย ศูนย์ควบคุมอยู่ที่สมองส่วนใด?", opts: ["สมองส่วนหน้า", "สมองส่วนกลาง", "สมองส่วนท้าย", "ไขสันหลัง"], ans: 1 },
+            { q: "29. พอนส์ (Pons) ทำหน้าที่อย่างไร?", opts: ["ควบคุมการหายใจอัตโนมัติ", "เป็นสะพานเชื่อมสัญญาณระหว่างสมองใหญ่และสมองน้อย", "ควบคุมความหิว", "ควบคุมการมองเห็น"], ans: 1 },
+            { q: "30. ข้อใดคือความจริงเกี่ยวกับเซลล์ประสาทสั่งการ (Motor neuron)?", opts: ["เชื่อมต่อกับอวัยวะรับความรู้สึกโดยตรง", "พบได้เฉพาะในสมอง", "นำกระแสประสาทไปยังหน่วยปฏิบัติงาน (กล้ามเนื้อ/ต่อม)", "ทำหน้าที่ประสานงานระหว่างเซลล์รับความรู้สึกและสั่งการ"], ans: 2 }
+        ];
+
+        var currentQuizData = allQuestions.slice();
+        var wrongAnswers = [];
+        var isRetryMode = false;
+        var userAnswers = {};
+
+        function toggleTheme() {
+            document.body.classList.toggle("dark-mode");
+        }
+
+        function switchTab(tabId, btnElement) {
+            var sections = document.querySelectorAll(".content-section");
+            for (var i = 0; i < sections.length; i++) sections[i].classList.remove("active");
+            var buttons = document.querySelectorAll(".tab-btn");
+            for (var i = 0; i < buttons.length; i++) buttons[i].classList.remove("active");
+            document.getElementById(tabId).classList.add("active");
+            btnElement.classList.add("active");
+        }
+
+        var brainData = {
+            frontal: { title: "กลีบหน้า (Frontal Lobe)", desc: "ตำแหน่ง: ด้านหน้าสุดบริเวณหลังหน้าผาก อยู่ด้านหน้าร่องกลาง (Central sulcus)<br>หน้าที่หลัก: คิด วางแผน ตัดสินใจ ควบคุมการเคลื่อนไหวที่ตั้งใจ บุคลิกภาพและอารมณ์" },
+            parietal: { title: "กลีบข้าง (Parietal Lobe)", desc: "ตำแหน่ง: ด้านบนศีรษะ อยู่ด้านหลังร่องกลาง (Central sulcus)<br>หน้าที่หลัก: รับและแปลผลความรู้สึกจากผิวหนัง (สัมผัส แรงกด ร้อน-เย็น เจ็บปวด) และรับรู้ตำแหน่งร่างกาย" },
+            temporal: { title: "กลีบขมับ (Temporal Lobe)", desc: "ตำแหน่ง: ด้านข้างของสมอง อยู่ใต้ร่องด้านข้าง (Lateral fissure) บริเวณเหนือใบหู<br>หน้าที่หลัก: การได้ยินและแปลผลเสียง ความเข้าใจภาษาที่ได้ยิน ความจำ" },
+            occipital: { title: "กลีบท้ายทอย (Occipital Lobe)", desc: "ตำแหน่ง: ด้านหลังสุดของสมองใหญ่<br>หน้าที่หลัก: การมองเห็นและแปลผลภาพ" }
+        };
+
+        function showBrainInfo(lobe) {
+            var parts = document.querySelectorAll(".brain-part");
+            for (var i = 0; i < parts.length; i++) parts[i].classList.remove("active");
+            document.getElementById("lobe-" + lobe).classList.add("active");
+            document.getElementById("brain-title").innerHTML = brainData[lobe].title;
+            document.getElementById("brain-desc").innerHTML = brainData[lobe].desc;
+        }
+
+        var selectedLobe = null;
+        var selectedActivity = null;
+
+        function selectMatch(element, type) {
+            if (element.classList.contains("correct-match")) return;
+            
+            var feedbackDiv = document.getElementById("match-feedback");
+            feedbackDiv.innerHTML = ""; // เคลียร์ผลลัพธ์เก่าเมื่อเริ่มเลือกใหม่
+
+            if (type === "lobe") {
+                var items = document.querySelectorAll("#match-col-lobe .match-item");
+                for(var i=0; i<items.length; i++) items[i].classList.remove("selected");
+                element.classList.add("selected");
+                selectedLobe = element;
+            } else {
+                var items = document.querySelectorAll("#match-col-activity .match-item");
+                for(var i=0; i<items.length; i++) items[i].classList.remove("selected");
+                element.classList.add("selected");
+                selectedActivity = element;
+            }
+            if (selectedLobe && selectedActivity) setTimeout(checkMatch, 300);
+        }
+
+        function checkMatch() {
+            var feedbackDiv = document.getElementById("match-feedback");
+            if (selectedLobe.getAttribute("data-match") === selectedActivity.getAttribute("data-match")) {
+                selectedLobe.classList.add("correct-match");
+                selectedActivity.classList.add("correct-match");
+                selectedLobe.classList.remove("selected");
+                selectedActivity.classList.remove("selected");
+                
+                // แจ้งเตือนผลลัพธ์ที่ถูกต้อง
+                feedbackDiv.innerHTML = "<span style='color: var(--correct-text); font-size: 1.3rem;'>✅ จับคู่ถูกต้อง!</span>";
+            } else {
+                selectedLobe.classList.add("wrong-match");
+                selectedActivity.classList.add("wrong-match");
+                
+                // แจ้งเตือนผลลัพธ์ที่ผิด
+                feedbackDiv.innerHTML = "<span style='color: var(--wrong-text); font-size: 1.3rem;'>❌ จับคู่ผิด ลองใหม่อีกครั้ง!</span>";
+                
+                var lobeToReset = selectedLobe;
+                var actToReset = selectedActivity;
+                setTimeout(function() {
+                    lobeToReset.classList.remove("wrong-match", "selected");
+                    actToReset.classList.remove("wrong-match", "selected");
+                }, 800);
+            }
+            selectedLobe = null;
+            selectedActivity = null;
+        }
+
+        function renderQuiz(data) {
+            var container = document.getElementById("quiz-container");
+            container.innerHTML = "";
+            userAnswers = {};
+            for (var i = 0; i < data.length; i++) {
+                var item = data[i];
+                var qCard = document.createElement("div");
+                qCard.className = "question-card";
+                qCard.id = "q-card-" + i;
+                var optsHtml = '<div class="options">';
+                for (var j = 0; j < item.opts.length; j++) {
+                    optsHtml += '<button class="option-btn" id="opt-' + i + '-' + j + '" onclick="selectOption(' + i + ', ' + j + ')">' + item.opts[j] + '</button>';
+                }
+                optsHtml += '</div>';
+                qCard.innerHTML = '<div class="question-text">' + item.q + '</div>' + optsHtml;
+                container.appendChild(qCard);
+            }
+        }
+
+        function selectOption(qIndex, optIndex) {
+            var qCard = document.getElementById("q-card-" + qIndex);
+            var buttons = qCard.getElementsByClassName("option-btn");
+            for(var i=0; i<buttons.length; i++) buttons[i].classList.remove("selected-option");
+            document.getElementById("opt-" + qIndex + "-" + optIndex).classList.add("selected-option");
+            userAnswers[qIndex] = optIndex;
+        }
+
+        function submitQuiz() {
+            var score = 0;
+            wrongAnswers = [];
+            for (var i = 0; i < currentQuizData.length; i++) {
+                var item = currentQuizData[i];
+                var correctBtn = document.getElementById("opt-" + i + "-" + item.ans);
+                correctBtn.classList.add("correct");
+                if (userAnswers[i] !== undefined) {
+                    if (userAnswers[i] === item.ans) {
+                        score++;
+                    } else {
+                        var wrongBtn = document.getElementById("opt-" + i + "-" + userAnswers[i]);
+                        wrongBtn.classList.remove("selected-option");
+                        wrongBtn.classList.add("wrong");
+                        wrongAnswers.push(item);
+                    }
+                } else {
+                    wrongAnswers.push(item);
+                }
+                var buttons = document.getElementById("q-card-" + i).getElementsByClassName("option-btn");
+                for(var j=0; j<buttons.length; j++) buttons[j].disabled = true;
+            }
+            var resultBox = document.getElementById("result-box");
+            document.getElementById("submit-quiz-btn").style.display = "none";
+            resultBox.style.display = "block";
+            resultBox.style.backgroundColor = score >= currentQuizData.length * 0.7 ? "var(--correct-bg)" : "var(--wrong-bg)";
+            resultBox.style.color = score >= currentQuizData.length * 0.7 ? "var(--correct-text)" : "var(--wrong-text)";
+            var resultText = "คุณได้คะแนน " + score + " / " + currentQuizData.length;
+            if (isRetryMode && score === currentQuizData.length && currentQuizData.length > 0) {
+                resultText += "<br>ยอดเยี่ยม! คุณทบทวนข้อผิดผ่านทั้งหมดแล้ว";
+            } else if (wrongAnswers.length > 0) {
+                resultText += "<br>คุณทำผิด " + wrongAnswers.length + " ข้อ";
+            } else {
+                resultText += "<br>ยอดเยี่ยม! คุณตอบถูกทุกข้อ!";
+            }
+            resultBox.innerHTML = resultText;
+            document.getElementById("retry-wrong-btn").style.display = wrongAnswers.length > 0 ? "block" : "none";
+            document.getElementById("reset-quiz-btn").style.display = "block";
+        }
+
+        function retryWrongQuiz() {
+            isRetryMode = true;
+            currentQuizData = wrongAnswers.slice();
+            document.getElementById("result-box").style.display = "none";
+            document.getElementById("retry-wrong-btn").style.display = "none";
+            document.getElementById("reset-quiz-btn").style.display = "none";
+            document.getElementById("submit-quiz-btn").style.display = "block";
+            renderQuiz(currentQuizData);
+            window.scrollTo({ top: document.getElementById("quiz").offsetTop, behavior: "smooth" });
+        }
+
+        function resetQuiz() {
+            isRetryMode = false;
+            currentQuizData = allQuestions.slice();
+            wrongAnswers = [];
+            document.getElementById("result-box").style.display = "none";
+            document.getElementById("retry-wrong-btn").style.display = "none";
+            document.getElementById("reset-quiz-btn").style.display = "none";
+            document.getElementById("submit-quiz-btn").style.display = "block";
+            renderQuiz(currentQuizData);
+            window.scrollTo({ top: document.getElementById("quiz").offsetTop, behavior: "smooth" });
+        }
+
+        window.onload = function() {
+            renderQuiz(currentQuizData);
+        };
+    </script>
+</body>
+</html>
