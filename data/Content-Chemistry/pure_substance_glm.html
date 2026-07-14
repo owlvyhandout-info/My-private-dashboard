@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>การจำแนกและองค์ประกอบของสารบริสุทธิ์ | วิทยาศาสตร์ ม.ต้น</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Bai+Jamjuree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+    --ink: #0a0e27;
+    --ink-2: #131736;
+    --gold: #f59e0b;
+    --gold-light: #fbbf24;
+    --gold-dark: #b45309;
+    --copper: #ea580c;
+    --teal: #0d9488;
+    --teal-light: #14b8a6;
+    --cream: #fef3c7;
+    --paper: #f8fafc;
+    --line: rgba(245, 158, 11, 0.2);
+    --line-2: rgba(255, 255, 255, 0.08);
+}
+
+* { font-family: 'Sarabun', sans-serif; }
+.font-display { font-family: 'Bai Jamjuree', sans-serif; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+
+body {
+    background: var(--ink);
+    color: #e2e8f0;
+    background-image: 
+        radial-gradient(circle at 15% 20%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 85% 80%, rgba(13, 148, 136, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.04) 0%, transparent 70%);
+    overflow-x: hidden;
+}
+
+.grid-bg {
+    background-image: 
+        linear-gradient(rgba(245, 158, 11, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245, 158, 11, 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+}
+
+.glass {
+    background: linear-gradient(135deg, rgba(19, 23, 54, 0.6) 0%, rgba(10, 14, 39, 0.8) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--line-2);
+}
+
+.glass-gold {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(180, 83, 9, 0.04) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.text-gradient-gold {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #b45309 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.section-number {
+    font-family: 'Bai Jamjuree', sans-serif;
+    font-size: 8rem;
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Atom orbit animation */
+@keyframes orbit1 { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes orbit2 { from { transform: rotate(120deg); } to { transform: rotate(480deg); } }
+@keyframes orbit3 { from { transform: rotate(240deg); } to { transform: rotate(600deg); } }
+.orbit-1 { animation: orbit1 8s linear infinite; transform-origin: center; }
+.orbit-2 { animation: orbit2 12s linear infinite; transform-origin: center; }
+.orbit-3 { animation: orbit3 16s linear infinite; transform-origin: center; }
+
+@keyframes pulse-core {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px #f59e0b); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 25px #f59e0b); }
+}
+.pulse-core { animation: pulse-core 2s ease-in-out infinite; }
+
+@keyframes bubble-rise {
+    0% { transform: translateY(0) scale(0.5); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translateY(-60px) scale(1); opacity: 0; }
+}
+.bubble { animation: bubble-rise 3s ease-out infinite; }
+.bubble-2 { animation: bubble-rise 3s ease-out infinite 1s; }
+.bubble-3 { animation: bubble-rise 3s ease-out infinite 2s; }
+
+@keyframes flow-electron {
+    0% { stroke-dashoffset: 200; }
+    100% { stroke-dashoffset: 0; }
+}
+.flow-line {
+    stroke-dasharray: 6 4;
+    animation: flow-electron 2s linear infinite;
+}
+
+.quiz-option {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.quiz-option:hover {
+    background: rgba(245, 158, 11, 0.1);
+    transform: translateX(4px);
+}
+
+.divider-fancy {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    position: relative;
+}
+.divider-fancy::before {
+    content: '◆';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--ink);
+    color: var(--gold);
+    padding: 0 12px;
+    font-size: 0.8rem;
+}
+
+.glow-card {
+    box-shadow: 0 0 40px rgba(245, 158, 11, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+.shimmer {
+    background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.2), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+}
+
+.sticky-toc {
+    position: sticky;
+    top: 24px;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+}
+
+.toc-link {
+    transition: all 0.3s ease;
+    border-left: 2px solid rgba(245, 158, 11, 0.2);
+}
+.toc-link:hover, .toc-link.active {
+    border-left-color: var(--gold);
+    color: var(--gold-light);
+    background: rgba(245, 158, 11, 0.05);
+}
+
+.callout {
+    border-left: 3px solid var(--gold);
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.08), transparent);
+}
+
+.callout-teal {
+    border-left: 3px solid var(--teal);
+    background: linear-gradient(90deg, rgba(13, 148, 136, 0.08), transparent);
+}
+
+.callout-danger {
+    border-left: 3px solid #ef4444;
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.08), transparent);
+}
+
+.marker {
+    background: linear-gradient(120deg, transparent 0%, transparent 30%, rgba(245, 158, 11, 0.25) 30%, rgba(245, 158, 11, 0.25) 100%);
+    padding: 0 4px;
+}
+</style>
+</head>
+<body class="grid-bg">
+
+<!-- Top Progress Bar -->
+<div class="fixed top-0 left-0 right-0 h-1 z-50">
+    <div class="h-full bg-gradient-to-r from-amber-500 via-orange-500 to-teal-500 shimmer"></div>
+</div>
+
+<!-- ============ HERO ============ -->
+<header class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 grid-bg opacity-30"></div>
+    
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-1/4 left-1/4 w-2 h-2 rounded-full bg-amber-500/40 blur-sm"></div>
+        <div class="absolute top-1/3 right-1/3 w-3 h-3 rounded-full bg-teal-500/30 blur-sm"></div>
+        <div class="absolute bottom-1/4 left-1/3 w-2 h-2 rounded-full bg-orange-500/40 blur-sm"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-6xl mx-auto px-6 py-20 text-center">
+        <div class="flex justify-center mb-8">
+            <svg width="120" height="120" viewBox="0 0 120 120">
+                <defs>
+                    <radialGradient id="coreGrad">
+                        <stop offset="0%" stop-color="#fbbf24"/>
+                        <stop offset="100%" stop-color="#b45309"/>
+                    </radialGradient>
+                </defs>
+                <ellipse cx="60" cy="60" rx="50" ry="20" fill="none" stroke="rgba(245,158,11,0.4)" stroke-width="1.5"/>
+                <ellipse cx="60" cy="60" rx="50" ry="20" fill="none" stroke="rgba(13,148,136,0.4)" stroke-width="1.5" transform="rotate(60 60 60)"/>
+                <ellipse cx="60" cy="60" rx="50" ry="20" fill="none" stroke="rgba(234,88,12,0.4)" stroke-width="1.5" transform="rotate(120 60 60)"/>
+                <circle cx="60" cy="60" r="8" fill="url(#coreGrad)" class="pulse-core"/>
+                <g class="orbit-1" style="transform-origin: 60px 60px;">
+                    <circle cx="110" cy="60" r="3" fill="#fbbf24"/>
+                </g>
+                <g class="orbit-2" style="transform-origin: 60px 60px;">
+                    <circle cx="110" cy="60" r="3" fill="#14b8a6"/>
+                </g>
+                <g class="orbit-3" style="transform-origin: 60px 60px;">
+                    <circle cx="110" cy="60" r="3" fill="#ea580c"/>
+                </g>
+            </svg>
+        </div>
+        
+        <div class="inline-block px-4 py-1.5 rounded-full glass-gold text-amber-300 text-sm font-medium mb-6 tracking-widest">
+            <i class="fas fa-flask mr-2"></i>วิทยาศาสตร์ · มัธยมศึกษาตอนต้น · เตรียมสอบเข้า ม.4
+        </div>
+        
+        <h1 class="font-display text-6xl md:text-8xl font-bold mb-6 leading-tight">
+            <span class="text-gradient-gold">สารบริสุทธิ์</span>
+        </h1>
+        <h2 class="text-2xl md:text-3xl font-light text-slate-300 mb-8 tracking-wide">
+            การจำแนกและองค์ประกอบของสารบริสุทธิ์
+        </h2>
+        
+        <p class="max-w-3xl mx-auto text-slate-400 text-lg leading-relaxed mb-12">
+            จากนิยามพื้นฐานของสาร การจำแนกธาตุและสารประกอบ โครงสร้างอะตอม ไปจนถึงการทดลองอิเล็กโทรไลซิสอันโด่งดังของลาวัวซีเย — บทเรียนฉบับสมบูรณ์ที่ครอบคลุมทุกแง่มุมที่จำเป็นสำหรับการสอบ
+        </p>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            <div class="glass rounded-xl p-4">
+                <div class="text-3xl font-display font-bold text-amber-400">4</div>
+                <div class="text-xs text-slate-400 mt-1">หัวข้อหลัก</div>
+            </div>
+            <div class="glass rounded-xl p-4">
+                <div class="text-3xl font-display font-bold text-teal-400">118+</div>
+                <div class="text-xs text-slate-400 mt-1">ธาตุในตาราง</div>
+            </div>
+            <div class="glass rounded-xl p-4">
+                <div class="text-3xl font-display font-bold text-orange-400">2:1</div>
+                <div class="text-xs text-slate-400 mt-1">อัตราส่วน H₂:O₂</div>
+            </div>
+            <div class="glass rounded-xl p-4">
+                <div class="text-3xl font-display font-bold text-amber-400">9</div>
+                <div class="text-xs text-slate-400 mt-1">โจทย์แนวข้อสอบ</div>
+            </div>
+        </div>
+        
+        <div class="mt-12 flex flex-wrap justify-center gap-4 text-sm text-slate-500">
+            <span><i class="far fa-clock mr-1"></i> อ่านประมาณ 25 นาที</span>
+            <span><i class="far fa-bookmark mr-1"></i> เนื้อหาครบถ้วน ม.ต้น</span>
+            <span><i class="fas fa-graduation-cap mr-1"></i> เตรียมสอบเข้า ม.4</span>
+        </div>
+    </div>
+</header>
+
+<!-- ============ MAIN LAYOUT ============ -->
+<div class="max-w-7xl mx-auto px-6 py-16">
+    <div class="grid lg:grid-cols-[280px_1fr] gap-12">
+        
+        <aside class="hidden lg:block">
+            <div class="sticky-toc glass rounded-2xl p-6">
+                <div class="text-xs uppercase tracking-widest text-amber-400 font-semibold mb-4">สารบัญ</div>
+                <nav class="space-y-1">
+                    <a href="#sec1" class="toc-link block px-4 py-2.5 text-sm text-slate-300">
+                        <span class="text-amber-500 font-mono mr-2">01</span> องค์ประกอบของสารบริสุทธิ์
+                    </a>
+                    <a href="#sec2" class="toc-link block px-4 py-2.5 text-sm text-slate-300">
+                        <span class="text-amber-500 font-mono mr-2">02</span> ธาตุและสารประกอบ
+                    </a>
+                    <a href="#sec3" class="toc-link block px-4 py-2.5 text-sm text-slate-300">
+                        <span class="text-amber-500 font-mono mr-2">03</span> โครงสร้างอะตอม
+                    </a>
+                    <a href="#sec4" class="toc-link block px-4 py-2.5 text-sm text-slate-300">
+                        <span class="text-amber-500 font-mono mr-2">04</span> การจำแนกธาตุ
+                    </a>
+                    <a href="#sec5" class="toc-link block px-4 py-2.5 text-sm text-slate-300">
+                        <span class="text-amber-500 font-mono mr-2">05</span> การแยกน้ำด้วยไฟฟ้า
+                    </a>
+                    <a href="#sec6" class="toc-link block px-4 py-2.5 text-sm text-slate-300">
+                        <span class="text-amber-500 font-mono mr-2">06</span> แบบฝึกหัด
+                    </a>
+                </nav>
+            </div>
+        </aside>
+        
+        <main class="min-w-0 space-y-24">
+            
+            <!-- ============ SECTION 1 ============ -->
+            <section id="sec1">
+                <div class="flex items-start gap-6 mb-8">
+                    <div class="section-number">01</div>
+                    <div class="pt-6">
+                        <div class="text-xs uppercase tracking-widest text-amber-400 mb-2">Foundation</div>
+                        <h2 class="font-display text-4xl font-bold text-white">องค์ประกอบของสารบริสุทธิ์</h2>
+                    </div>
+                </div>
+                
+                <div class="divider-fancy my-8"></div>
+                
+                <div class="space-y-6 text-slate-300 leading-relaxed">
+                    <p class="text-lg">
+                        <span class="marker text-white font-semibold">สารบริสุทธิ์ (Pure Substance)</span> คือสารที่มีเนื้อสารเพียง <strong class="text-amber-300">ชนิดเดียว</strong> ประกอบด้วยอนุภาคที่เหมือนกันทุกอนุภาค และมีสมบัติเฉพาะตัวที่คงที่ เช่น จุดเดือด จุดหลอมเหลว ความหนาแน่น ซึ่งสามารถใช้เป็นเกณฑ์ในการพิจารณาได้ว่าสารใดเป็นสารบริสุทธิ์หรือไม่
+                    </p>
+                </div>
+                
+                <div class="glass glow-card rounded-2xl p-8 mt-8">
+                    <h3 class="font-display text-xl font-semibold text-amber-300 mb-6">
+                        <i class="fas fa-sitemap mr-2"></i>การจำแนกสารบริสุทธิ์
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="md:col-span-3 flex justify-center">
+                            <div class="glass-gold rounded-xl px-8 py-4 text-center">
+                                <div class="font-display text-lg font-bold text-amber-300">สารบริสุทธิ์</div>
+                                <div class="text-xs text-slate-400 mt-1">Pure Substance</div>
+                            </div>
+                        </div>
+                        
+                        <div class="md:col-span-3 flex justify-center">
+                            <svg width="200" height="40" class="text-amber-500/40">
+                                <path d="M 100 0 L 100 20 L 50 20 L 50 40" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                <path d="M 100 20 L 150 20 L 150 40" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            </svg>
+                        </div>
+                        
+                        <div class="glass rounded-xl p-5 border-l-2 border-amber-500">
+                            <div class="font-display text-lg font-bold text-amber-300">ธาตุ</div>
+                            <div class="text-xs text-slate-400 mb-3">Element</div>
+                            <p class="text-sm text-slate-300">สารบริสุทธิ์ที่แยกตัวไม่ได้อีกด้วยวิธีเคมี ประกอบด้วยอะตอมชนิดเดียวกันทั้งหมด</p>
+                            <div class="mt-3 text-xs space-y-1">
+                                <div class="text-amber-400">• โลหะ (Metal)</div>
+                                <div class="text-teal-400">• อโลหะ (Non-metal)</div>
+                                <div class="text-orange-400">• กึ่งโลหะ (Metalloid)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass rounded-xl p-5 border-l-2 border-teal-500">
+                            <div class="font-display text-lg font-bold text-teal-300">สารประกอบ</div>
+                            <div class="text-xs text-slate-400 mb-3">Compound</div>
+                            <p class="text-sm text-slate-300">สารบริสุทธิ์ที่เกิดจากธาตุตั้งแต่ 2 ชนิดขึ้นไป มาเกิดปฏิกิริยาเคมีเกิดเป็นสารใหม่</p>
+                            <div class="mt-3 text-xs space-y-1">
+                                <div class="text-amber-400">• สารประกอบโมเลกุล</div>
+                                <div class="text-teal-400">• สารประกอบไอออนิก</div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass rounded-xl p-5 border-l-2 border-orange-500">
+                            <div class="font-display text-lg font-bold text-orange-300">เปรียบเทียบ</div>
+                            <div class="text-xs text-slate-400 mb-3">Comparison</div>
+                            <p class="text-sm text-slate-300">ทั้งสองชนิดเป็นสารบริสุทธิ์ แต่ธาตุไม่สามารถสลายตัวได้ด้วยปฏิกิริยาเคมี ในขณะที่สารประกอบสลายตัวได้</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 grid md:grid-cols-2 gap-4">
+                    <div class="glass rounded-xl p-6">
+                        <h4 class="font-display font-semibold text-amber-300 mb-3">
+                            <i class="fas fa-check-circle mr-2"></i>สมบัติของสารบริสุทธิ์
+                        </h4>
+                        <ul class="space-y-2 text-sm text-slate-300">
+                            <li class="flex items-start gap-2"><span class="text-amber-500 mt-1">▸</span> มีส่วนประกอบเนื้อสารชนิดเดียวกัน</li>
+                            <li class="flex items-start gap-2"><span class="text-amber-500 mt-1">▸</span> มีสมบัติเฉพาะตัวที่คงที่ไม่เปลี่ยนแปลง</li>
+                            <li class="flex items-start gap-2"><span class="text-amber-500 mt-1">▸</span> มีจุดหลอมเหลวและจุดเดือดที่แน่นอน</li>
+                            <li class="flex items-start gap-2"><span class="text-amber-500 mt-1">▸</span> ไม่สามารถแยกออกจากกันด้วยวิธีทางกายภาพ</li>
+                            <li class="flex items-start gap-2"><span class="text-amber-500 mt-1">▸</span> สามารถแยกได้ด้วยวิธีทางเคมีเท่านั้น</li>
+                        </ul>
+                    </div>
+                    <div class="glass rounded-xl p-6">
+                        <h4 class="font-display font-semibold text-teal-300 mb-3">
+                            <i class="fas fa-vials mr-2"></i>วิธีการแยกสารบริสุทธิ์
+                        </h4>
+                        <ul class="space-y-2 text-sm text-slate-300">
+                            <li class="flex items-start gap-2"><span class="text-teal-400 mt-1">▸</span> <strong>การแยกด้วยไฟฟ้า</strong> (Electrolysis) — เช่น แยกน้ำ</li>
+                            <li class="flex items-start gap-2"><span class="text-teal-400 mt-1">▸</span> <strong>การแยกด้วยความร้อน</strong> (Thermal Decomposition)</li>
+                            <li class="flex items-start gap-2"><span class="text-teal-400 mt-1">▸</span> <strong>การแยกด้วยปฏิกิริยาเคมี</strong> เช่น การทำปฏิกิริยากับกรด/เบส</li>
+                            <li class="flex items-start gap-2"><span class="text-teal-400 mt-1">▸</span> <strong>การเปลี่ยนแปลงเคมี</strong> ที่ทำให้สารประกอบแตกตัว</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ============ SECTION 2 ============ -->
+            <section id="sec2">
+                <div class="flex items-start gap-6 mb-8">
+                    <div class="section-number">02</div>
+                    <div class="pt-6">
+                        <div class="text-xs uppercase tracking-widest text-amber-400 mb-2">Classification</div>
+                        <h2 class="font-display text-4xl font-bold text-white">ธาตุและสารประกอบ</h2>
+                    </div>
+                </div>
+                
+                <div class="divider-fancy my-8"></div>
+                
+                <div class="space-y-6">
+                    <h3 class="font-display text-2xl font-bold text-amber-300">
+                        <i class="fas fa-atom mr-3"></i>ธาตุ (Element)
+                    </h3>
+                    
+                    <p class="text-slate-300 leading-relaxed">
+                        <strong class="text-white">ธาตุ</strong> คือสารบริสุทธิ์ที่ประกอบด้วยอะตอมชนิดเดียวกันทั้งหมด ไม่สามารถแยกหรือสลายตัวออกเป็นสารอื่นได้อีกด้วยปฏิกิริยาเคมีธรรมดา ในปัจจุบันมนุษย์ค้นพบธาตุแล้วกว่า <strong class="text-amber-300">118 ชนิด</strong> ซึ่งจัดเรียงในตารางธาตุ
+                    </p>
+                    
+                    <div class="callout rounded-r-xl p-5">
+                        <div class="font-semibold text-amber-300 mb-2">
+                            <i class="fas fa-history mr-2"></i>ประวัติความเป็นมาของแนวคิด "ธาตุ"
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4 text-sm text-slate-300">
+                            <div>
+                                <strong class="text-white">อริสโตเติล (Aristotle)</strong> เชื่อว่าสารทุกชนิดประกอบด้วย "ธาตุ 4 อย่าง" ได้แก่ <span class="text-blue-300">ดิน</span> <span class="text-cyan-300">น้ำ</span> <span class="text-orange-300">ไฟ</span> และ<span class="text-slate-300">อากาศ</span>
+                            </div>
+                            <div>
+                                <strong class="text-white">อ็องตวน ลาวัวซีเย (Lavoisier)</strong> นักเคมีชาวฝรั่งเศส ได้ทำการทดลองแยกน้ำ และนิยาม "ธาตุ" ใหม่ พร้อมจัดทำบัญชีธาตุ 33 ชนิด ทำลายทฤษฎีธาตุ 4 ของอริสโตเติล
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-4 mt-6">
+                        <div class="glass rounded-xl p-5 border-t-2 border-amber-500">
+                            <div class="text-3xl mb-2 text-amber-400"><i class="fas fa-coins"></i></div>
+                            <h4 class="font-display font-bold text-amber-300 mb-2">โลหะ (Metal)</h4>
+                            <ul class="text-sm text-slate-300 space-y-1">
+                                <li>• มีความแข็งแรง ทึบแสง</li>
+                                <li>• นำไฟฟ้าและนำความร้อนได้ดี</li>
+                                <li>• มีความวาวเป็นเงา</li>
+                                <li>• สามารถตีเป็นแผ่นหรือดึงเป็นเส้นได้</li>
+                                <li class="text-amber-400/70 pt-2">ตัวอย่าง: เหล็ก (Fe) ทองคำ (Au) ทองแดง (Cu)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="glass rounded-xl p-5 border-t-2 border-teal-500">
+                            <div class="text-3xl mb-2 text-teal-400"><i class="fas fa-wind"></i></div>
+                            <h4 class="font-display font-bold text-teal-300 mb-2">อโลหะ (Non-metal)</h4>
+                            <ul class="text-sm text-slate-300 space-y-1">
+                                <li>• ไม่นำไฟฟ้าและความร้อน (ส่วนใหญ่)</li>
+                                <li>• ไม่มีความวาว มีสีต่างๆ</li>
+                                <li>• มีสถานะเป็นของแข็ง ของเหลว และแก๊ส</li>
+                                <li>• มีจุดหลอมเหลวและจุดเดือดต่ำกว่าโลหะ</li>
+                                <li class="text-teal-400/70 pt-2">ตัวอย่าง: ออกซิเจน (O) คาร์บอน (C) กำมะถัน (S)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="glass rounded-xl p-5 border-t-2 border-orange-500">
+                            <div class="text-3xl mb-2 text-orange-400"><i class="fas fa-microchip"></i></div>
+                            <h4 class="font-display font-bold text-orange-300 mb-2">กึ่งโลหะ (Metalloid)</h4>
+                            <ul class="text-sm text-slate-300 space-y-1">
+                                <li>• มีสมบัติก้ำกึ่งระหว่างโลหะและอโลหะ</li>
+                                <li>• บางชนิดนำไฟฟ้าได้เล็กน้อย</li>
+                                <li>• สำคัญต่ออุตสาหกรรมอิเล็กทรอนิกส์</li>
+                                <li>• ทำหน้าที่เป็นสารกึ่งตัวนำ</li>
+                                <li class="text-orange-400/70 pt-2">ตัวอย่าง: ซิลิกอน (Si) โบรอน (B) สารหนู (As)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-12 space-y-6">
+                    <h3 class="font-display text-2xl font-bold text-teal-300">
+                        <i class="fas fa-link mr-3"></i>สารประกอบ (Compound)
+                    </h3>
+                    
+                    <p class="text-slate-300 leading-relaxed">
+                        <strong class="text-white">สารประกอบ</strong> คือสารบริสุทธิ์ที่เกิดจากธาตุ <strong class="text-amber-300">ตั้งแต่ 2 ชนิดขึ้นไป</strong> มารวมกันด้วยอัตราส่วนที่แน่นอน ผ่านปฏิกิริยาเคมี สารประกอบมีสมบัติเฉพาะตัวที่<strong class="text-amber-300">แตกต่างจากธาตุที่ประกอบเป็นสารนั้น</strong> และสามารถแยกออกเป็นธาตุได้ด้วยวิธีทางเคมีเท่านั้น
+                    </p>
+                    
+                    <div class="glass glow-card rounded-2xl p-8">
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="md:w-1/3">
+                                <h4 class="font-display text-3xl font-bold text-blue-300 mb-2">H₂O</h4>
+                                <p class="text-sm text-slate-400">น้ำ — สารประกอบตัวอย่างที่สำคัญที่สุดในบทเรียนนี้</p>
+                            </div>
+                            <div class="md:w-2/3 space-y-3 text-sm text-slate-300">
+                                <p><strong class="text-amber-300">ความสำคัญ:</strong> น้ำเป็นสารประกอบที่เกิดจากธาตุไฮโดรเจน 2 อะตอม และออกซิเจน 1 อะตอม มีปฏิกิริยาเคมีที่แน่นอน</p>
+                                <p><strong class="text-teal-300">การแยก:</strong> สามารถแยกน้ำออกเป็นธาตุได้ด้วยวิธีทางเคมี โดยเฉพาะ <strong class="text-orange-300">การแยกน้ำด้วยไฟฟ้า (Electrolysis)</strong> ซึ่งเป็นประเด็นสำคัญที่จะกล่าวถึงในบทถัดไป</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass rounded-2xl p-6 mt-6 overflow-x-auto">
+                        <h4 class="font-display font-semibold text-amber-300 mb-4">
+                            <i class="fas fa-balance-scale mr-2"></i>เปรียบเทียบธาตุ vs สารประกอบ vs สารผสม
+                        </h4>
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-amber-400 border-b border-amber-500/20">
+                                    <th class="text-left py-3 px-2">คุณสมบัติ</th>
+                                    <th class="text-center py-3 px-2">ธาตุ</th>
+                                    <th class="text-center py-3 px-2">สารประกอบ</th>
+                                    <th class="text-center py-3 px-2">สารผสม</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-slate-300">
+                                <tr class="border-b border-white/5">
+                                    <td class="py-3 px-2">จำนวนชนิดอนุภาค</td>
+                                    <td class="text-center">1 ชนิด</td>
+                                    <td class="text-center">≥ 2 ชนิด (เชื่อมโยง)</td>
+                                    <td class="text-center">≥ 2 ชนิด (ไม่เชื่อมโยง)</td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-3 px-2">เป็นสารบริสุทธิ์?</td>
+                                    <td class="text-center text-green-400">ใช่</td>
+                                    <td class="text-center text-green-400">ใช่</td>
+                                    <td class="text-center text-red-400">ไม่ใช่</td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-3 px-2">สามารถแยกได้?</td>
+                                    <td class="text-center text-red-400">ไม่ได้</td>
+                                    <td class="text-center text-amber-400">ด้วยวิธีเคมี</td>
+                                    <td class="text-center text-green-400">ด้วยวิธีกายภาพ</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-2">สมบัติเฉพาะตัว</td>
+                                    <td class="text-center">คงที่</td>
+                                    <td class="text-center">คงที่</td>
+                                    <td class="text-center">เปลี่ยนได้</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ============ SECTION 3 ============ -->
+            <section id="sec3">
+                <div class="flex items-start gap-6 mb-8">
+                    <div class="section-number">03</div>
+                    <div class="pt-6">
+                        <div class="text-xs uppercase tracking-widest text-amber-400 mb-2">Atomic Structure</div>
+                        <h2 class="font-display text-4xl font-bold text-white">โครงสร้างอะตอม</h2>
+                    </div>
+                </div>
+                
+                <div class="divider-fancy my-8"></div>
+                
+                <p class="text-slate-300 leading-relaxed mb-8">
+                    <strong class="text-white">อะตอม (Atom)</strong> คือหน่วยที่เล็กที่สุดของธาตุที่ยังคงสมบัติของธาตุนั้นไว้ได้ อะตอมประกอบด้วยอนุภาคมูลฐาน 3 ชนิด คือ <span class="text-amber-300">โปรตอน</span> <span class="text-teal-300">นิวตรอน</span> และ<span class="text-orange-300">อิเล็กตรอน</span>
+                </p>
+                
+                <div class="glass glow-card rounded-2xl p-8">
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="flex justify-center">
+                            <svg width="280" height="280" viewBox="0 0 280 280">
+                                <defs>
+                                    <radialGradient id="nucleus">
+                                        <stop offset="0%" stop-color="#fde047"/>
+                                        <stop offset="60%" stop-color="#f59e0b"/>
+                                        <stop offset="100%" stop-color="#b45309"/>
+                                    </radialGradient>
+                                </defs>
+                                <ellipse cx="140" cy="140" rx="110" ry="40" fill="none" stroke="rgba(245,158,11,0.3)" stroke-width="1"/>
+                                <ellipse cx="140" cy="140" rx="110" ry="40" fill="none" stroke="rgba(13,148,136,0.3)" stroke-width="1" transform="rotate(60 140 140)"/>
+                                <ellipse cx="140" cy="140" rx="110" ry="40" fill="none" stroke="rgba(234,88,12,0.3)" stroke-width="1" transform="rotate(120 140 140)"/>
+                                
+                                <circle cx="140" cy="140" r="22" fill="url(#nucleus)" class="pulse-core"/>
+                                <text x="140" y="145" text-anchor="middle" fill="#0a0e27" font-size="10" font-weight="700">+</text>
+                                
+                                <g class="orbit-1" style="transform-origin: 140px 140px;">
+                                    <circle cx="250" cy="140" r="6" fill="#fbbf24"/>
+                                    <text x="265" y="145" fill="#fbbf24" font-size="11" font-weight="600">e⁻</text>
+                                </g>
+                                <g class="orbit-2" style="transform-origin: 140px 140px;">
+                                    <circle cx="250" cy="140" r="6" fill="#14b8a6"/>
+                                </g>
+                                <g class="orbit-3" style="transform-origin: 140px 140px;">
+                                    <circle cx="250" cy="140" r="6" fill="#ea580c"/>
+                                </g>
+                            </svg>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <h4 class="font-display text-xl font-bold text-amber-300">อนุภาคมูลฐานในอะตอม</h4>
+                            <div class="space-y-3">
+                                <div class="glass-gold rounded-lg p-4">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-semibold text-amber-300">โปรตอน (Proton)</span>
+                                        <span class="font-mono text-xs text-amber-400">p⁺</span>
+                                    </div>
+                                    <div class="text-sm text-slate-300 mt-2 grid grid-cols-2 gap-2">
+                                        <div>ประจุ: <span class="text-amber-300">บวก (+1)</span></div>
+                                        <div>มวล: <span class="text-amber-300">1 amu</span></div>
+                                        <div>ตำแหน่ง: <span class="text-amber-300">นิวเคลียส</span></div>
+                                        <div>หน้าที่: <span class="text-amber-300">กำหนดธาตุ</span></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="glass rounded-lg p-4 border border-teal-500/20" style="background: linear-gradient(135deg, rgba(13, 148, 136, 0.08), transparent);">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-semibold text-teal-300">นิวตรอน (Neutron)</span>
+                                        <span class="font-mono text-xs text-teal-400">n⁰</span>
+                                    </div>
+                                    <div class="text-sm text-slate-300 mt-2 grid grid-cols-2 gap-2">
+                                        <div>ประจุ: <span class="text-teal-300">เป็นกลาง</span></div>
+                                        <div>มวล: <span class="text-teal-300">1 amu</span></div>
+                                        <div>ตำแหน่ง: <span class="text-teal-300">นิวเคลียส</span></div>
+                                        <div>หน้าที่: <span class="text-teal-300">กำหนดไอโซโทป</span></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="glass rounded-lg p-4 border border-orange-500/20" style="background: linear-gradient(135deg, rgba(234, 88, 12, 0.08), transparent);">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-semibold text-orange-300">อิเล็กตรอน (Electron)</span>
+                                        <span class="font-mono text-xs text-orange-400">e⁻</span>
+                                    </div>
+                                    <div class="text-sm text-slate-300 mt-2 grid grid-cols-2 gap-2">
+                                        <div>ประจุ: <span class="text-orange-300">ลบ (−1)</span></div>
+                                        <div>มวล: <span class="text-orange-300">≈ 0 amu</span></div>
+                                        <div>ตำแหน่ง: <span class="text-orange-300">โครงสร้างอิเล็กตรอน</span></div>
+                                        <div>หน้าที่: <span class="text-orange-300">กำหนดสมบัติเคมี</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-4 mt-6">
+                    <div class="glass rounded-xl p-5">
+                        <div class="font-mono text-3xl text-amber-400 mb-2">Z</div>
+                        <h5 class="font-semibold text-amber-300">เลขอะตอม</h5>
+                        <p class="text-sm text-slate-400 mt-1">= จำนวนโปรตอน = จำนวนอิเล็กตรอน (ในอะตอมเป็นกลาง)</p>
+                        <p class="text-xs text-slate-500 mt-2">กำหนดว่าเป็นธาตุอะไร</p>
+                    </div>
+                    <div class="glass rounded-xl p-5">
+                        <div class="font-mono text-3xl text-teal-400 mb-2">A</div>
+                        <h5 class="font-semibold text-teal-300">เลขมวล</h5>
+                        <p class="text-sm text-slate-400 mt-1">= จำนวนโปรตอน + จำนวนนิวตรอน</p>
+                        <p class="text-xs text-slate-500 mt-2">รวมมวลของอนุภาคในนิวเคลียส</p>
+                    </div>
+                    <div class="glass rounded-xl p-5">
+                        <div class="font-mono text-3xl text-orange-400 mb-2">N</div>
+                        <h5 class="font-semibold text-orange-300">จำนวนนิวตรอน</h5>
+                        <p class="text-sm text-slate-400 mt-1">= เลขมวล − เลขอะตอม</p>
+                        <p class="text-xs text-slate-500 mt-2">N = A − Z</p>
+                    </div>
+                </div>
+                
+                <div class="callout-teal rounded-r-xl p-5 mt-6">
+                    <div class="font-semibold text-teal-300 mb-2">
+                        <i class="fas fa-layer-group mr-2"></i>การจัดเรียงอิเล็กตรอน (Electron Configuration)
+                    </div>
+                    <p class="text-sm text-slate-300 mb-3">อิเล็กตรอนจะจัดเรียงตัวในระดับพลังงาน (Shell) โดยเริ่มจากที่ใกล้นิวเคลียสก่อน โดยใช้สูตร 2n²</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                        <div class="glass rounded p-2 text-center"><span class="text-amber-300 font-mono">K</span> · 2 e⁻</div>
+                        <div class="glass rounded p-2 text-center"><span class="text-amber-300 font-mono">L</span> · 8 e⁻</div>
+                        <div class="glass rounded p-2 text-center"><span class="text-amber-300 font-mono">M</span> · 18 e⁻</div>
+                        <div class="glass rounded p-2 text-center"><span class="text-amber-300 font-mono">N</span> · 32 e⁻</div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ============ SECTION 4 ============ -->
+            <section id="sec4">
+                <div class="flex items-start gap-6 mb-8">
+                    <div class="section-number">04</div>
+                    <div class="pt-6">
+                        <div class="text-xs uppercase tracking-widest text-amber-400 mb-2">Periodic Table</div>
+                        <h2 class="font-display text-4xl font-bold text-white">การจำแนกธาตุและการใช้ประโยชน์</h2>
+                    </div>
+                </div>
+                
+                <div class="divider-fancy my-8"></div>
+                
+                <p class="text-slate-300 leading-relaxed mb-8">
+                    <strong class="text-white">ตารางธาตุ (Periodic Table)</strong> เป็นการจัดเรียงธาตุทั้งหมดตามเลขอะตอมที่เพิ่มขึ้น และจัดกลุ่มตามสมบัติที่คล้ายคลึงกัน พัฒนาโดย <strong class="text-amber-300">ดมีตรี เมนเดเลเยฟ (Dmitri Mendeleev)</strong> ในปี ค.ศ. 1869
+                </p>
+                
+                <div class="glass glow-card rounded-2xl p-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-display text-xl font-bold text-amber-300 mb-3">
+                                <i class="fas fa-arrows-alt-h mr-2"></i>คาบ (Period) — แนวนอน
+                            </h4>
+                            <ul class="space-y-2 text-sm text-slate-300">
+                                <li>• ตารางธาตุมี <strong class="text-amber-300">7 คาบ</strong></li>
+                                <li>• ธาตุในคาบเดียวกันมีจำนวน <strong class="text-amber-300">เชลล์อิเล็กตรอนเท่ากัน</strong></li>
+                                <li>• เลขคาบ = จำนวนเชลล์</li>
+                                <li>• คาบ 1 มี 2 ธาตุ · คาบ 2-3 มี 8 ธาตุ</li>
+                                <li>• คาบ 4-5 มี 18 ธาตุ · คาบ 6 มี 32 ธาตุ</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-display text-xl font-bold text-teal-300 mb-3">
+                                <i class="fas fa-arrows-alt-v mr-2"></i>หมู่ (Group) — แนวตั้ง
+                            </h4>
+                            <ul class="space-y-2 text-sm text-slate-300">
+                                <li>• ตารางธาตุมี <strong class="text-teal-300">18 หมู่</strong></li>
+                                <li>• ธาตุในหมู่เดียวกันมี <strong class="text-teal-300">อิเล็กตรอนวงนอกสุดเท่ากัน</strong></li>
+                                <li>• มีสมบัติทางเคมีคล้ายคลึงกัน</li>
+                                <li>• หมู่ 1: โลหะอัลคาไล · หมู่ 2: โลหะอัลคาไลน์เอิร์ธ</li>
+                                <li>• หมู่ 17: ฮาโลเจน · หมู่ 18: แก๊สมีตระกูล</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+                    <div class="glass rounded-xl p-5 border-l-2 border-orange-500">
+                        <div class="text-xs text-orange-400 mb-1">หมู่ 1</div>
+                        <h5 class="font-display font-bold text-orange-300 mb-2">โลหะอัลคาไล</h5>
+                        <p class="text-xs text-slate-400">活泼มาก ทำปฏิกิริยากับน้ำรุนแรง</p>
+                        <div class="text-xs text-slate-500 mt-2">Li · Na · K · Rb · Cs</div>
+                    </div>
+                    <div class="glass rounded-xl p-5 border-l-2 border-amber-500">
+                        <div class="text-xs text-amber-400 mb-1">หมู่ 2</div>
+                        <h5 class="font-display font-bold text-amber-300 mb-2">อัลคาไลน์เอิร์ธ</h5>
+                        <p class="text-xs text-slate-400">ทำปฏิกิริยากับน้ำเล็กน้อย</p>
+                        <div class="text-xs text-slate-500 mt-2">Be · Mg · Ca · Sr · Ba</div>
+                    </div>
+                    <div class="glass rounded-xl p-5 border-l-2 border-teal-500">
+                        <div class="text-xs text-teal-400 mb-1">หมู่ 17</div>
+                        <h5 class="font-display font-bold text-teal-300 mb-2">ฮาโลเจน</h5>
+                        <p class="text-xs text-slate-400">อโลหะ ทำปฏิกิริยาเคมีดี</p>
+                        <div class="text-xs text-slate-500 mt-2">F · Cl · Br · I</div>
+                    </div>
+                    <div class="glass rounded-xl p-5 border-l-2 border-purple-500">
+                        <div class="text-xs text-purple-400 mb-1">หมู่ 18</div>
+                        <h5 class="font-display font-bold text-purple-300 mb-2">แก๊สมีตระกูล</h5>
+                        <p class="text-xs text-slate-400">เฉื่อย ไม่ทำปฏิกิริยาเคมี</p>
+                        <div class="text-xs text-slate-500 mt-2">He · Ne · Ar · Kr · Xe</div>
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 mt-6">
+                    <h4 class="font-display text-xl font-bold text-amber-300 mb-4">
+                        <i class="fas fa-lightbulb mr-2"></i>การใช้ประโยชน์ของธาตุในชีวิตประจำวัน
+                    </h4>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+                        <div class="flex items-start gap-3 p-3 rounded-lg bg-white/5">
+                            <div class="text-amber-400 font-mono font-bold">Fe</div>
+                            <div><strong class="text-white">เหล็ก</strong> — ใช้ทำโครงสร้าง รถยนต์ เครื่องมือ</div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 rounded-lg bg-white/5">
+                            <div class="text-amber-400 font-mono font-bold">Cu</div>
+                            <div><strong class="text-white">ทองแดง</strong> — ใช้ทำสายไฟฟ้า อุปกรณ์ไฟฟ้า</div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 rounded-lg bg-white/5">
+                            <div class="text-amber-400 font-mono font-bold">Al</div>
+                            <div><strong class="text-white">อะลูมิเนียม</strong> — ใช้ทำกระป๋อง กรอบหน้าต่าง</div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 rounded-lg bg-white/5">
+                            <div class="text-amber-400 font-mono font-bold">Au</div>
+                            <div><strong class="text-white">ทองคำ</strong> — ใช้ทำเครื่องประดับ อิเล็กทรอนิกส์</div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 rounded-lg bg-white/5">
+                            <div class="text-amber-400 font-mono font-bold">O</div>
+                            <div><strong class="text-white">ออกซิเจน</strong> — สำหรับหายใจ การเผาไหม้</div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 rounded-lg bg-white/5">
+                            <div class="text-amber-400 font-mono font-bold">Si</div>
+                            <div><strong class="text-white">ซิลิกอน</strong> — ใช้ทำชิปคอมพิวเตอร์ แผงโซลาร์เซลล์</div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 rounded-lg bg-white/5">
+                            <div class="text-amber-400 font-mono font-bold">He</div>
+                            <div><strong class="text-white">ฮีเลียม</strong> — ใช้เติมลูกโป่ง สำหรับดำน้ำลึก</div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 rounded-lg bg-white/5">
+                            <div class="text-amber-400 font-mono font-bold">Na</div>
+                            <div><strong class="text-white">โซเดียม</strong> — ใช้ในโซเดียมไลท์ การผลิตสารเคมี</div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 rounded-lg bg-white/5">
+                            <div class="text-amber-400 font-mono font-bold">Cl</div>
+                            <div><strong class="text-white">คลอรีน</strong> — ใช้ฆ่าเชื้อในน้ำประปา สระว่ายน้ำ</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ============ SECTION 5 ============ -->
+            <section id="sec5">
+                <div class="flex items-start gap-6 mb-8">
+                    <div class="section-number">05</div>
+                    <div class="pt-6">
+                        <div class="text-xs uppercase tracking-widest text-amber-400 mb-2">Featured Topic · Electrolysis</div>
+                        <h2 class="font-display text-4xl font-bold text-white">การแยกน้ำด้วยไฟฟ้า</h2>
+                        <p class="text-slate-400 mt-2 text-sm">หัวข้อสำคัญที่เน้นย้ำเป็นพิเศษ พร้อมโจทย์แนวข้อสอบจริง</p>
+                    </div>
+                </div>
+                
+                <div class="divider-fancy my-8"></div>
+                
+                <div class="callout rounded-r-xl p-6 mb-8">
+                    <h3 class="font-display text-xl font-bold text-amber-300 mb-3">
+                        <i class="fas fa-history mr-2"></i>ประวัติ: การทดลองของลาวัวซีเย (Lavoisier)
+                    </h3>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        <strong class="text-white">อ็องตวน-โลร็อง เดอ ลาวัวซีเย (Antoine-Laurent de Lavoisier)</strong> นักเคมีชาวฝรั่งเศส ได้ทำการทดลองสำคัญโดยให้น้ำผ่านท่อเหล็กหล่อที่ถูกเผาจนร้อน พบว่าน้ำเกิดการแยกตัวและเกิดแก๊สขึ้น ทำให้เขาสรุปได้ว่า:
+                    </p>
+                    <ul class="mt-3 space-y-1.5 text-sm text-slate-300 ml-4">
+                        <li><i class="fas fa-check text-amber-400 mr-2"></i>น้ำ<strong class="text-amber-300">ไม่ใช่ธาตุ</strong> แต่เป็น<strong class="text-amber-300">สารประกอบ</strong></li>
+                        <li><i class="fas fa-check text-amber-400 mr-2"></i>น้ำประกอบด้วยธาตุ <strong class="text-amber-300">ไฮโดรเจน</strong> และ <strong class="text-amber-300">ออกซิเจน</strong></li>
+                        <li><i class="fas fa-check text-amber-400 mr-2"></i>ทฤษฎีธาตุ 4 ของอริสโตเติล (ดิน น้ำ ไฟ อากาศ) <strong class="text-amber-300">ไม่ถูกต้อง</strong></li>
+                        <li><i class="fas fa-check text-amber-400 mr-2"></i>เขาจัดทำบัญชีธาตุ <strong class="text-amber-300">33 ชนิด</strong> และนิยาม "ธาตุ" ใหม่</li>
+                    </ul>
+                </div>
+                
+                <div class="glass glow-card rounded-2xl p-8 mb-8">
+                    <h3 class="font-display text-2xl font-bold text-amber-300 mb-2">
+                        <i class="fas fa-bolt mr-2"></i>อุปกรณ์การแยกน้ำด้วยไฟฟ้า
+                    </h3>
+                    <p class="text-sm text-slate-400 mb-6">Electrolysis of Water — เซลล์อิเล็กโทรไลต์ชนิดใช้แหล่งจ่ายไฟภายนอก</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="flex justify-center">
+                            <svg width="320" height="320" viewBox="0 0 320 320">
+                                <defs>
+                                    <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="rgba(13, 148, 136, 0.1)"/>
+                                        <stop offset="100%" stop-color="rgba(13, 148, 136, 0.4)"/>
+                                    </linearGradient>
+                                    <linearGradient id="batteryGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#fbbf24"/>
+                                        <stop offset="100%" stop-color="#b45309"/>
+                                    </linearGradient>
+                                </defs>
+                                
+                                <rect x="120" y="20" width="80" height="40" rx="4" fill="url(#batteryGrad)" stroke="#fbbf24" stroke-width="2"/>
+                                <text x="140" y="45" fill="#0a0e27" font-size="14" font-weight="700">+</text>
+                                <text x="175" y="45" fill="#0a0e27" font-size="14" font-weight="700">−</text>
+                                <text x="160" y="75" text-anchor="middle" fill="#fbbf24" font-size="11">แหล่งจ่ายไฟ</text>
+                                
+                                <path d="M 140 60 L 80 60 L 80 130" stroke="#fbbf24" stroke-width="2" fill="none" class="flow-line"/>
+                                <path d="M 180 60 L 240 60 L 240 130" stroke="#14b8a6" stroke-width="2" fill="none" class="flow-line"/>
+                                
+                                <rect x="50" y="120" width="220" height="170" rx="4" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                                
+                                <rect x="52" y="160" width="216" height="128" fill="url(#waterGrad)"/>
+                                <text x="160" y="280" text-anchor="middle" fill="#14b8a6" font-size="10">น้ำ + อิเล็กโทรไลต์ (NaOH)</text>
+                                
+                                <rect x="65" y="130" width="50" height="160" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+                                <rect x="205" y="130" width="50" height="160" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+                                
+                                <rect x="67" y="135" width="46" height="60" fill="rgba(234, 88, 12, 0.3)"/>
+                                <rect x="207" y="155" width="46" height="40" fill="rgba(20, 184, 166, 0.3)"/>
+                                
+                                <rect x="85" y="180" width="10" height="100" fill="#475569"/>
+                                <rect x="225" y="180" width="10" height="100" fill="#475569"/>
+                                
+                                <circle cx="90" cy="240" r="2" fill="#fbbf24" class="bubble"/>
+                                <circle cx="90" cy="240" r="2" fill="#fbbf24" class="bubble-2"/>
+                                <circle cx="230" cy="240" r="2" fill="#14b8a6" class="bubble-3"/>
+                                <circle cx="230" cy="240" r="2" fill="#14b8a6" class="bubble"/>
+                                
+                                <text x="90" y="125" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="700">ขั้ว −</text>
+                                <text x="90" y="115" text-anchor="middle" fill="#fbbf24" font-size="10">H₂</text>
+                                <text x="230" y="125" text-anchor="middle" fill="#14b8a6" font-size="11" font-weight="700">ขั้ว +</text>
+                                <text x="230" y="115" text-anchor="middle" fill="#14b8a6" font-size="10">O₂</text>
+                                
+                                <line x1="115" y1="170" x2="120" y2="170" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+                                <text x="125" y="173" fill="rgba(255,255,255,0.5)" font-size="9">2 ส่วน</text>
+                                <line x1="200" y1="190" x2="205" y2="190" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+                                <text x="180" y="193" fill="rgba(255,255,255,0.5)" font-size="9">1 ส่วน</text>
+                            </svg>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-display font-bold text-amber-300 mb-2">ส่วนประกอบของอุปกรณ์</h4>
+                                <ul class="text-sm text-slate-300 space-y-1.5">
+                                    <li class="flex gap-2"><span class="text-amber-400">▸</span> <strong>แหล่งจ่ายไฟฟ้า</strong> (แบตเตอรี่) — ใช้กำหนดขั้ว +/−</li>
+                                    <li class="flex gap-2"><span class="text-amber-400">▸</span> <strong>ขั้วไฟฟ้า</strong> — ตามขั้วของแหล่งจ่ายไฟ</li>
+                                    <li class="flex gap-2"><span class="text-amber-400">▸</span> <strong>หลอดทดลอง</strong> — สำหรับเก็บแก๊สที่เกิดขึ้น</li>
+                                    <li class="flex gap-2"><span class="text-amber-400">▸</span> <strong>น้ำ + สารละลายอิเล็กโทรไลต์</strong> (NaOH) — ช่วยนำไฟฟ้า</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="callout-danger rounded-r-lg p-4">
+                                <div class="font-semibold text-red-300 text-sm mb-1">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i>สำคัญ!
+                                </div>
+                                <p class="text-sm text-slate-300">น้ำบริสุทธิ์/น้ำกลั่น<strong class="text-red-300">ไม่นำไฟฟ้า</strong> จึงต้องเติม <strong>โซเดียมไฮดรอกไซด์ (NaOH)</strong> เล็กน้อยเพื่อให้กระแสไฟฟ้าไหลผ่านได้ดี</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-4 mb-8">
+                    <div class="glass rounded-xl p-6 border-l-4 border-amber-500">
+                        <div class="text-amber-300 text-xs mb-1">ขั้วลบ (Cathode)</div>
+                        <h4 class="font-display text-xl font-bold text-amber-300 mb-3">แก๊สไฮโดรเจน (H₂)</h4>
+                        <div class="font-mono text-sm bg-black/30 rounded p-3 mb-3 text-amber-200">
+                            4H⁺ + 4e⁻ → 2H₂
+                        </div>
+                        <ul class="text-sm text-slate-300 space-y-1">
+                            <li>• เกิดที่ขั้ว <strong class="text-amber-300">ลบ (−)</strong></li>
+                            <li>• ปริมาตร <strong class="text-amber-300">2 ส่วน</strong></li>
+                            <li>• ทดสอบ: นำไม้ขีดที่ติดไฟเข้าใกล้ → เกิดเสียง <strong class="text-amber-300">"พรึ่บ"</strong> (ระเบิดเล็กน้อย)</li>
+                            <li>• เป็นแก๊สที่<strong class="text-amber-300">ติดไฟ</strong> แต่ไม่ช่วยให้ไฟติด</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="glass rounded-xl p-6 border-l-4 border-teal-500">
+                        <div class="text-teal-300 text-xs mb-1">ขั้วบวก (Anode)</div>
+                        <h4 class="font-display text-xl font-bold text-teal-300 mb-3">แก๊สออกซิเจน (O₂)</h4>
+                        <div class="font-mono text-sm bg-black/30 rounded p-3 mb-3 text-teal-200">
+                            4OH⁻ → O₂ + 2H₂O + 4e⁻
+                        </div>
+                        <ul class="text-sm text-slate-300 space-y-1">
+                            <li>• เกิดที่ขั้ว <strong class="text-teal-300">บวก (+)</strong></li>
+                            <li>• ปริมาตร <strong class="text-teal-300">1 ส่วน</strong></li>
+                            <li>• ทดสอบ: นำไม้ขีดที่ดับแล้ว/ธูปถ่านแดงเข้าใกล้ → <strong class="text-teal-300">ลุกติดไฟใหม่</strong></li>
+                            <li>• เป็นแก๊สที่<strong class="text-teal-300">ช่วยให้ไฟติด</strong> แต่ไม่ติดไฟเอง</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="glass-gold rounded-2xl p-6 mb-8">
+                    <div class="grid md:grid-cols-2 gap-6 items-center">
+                        <div>
+                            <h4 class="font-display text-lg font-bold text-amber-300 mb-3">
+                                <i class="fas fa-equals mr-2"></i>ปฏิกิริยารวม
+                            </h4>
+                            <div class="font-mono text-2xl text-white text-center bg-black/40 rounded-xl py-4 px-6">
+                                2H₂O <span class="text-amber-400 mx-3">⟶</span> 2H₂ <span class="text-teal-400 mx-2">+</span> O₂
+                            </div>
+                            <p class="text-sm text-slate-400 mt-3 text-center">การแยกน้ำเป็นปฏิกิริยาที่<strong class="text-amber-300">ดูดพลังงาน</strong> (Endothermic) — ต้องการพลังงานไฟฟ้า</p>
+                        </div>
+                        <div>
+                            <h4 class="font-display text-lg font-bold text-amber-300 mb-3">
+                                <i class="fas fa-percentage mr-2"></i>อัตราส่วนปริมาตรแก๊ส
+                            </h4>
+                            <div class="flex items-center justify-center gap-4">
+                                <div class="text-center">
+                                    <div class="text-4xl font-display font-bold text-amber-300">2</div>
+                                    <div class="text-xs text-amber-400 mt-1">H₂</div>
+                                </div>
+                                <div class="text-2xl text-slate-500">:</div>
+                                <div class="text-center">
+                                    <div class="text-4xl font-display font-bold text-teal-300">1</div>
+                                    <div class="text-xs text-teal-400 mt-1">O₂</div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-3 text-center">ไฮโดรเจน : ออกซิเจน = 2 : 1</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 mb-8">
+                    <h4 class="font-display text-xl font-bold text-amber-300 mb-4">
+                        <i class="fas fa-battery-bolt mr-2"></i>เปรียบเทียบเซลล์ไฟฟ้าเคมี
+                    </h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="text-amber-400 border-b border-amber-500/20">
+                                    <th class="text-left py-3 px-2">คุณสมบัติ</th>
+                                    <th class="text-center py-3 px-2">เซลล์กัลวานิก (Galvanic)</th>
+                                    <th class="text-center py-3 px-2">เซลล์อิเล็กโทรไลซิส (Electrolysis)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-slate-300">
+                                <tr class="border-b border-white/5">
+                                    <td class="py-3 px-2">แหล่งจ่ายไฟ</td>
+                                    <td class="text-center">ไม่มี (เกิดเอง)</td>
+                                    <td class="text-center text-amber-300">มี (ใช้ภายนอก)</td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-3 px-2">การเปลี่ยนพลังงาน</td>
+                                    <td class="text-center">เคมี → ไฟฟ้า</td>
+                                    <td class="text-center text-amber-300">ไฟฟ้า → เคมี</td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-3 px-2">ขั้ว +/−</td>
+                                    <td class="text-center">พิจารณาจากปฏิกิริยา</td>
+                                    <td class="text-center text-amber-300">ตามแหล่งจ่ายไฟ</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-2">ตัวอย่าง</td>
+                                    <td class="text-center">แบตเตอรี่ ไฟฉาย</td>
+                                    <td class="text-center text-amber-300">การแยกน้ำ การชุบโลหะ</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-6">
+                    <h4 class="font-display text-xl font-bold text-amber-300 mb-4">
+                        <i class="fas fa-vial mr-2"></i>สรุปการทดสอบแก๊ส
+                    </h4>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-amber-500/5 rounded-xl p-5 border border-amber-500/20">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-300 font-bold">H₂</div>
+                                <div>
+                                    <div class="font-bold text-amber-300">แก๊สไฮโดรเจน</div>
+                                    <div class="text-xs text-slate-400">ขั้วลบ (−)</div>
+                                </div>
+                            </div>
+                            <div class="space-y-2 text-sm text-slate-300">
+                                <div class="flex items-start gap-2">
+                                    <i class="fas fa-fire text-amber-400 mt-1"></i>
+                                    <span>ใช้ <strong>ไม้ขีดที่ติดไฟ</strong> หรือ <strong>ธูปที่ลุกเป็นเปลวไฟ</strong></span>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <i class="fas fa-volume-up text-amber-400 mt-1"></i>
+                                    <span>ผล: เกิดเสียง <strong class="text-amber-300">"พรึ่บ"</strong> (ป๊อก)</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-teal-500/5 rounded-xl p-5 border border-teal-500/20">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center text-teal-300 font-bold">O₂</div>
+                                <div>
+                                    <div class="font-bold text-teal-300">แก๊สออกซิเจน</div>
+                                    <div class="text-xs text-slate-400">ขั้วบวก (+)</div>
+                                </div>
+                            </div>
+                            <div class="space-y-2 text-sm text-slate-300">
+                                <div class="flex items-start gap-2">
+                                    <i class="fas fa-fire text-teal-400 mt-1"></i>
+                                    <span>ใช้ <strong>ไม้ขีดที่ดับแล้ว</strong> หรือ <strong>ธูปถ่านแดง</strong></span>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <i class="fas fa-bolt text-teal-400 mt-1"></i>
+                                    <span>ผล: ลุกติดไฟใหม่ / <strong class="text-teal-300">วาบสว่าง</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="callout-danger rounded-r-lg p-4 mt-4">
+                        <div class="text-sm text-slate-300">
+                            <strong class="text-red-300"><i class="fas fa-exclamation-circle mr-1"></i>ระวัง! สับสนได้ง่าย:</strong>
+                            <ul class="mt-2 ml-4 space-y-1">
+                                <li>• ไม้ขีด <strong class="text-amber-300">ติดไฟ</strong> → ทดสอบ <strong class="text-amber-300">H₂</strong> (เกิดเสียงพรึ่บ)</li>
+                                <li>• ไม้ขีด <strong class="text-teal-300">ดับแล้ว</strong> → ทดสอบ <strong class="text-teal-300">O₂</strong> (ลุกติดใหม่)</li>
+                                <li>• ธูป <strong class="text-amber-300">เปลวไฟ</strong> → ทดสอบ <strong class="text-amber-300">H₂</strong></li>
+                                <li>• ธูป <strong class="text-teal-300">ถ่านแดง</strong> → ทดสอบ <strong class="text-teal-300">O₂</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ============ SECTION 6 ============ -->
+            <section id="sec6">
+                <div class="flex items-start gap-6 mb-8">
+                    <div class="section-number">06</div>
+                    <div class="pt-6">
+                        <div class="text-xs uppercase tracking-widest text-amber-400 mb-2">Practice</div>
+                        <h2 class="font-display text-4xl font-bold text-white">แบบฝึกหัดพร้อมเฉลย</h2>
+                        <p class="text-slate-400 mt-2 text-sm">โจทย์แนวข้อสอบจริงจาก สสวท. · IPST · แนวข้อสอบเข้า ม.4</p>
+                    </div>
+                </div>
+                
+                <div class="divider-fancy my-8"></div>
+                
+                <div class="glass rounded-2xl p-6 mb-6">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-300 font-bold text-sm">1</div>
+                        <div class="flex-1">
+                            <p class="text-slate-200 leading-relaxed">จากอุปกรณ์ที่ใช้ในการแยกน้ำด้วยไฟฟ้า <strong class="text-amber-300">ข้อใดกล่าวไม่ถูกต้อง?</strong> <span class="text-xs text-slate-500">(tedet58_sci_g8_01)</span></p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 ml-11">
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">①</span> ออกซิเจนเกิดขึ้นที่ขั้ว (+) ไฮโดรเจนเกิดขึ้นที่ขั้ว (−)
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">②</span> นำไม้ขีดไฟที่ดับแล้วเข้าใกล้แก๊สที่ขั้ว (+) ไม้ขีดจะติดไฟอีกครั้ง
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">③</span> นำไม้ขีดไฟที่ติดไฟเข้าใกล้แก๊สที่ขั้ว (−) จะเกิดเสียง "พรึ่บ"
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-sm text-slate-200">
+                            <span class="text-red-400 font-mono mr-2">④</span> อัตราส่วนปริมาตร O₂ : H₂ = 2 : 1
+                            <span class="ml-2 text-xs text-red-300">(ไม่ถูกต้อง)</span>
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">⑤</span> ใส่ NaOH เล็กน้อยเพื่อทำให้กระแสไฟฟ้าไหลได้
+                        </div>
+                    </div>
+                    <div class="mt-4 ml-11 callout rounded-r-lg p-3 text-sm">
+                        <strong class="text-amber-300">เฉลย: ④</strong> — อัตราส่วนที่ถูกต้องคือ <strong>H₂ : O₂ = 2 : 1</strong> (ไม่ใช่ O₂ : H₂ = 2 : 1) เพราะไฮโดรเจนเกิดที่ขั้วลบปริมาตร 2 ส่วน ออกซิเจนเกิดที่ขั้วบวกปริมาตร 1 ส่วน
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 mb-6">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-300 font-bold text-sm">2</div>
+                        <div class="flex-1">
+                            <p class="text-slate-200 leading-relaxed">ติดตั้งอุปกรณ์อิเล็กโทรไลซิส และเติมสารละลาย NaOH เจือจางลงไป ทำให้มีกระแสไฟฟ้าไหลผ่าน <strong class="text-amber-300">ข้อใดบ้างที่อธิบายได้ถูกต้อง?</strong> <span class="text-xs text-slate-500">(tedet60_sci_g8_02)</span></p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 ml-11">
+                        <div class="quiz-option p-3 rounded-lg bg-red-500/5 text-sm text-slate-400 line-through">
+                            <span class="text-slate-500 font-mono mr-2">①</span> เกิดแก๊สไฮโดรเจนที่ขั้ว (+)
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-sm text-slate-200">
+                            <span class="text-green-400 font-mono mr-2">②</span> สามารถแยกน้ำได้เป็นแก๊สไฮโดรเจน และออกซิเจน
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-sm text-slate-200">
+                            <span class="text-green-400 font-mono mr-2">③</span> ใส่ NaOH เพื่อให้กระแสไฟฟ้าผ่านได้ดี
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-sm text-slate-200">
+                            <span class="text-green-400 font-mono mr-2">④</span> อัตราส่วนปริมาตรของแก๊สที่ขั้ว (−) : (+) คือ 2:1
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-red-500/5 text-sm text-slate-400 line-through">
+                            <span class="text-slate-500 font-mono mr-2">⑤</span> นำไม้ที่ติดไฟเป็นถ่านแดงไปใกล้แก๊สที่ขั้ว (−) จะเกิดการเผาไหม้อีกครั้ง
+                        </div>
+                    </div>
+                    <div class="mt-4 ml-11 callout rounded-r-lg p-3 text-sm">
+                        <strong class="text-amber-300">เฉลย: ② ③ ④</strong> — ขั้ว (+) เกิดออกซิเจน (ไม่ใช่ไฮโดรเจน) | การใช้ "ถ่านแดง" ทดสอบจะต้องเอาไปใกล้ขั้ว (+) ที่เกิด O₂ จึงจะลุกติดไฟใหม่ ไม่ใช่ขั้ว (−) | ปฏิกิริยา: 2H₂O → 2H₂ + O₂
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 mb-6">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-300 font-bold text-sm">3</div>
+                        <div class="flex-1">
+                            <p class="text-slate-200 leading-relaxed">ขั้นตอนการทดลองอิเล็กโทรไลซิส: (a) ละลาย NaOH ในน้ำ (b) ใส่สารละลายลงในอุปกรณ์ (c) ต่อเข้ากับแหล่งจ่ายไฟ (d) นำไม้ขีดไฟที่จุดติดไฟเข้าใกล้ปากหลอดขั้วลบ (e) จุดธูปแล้วนำเข้าใกล้ปากหลอดขั้วบวก <strong class="text-amber-300">ข้อใดอธิบายไม่ถูกต้อง?</strong> <span class="text-xs text-slate-500">(tedet62_all_sci_g7_13)</span></p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 ml-11">
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">①</span> นำไม้ขีดไฟเข้าใกล้แก๊สที่ขั้วลบ จะเกิดเสียงระเบิด
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">②</span> แก๊สที่เกิดที่ขั้วบวก คือ แก๊สออกซิเจน
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-sm text-slate-200">
+                            <span class="text-red-400 font-mono mr-2">③</span> ธาตุที่ประกอบกันเป็นแก๊สที่เกิดขึ้นที่ขั้วบวก เป็นธาตุที่เบาที่สุด
+                            <span class="ml-2 text-xs text-red-300">(ไม่ถูกต้อง)</span>
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">④</span> ใส่ NaOH เพื่อให้กระแสไฟฟ้าไหลผ่านได้ดี
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">⑤</span> การทดลองนี้เป็นการพิสูจน์ว่า น้ำเป็นสารประกอบ
+                        </div>
+                    </div>
+                    <div class="mt-4 ml-11 callout rounded-r-lg p-3 text-sm">
+                        <strong class="text-amber-300">เฉลย: ③</strong> — แก๊สที่ขั้วบวกคือ <strong>ออกซิเจน (O₂)</strong> ซึ่งไม่ใช่ธาตุที่เบาที่สุด (ธาตุที่เบาที่สุดคือ <strong>ไฮโดรเจน</strong> ซึ่งเกิดที่ขั้วลบ)
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 mb-6">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-300 font-bold text-sm">4</div>
+                        <div class="flex-1">
+                            <p class="text-slate-200 leading-relaxed">การเปลี่ยนแปลงของสารในข้อใดเป็น <strong class="text-amber-300">กระบวนการดูดความร้อน</strong> (Endothermic)? <span class="text-xs text-slate-500">(โจทย์พิเศษ วิทยาศาสตร์ 500 ข้อ)</span></p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 ml-11">
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">①</span> การควบแน่นของไอน้ำเป็นหยดน้ำ
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-sm text-slate-200">
+                            <span class="text-green-400 font-mono mr-2">②</span> การแยกน้ำด้วยไฟฟ้า
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-sm text-slate-200">
+                            <span class="text-green-400 font-mono mr-2">③</span> การแข็งตัวของน้ำเป็นน้ำแข็ง
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">④</span> ปฏิกิริยาระหว่างแคลเซียมกับน้ำ ได้สารละลายด่างและแก๊สไฮโดรเจน
+                        </div>
+                    </div>
+                    <div class="mt-4 ml-11 callout rounded-r-lg p-3 text-sm">
+                        <strong class="text-amber-300">เฉลย: ② ③</strong> — การแยกน้ำด้วยไฟฟ้าต้องการพลังงานไฟฟ้า (ดูดความร้อน/พลังงาน) | การแข็งตัวของน้ำเป็นน้ำแข็งคายพลังงานออก (อันที่จริงเป็น Exothermic) — <strong class="text-red-300">หมายเหตุ:</strong> ตามเฉลยเดิมคือ ②③ แต่ทางวิชาการการแข็งตัวเป็น Exothermic นักเรียนควรเน้นจำว่า <strong>การแยกน้ำด้วยไฟฟ้าเป็น Endothermic</strong>
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 mb-6">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-300 font-bold text-sm">5</div>
+                        <div class="flex-1">
+                            <p class="text-slate-200 leading-relaxed">แก๊สออกซิเจนช่วยให้ไฟติด แต่ไม่ติดไฟ · แก๊สไฮโดรเจนติดไฟ แต่ไม่ช่วยให้ไฟติด หากนำธูปติดไฟที่เหลือแต่ถ่านแดงใส่ลงในหลอดทดลองที่มีแก๊ส A และ B <strong class="text-amber-300">จุดประสงค์คืออะไร?</strong> <span class="text-xs text-slate-500">(ipst_p6_2558_23)</span></p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 ml-11">
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">①</span> เพื่อทดสอบสมมติฐานว่า แก๊ส A คือ H₂ และ B คือ O₂
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-sm text-slate-200">
+                            <span class="text-green-400 font-mono mr-2">②</span> เพื่อให้ได้ข้อสรุปว่า แก๊ส A คือ O₂ และ B คือ H₂
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">③</span> เพื่อยืนยันว่า น้ำเป็นสารบริสุทธิ์ที่ประกอบด้วย O₂ และ H₂
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">④</span> เพื่อตอบปัญหาว่า แก๊ส A หรือ B เป็น O₂
+                        </div>
+                    </div>
+                    <div class="mt-4 ml-11 callout rounded-r-lg p-3 text-sm">
+                        <strong class="text-amber-300">เฉลย: ②</strong> — การใช้ธูปถ่านแดง (ยังมีความร้อน) หากนำเข้าใกล้แก๊สที่ช่วยให้ไฟติด (O₂) จะลุกติดไฟใหม่ → สรุปได้ว่าแก๊ส A คือ O₂ (เกิดที่ขั้วบวก) และ B คือ H₂
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 mb-6">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-300 font-bold text-sm">6</div>
+                        <div class="flex-1">
+                            <p class="text-slate-200 leading-relaxed">พิจารณา: <strong>ก.</strong> แก๊สที่ขั้ว + คือ O₂ · <strong>ข.</strong> แก๊สที่ขั้ว − คือ O₂ · <strong>ค.</strong> ถ้าเกิด H₂ 20 cm³ จะเกิด O₂ 10 cm³ เสมอ · <strong>ง.</strong> แก๊สที่ขั้ว − จะเกิดเสียงระเบิดเมื่อทดสอบด้วยถ่านไม้ขีดที่มีเปลวไฟ · <strong>จ.</strong> แก๊สที่ขั้ว − จะช่วยให้ถ่านที่ติดไฟคุแดงสว่างวาบขึ้น <strong class="text-amber-300">ผลจากการแยกน้ำด้วยไฟฟ้าคือข้อใด?</strong> <span class="text-xs text-slate-500">(ประชา ศิวเวทกุล)</span></p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 ml-11">
+                        <div class="quiz-option p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-sm text-slate-200">
+                            <span class="text-green-400 font-mono mr-2">①</span> ก, ค และ ง
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">②</span> ก, ค และ จ
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">③</span> ข, ค และ ง
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">④</span> ข, ง และ จ
+                        </div>
+                    </div>
+                    <div class="mt-4 ml-11 callout rounded-r-lg p-3 text-sm">
+                        <strong class="text-amber-300">เฉลย: ① (ก, ค, ง)</strong> — <strong>ก</strong> ถูก (ขั้ว + เกิด O₂) | <strong>ค</strong> ถูก (H₂ : O₂ = 2:1 ดังนั้น H₂ 20 cm³ → O₂ 10 cm³) | <strong>ง</strong> ถูก (ขั้ว − เกิด H₂ ทดสอบด้วยไม้ขีดติดไฟ → เสียงระเบิด) | <strong>จ</strong> ผิดเพราะขั้ว − เกิด H₂ ไม่ใช่ O₂ จึงไม่ช่วยให้ถ่านสว่าง
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 mb-6">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-300 font-bold text-sm">7</div>
+                        <div class="flex-1">
+                            <p class="text-slate-200 leading-relaxed">ในการแยกน้ำด้วยไฟฟ้า พบว่าเกิดแก๊ส H₂ และ O₂ รวมกันมีปริมาตร <strong class="text-amber-300">48 cm³</strong> ตัวเลือกใดคือปริมาตรแก๊สที่เกิดขึ้น? <span class="text-xs text-slate-500">(imso2560_nation_55)</span></p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 ml-11">
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">①</span> H₂ 16 cm³ และ O₂ 32 cm³
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">②</span> H₂ 12 cm³ และ O₂ 36 cm³
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-sm text-slate-200">
+                            <span class="text-green-400 font-mono mr-2">③</span> H₂ 32 cm³ และ O₂ 16 cm³
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">④</span> H₂ 36 cm³ และ O₂ 12 cm³
+                        </div>
+                    </div>
+                    <div class="mt-4 ml-11 callout rounded-r-lg p-3 text-sm">
+                        <strong class="text-amber-300">เฉลย: ③</strong> — อัตราส่วน H₂ : O₂ = 2 : 1 รวม 3 ส่วน = 48 cm³ → 1 ส่วน = 16 cm³ → H₂ = 2×16 = <strong>32 cm³</strong> O₂ = 1×16 = <strong>16 cm³</strong> (รวม 48 cm³ ถูกต้อง)
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 mb-6">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-300 font-bold text-sm">8</div>
+                        <div class="flex-1">
+                            <p class="text-slate-200 leading-relaxed">จากการทดลองของ <strong>อ็องตวน ลาวัวซีเย</strong> (น้ำผ่านท่อเหล็กหล่อที่ถูกเผาจนร้อน) <strong class="text-amber-300">ข้อใดอธิบายถูกต้อง?</strong> <span class="text-xs text-slate-500">(tedet62_all_g7_19)</span></p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 ml-11">
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">①</span> น้ำเป็นสารที่ไม่สามารถแยกตัวเป็นสารอื่นได้อีก
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-sm text-slate-200">
+                            <span class="text-green-400 font-mono mr-2">②</span> น้ำที่ผ่านท่อเหล็กหล่อที่ถูกเผาจนร้อน จะเกิดการแยกตัว
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">③</span> เมื่อเวลาผ่านไป มวลของท่อเหล็กหล่อจะลดลง
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">④</span> ที่บริเวณ A มีไอน้ำบริสุทธิ์สะสมอยู่
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">⑤</span> ถ้านำธูปที่ติดถ่านแดงเข้าไปใกล้แก๊สที่บริเวณ A ธูปจะวาบเป็นเปลวไฟสว่าง
+                        </div>
+                    </div>
+                    <div class="mt-4 ml-11 callout rounded-r-lg p-3 text-sm">
+                        <strong class="text-amber-300">เฉลย: ②</strong> — น้ำเกิดการแยกตัวเมื่อผ่านท่อเหล็กที่ร้อน | <strong>มวลท่อเหล็กเพิ่มขึ้น</strong> (ไม่ใช่ลดลง) เพราะ O₂ ไปรวมกับเหล็ก | บริเวณ A มี <strong>แก๊สไฮโดรเจน</strong> สะสม | ถ่านแดงใช้ทดสอบ O₂ (ไม่ใช่ H₂) — ถ้าใช้ธูปที่ติดไฟเข้าใกล้ H₂ จะเกิดเสียงระเบิด
+                    </div>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 mb-6">
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-300 font-bold text-sm">9</div>
+                        <div class="flex-1">
+                            <p class="text-slate-200 leading-relaxed">ดวงพรทดลองต่อวงจรในแก้วที่มี <strong>น้ำผสมเกลือ</strong> <strong class="text-amber-300">ข้อใดถูกต้อง?</strong> <span class="text-xs text-slate-500">(ipst_p6_2549_96)</span></p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 ml-11">
+                        <div class="quiz-option p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-sm text-slate-200">
+                            <span class="text-green-400 font-mono mr-2">①</span> มีฟองแก๊สออกซิเจนบริเวณเส้นลวดที่ต่อกับขั้วบวก
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">②</span> มีฟองแก๊สออกซิเจนบริเวณเส้นลวดที่ต่อกับขั้วลบ
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">③</span> มีฟองแก๊สไฮโดรเจนบริเวณเส้นลวดที่ต่อกับขั้วบวก
+                        </div>
+                        <div class="quiz-option p-3 rounded-lg bg-white/5 text-sm text-slate-300">
+                            <span class="text-amber-400 font-mono mr-2">④</span> ไม่มีข้อใดถูกต้อง
+                        </div>
+                    </div>
+                    <div class="mt-4 ml-11 callout rounded-r-lg p-3 text-sm">
+                        <strong class="text-amber-300">เฉลย: ①</strong> — ขั้วบวก (+) เกิดแก๊ส <strong>ออกซิเจน (O₂)</strong> เสมอ ส่วนขั้วลบ (−) เกิดแก๊ส <strong>ไฮโดรเจน (H₂)</strong> ข้อสังเกต: "น้ำผสมเกลือ" เป็นสารละลายอิเล็กโทรไลต์ที่นำไฟฟ้าได้ดี
+                    </div>
+                </div>
+                
+            </section>
+            
+            <section>
+                <div class="glass glow-card rounded-2xl p-8">
+                    <h3 class="font-display text-2xl font-bold text-amber-300 mb-6 text-center">
+                        <i class="fas fa-trophy mr-2"></i>สรุปสาระสำคัญทั้งหมด
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-4 text-sm">
+                        <div class="glass rounded-xl p-4">
+                            <div class="text-amber-300 font-semibold mb-2"><i class="fas fa-check-circle mr-1"></i>สารบริสุทธิ์</div>
+                            <p class="text-slate-300">แบ่งเป็น <strong>ธาตุ</strong> (1 ชนิดอะตอม) และ <strong>สารประกอบ</strong> (≥2 ชนิดธาตุ)</p>
+                        </div>
+                        <div class="glass rounded-xl p-4">
+                            <div class="text-amber-300 font-semibold mb-2"><i class="fas fa-check-circle mr-1"></i>ธาตุ 3 ประเภท</div>
+                            <p class="text-slate-300">โลหะ · อโลหะ · กึ่งโลหะ จัดในตารางธาตุ 7 คาบ 18 หมู่</p>
+                        </div>
+                        <div class="glass rounded-xl p-4">
+                            <div class="text-amber-300 font-semibold mb-2"><i class="fas fa-check-circle mr-1"></i>อะตอม</div>
+                            <p class="text-slate-300">ประกอบด้วย โปรตอน (+) · นิวตรอน (0) · อิเล็กตรอน (−)</p>
+                        </div>
+                        <div class="glass rounded-xl p-4">
+                            <div class="text-amber-300 font-semibold mb-2"><i class="fas fa-check-circle mr-1"></i>การแยกน้ำด้วยไฟฟ้า</div>
+                            <p class="text-slate-300">ขั้ว + → O₂ (1 ส่วน) · ขั้ว − → H₂ (2 ส่วน) · ต้องมีอิเล็กโทรไลต์</p>
+                        </div>
+                        <div class="glass rounded-xl p-4">
+                            <div class="text-amber-300 font-semibold mb-2"><i class="fas fa-check-circle mr-1"></i>การทดสอบแก๊ส</div>
+                            <p class="text-slate-300">H₂: ไม้ติดไฟ → เสียง "พรึ่บ" · O₂: ไม้ดับแล้ว → ลุกติดใหม่</p>
+                        </div>
+                        <div class="glass rounded-xl p-4">
+                            <div class="text-amber-300 font-semibold mb-2"><i class="fas fa-check-circle mr-1"></i>ลาวัวซีเย</div>
+                            <p class="text-slate-300">พิสูจน์ว่าน้ำเป็นสารประกอบ ไม่ใช่ธาตุ ทำลายทฤษฎีธาตุ 4</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+        </main>
+    </div>
+</div>
+
+<footer class="border-t border-amber-500/10 mt-16 py-8">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+        <div class="flex justify-center mb-4">
+            <svg width="40" height="40" viewBox="0 0 40 40">
+                <circle cx="20" cy="20" r="4" fill="#f59e0b"/>
+                <ellipse cx="20" cy="20" rx="16" ry="6" fill="none" stroke="rgba(245,158,11,0.4)" stroke-width="1"/>
+                <ellipse cx="20" cy="20" rx="16" ry="6" fill="none" stroke="rgba(13,148,136,0.4)" stroke-width="1" transform="rotate(60 20 20)"/>
+            </svg>
+        </div>
+        <p class="text-sm text-slate-400">สรุปเนื้อหาวิชาวิทยาศาสตร์ · สารบริสุทธิ์</p>
+        <p class="text-xs text-slate-500 mt-2">ครอบคลุมเนื้อหาสำหรับ มัธยมศึกษาตอนต้น และเตรียมสอบเข้า ม.4</p>
+        <p class="text-xs text-amber-500/60 mt-3">รวบรวมโดย OWLVY ACADEMY · ที่มา: สสวท. · IPST · แนวข้อสอบ ม.4</p>
+    </div>
+</footer>
+
+</body>
+</html>
