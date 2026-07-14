@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปเนื้อหา: ระบบขับถ่ายของเสียและระบบไต (Human Excretory System)</title>
+    <style>
+        :root {
+            --primary-color: #1a4f76;
+            --secondary-color: #2a7da3;
+            --accent-color: #e67e22;
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-color: #dcdde1;
+            --success-color: #2ecc71;
+            --warning-color: #e74c3c;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 20px;
+            margin-bottom: 35px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .nav-summary {
+            background: #eef4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .nav-summary h3 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .nav-summary ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .nav-summary li a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .nav-summary li a:hover {
+            text-decoration: underline;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-left: 5px solid var(--secondary-color);
+            padding-left: 12px;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            margin: 15px 0 10px 0;
+            font-size: 18px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-bottom: 20px;
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* Tables styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 15px;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        /* Callout Boxes */
+        .callout {
+            background-color: #fff9e6;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .callout-title {
+            font-weight: bold;
+            color: #b76211;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .danger-box {
+            background-color: #fdf2f2;
+            border-left: 4px solid var(--warning-color);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .danger-title {
+            font-weight: bold;
+            color: #c0392b;
+            margin-bottom: 5px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #e1b12c;
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .flow-path {
+            background: #f8fafc;
+            padding: 15px;
+            border: 1px dashed var(--secondary-color);
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 15px 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 5px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        
+        .math {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>ระบบขับถ่ายของเสียและระบบไต (Human Excretory System)</h1>
+        <p>สรุปเนื้อหาเชิงลึกเพื่อการเตรียมสอบและการเรียนรู้ จัดหมวดหมู่ตามหลักอนุกรมวิธานความรู้วิทยาศาสตร์</p>
+    </header>
+
+    <div class="nav-summary">
+        <h3>สารบัญเนื้อหา</h3>
+        <ul>
+            <li><a href="#section1">1. ภาพรวมและนิยามของระบบขับถ่าย</a></li>
+            <li><a href="#section2">2. โครงสร้างภายนอกของไตและทางเดินปัสสาวะ</a></li>
+            <li><a href="#section3">3. โครงสร้างภายในและหน่วยไต (Nephron)</a></li>
+            <li><a href="#section4">4. กระบวนการกรองและดูดกลับของสาร</a></li>
+            <li><a href="#section5">5. กระเพาะปัสสาวะและสุขอนามัย</a></li>
+        </ul>
+    </div>
+
+    <!-- SECTION 1 -->
+    <section id="section1">
+        <h2>1. ภาพรวมและนิยามของระบบขับถ่าย</h2>
+        <p><strong>ระบบขับถ่ายของเสีย (Excretory System)</strong> คือ ระบบที่ทำหน้าที่กำจัดของเสียที่เกิดจากกระบวนการเมแทบอลิซึมหรือผลจากการหายใจระดับเซลล์ (Cellular Respiration) ออกนอกร่างกาย พร้อมทั้งทำหน้าที่รักษาองค์ประกอบของเหลว ควบคุมสมดุลน้ำ แร่ธาตุ แรงดันออสโมซิส และปรับค่าความเป็นกรด-ด่าง (pH) ให้คงที่</p>
+        
+        <div class="callout">
+            <div class="callout-title">⚠️ จุดควรระวัง! ข้อสอบมักลวง</div>
+            <ul>
+                <li><strong>การถ่ายอุจจาระ</strong> เป็นการกำจัดกากอาหารที่เหลือจากการย่อย ซึ่งเป็นหน้าที่ของ <u>ระบบย่อยอาหาร</u> ไม่ใช่ระบบขับถ่าย</li>
+                <li><strong>การทำลายหรือสลายสารพิษ</strong> (Detoxification) ในร่างกาย เกิดขึ้นที่ <u>ตับ</u> ไม่ใช่ไต (ตับจะเปลี่ยนแอมโมเนียที่เป็นพิษสูงให้เป็นยูเรีย)</li>
+                <li><strong>การฟอกเลือดกับ การกรองเลือด:</strong> เลือดจะไปฟอกแก๊ส (แลกเปลี่ยนแก๊ส O₂ / CO₂) ที่ <u>ปอด</u> แต่เลือดจะไปกรองของเสียที่เป็นสารเคมี (ยูเรีย) ที่ <u>ไต</u></li>
+            </ul>
+        </div>
+
+        <h3>การสูญเสียน้ำออกจากร่างกายในภาวะปกติ</h3>
+        <p>ในสภาวะปกติ ร่างกายจะขับน้ำออกทางช่องทางต่างๆ โดยเรียงลำดับปริมาณจากมากไปน้อย ดังนี้:</p>
+        <div class="flow-path">
+            น้ำปัสสาวะ (ไต) &gt; เหงื่อ (ผิวหนัง) &gt; ลมหายใจออก (ปอด) &gt; อุจจาระ (ทวารหนัก)
+        </div>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section id="section2">
+        <h2>2. โครงสร้างภายนอกของไตและทางเดินปัสสาวะ</h2>
+        <p>ไตมนุษย์มีลักษณะคล้ายเมล็ดถั่ว ตั้งอยู่บริเวณช่องท้องสองข้างของกระดูกสันหลัง ทางเดินของน้ำปัสสาวะนับตั้งแต่ถูกผลิตขึ้นจนถึงขับออกจากร่างกาย มีลำดับขั้นตอนดังนี้:</p>
+        
+        <div class="flow-path">
+            เนื้อไต (สร้างปัสสาวะ) &gt; กรวยไต (Renal Pelvis) &gt; ท่อไต (Ureter) &gt; กระเพาะปัสสาวะ (Urinary Bladder) &gt; ท่อปัสสาวะ (Urethra)
+        </div>
+
+        <h3>การเปรียบเทียบหลอดเลือดที่ไหลเข้าและออกจากไต</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>คุณสมบัติ / ชนิดสาร</th>
+                    <th>หลอดเลือดแดงเข้าสู่ไต (Renal Artery)</th>
+                    <th>หลอดเลือดดำออกจากไต (Renal Vein)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>แก๊สออกซิเจน (O₂)</strong></td>
+                    <td><span style="color:green; font-weight:bold;">สูง</span></td>
+                    <td><span style="color:red; font-weight:bold;">ต่ำ</span> (ไตดึงไปใช้ในเซลล์)</td>
+                </tr>
+                <tr>
+                    <td><strong>แก๊สคาร์บอนไดออกไซด์ (CO₂)</strong></td>
+                    <td><span style="color:red; font-weight:bold;">ต่ำ</span></td>
+                    <td><span style="color:green; font-weight:bold;">สูง</span> (ผลผลิตจากการหายใจของเซลล์ไต)</td>
+                </tr>
+                <tr>
+                    <td><strong>ยูเรีย (Urea)</strong></td>
+                    <td><span style="color:red; font-weight:bold;">สูงที่สุด</span> (นำของเสียจากตับมากรอง)</td>
+                    <td><span style="color:green; font-weight:bold;">ต่ำที่สุด</span> (เนื่องจากถูกกรองออกไปแล้ว)</td>
+                </tr>
+                <tr>
+                    <td><strong>กลูโคส (Glucose)</strong></td>
+                    <td>ปกติ (ประมาณ 0.10%)</td>
+                    <td>ใกล้เคียงเดิม (ลดลงเล็กน้อยจากการใช้พลังงานของไต)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout">
+            <div class="callout-title">💡 สรุปความเข้มข้นของยูเรีย (Urea Concentration)</div>
+            <p>หากเรียงลำดับความเข้มข้นของยูเรียจาก <strong>น้อยที่สุด ไปหา มากที่สุด</strong> จะได้ดังนี้:</p>
+            <p style="text-align:center; font-weight:bold; color:var(--primary-color);">
+                หลอดเลือดดำไต (Renal Vein) &lt; หลอดเลือดแดงไต (Renal Artery) &lt; ท่อไต/น้ำปัสสาวะ (Ureter / Urine)
+            </p>
+        </div>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section id="section3">
+        <h2>3. โครงสร้างภายในและหน่วยไต (Nephron)</h2>
+        <p>ภายในเนื้อไตแต่ละข้างจะประกอบด้วยโครงสร้างขนาดเล็กที่ทำหน้าที่กรองเลือด เรียกว่า <strong>หน่วยไต (Nephron)</strong> จำนวนข้างละประมาณ 1 ล้านหน่วย ประกอบด้วยส่วนสำคัญ 2 กลุ่มหลัก คือ:</p>
+        
+        <h3>1. Renal Corpuscle (ส่วนที่เกี่ยวกับกระบวนการกรอง)</h3>
+        <ul>
+            <li><strong>โกลเมอรูลัส (Glomerulus):</strong> กลุ่มหลอดเลือดฝอยแตกแขนงที่มีความดันสูง ทำหน้าที่เป็นตัวกรองเชิงกล</li>
+            <li><strong>โบว์แมนแคปซูล (Bowman's Capsule):</strong> โครงสร้างคล้ายถ้วยหรือกระเปาะล้อมรอบโกลเมอรูลัส เพื่อรองรับสารที่กรองผ่านออกมา (Filtrate)</li>
+        </ul>
+
+        <h3>2. หลอดหน่วยไต / ท่อหน่วยไต (Convoluted Tubule)</h3>
+        <ul>
+            <li><strong>ท่อหน่วยไตส่วนต้น (Proximal Convoluted Tubule):</strong> เป็นบริเวณที่มีการดูดกลับสารที่มีประโยชน์มากที่สุด</li>
+            <li><strong>ห่วงเฮนเล (Loop of Henle):</strong> มีลักษณะเป็นห่วงรูปตัว U ทำหน้าที่ปรับความเข้มข้นของน้ำปัสสาวะและดูดกลับน้ำและโซเดียม</li>
+            <li><strong>ท่อหน่วยไตส่วนปลาย (Distal Convoluted Tubule):</strong> ทำหน้าที่ดูดกลับสารและหลั่งสารเคมีบางชนิดเพื่อปรับค่า pH ของเลือด</li>
+            <li><strong>ท่อรวม (Collecting Duct):</strong> รองรับน้ำปัสสาวะจากหลายหน่วยไตเพื่อส่งต่อไปยังกรวยไต</li>
+        </ul>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section id="section4">
+        <h2>4. กระบวนการกรองและดูดกลับของสาร</h2>
+        <p>การผลิตน้ำปัสสาวะอาศัย 3 กลไกหลัก คือ <strong>1. การกรอง (Filtration)</strong> ที่โกลเมอรูลัส, <strong>2. การดูดกลับ (Reabsorption)</strong> ที่ท่อหน่วยไต และ <strong>3. การหลั่ง (Secretion)</strong></p>
+
+        <h3>การจำแนกสารตามพฤติกรรมการกรองและการดูดกลับ</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ตำแหน่ง / สถานะ</th>
+                    <th>องค์ประกอบของสารที่ตรวจพบ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>ในโกลเมอรูลัส (เลือดก่อนกรอง)</strong></td>
+                    <td>เซลล์เม็ดเลือด, โปรตีนโมเลกุลใหญ่, กรดอะมิโน, กลูโคส, ยูเรีย, น้ำ, แร่ธาตุ</td>
+                </tr>
+                <tr>
+                    <td><strong>ในโบว์แมนแคปซูล (สารที่ผ่านการกรอง)</strong></td>
+                    <td>กรดอะมิโน, กลูโคส, ยูเรีย, น้ำ, แร่ธาตุต่างๆ <br><small style="color:red;">*ไม่พบเซลล์เม็ดเลือดและโปรตีนโมเลกุลใหญ่ในภาวะปกติ</small></td>
+                </tr>
+                <tr>
+                    <td><strong>สารที่ถูกดูดกลับ 100% (ที่ท่อส่วนต้น)</strong></td>
+                    <td><span class="badge" style="background-color:var(--success-color);">กลูโคส</span> และ <span class="badge" style="background-color:var(--success-color);">กรดอะมิโน</span> (คนปกติจะไม่พบสารสองชนิดนี้ในปัสสาวะเลย)</td>
+                </tr>
+                <tr>
+                    <td><strong>สารที่ถูกดูดกลับบางส่วน</strong></td>
+                    <td>น้ำ, แร่ธาตุ (โซเดียม, คลอไรด์, ฟอสเฟต), วิตามิน รวมถึง <strong>ยูเรีย</strong> (ดูดกลับบางส่วนเพื่อรักษาสมดุลความดันออสโมซิส)</td>
+                </tr>
+                <tr>
+                    <td><strong>สารที่พบในน้ำปัสสาวะปกติ (Urine)</strong></td>
+                    <td>ยูเรีย (ความเข้มข้นสูงมาก), กรดยูริก, แอมโมเนีย, ครีเอทินิน, น้ำ และแร่ธาตุส่วนเกิน</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="danger-box">
+            <div class="danger-title">🩺 การวินิจฉัยโรคจากน้ำปัสสาวะ</div>
+            <ul>
+                <li><strong>หากตรวจพบกลูโคสในปัสสาวะ:</strong> แสดงว่าผู้นั้นอาจเป็น <u>โรคเบาหวาน</u> หรือมีความผิดปกติร้ายแรงที่ <u>ท่อหน่วยไตส่วนต้น</u> (ดูดกลับกลูโคสไม่ได้)</li>
+                <li><strong>หากตรวจพบโปรตีน (เช่น แอลบูมิน) หรือเซลล์เม็ดเลือดแดงในปัสสาวะ:</strong> แสดงว่าเยื่อกรองที่ <u>โกลเมอรูลัส เกิดการอักเสบหรือเสียหาย</u> ทำให้สารโมเลกุลใหญ่รั่วไหลออกมาได้</li>
+            </ul>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">🍷 เกร็ดความรู้: แอลกอฮอล์กับการปัสสาวะบ่อย</div>
+            <p>การดื่มเครื่องดื่มแอลกอฮอล์จะไป <strong>ยับยั้งการหลั่งฮอร์โมนวาโซเพรสซิน (Vasopressin / ADH)</strong> จากต่อมใต้สมอง ส่งผลให้ท่อหน่วยไตลดการดูดกลับน้ำเข้าสู่ร่างกาย ร่างกายจึงขับน้ำออกมาในรูปของปัสสาวะบ่อยและมากกว่าปกติ</p>
+        </div>
+    </section>
+
+    <!-- SECTION 5 -->
+    <section id="section5">
+        <h2>5. กระเพาะปัสสาวะและสุขอนามัย</h2>
+        <p><strong>กระเพาะปัสสาวะ (Urinary Bladder)</strong> เป็นอวัยวะกล้ามเนื้อกลวง ทำหน้าที่เก็บสำรองน้ำปัสสาวะที่หลั่งมาจากท่อไต มีความจุเต็มที่ประมาณ 1 - 1.5 ลิตร โดยปกติมนุษย์จะเริ่มรู้สึกปวดปัสสาวะเมื่อมีน้ำปัสสาวะสะสมอยู่ประมาณ <strong>250 ลูกบาศก์เซนติเมตร (cc)</strong></p>
+
+        <div class="danger-box">
+            <div class="danger-title">🚨 อันตรายจากการกลั้นปัสสาวะเป็นเวลานาน</div>
+            <p>การกลั้นปัสสาวะบ่อยครั้งหรือเป็นเวลานาน ส่งผลเสียต่อระบบร่างกายอย่างร้ายแรง ดังนี้:</p>
+            <ol>
+                <li><strong>กล้ามเนื้อหูรูดเสียหาย:</strong> หูรูดที่ทำหน้าที่กักเก็บปัสสาวะบริเวณปลายท่อปัสสาวะอาจปริแตกหรือเสื่อมสภาพ ทำให้เกิดอาการปัสสาวะเล็ด</li>
+                <li><strong>การติดเชื้อแบคทีเรีย:</strong> แบคทีเรีย เช่น <em>E. coli</em> จะเจริญเติบโตและเพิ่มจำนวนได้ดีในปัสสาวะที่ค้างอยู่ ส่งผลให้เกิดโรคกระเพาะปัสสาวะอักเสบ</li>
+                <li><strong>ภาวะน้ำปัสสาวะไหลย้อนกลับ (Retrograde Flow):</strong> ปัสสาวะที่ไม่สามารถระบายออกจะไหลย้อนกลับผ่านท่อไตขึ้นสู่ไต ทำให้ไตติดเชื้อ อักเสบ และเนื้อไตเสียหายจนเกิดภาวะไตเสื่อม</li>
+                <li><strong>กล้ามเนื้อกระเพาะปัสสาวะคราก:</strong> การขยายตัวมากเกินไปเป็นเวลานานทำให้ความสามารถในการบีบตัวเพื่อขับปัสสาวะลดลง ส่งผลให้ปัสสาวะไม่สุด</li>
+            </ol>
+            <p style="margin-top:10px; font-style:italic; color:#7f8c8d;">*ข้อความลวง: การกลั้นปัสสาวะไม่ได้ส่งผลให้สารอาหาร (กลูโคส/กรดอะมิโน) ถูกดูดกลับเข้ากระแสเลือดเพิ่มขึ้นแต่อย่างใด เนื่องจากสารเหล่านั้นถูกดูดกลับเสร็จสิ้นสมบูรณ์ที่ท่อหน่วยไตแล้ว</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 เอกสารสรุปเนื้อหาระบบขับถ่ายวิทยาศาสตร์การแพทย์ | จัดทำขึ้นเพื่อการศึกษาตามข้อมูลอ้างอิงของชุดแบบฝึกหัดชีววิทยา</p>
+    </footer>
+</div>
+
+</body>
+</html>
