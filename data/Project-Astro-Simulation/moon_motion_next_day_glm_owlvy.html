@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จำลองการโคจรของดวงจันทร์ แบบ 2 หน้าจอ พร้อม OwlvyBot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1a1a2e;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 { color: #fde68a; text-align: center; margin-bottom: 5px; font-size: 1.8rem; }
+        .subtitle { color: #94a3b8; text-align: center; margin-bottom: 25px; font-size: 0.95rem; }
+
+        /* แผงควบคุม */
+        .controls-panel {
+            background: #334155;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .control-group { background: #1e293b; padding: 15px; border-radius: 10px; }
+        .control-group h3 { margin: 0 0 15px 0; font-size: 1.1rem; color: #67e8f9; }
+
+        .radio-group { display: flex; flex-direction: column; gap: 12px; }
+        .radio-group label {
+            display: flex; align-items: center; gap: 10px; cursor: pointer;
+            padding: 10px; border-radius: 8px; border: 2px solid transparent; transition: all 0.3s;
+        }
+        .radio-group label:hover { background: rgba(255,255,255,0.05); }
+        .radio-group label.active { background: rgba(56, 189, 248, 0.1); border-color: #38bdf8; }
+        .radio-group input[type="radio"] { display: none; }
+        .radio-btn {
+            width: 20px; height: 20px; border-radius: 50%; border: 2px solid #94a3b8;
+            display: flex; justify-content: center; align-items: center; transition: all 0.3s;
+        }
+        .radio-group label.active .radio-btn { border-color: #38bdf8; }
+        .radio-group label.active .radio-btn::after {
+            content: ''; width: 12px; height: 12px; border-radius: 50%; background: #38bdf8;
+        }
+
+        .input-row { display: flex; gap: 15px; margin-top: 15px; }
+        .input-box { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+        .input-box label { font-size: 0.85rem; color: #cbd5e1; }
+        .input-box input { 
+            width: 100%; padding: 8px; border-radius: 5px; border: none; 
+            background: #0f172a; color: white; font-family: inherit; font-size: 1rem; text-align: center;
+        }
+
+        /* คอนเทนเนอร์หน้าจอ 2 จอ */
+        .screens-container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .screen-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .screen-title {
+            font-size: 1.2rem; font-weight: bold; margin-bottom: 10px;
+            padding: 5px 20px; border-radius: 20px;
+        }
+        .title-day1 { background: #2563eb; color: white; }
+        .title-day2 { background: #d946ef; color: white; }
+
+        /* กล่องท้องฟ้า */
+        .sky-container {
+            position: relative;
+            width: 100%;
+            height: 400px; /* เพิ่มความสูงเล็กน้อยให้สัดส่วนพื้นดินกับหุ่นพอดี */
+            background: linear-gradient(to bottom, #0b1026 0%, #1e3a5f 80%, #2d4a22 80%, #1a2e12 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 4px solid #334155;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .star {
+            position: absolute; background: white; border-radius: 50%;
+            animation: twinkle 2s infinite ease-in-out;
+        }
+        @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+        .direction-label {
+            position: absolute; bottom: 30px; font-size: 1rem; font-weight: bold;
+            color: #fcd34d; text-shadow: 0 0 5px rgba(0,0,0,0.8);
+        }
+        .dir-east { left: 20px; }
+        .dir-south { left: 50%; transform: translateX(-50%); }
+        .dir-west { right: 20px; }
+
+        .facing-indicator {
+            position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6);
+            padding: 3px 8px; border-radius: 5px; font-size: 0.75rem; color: #cbd5e1; z-index: 20;
+        }
+
+        /* ดวงจันทร์หลัก */
+        .moon {
+            position: absolute; width: 40px; height: 40px;
+            background: radial-gradient(circle at 35% 35%, #fdf4e3, #fde68a, #d69e2e);
+            border-radius: 50%; box-shadow: 0 0 20px #fde68a;
+            transition: left 0.8s ease-in-out, bottom 0.8s ease-in-out;
+            z-index: 10; transform: translateX(-50%); 
+        }
+
+        /* ดวงจันทร์ซ้อน (วันก่อนหน้า) */
+        .ghost-moon {
+            position: absolute; width: 40px; height: 40px;
+            border: 2px dashed #60a5fa; border-radius: 50%; opacity: 0.6;
+            z-index: 5; transform: translateX(-50%); display: none;
+            transition: left 0.8s ease-in-out, bottom 0.8s ease-in-out;
+        }
+        .ghost-label {
+            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+            font-size: 0.75rem; color: #60a5fa; white-space: nowrap;
+        }
+
+        /* ดาวอ้างอิง */
+        .ref-star {
+            position: absolute; width: 8px; height: 8px; background: #fff;
+            border-radius: 50%; box-shadow: 0 0 15px #fff, 0 0 30px #38bdf8;
+            z-index: 5; transform: translate(-50%, 50%); 
+        }
+
+        /* ข้อมูลบนหน้าจอ */
+        .screen-info {
+            position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7);
+            padding: 8px 12px; border-radius: 8px; font-size: 0.95rem; line-height: 1.5; z-index: 20;
+        }
+        .info-time { color: #fde68a; font-weight: bold; }
+        .info-angle { color: #67e8f9; font-weight: bold; }
+
+        /* ===== หุ่น OwlvyBot ===== */
+        .owlvybot {
+            position: absolute;
+            bottom: 18%; /* ตั้งค่าให้เท้าติดพื้นหญ้าพอดี (พื้นเริ่มที่ 20% จากล่าง) */
+            left: 50%;
+            transform: translateX(-50%);
+            height: 90px; /* ขนาดความสูงของหุ่น */
+            z-index: 15; /* ให้หุ่นยืนอยู่หน้าดวงจันทร์ */
+            filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.6)); /* แสงเรืองสีฟ้ารอบๆ ตัว */
+            pointer-events: none; /* กันคลิกทับ */
+            animation: botIdle 3s infinite ease-in-out;
+        }
+        @keyframes botIdle {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-5px); } /* หุ่นลอยตัวเบาๆ */
+        }
+
+        /* กล่องอธิบายที่มา */
+        .explanation-box {
+            margin-top: 25px; width: 100%; max-width: 900px;
+            background: #0f172a; border: 2px solid #38bdf8; border-radius: 15px;
+            padding: 20px; box-sizing: border-box;
+        }
+        .explanation-title { color: #38bdf8; font-weight: bold; font-size: 1.2rem; margin-bottom: 15px; text-align: center; }
+        .explanation { background: #1e293b; padding: 15px; border-radius: 10px; line-height: 1.8; color: #e2e8f0; }
+        .explanation strong { color: #fde68a; }
+        .explanation em { color: #f472b6; font-style: normal; font-weight: bold; }
+
+        @media (max-width: 700px) {
+            .screens-container { flex-direction: column; }
+            .controls-panel { grid-template-columns: 1fr; }
+            .owlvybot { height: 70px; bottom: 19%; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌝 ไขความลับดวงจันทร์ ร่วมกับ OwlvyBot</h1>
+    <p class="subtitle">จำลองท้องฟ้าจริง (หันหน้าสู่ทิศใต้: แขนซ้ายคือทิศตะวันออก, แขนขวาคือทิศตะวันตก)</p>
+
+    <!-- แผงควบคุม -->
+    <div class="controls-panel">
+        <div class="control-group">
+            <h3>1. เลือกโหมดการเปรียบเทียบ</h3>
+            <div class="radio-group">
+                <label id="modeTimeLabel" class="active" onclick="setMode('sameTime')">
+                    <input type="radio" name="mode" value="sameTime" checked>
+                    <span class="radio-btn"></span>
+                    สังเกตเวลาเดียวกัน (เห็นตำแหน่งเลื่อนไปทางซ้าย 13°)
+                </label>
+                <label id="modeAngleLabel" onclick="setMode('sameAngle')">
+                    <input type="radio" name="mode" value="sameAngle">
+                    <span class="radio-btn"></span>
+                    สังเกตตำแหน่งเดิม / มุมเงยคงที่ (เวลาจะช้าลง 50 นาที)
+                </label>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3>2. กำหนดข้อมูลวันที่ 1</h3>
+            <div class="input-row">
+                <div class="input-box">
+                    <label>เวลาที่สังเกต (24 ชม.)</label>
+                    <input type="time" id="time1" value="18:00" oninput="updateSimulation()">
+                </div>
+                <div class="input-box">
+                    <label>ตำแหน่งแนวนอน (องศาจากตะวันออก)</label>
+                    <input type="number" id="angle1" value="45" min="0" max="170" oninput="updateSimulation()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2 หน้าจอจำลอง -->
+    <div class="screens-container">
+        <!-- หน้าจอวันที่ 1 -->
+        <div class="screen-wrapper">
+            <div class="screen-title title-day1">📅 วันที่ 1</div>
+            <div class="sky-container" id="sky1">
+                <div class="facing-indicator">🧭 หันหน้าสู่ทิศใต้</div>
+                <div class="direction-label dir-east">ตะวันออก</div>
+                <div class="direction-label dir-south">ใต้</div>
+                <div class="direction-label dir-west">ตะวันตก</div>
+                
+                <!-- OwlvyBot วันที่ 1 -->
+                <img src="https://z-cdn-media.chatglm.cn/files/2d95c521-2d28-4094-b325-cfafaaa2f0e5.png?auth_key=1884296171-5b1989d9cacc45a18a75b60635096ed3-0-f022b5e80d1b6cbb363de7212d11b2f8" class="owlvybot" alt="OwlvyBot">
+                
+                <div class="ref-star" id="refStar1"></div>
+                <div class="moon" id="moon1"></div>
+                <div class="screen-info">
+                    เวลา: <span class="info-time" id="infoTime1">18:00</span> น.<br>
+                    ตำแหน่ง: <span class="info-angle" id="infoAngle1">45°</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- หน้าจอวันที่ 2 -->
+        <div class="screen-wrapper">
+            <div class="screen-title title-day2">📅 วันที่ 2</div>
+            <div class="sky-container" id="sky2">
+                <div class="facing-indicator">🧭 หันหน้าสู่ทิศใต้</div>
+                <div class="direction-label dir-east">ตะวันออก</div>
+                <div class="direction-label dir-south">ใต้</div>
+                <div class="direction-label dir-west">ตะวันตก</div>
+
+                <!-- OwlvyBot วันที่ 2 -->
+                <img src="https://z-cdn-media.chatglm.cn/files/2d95c521-2d28-4094-b325-cfafaaa2f0e5.png?auth_key=1884296171-5b1989d9cacc45a18a75b60635096ed3-0-f022b5e80d1b6cbb363de7212d11b2f8" class="owlvybot" alt="OwlvyBot">
+
+                <div class="ref-star" id="refStar2"></div>
+                
+                <!-- ดวงจันทร์ซ้อน (แสดงตำแหน่งวันที่ 1) -->
+                <div class="ghost-moon" id="ghostMoon"><span class="ghost-label">วันที่ 1</span></div>
+                
+                <div class="moon" id="moon2"></div>
+                <div class="screen-info">
+                    เวลา: <span class="info-time" id="infoTime2">18:00</span> น.<br>
+                    ตำแหน่ง: <span class="info-angle" id="infoAngle2">45°</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- กล่องคำอธิบาย -->
+    <div class="explanation-box">
+        <div class="explanation-title">💡 ที่มาของตัวเลขมหัศจรรย์</div>
+        <div class="explanation">
+            <strong>1. ทำไมถึงเลื่อนไปทางตะวันออก 13 องศา?</strong><br>
+            ดวงจันทร์ใช้เวลาโคจรรอบโลก 1 รอบ ประมาณ 27.3 วัน ดังนั้นใน 1 วัน ดวงจันทร์จะเคลื่อนที่บนท้องฟ้า <em>360 องศา ÷ 27.3 วัน ≈ 13.2 องศา</em> ในทิศทางที่ตรงข้ามกับการหมุนของโลก (คือทิศตะวันออก) ทำให้เวลาสังเกตเท่าเดิม ดวงจันทร์จะเลื่อนไปทางซ้าย (ตะวันออก)<br><br>
+            <strong>2. ทำไมเวลาถึงช้าไป 50 นาที?</strong><br>
+            โลกหมุนรอบตัวเอง 1 รอบ (360 องศา) ใช้เวลา 24 ชม. ดังนั้นโลกหมุน 1 องศา ใช้เวลา <em>24 ชม. ÷ 360 = 4 นาที</em> เมื่อดวงจันทร์หนีไปทางตะวันออก 13 องศา โลกจึงต้องหมุนตามเพิ่มอีก 13 องศาถึงจะเจอดวงจันทร์ที่ตำแหน่งเดิม <em>13 องศา × 4 นาที = 52 นาที</em> (ในหลักสูตรประถมมักปัดเป็น 50 นาทีเพื่อจำง่ายครับ)
+        </div>
+    </div>
+
+    <script>
+        // สร้างดาวบนท้องฟ้าทั้ง 2 จอ
+        function createStars(skyId, count) {
+            const sky = document.getElementById(skyId);
+            for(let i=0; i<count; i++) {
+                let star = document.createElement('div');
+                star.className = 'star';
+                let size = Math.random() * 2.5 + 0.5;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.top = Math.random() * 75 + '%';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                sky.appendChild(star);
+            }
+        }
+        createStars('sky1', 30);
+        createStars('sky2', 30);
+
+        // ฟังก์ชันคำนวณเวลา + 50 นาที
+        function addMinutes(timeStr, minutesToAdd) {
+            let [h, m] = timeStr.split(':').map(Number);
+            let totalMinutes = h * 60 + m + minutesToAdd;
+            if(totalMinutes >= 1440) totalMinutes -= 1440; 
+            let newH = Math.floor(totalMinutes / 60);
+            let newM = totalMinutes % 60;
+            return `${String(newH).padStart(2,'0')}:${String(newM).padStart(2,'0')}`;
+        }
+
+        // แปลงองศาเป็นตำแหน่ง Left % (0 องศา=ตะวันออก=ซ้าย, 180=ตะวันตก=ขวา)
+        function angleToPercentX(angle) {
+            return 10 + (angle / 180) * 80; 
+        }
+
+        // แปลงองศาเป็นความสูง Bottom % 
+        function angleToPercentY(angle) {
+            let rad = angle * Math.PI / 180;
+            let height = Math.sin(rad) * 60; 
+            return 15 + height; 
+        }
+
+        let currentMode = 'sameTime';
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('modeTimeLabel').classList.toggle('active', mode === 'sameTime');
+            document.getElementById('modeAngleLabel').classList.toggle('active', mode === 'sameAngle');
+            updateSimulation();
+        }
+
+        function updateSimulation() {
+            let time1 = document.getElementById('time1').value;
+            let angle1 = parseInt(document.getElementById('angle1').value);
+            if(isNaN(angle1)) angle1 = 45;
+            
+            let time2, angle2;
+            let ghostMoon = document.getElementById('ghostMoon');
+
+            // --- อัปเดตหน้าจอวันที่ 1 เสมอ ---
+            document.getElementById('moon1').style.left = angleToPercentX(angle1) + '%';
+            document.getElementById('moon1').style.bottom = angleToPercentY(angle1) + '%';
+            document.getElementById('infoTime1').innerText = time1;
+            document.getElementById('infoAngle1').innerText = angle1 + '°';
+
+            // ตั้งค่าดาวอ้างอิง 
+            let refAngle = angle1 + 10; 
+            if(refAngle > 170) refAngle = angle1 - 10; 
+            document.getElementById('refStar1').style.left = angleToPercentX(refAngle) + '%';
+            document.getElementById('refStar1').style.bottom = angleToPercentY(refAngle) + '%';
+            document.getElementById('refStar2').style.left = angleToPercentX(refAngle) + '%';
+            document.getElementById('refStar2').style.bottom = angleToPercentY(refAngle) + '%';
+
+            // --- อัปเดตหน้าจอวันที่ 2 ตามโหมด ---
+            if (currentMode === 'sameTime') {
+                // โหมดเวลาเดียวกัน: เวลาเท่าเดิม ตำแหน่งเลื่อนไปทิศตะวันออก (องศาลดลง)
+                time2 = time1;
+                angle2 = angle1 - 13; 
+                if(angle2 < 0) angle2 = 0; 
+
+                // แสดงภาพซ้อนวันที่ 1 
+                ghostMoon.style.display = 'block';
+                ghostMoon.style.left = angleToPercentX(angle1) + '%';
+                ghostMoon.style.bottom = angleToPercentY(angle1) + '%';
+
+            } else {
+                // โหมดตำแหน่ง/มุมเงยเดิม: ตำแหน่งเท่าเดิม เวลาเพิ่ม 50 นาที
+                time2 = addMinutes(time1, 50);
+                angle2 = angle1;
+
+                // ซ่อนภาพซ้อนเพราะตำแหน่งเดิม
+                ghostMoon.style.display = 'none';
+            }
+
+            // ย้ายดวงจันทร์วันที่ 2
+            document.getElementById('moon2').style.left = angleToPercentX(angle2) + '%';
+            document.getElementById('moon2').style.bottom = angleToPercentY(angle2) + '%';
+
+            // อัปเดตข้อมูลบนจอวันที่ 2
+            document.getElementById('infoTime2').innerText = time2;
+            document.getElementById('infoAngle2').innerText = angle2 + '°';
+        }
+
+        // รันครั้งแรก
+        updateSimulation();
+    </script>
+</body>
+</html>
