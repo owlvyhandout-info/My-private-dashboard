@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบขับถ่ายของเสีย | คู่มือสรุปเนื้อหา ม.ต้น–ม.ปลาย</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F5F3EE;
+    --bg-elev: #FFFFFF;
+    --bg-soft: #EFEBE2;
+    --text: #23281F;
+    --text-dim: #5B5F52;
+    --line: #DEDACD;
+    --accent: #0F7A6B;      /* deep teal — kidney/filtration */
+    --accent-2: #C4602A;    /* terracotta-clay — flagged/warning */
+    --accent-3: #2C6E9E;    /* blue — blood/vascular */
+    --chip-bg: #E7E2D3;
+    --code-bg: #EAE5D8;
+    --shadow: 0 1px 2px rgba(30,30,20,.06), 0 8px 24px rgba(30,30,20,.05);
+    --nephron-a: #0F7A6B;
+    --nephron-b: #C4602A;
+    --nephron-c: #2C6E9E;
+  }
+  html[data-theme="navy"]{
+    --bg: #0A1830;
+    --bg-elev: #10213E;
+    --bg-soft: #142B4C;
+    --text: #E8EEF7;
+    --text-dim: #93A3BE;
+    --line: #22385C;
+    --accent: #4FD8C4;
+    --accent-2: #F2A65A;
+    --accent-3: #7EB6F0;
+    --chip-bg: #16304F;
+    --code-bg: #0D2140;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 30px rgba(0,0,0,.35);
+    --nephron-a: #4FD8C4;
+    --nephron-b: #F2A65A;
+    --nephron-c: #7EB6F0;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth; scroll-padding-top:76px;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:"Sarabun",system-ui,sans-serif;
+    line-height:1.7; font-size:16.5px;
+    transition:background .35s ease, color .35s ease;
+  }
+  h1,h2,h3,h4{font-family:"Kanit","Sarabun",sans-serif; color:var(--text); letter-spacing:.2px;}
+  a{color:inherit;}
+
+  /* ===== Top bar / nav ===== */
+  header.topbar{
+    position:sticky; top:0; z-index:50;
+    background:color-mix(in srgb, var(--bg-elev) 92%, transparent);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto; padding:12px 20px;
+    display:flex; align-items:center; gap:18px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px; font-family:"Kanit"; font-weight:600;
+    font-size:16px; white-space:nowrap;
+  }
+  .brand .mark{
+    width:30px;height:30px; flex:none;
+  }
+  nav.toc{
+    display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; flex:1;
+  }
+  nav.toc::-webkit-scrollbar{display:none;}
+  nav.toc a{
+    text-decoration:none; white-space:nowrap; font-size:13.5px; font-weight:500;
+    color:var(--text-dim); padding:8px 12px; border-radius:8px;
+    transition:background .2s, color .2s;
+  }
+  nav.toc a:hover{background:var(--chip-bg); color:var(--text);}
+  nav.toc a.active{background:var(--accent); color:var(--bg);}
+
+  .theme-toggle{
+    flex:none; display:flex; align-items:center; gap:8px;
+    border:1px solid var(--line); background:var(--bg-soft);
+    padding:6px 12px; border-radius:999px; cursor:pointer;
+    font-family:"Sarabun"; font-size:13px; font-weight:600; color:var(--text);
+  }
+  .theme-toggle .dot{
+    width:9px;height:9px;border-radius:50%; background:var(--accent);
+  }
+
+  /* ===== Layout ===== */
+  main{max-width:880px; margin:0 auto; padding:28px 20px 100px;}
+  .hero{
+    padding:38px 0 18px; border-bottom:1px dashed var(--line); margin-bottom:30px;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--accent); margin-bottom:14px;
+  }
+  .eyebrow::before{content:"";width:22px;height:2px;background:var(--accent);display:inline-block;}
+  h1.title{font-size:clamp(28px,4vw,40px); margin:0 0 12px; line-height:1.25;}
+  .subtitle{color:var(--text-dim); font-size:16px; max-width:640px;}
+
+  section.chapter{
+    padding-top:52px; margin-top:-52px; /* anchor offset trick fallback */
+  }
+  .chapter-head{
+    display:flex; align-items:baseline; gap:12px; margin-bottom:6px; margin-top:60px;
+  }
+  .chapter-head .num{
+    font-family:"IBM Plex Mono"; color:var(--accent); font-size:14px; font-weight:600;
+  }
+  .chapter-head h2{font-size:24px; margin:0;}
+  .chapter-sub{color:var(--text-dim); font-size:14.5px; margin:0 0 22px;}
+
+  h3.sub-h{font-size:18.5px; margin:30px 0 10px; color:var(--text);}
+  h4.sub-h4{font-size:16px; margin:20px 0 8px; color:var(--accent-3);}
+
+  p{margin:0 0 14px;}
+  ul,ol{margin:0 0 16px; padding-left:22px;}
+  li{margin-bottom:6px;}
+
+  /* ===== Cards / callouts ===== */
+  .card{
+    background:var(--bg-elev); border:1px solid var(--line); border-radius:14px;
+    padding:18px 20px; margin:18px 0; box-shadow:var(--shadow);
+  }
+  .callout{
+    border-radius:12px; padding:16px 18px; margin:20px 0;
+    border:1px solid var(--line); position:relative; padding-left:48px;
+  }
+  .callout::before{
+    position:absolute; left:16px; top:16px; font-size:18px; line-height:1;
+  }
+  .callout .callout-title{
+    font-family:"Kanit"; font-weight:600; font-size:14.5px; margin-bottom:6px;
+    display:block;
+  }
+  .callout.key{ background:color-mix(in srgb, var(--accent) 10%, var(--bg-elev)); border-color:color-mix(in srgb, var(--accent) 35%, var(--line)); }
+  .callout.key::before{content:"✓"; color:var(--accent);}
+  .callout.key .callout-title{color:var(--accent);}
+
+  .callout.warn{ background:color-mix(in srgb, var(--accent-2) 12%, var(--bg-elev)); border-color:color-mix(in srgb, var(--accent-2) 40%, var(--line)); }
+  .callout.warn::before{content:"⚠";color:var(--accent-2);}
+  .callout.warn .callout-title{color:var(--accent-2);}
+
+  .callout.note{ background:color-mix(in srgb, var(--accent-3) 10%, var(--bg-elev)); border-color:color-mix(in srgb, var(--accent-3) 35%, var(--line)); }
+  .callout.note::before{content:"i"; color:var(--accent-3); font-family:"Kanit"; font-weight:700;}
+  .callout.note .callout-title{color:var(--accent-3);}
+
+  .chip{
+    display:inline-block; background:var(--chip-bg); color:var(--text);
+    font-size:12.5px; padding:3px 10px; border-radius:999px; margin:0 4px 4px 0;
+    font-family:"IBM Plex Mono";
+  }
+
+  /* ===== Tables ===== */
+  table{width:100%; border-collapse:collapse; margin:18px 0; font-size:14.5px;}
+  thead th{
+    background:var(--bg-soft); font-family:"Kanit"; font-weight:600; text-align:left;
+    padding:10px 12px; border-bottom:2px solid var(--line);
+  }
+  tbody td{padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top;}
+  tbody tr:last-child td{border-bottom:none;}
+  .table-wrap{overflow-x:auto; border-radius:12px; border:1px solid var(--line);}
+  .table-wrap table{margin:0;}
+  td.center, th.center{text-align:center;}
+
+  /* ===== Nephron pathway diagram ===== */
+  .flow{
+    display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:20px 0;
+  }
+  .flow .step{
+    background:var(--bg-elev); border:1px solid var(--line); border-radius:10px;
+    padding:10px 14px; font-size:13.5px; font-weight:600; font-family:"Kanit";
+    box-shadow:var(--shadow);
+  }
+  .flow .arrow{color:var(--text-dim); font-size:18px;}
+  .flow .step.a{border-color:var(--nephron-a); color:var(--nephron-a);}
+  .flow .step.b{border-color:var(--nephron-b); color:var(--nephron-b);}
+  .flow .step.c{border-color:var(--nephron-c); color:var(--nephron-c);}
+
+  .legend{display:flex; gap:16px; flex-wrap:wrap; font-size:13px; color:var(--text-dim); margin:8px 0 4px;}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .legend i{width:10px;height:10px;border-radius:50%; display:inline-block;}
+
+  hr.rule{border:none; border-top:1px dashed var(--line); margin:44px 0;}
+
+  footer{
+    max-width:880px; margin:0 auto; padding:20px 20px 60px; color:var(--text-dim); font-size:13px;
+    border-top:1px solid var(--line); margin-top:40px;
+  }
+
+  code, .mono{font-family:"IBM Plex Mono",monospace; font-size:.92em; background:var(--code-bg); padding:1px 6px; border-radius:5px;}
+
+  @media (max-width:720px){
+    .topbar-inner{flex-wrap:wrap;}
+    nav.toc{order:3; width:100%;}
+    main{padding:20px 14px 80px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11 4C7 4 5 9 5 14c0 7 3 14 9 14 3 0 4.5-2 6-2s3 2 6 2c6 0 9-7 9-14 0-5-2-10-6-10-3 0-4 3-6 3s-4-3-7-3-4.5 0-5 0Z" fill="var(--accent)" opacity="0.9" transform="scale(0.85) translate(2,0)"/>
+      </svg>
+      <span>ระบบขับถ่ายของเสีย</span>
+    </div>
+    <nav class="toc" id="toc">
+      <a href="#overview">ภาพรวม</a>
+      <a href="#anatomy">โครงสร้างไต</a>
+      <a href="#nephron">หน่วยไต</a>
+      <a href="#formation">การสร้างปัสสาวะ</a>
+      <a href="#substances">สารในเลือด–ปัสสาวะ</a>
+      <a href="#bladder">กระเพาะปัสสาวะ</a>
+      <a href="#hormone">ฮอร์โมน</a>
+      <a href="#disease">โรคไต–ฟอกไต</a>
+      <a href="#glossary">คำศัพท์สับสน</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle">
+      <span class="dot" id="themeDot"></span>
+      <span id="themeLabel">โหมด Light</span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <div class="hero">
+    <span class="eyebrow">ชีววิทยา ม.ต้น–ม.ปลาย · ร่างกายมนุษย์</span>
+    <h1 class="title">ระบบขับถ่ายของเสีย<br>(Excretory System)</h1>
+    <p class="subtitle">สรุปเนื้อหาแบบเจาะประเด็นที่ข้อสอบชอบออก — ตั้งแต่ภาพรวม โครงสร้างไต หน่วยไต ไปจนถึงกระบวนการสร้างปัสสาวะ พร้อมกล่องเตือน <b>"เข้าใจผิดบ่อย"</b> ที่รวบรวมจากข้อสอบจริงหลายสนาม (TEDET, O-NET, สอวน., IMSO)</p>
+  </div>
+
+  <!-- ============ 1. OVERVIEW ============ -->
+  <section class="chapter" id="overview">
+    <div class="chapter-head"><span class="num">01</span><h2>ภาพรวมของระบบขับถ่าย</h2></div>
+    <p class="chapter-sub">ระบบขับถ่ายคืออะไร ทำหน้าที่อะไรบ้าง และของเสียแต่ละชนิดออกทางไหน</p>
+
+    <p>ระบบขับถ่าย (excretory system) ทำหน้าที่หลักคือ <b>กำจัดของเสียที่เกิดจากกระบวนการเมแทบอลิซึม (การหายใจระดับเซลล์) ออกจากร่างกาย</b> พร้อมทั้งควบคุมสมดุลของเหลว แร่ธาตุ และค่า pH ให้คงที่ อวัยวะหลักของระบบนี้คือ <b>ไต (kidney)</b> ซึ่งทำงานร่วมกับท่อไต กระเพาะปัสสาวะ และท่อปัสสาวะ</p>
+
+    <h3 class="sub-h">หน้าที่หลักของระบบขับถ่าย</h3>
+    <ul>
+      <li>ขับของเสียที่มีไนโตรเจนเป็นองค์ประกอบ (ยูเรีย กรดยูริก แอมโมเนีย) ซึ่งเกิดจากการสลายโปรตีนและกรดอะมิโน</li>
+      <li>รักษาสมดุลน้ำและแร่ธาตุ (โซเดียม โพแทสเซียม คลอไรด์) ในร่างกาย</li>
+      <li>รักษาสมดุลกรด–เบส (pH) ของเลือด</li>
+      <li>ควบคุมความดันออสโมซิสของของเหลวในร่างกาย</li>
+      <li>ผลิตฮอร์โมนที่เกี่ยวข้องกับความดันโลหิตและการสร้างเม็ดเลือดแดง (รายละเอียดในบทที่ 6)</li>
+    </ul>
+
+    <div class="callout warn">
+      <span class="callout-title">เข้าใจผิดบ่อย: "อุจจาระ" ไม่ใช่ของเสียของระบบขับถ่าย</span>
+      หลายคนเข้าใจว่าอุจจาระคือของเสียที่ระบบขับถ่ายกำจัดออก แต่จริง ๆ แล้ว <b>อุจจาระ (feces)</b> คือกากอาหารที่ร่างกาย <u>ไม่เคยดูดซึมเข้าสู่กระแสเลือด</u> ตั้งแต่แรก จึงเป็นผลผลิตของ <b>ระบบย่อยอาหาร</b> ไม่ใช่ระบบขับถ่าย ในขณะที่ยูเรียในปัสสาวะคือของเสียที่ผ่านกระบวนการเมแทบอลิซึมในเซลล์มาแล้วจึงถูกกรองออกจากเลือด — นี่คือความแตกต่างเชิงนิยามที่ข้อสอบชอบทดสอบ
+    </div>
+
+    <div class="callout note">
+      <span class="callout-title">ระวัง: นิยาม "แคบ" vs "กว้าง" ในข้อสอบแต่ละสนาม</span>
+      ข้อสอบบางสนาม (เช่น TEDET) ใช้คำว่า "การขับถ่ายของเสีย" ในความหมาย<b>แคบ</b> คือเจาะจงเฉพาะการทำงานของไตเท่านั้น ในขณะที่ข้อสอบทั่วไปบางชุดใช้ความหมาย<b>กว้าง</b> ครอบคลุมการกำจัดของเสียทุกช่องทาง (ปอด ผิวหนัง ไต ลำไส้ใหญ่) ควรอ่านโจทย์ให้ดีว่าเป็นบริบทใด และสังเกตว่าตัวเลือกมีคำว่า "ตับ" หรือไม่ — การขับสารพิษ (detoxification) เป็นหน้าที่ของ<b>ตับ</b> ซึ่งบางแหล่งจัดเป็นส่วนหนึ่งของระบบขับถ่ายแบบกว้าง แต่บางแหล่งไม่นับรวม
+    </div>
+
+    <h3 class="sub-h">ของเสียแต่ละชนิดกับอวัยวะที่กำจัด</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ของเสีย</th><th>อวัยวะที่ขับออก</th><th>หมายเหตุ</th></tr></thead>
+        <tbody>
+          <tr><td>ปัสสาวะ (ยูเรีย น้ำ แร่ธาตุส่วนเกิน)</td><td>ไต → ท่อไต → กระเพาะปัสสาวะ → ท่อปัสสาวะ</td><td>ปริมาณของเสียมากที่สุดในบรรดาช่องทางขับถ่าย</td></tr>
+          <tr><td>แก๊สคาร์บอนไดออกไซด์</td><td>ปอด (ถุงลม)</td><td>เกิดจากการหายใจระดับเซลล์</td></tr>
+          <tr><td>เหงื่อ (น้ำ + เกลือแร่ + ยูเรียเล็กน้อย)</td><td>ผิวหนัง (ต่อมเหงื่อ)</td><td>ช่วยระบายความร้อนไปพร้อมกัน</td></tr>
+          <tr><td>กากอาหาร (อุจจาระ)</td><td>ทวารหนัก</td><td><b>ไม่ใช่ของเสียจากเมแทบอลิซึม</b> — เป็นผลจากระบบย่อยอาหาร</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-h">สมดุลน้ำเข้า–ออกของร่างกาย (โดยประมาณต่อวัน)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>น้ำเข้าสู่ร่างกาย</th><th class="center">ปริมาณ (mL)</th><th>น้ำออกจากร่างกาย</th><th class="center">ปริมาณ (mL)</th></tr></thead>
+        <tbody>
+          <tr><td>ของเหลวที่ดื่ม</td><td class="center">~1,600</td><td><b>ปัสสาวะ</b></td><td class="center">~1,500</td></tr>
+          <tr><td>น้ำจากอาหาร</td><td class="center">~700</td><td>เหงื่อ</td><td class="center">~500</td></tr>
+          <tr><td>น้ำจากเมแทบอลิซึม</td><td class="center">~200</td><td>ลมหายใจออก</td><td class="center">~300</td></tr>
+          <tr><td></td><td class="center"></td><td>อุจจาระ</td><td class="center">~200</td></tr>
+          <tr><td><b>รวม</b></td><td class="center"><b>~2,500</b></td><td><b>รวม</b></td><td class="center"><b>~2,500</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout key">
+      <span class="callout-title">สรุปประเด็นสำคัญ</span>
+      เรียงลำดับการสูญเสียน้ำจากมากไปน้อยในภาวะปกติ: <b>ปัสสาวะ &gt; เหงื่อ &gt; ลมหายใจออก &gt; อุจจาระ</b> น้ำเข้า-ออกต้องสมดุลกันเสมอเพื่อรักษาปริมาตรของเหลวในร่างกายให้คงที่
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============ 2. ANATOMY ============ -->
+  <section class="chapter" id="anatomy">
+    <div class="chapter-head"><span class="num">02</span><h2>โครงสร้างภายนอกและภายในของไต</h2></div>
+    <p class="chapter-sub">รูปร่าง ตำแหน่ง ชั้นของไต และเส้นทางเดินของเลือด–ปัสสาวะ</p>
+
+    <p>ไต (kidney) มีลักษณะคล้ายเมล็ดถั่ว อยู่บริเวณด้านหลังช่องท้อง 2 ข้างซ้าย-ขวา แต่ละข้างแบ่งเป็น 2 ชั้นหลัก:</p>
+    <ul>
+      <li><b>ไตชั้นนอก (renal cortex)</b> — บริเวณที่มีโกลเมอรูลัสและโบว์แมนแคปซูลอยู่หนาแน่น เป็นจุดเริ่มต้นของการกรองเลือด</li>
+      <li><b>ไตชั้นใน (renal medulla)</b> — ประกอบด้วยหลอดไต (loop of Henle) และท่อรวม ทำหน้าที่ปรับความเข้มข้นของปัสสาวะ</li>
+    </ul>
+    <p>เลือดไหลเข้าสู่ไตทาง <b>หลอดเลือดแดงไต (renal artery)</b> และไหลออกทาง <b>หลอดเลือดดำไต (renal vein)</b> ส่วนของเสียที่กรองได้จะถูกลำเลียงผ่าน <b>ท่อไต (ureter)</b> ไปเก็บที่กระเพาะปัสสาวะ</p>
+
+    <div class="callout warn">
+      <span class="callout-title">เข้าใจผิดบ่อย: "ฟอกเลือด" ที่ปอด vs "กรองเลือด" ที่ไต</span>
+      ข้อสอบมักใช้คำสองคำนี้สลับกันเพื่อทดสอบความเข้าใจ — โดยหลักการแล้ว เลือดไป<b>ฟอกแก๊ส (แลกเปลี่ยน O₂/CO₂)</b> ที่<b>ปอด</b> แต่เลือดไป<b>กรองของเสีย</b> ที่<b>ไต</b> ทั้งสองกระบวนการต่างกันโดยสิ้นเชิงทั้งตำแหน่งและกลไก
+    </div>
+
+    <h3 class="sub-h">องค์ประกอบของเลือดที่เข้า vs ออกจากไต</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ตำแหน่ง</th><th>O₂</th><th>CO₂</th><th>ยูเรีย</th><th>กลูโคส</th></tr></thead>
+        <tbody>
+          <tr><td>หลอดเลือด<b>เข้า</b>ไต (renal artery)</td><td>สูงกว่า</td><td>ต่ำกว่า</td><td>สูงกว่า</td><td>เท่ากัน*</td></tr>
+          <tr><td>หลอดเลือด<b>ออก</b>จากไต (renal vein)</td><td>ต่ำกว่า</td><td>สูงกว่า</td><td>ต่ำกว่า</td><td>เท่ากัน*</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13.5px;color:var(--text-dim);">*กลูโคสถูกกรองออกไปแล้วแต่ถูกดูดกลับเข้าสู่หลอดเลือดฝอยเกือบ 100% จึงไม่เปลี่ยนแปลงมากในระดับความเข้มข้นสุทธิของเลือด</p>
+
+    <div class="callout key">
+      <span class="callout-title">สรุปประเด็นสำคัญ</span>
+      เนื้อไตเป็นเนื้อเยื่อที่มีเซลล์ที่มีชีวิตเหมือนเซลล์ทั่วไป จึงต้อง<b>หายใจระดับเซลล์</b>เพื่อสร้างพลังงาน กระบวนการนี้ผลิต<b>น้ำและ CO₂</b> เป็นผลพลอยได้เสมอ ไม่ว่าจะเป็นเซลล์อวัยวะใดก็ตาม — เป็นจุดที่ข้อสอบชอบใช้ทดสอบว่านักเรียนแยกแยะ "หน้าที่พิเศษของอวัยวะ" ออกจาก "การหายใจระดับเซลล์ที่เกิดในทุกเซลล์" ได้หรือไม่
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============ 3. NEPHRON ============ -->
+  <section class="chapter" id="nephron">
+    <div class="chapter-head"><span class="num">03</span><h2>หน่วยไต (Nephron)</h2></div>
+    <p class="chapter-sub">หน่วยทำงานที่เล็กที่สุดของไต — ที่ที่การกรองเลือดเกิดขึ้นจริง</p>
+
+    <p>ไตแต่ละข้างมีหน่วยไต (nephron) อยู่จำนวนมาก แต่ละหน่วยประกอบด้วยโครงสร้างต่อเนื่องกันดังนี้:</p>
+
+    <div class="flow">
+      <div class="step a">โกลเมอรูลัส<br><span style="font-weight:400;font-size:12px;">Glomerulus</span></div>
+      <div class="arrow">→</div>
+      <div class="step a">โบว์แมนแคปซูล<br><span style="font-weight:400;font-size:12px;">Bowman's Capsule</span></div>
+      <div class="arrow">→</div>
+      <div class="step b">ท่อหน่วยไตส่วนต้น<br><span style="font-weight:400;font-size:12px;">Proximal Tubule</span></div>
+      <div class="arrow">→</div>
+      <div class="step b">หลอดไต (Henle)<br><span style="font-weight:400;font-size:12px;">Loop of Henle</span></div>
+      <div class="arrow">→</div>
+      <div class="step b">ท่อหน่วยไตส่วนปลาย<br><span style="font-weight:400;font-size:12px;">Distal Tubule</span></div>
+      <div class="arrow">→</div>
+      <div class="step c">ท่อรวม<br><span style="font-weight:400;font-size:12px;">Collecting Duct</span></div>
+    </div>
+    <p style="font-size:13px;color:var(--text-dim);">โกลเมอรูลัส + โบว์แมนแคปซูล รวมเรียกว่า <b>Renal Corpuscle</b> (จุดที่เกิดการกรองครั้งแรก)</p>
+
+    <div class="callout warn">
+      <span class="callout-title">เข้าใจผิดบ่อย: ท่อไต ≠ ท่อหน่วยไต ≠ หลอดไต</span>
+      สามคำนี้ในภาษาไทยหน้าตาคล้ายกันมากแต่หมายถึงคนละโครงสร้าง:
+      <ul style="margin-top:10px;">
+        <li><b>ท่อไต (Ureter)</b> — ท่อขนาดใหญ่ที่ลำเลียงปัสสาวะจาก<u>กรวยไต</u>ไปยัง<u>กระเพาะปัสสาวะ</u> (อยู่นอกเนื้อไต)</li>
+        <li><b>ท่อหน่วยไต / หลอดไต (Convoluted Tubule)</b> — ส่วนหนึ่งของหน่วยไตแต่ละหน่วยที่ขดอยู่ภายในเนื้อไต ทำหน้าที่ดูดกลับและหลั่งสารเพิ่ม</li>
+      </ul>
+      ทั้งสองคำมาจากคำภาษาอังกฤษคนละคำ (Ureter ≠ Convoluted tubule) แต่การแปลไทยที่ใกล้เคียงกันทำให้สับสนได้ง่ายในข้อสอบ
+    </div>
+
+    <h3 class="sub-h">เส้นทางเดินของน้ำปัสสาวะ (ลำดับที่ต้องจำ)</h3>
+    <div class="flow">
+      <div class="step">หน่วยไต</div><div class="arrow">→</div>
+      <div class="step">กรวยไต<br><span style="font-weight:400;font-size:12px;">Renal Pelvis</span></div><div class="arrow">→</div>
+      <div class="step">ท่อไต<br><span style="font-weight:400;font-size:12px;">Ureter</span></div><div class="arrow">→</div>
+      <div class="step">กระเพาะปัสสาวะ<br><span style="font-weight:400;font-size:12px;">Bladder</span></div><div class="arrow">→</div>
+      <div class="step">ท่อปัสสาวะ<br><span style="font-weight:400;font-size:12px;">Urethra</span></div>
+    </div>
+    <div class="callout note">
+      <span class="callout-title">เทคนิคจำ</span>
+      ลำดับ "หน่วย–กรวย–ท่อ–รอที่กระเพาะ–ออกท่อปัสสาวะ" ช่วยกันสับสนระหว่างการเดินทาง<b>ภายในเนื้อไต</b> (หน่วยไต) กับการเดินทาง<b>ออกนอกไต</b> (กรวยไต → ท่อไต → กระเพาะปัสสาวะ → ท่อปัสสาวะ)
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============ 4. URINE FORMATION ============ -->
+  <section class="chapter" id="formation">
+    <div class="chapter-head"><span class="num">04</span><h2>กระบวนการสร้างปัสสาวะ</h2></div>
+    <p class="chapter-sub">3 ขั้นตอนหลัก: การกรอง → การดูดกลับ → การหลั่งเพิ่ม</p>
+
+    <h4 class="sub-h4">① การกรอง (Filtration) — ที่โกลเมอรูลัส</h4>
+    <p>ความดันเลือดในหลอดเลือดฝอยของโกลเมอรูลัสสูงกว่าปกติ ดันให้ของเหลวและสารโมเลกุลเล็กใน<b>พลาสมา</b>ผ่านผนังหลอดเลือดฝอยเข้าสู่โบว์แมนแคปซูล การกรองขั้นนี้เป็นการกรองแบบ<b>ไม่เลือกชนิด</b> (ไม่คัดแยกว่าสารมีประโยชน์หรือเป็นของเสีย) โดยใช้เกณฑ์ขนาดโมเลกุลเพียงอย่างเดียว</p>
+    <ul>
+      <li><b>ผ่านการกรองได้:</b> น้ำ กลูโคส กรดอะมิโน ยูเรีย กรดยูริก แร่ธาตุ (Na⁺, Cl⁻ ฯลฯ)</li>
+      <li><b>ผ่านการกรองไม่ได้ (ขนาดใหญ่เกินไป):</b> เซลล์เม็ดเลือด และพลาสมาโปรตีนโมเลกุลใหญ่ — จึงยังคงอยู่ในหลอดเลือดฝอยต่อไป</li>
+    </ul>
+
+    <h4 class="sub-h4">② การดูดกลับ (Reabsorption) — ที่ท่อหน่วยไต</h4>
+    <p>สารที่มีประโยชน์ในของเหลวที่กรองได้จะถูกดูดกลับเข้าสู่หลอดเลือดฝอยที่พันรอบท่อหน่วยไต แบ่งได้ 3 กลุ่มตามระดับการดูดกลับ:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>กลุ่ม</th><th>สารตัวอย่าง</th><th>ลักษณะ</th></tr></thead>
+        <tbody>
+          <tr><td>ดูดกลับเกือบ 100%</td><td>กลูโคส, กรดอะมิโน</td><td>ปกติไม่ควรพบในปัสสาวะเลย</td></tr>
+          <tr><td>ดูดกลับบางส่วน</td><td>น้ำ, ยูเรีย, กรดยูริก, โซเดียม, ฟอสเฟต</td><td>ยังพบเหลือในปัสสาวะได้ตามปกติ</td></tr>
+          <tr><td>แทบไม่ถูกดูดกลับ</td><td>แอมโมเนีย (ส่วนใหญ่ถูกหลั่งเพิ่มแทน)</td><td>ถูกกำจัดออกไปเกือบทั้งหมด</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-title">เข้าใจผิดบ่อย: โซเดียม "ก็ถูกดูดกลับ" ไม่ใช่ข้อยกเว้น</span>
+      โจทย์บางข้อหลอกด้วยประโยคทำนอง "ท่อหน่วยไตดูดกลับกลูโคสและกรดอะมิโน แต่<u>ไม่พบ</u>การดูดกลับโซเดียม" — ข้อความนี้<b>ผิด</b> เพราะโซเดียมไอออน (Na⁺) ก็ถูกดูดกลับที่ท่อหน่วยไตเช่นกัน และมีบทบาทสำคัญในการควบคุมการดูดกลับน้ำ (osmosis) ด้วย
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-title">เข้าใจผิดบ่อย: โปรตีนในปัสสาวะ — "ไม่ถูกกรองตั้งแต่แรก" ต่างจาก "ถูกกรองแล้วดูดกลับหมด"</span>
+      ปกติแล้ว<b>โปรตีนโมเลกุลใหญ่ในพลาสมาจะไม่ผ่านการกรองที่โกลเมอรูลัสตั้งแต่ต้น</b> เนื่องจากขนาดใหญ่เกินกว่าจะลอดผ่านผนังหลอดเลือดฝอยได้ ต่างจากกลูโคสซึ่ง<b>ถูกกรองผ่านไปได้</b>แต่ถูกดูดกลับเข้าสู่เลือดจนหมดที่ท่อหน่วยไต แม้ผลลัพธ์สุดท้ายจะเหมือนกันคือ "ไม่พบในปัสสาวะ" แต่<b>กลไกต่างกัน</b> — หากตรวจพบ<b>โปรตีน</b>ในปัสสาวะ (proteinuria) แสดงว่าความผิดปกติอยู่ที่<b>โกลเมอรูลัส</b> (การกรองรั่ว) แต่หากตรวจพบ<b>กลูโคส</b>ในปัสสาวะ (glucosuria) มักบ่งชี้ว่าน้ำตาลในเลือดสูงเกินขีดความสามารถในการดูดกลับของท่อหน่วยไต (เช่น โรคเบาหวาน) ไม่ใช่ความผิดปกติของการกรอง
+    </div>
+
+    <h4 class="sub-h4">③ การหลั่งเพิ่ม (Secretion) — ที่ท่อหน่วยไต</h4>
+    <p>นอกจากดูดกลับแล้ว เซลล์ผนังท่อหน่วยไตยังทำหน้าที่<b>หลั่งสารเพิ่ม</b>จากหลอดเลือดฝอยเข้าสู่ของเหลวในท่อ เช่น ไฮโดรเจนไอออน (H⁺) โพแทสเซียม (K⁺) และแอมโมเนีย เพื่อช่วยควบคุมค่า pH ของเลือดให้คงที่</p>
+
+    <div class="callout key">
+      <span class="callout-title">สรุปประเด็นสำคัญ</span>
+      ปัสสาวะ = (สิ่งที่ถูกกรอง) − (สิ่งที่ถูกดูดกลับ) + (สิ่งที่ถูกหลั่งเพิ่ม) ดังนั้นความเข้มข้นของยูเรียในน้ำปัสสาวะจึง<b>สูงกว่า</b>ในเลือดมาก เพราะยูเรียถูกกรองออกมาแล้วมีเพียงบางส่วนถูกดูดกลับ ในขณะที่น้ำส่วนใหญ่ถูกดูดกลับคืน ทำให้ยูเรียเข้มข้นขึ้นเรื่อย ๆ ตลอดเส้นทางของท่อหน่วยไต
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============ 5. SUBSTANCES ============ -->
+  <section class="chapter" id="substances">
+    <div class="chapter-head"><span class="num">05</span><h2>สารในเลือดและปัสสาวะ</h2></div>
+    <p class="chapter-sub">เกณฑ์การแยกแยะ "ปัสสาวะปกติ" กับ "ปัสสาวะที่บ่งชี้ความผิดปกติ"</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>สาร</th><th class="center">พบในปัสสาวะปกติ?</th><th>ความหมายหากพบผิดปกติ</th></tr></thead>
+        <tbody>
+          <tr><td>ยูเรีย, กรดยูริก, แอมโมเนีย, เกลือแร่ (Na⁺, K⁺, Cl⁻)</td><td class="center">✔ พบได้ปกติ</td><td>—</td></tr>
+          <tr><td>กลูโคส (Glucose)</td><td class="center">✘ ไม่ควรพบ</td><td>น้ำตาลในเลือดสูงเกินขีดการดูดกลับ (เช่น เบาหวาน)</td></tr>
+          <tr><td>โปรตีน / อัลบูมิน (Albumin)</td><td class="center">✘ ไม่ควรพบ</td><td>โกลเมอรูลัสรั่ว/กรองผิดปกติ</td></tr>
+          <tr><td>เซลล์เม็ดเลือดแดง</td><td class="center">✘ ไม่ควรพบ</td><td>มีเลือดออกในทางเดินปัสสาวะหรือไตอักเสบ</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout note">
+      <span class="callout-title">ตัวอย่างการอ่านตารางข้อสอบ</span>
+      โจทย์มักให้ตารางเปรียบเทียบร้อยละของยูเรีย กลูโคส โปรตีน ใน "เลือดก่อนไหลผ่านไต" "เลือดหลังไหลผ่านไต" และ "น้ำปัสสาวะ" — หลักการอ่าน: กลูโคสและโปรตีนควรเป็น 0% ในปัสสาวะเสมอ (ถ้าไม่ใช่ 0 = ผิดปกติ) ส่วนยูเรียจะเข้มข้นขึ้นมากในปัสสาวะเมื่อเทียบกับเลือด เพราะถูกดูดกลับน้อยกว่าสัดส่วนน้ำที่ถูกดูดกลับ
+    </div>
+
+    <h3 class="sub-h">ทำไมความเข้มข้นของยูเรียในปัสสาวะจึงบอกปริมาณโปรตีนที่กินเข้าไปได้</h3>
+    <p>แอมโมเนียเป็นของเสียที่เกิดจากการย่อยสลายโปรตีน ร่างกายจะเปลี่ยนแอมโมเนียเป็น<b>ยูเรีย</b>ที่<b>ตับ</b>เพื่อลดความเป็นพิษ ดังนั้นยิ่งได้รับโปรตีนมากเท่าไร ความเข้มข้นของยูเรียในปัสสาวะก็จะยิ่งสูงตามไปด้วย</p>
+
+    <div class="callout warn">
+      <span class="callout-title">เข้าใจผิดบ่อย: ยูเรียสร้างที่ตับ ไม่ใช่ที่ไต</span>
+      ไตมีหน้าที่<b>กรองยูเรียออกจากเลือด</b> แต่ไม่ได้เป็นผู้<b>สร้าง</b>ยูเรีย กระบวนการสังเคราะห์ยูเรียจากแอมโมเนียเกิดขึ้นที่<b>ตับ</b> ซึ่งเป็นอวัยวะเสริมของระบบย่อยอาหาร — คำถามลักษณะ "ระบบย่อยอาหารมีอวัยวะที่สร้างยูเรียอยู่ด้วยหรือไม่" คำตอบคือ <b>ใช่ (ถูกต้อง)</b> เพราะตับถือเป็นอวัยวะเสริมของระบบย่อยอาหาร
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============ 6. BLADDER ============ -->
+  <section class="chapter" id="bladder">
+    <div class="chapter-head"><span class="num">06</span><h2>กระเพาะปัสสาวะและการขับปัสสาวะ</h2></div>
+    <p class="chapter-sub">เก็บ รับรู้ และขับ — พร้อมผลเสียจากการกลั้นปัสสาวะบ่อย ๆ</p>
+
+    <p>ปัสสาวะที่ผลิตจากไตจะถูกลำเลียงผ่านท่อไตมาเก็บสะสมไว้ที่<b>กระเพาะปัสสาวะ</b> เมื่อปริมาณปัสสาวะสะสมมากขึ้นถึงระดับหนึ่ง (ประมาณ 150–300 มิลลิลิตร) จะเกิดความรู้สึกปวดปัสสาวะ และเมื่อขับถ่าย กล้ามเนื้อผนังกระเพาะปัสสาวะจะบีบตัวพร้อมกับกล้ามเนื้อหูรูดคลายตัวเพื่อขับปัสสาวะออกทางท่อปัสสาวะ</p>
+
+    <h3 class="sub-h">ผลเสียของการกลั้นปัสสาวะเป็นเวลานาน</h3>
+    <ul>
+      <li>กล้ามเนื้อหูรูดที่ป้องกันการรั่วไหลอาจทำงานหนักเกินไปจนเสียหาย</li>
+      <li>แบคทีเรีย เช่น <i>E. coli</i> เพิ่มจำนวนในกระเพาะปัสสาวะ ก่อให้เกิดการอักเสบ/ติดเชื้อทางเดินปัสสาวะ</li>
+      <li>เกิด<b>ภาวะไหลย้อนกลับ</b> — ปัสสาวะที่ระบายไม่ทันไหลย้อนกลับเข้าไปในไต อาจทำให้ไตเสียหาย</li>
+      <li>กระเพาะปัสสาวะขยายตัวเรื้อรัง ส่งผลให้ความสามารถในการบีบตัวลดลงในระยะยาว</li>
+    </ul>
+
+    <div class="callout warn">
+      <span class="callout-title">เข้าใจผิดบ่อย: การกลั้นปัสสาวะไม่ได้ทำให้ "ดูดสารอาหารกลับ" ที่กระเพาะปัสสาวะ</span>
+      ข้อสอบบางข้อหลอกว่า "ถ้ากลั้นปัสสาวะนาน สารอาหาร เช่น กลูโคส กรดอะมิโน จะถูกดูดซึมกลับเข้าสู่หลอดเลือดฝอย" — ข้อความนี้<b>ผิด</b> เพราะ<b>การดูดกลับ (reabsorption)</b> เกิดขึ้นเฉพาะที่<b>ท่อหน่วยไต</b>ในขั้นตอนการสร้างปัสสาวะเท่านั้น เมื่อปัสสาวะเดินทางมาถึงกระเพาะปัสสาวะแล้ว ถือว่าองค์ประกอบคงที่ ไม่มีการดูดกลับสารใด ๆ เพิ่มอีก
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============ 7. HORMONES ============ -->
+  <section class="chapter" id="hormone">
+    <div class="chapter-head"><span class="num">07</span><h2>ฮอร์โมนและการควบคุมสมดุล</h2></div>
+    <p class="chapter-sub">ไตไม่ได้แค่กรองของเสีย แต่ยังทำหน้าที่เป็นต่อมไร้ท่อด้วย</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ฮอร์โมน/สาร</th><th>แหล่งผลิต</th><th>หน้าที่</th></tr></thead>
+        <tbody>
+          <tr><td>เรนิน (Renin)</td><td>ไต</td><td>ควบคุมความดันโลหิตผ่านระบบ RAAS</td></tr>
+          <tr><td>อีริโทรพอยอีติน (Erythropoietin)</td><td>ไต</td><td>กระตุ้นไขกระดูกให้สร้างเม็ดเลือดแดง</td></tr>
+          <tr><td>วิตามินดี (รูปแอคทีฟ)</td><td>ไต (กระตุ้นการสร้าง)</td><td>ช่วยการดูดซึมแคลเซียม</td></tr>
+          <tr><td>วาโซเพรสซิน / ADH</td><td>ต่อมใต้สมอง (ออกฤทธิ์ที่ไต)</td><td>ควบคุมการดูดกลับน้ำที่ท่อรวม</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout note">
+      <span class="callout-title">ทำไมดื่มแอลกอฮอล์แล้วปัสสาวะบ่อย</span>
+      แอลกอฮอล์ไป<b>กดการหลั่งฮอร์โมนวาโซเพรสซิน (ADH)</b> ทำให้ท่อรวมดูดน้ำกลับน้อยลง ปัสสาวะจึงถูกขับออกมามากและบ่อยกว่าปกติ — ไม่ได้เกิดจากไตทำงานดีขึ้นหรือร่างกายพยายามขับแอลกอฮอล์ออกอย่างรวดเร็วตามที่มักเข้าใจผิดกัน
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============ 8. DISEASE ============ -->
+  <section class="chapter" id="disease">
+    <div class="chapter-head"><span class="num">08</span><h2>โรคไตและการฟอกไต</h2></div>
+    <p class="chapter-sub">เมื่อไตทำงานผิดปกติ ร่างกายรับมืออย่างไร</p>
+
+    <p>สาเหตุสำคัญของ<b>โรคไตวายเรื้อรัง</b> คือ<b>โรคเบาหวาน</b>และ<b>ความดันโลหิตสูง</b> หากไม่ควบคุมระดับน้ำตาลและความดันโลหิตให้อยู่ในเกณฑ์ปกติ จะเพิ่มความเสี่ยงต่อภาวะไตวายเรื้อรังระยะสุดท้าย ซึ่งจำเป็นต้องรักษาด้วย<b>การล้างไต (dialysis)</b></p>
+
+    <p>ในการ<b>ฟอกเลือดด้วยเครื่องไตเทียม (hemodialysis)</b> เลือดของผู้ป่วยจะไหลผ่านเยื่อเลือกผ่านที่กั้นระหว่างเลือดกับน้ำยาล้างไต โดยของเสีย (เช่น ยูเรีย) จะแพร่จากเลือดไปยังน้ำยาล้างไตซึ่งมีความเข้มข้นของของเสียต่ำกว่า</p>
+
+    <div class="callout key">
+      <span class="callout-title">สรุปประเด็นสำคัญ: หลักการไหลสวนทาง (Countercurrent)</span>
+      หากเลือดและน้ำยาล้างไตไหล<b>สวนทางกัน</b> (แทนที่จะไหลทิศทางเดียวกัน) จะรักษาระดับความแตกต่างของความเข้มข้นของเสียไว้ได้ตลอดความยาวของเยื่อเลือกผ่าน ทำให้การกำจัดของเสีย<b>มีประสิทธิภาพมากกว่า</b>การไหลทิศทางเดียวกัน — หลักการเดียวกันนี้อธิบายได้ว่าทำไมสัตว์ที่อาศัยในแหล่งแห้งแล้งจึงมักมี<b>หลอดไต (Loop of Henle) ที่ยาวกว่า</b> เพื่อสร้างปัสสาวะที่เข้มข้นกว่า ลดการสูญเสียน้ำ
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============ 9. GLOSSARY ============ -->
+  <section class="chapter" id="glossary">
+    <div class="chapter-head"><span class="num">09</span><h2>คำศัพท์ที่มักสับสน (สรุปรวม)</h2></div>
+    <p class="chapter-sub">ตารางเช็กด่วนก่อนสอบ</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>คำไทย</th><th>อังกฤษ</th><th>อยู่ที่ไหน</th><th>ทำหน้าที่</th></tr></thead>
+        <tbody>
+          <tr><td>หน่วยไต</td><td>Nephron</td><td>ในเนื้อไต (คอร์เทกซ์+เมดัลลา)</td><td>หน่วยกรอง–ดูดกลับ–หลั่งเพิ่ม</td></tr>
+          <tr><td>โกลเมอรูลัส</td><td>Glomerulus</td><td>ในหน่วยไต</td><td>กรองเลือดครั้งแรก</td></tr>
+          <tr><td>โบว์แมนแคปซูล</td><td>Bowman's Capsule</td><td>หุ้มโกลเมอรูลัส</td><td>รับของเหลวที่กรองได้</td></tr>
+          <tr><td>ท่อหน่วยไต / หลอดไต</td><td>Convoluted Tubule</td><td>ในเนื้อไต</td><td>ดูดกลับ + หลั่งเพิ่ม</td></tr>
+          <tr><td>กรวยไต</td><td>Renal Pelvis</td><td>ส่วนกลางของไต</td><td>รวบรวมปัสสาวะก่อนออกจากไต</td></tr>
+          <tr><td>ท่อไต</td><td>Ureter</td><td>นอกเนื้อไต</td><td>ลำเลียงปัสสาวะสู่กระเพาะปัสสาวะ</td></tr>
+          <tr><td>กระเพาะปัสสาวะ</td><td>Bladder</td><td>ช่องท้องส่วนล่าง</td><td>เก็บสะสมปัสสาวะ</td></tr>
+          <tr><td>ท่อปัสสาวะ</td><td>Urethra</td><td>ปลายทางออก</td><td>ขับปัสสาวะออกนอกร่างกาย</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-h">แยกแยะ 3 ระบบ (ย่อยอาหาร / หมุนเวียนเลือด / ขับถ่าย) เวลาเจอผังการจำแนก</h3>
+    <p>โจทย์รูปแบบ dichotomous key (แผนภาพแยกประเภทด้วยคำถามใช่/ไม่ใช่) มักให้จำแนกระบบ 3 ระบบนี้ตามหน้าที่ จุดที่ต้องระวังคือ <b>คำถามในแต่ละจุดแยกต้องทำให้ผลลัพธ์ตรงกับกิ่งก้านที่วาดไว้จริง</b> เช่น ถ้ากิ่งแรกแยกระบบขับถ่ายออกจากอีกสองระบบ คำถามจุดนั้นต้องเป็นคำถามที่<b>ระบบขับถ่ายตอบต่างจากอีกสองระบบ</b> — คำถามเรื่อง "กรองของเสียไนโตรเจน" จะทำให้ระบบขับถ่ายตอบ "ใช่" (ไม่ใช่ "ไม่ใช่") จึงต้องดูทิศทางกิ่งก้านในผังให้ตรงกับคำถามเสมอ อย่าเดาจากคำที่ "ฟังดูเกี่ยวกับไต" อย่างเดียว</p>
+
+    <div class="callout key">
+      <span class="callout-title">เทคนิคเช็กด่วนก่อนสอบ</span>
+      <ul style="margin-top:8px;">
+        <li>เจอ "ยูเรีย" → คิดถึงตับ (สร้าง) + ไต (กรองออก)</li>
+        <li>เจอ "โปรตีนในปัสสาวะ" → ผิดปกติที่โกลเมอรูลัส</li>
+        <li>เจอ "กลูโคสในปัสสาวะ" → ผิดปกติที่การดูดกลับ/ระดับน้ำตาลในเลือดสูง</li>
+        <li>เจอ "ฟอก" → นึกถึงปอด, เจอ "กรอง" → นึกถึงไต</li>
+        <li>เจอ "อุจจาระ" ในตัวเลือกของระบบขับถ่าย (นิยามแคบ) → มักเป็นตัวลวง เพราะเป็นหน้าที่ระบบย่อยอาหาร</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  เอกสารสรุปนี้จัดทำจากเนื้อหาแบบฝึกหัดชุด "ระบบขับถ่ายของเสีย" (ภาพรวม, โครงสร้างไต, สารที่ถูกดูดกลับ, กระเพาะปัสสาวะ) พร้อมเพิ่มเติมเนื้อหาเสริมระดับ ม.ต้น–ม.ปลาย เพื่อการทบทวนก่อนสอบ
+</footer>
+
+<script>
+  const root = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  const dot = document.getElementById('themeDot');
+  const label = document.getElementById('themeLabel');
+
+  function applyTheme(t){
+    if(t === 'navy'){
+      root.setAttribute('data-theme','navy');
+      label.textContent = 'โหมด Navy';
+    } else {
+      root.removeAttribute('data-theme');
+      label.textContent = 'โหมด Light';
+    }
+  }
+  let current = 'light';
+  applyTheme(current);
+  btn.addEventListener('click', () => {
+    current = current === 'light' ? 'navy' : 'light';
+    applyTheme(current);
+  });
+
+  // Scroll-spy for nav
+  const sections = document.querySelectorAll('section.chapter');
+  const links = document.querySelectorAll('nav.toc a');
+  const spy = () => {
+    let activeId = sections[0] && sections[0].id;
+    const scrollPos = window.scrollY + 100;
+    sections.forEach(sec => {
+      if (sec.offsetTop <= scrollPos) activeId = sec.id;
+    });
+    links.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + activeId);
+    });
+  };
+  document.addEventListener('scroll', spy, {passive:true});
+  spy();
+</script>
+</body>
+</html>
