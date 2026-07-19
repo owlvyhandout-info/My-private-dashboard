@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สรุปเนื้อหา: ระบบหายใจและการแลกเปลี่ยนแก๊ส</title>
+<style>
+  :root {
+    --bg: #f6f7fb;
+    --bg-secondary: #ffffff;
+    --bg-card: #ffffff;
+    --bg-accent: #eef2ff;
+    --text-main: #1c2333;
+    --text-sub: #4a5268;
+    --text-muted: #6b7280;
+    --border: #e2e5ec;
+    --accent: #2451c4;
+    --accent-2: #0e9f6e;
+    --accent-3: #d97706;
+    --danger: #dc2626;
+    --danger-bg: #fef2f2;
+    --danger-border: #fecaca;
+    --tip-bg: #ecfdf5;
+    --tip-border: #a7f3d0;
+    --nav-bg: rgba(255,255,255,0.92);
+    --shadow: 0 2px 10px rgba(30,41,80,0.06);
+    --code-bg: #eef1f8;
+    --o2-color: #dc2626;
+    --co2-color: #2451c4;
+  }
+  [data-theme="dark"] {
+    --bg: #0b1220;
+    --bg-secondary: #101a2e;
+    --bg-card: #131f38;
+    --bg-accent: #16233f;
+    --text-main: #e8ecf7;
+    --text-sub: #b7c1da;
+    --text-muted: #8b96b3;
+    --border: #263352;
+    --accent: #6f9bff;
+    --accent-2: #34d399;
+    --accent-3: #fbbf24;
+    --danger: #f87171;
+    --danger-bg: #2a1418;
+    --danger-border: #5b2530;
+    --tip-bg: #0f2a24;
+    --tip-border: #1f5c47;
+    --nav-bg: rgba(16,26,46,0.92);
+    --shadow: 0 2px 14px rgba(0,0,0,0.4);
+    --code-bg: #1a2740;
+    --o2-color: #f87171;
+    --co2-color: #6f9bff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', 'Sarabun', 'Noto Sans Thai', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text-main);
+    line-height: 1.75;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--nav-bg);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .topbar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .brand span { color: var(--text-muted); font-weight: 400; font-size: 0.85rem; }
+  nav.topnav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    flex: 1;
+    justify-content: center;
+  }
+  nav.topnav a {
+    color: var(--text-sub);
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 7px 12px;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  nav.topnav a:hover {
+    background: var(--bg-accent);
+    border-color: var(--border);
+    color: var(--accent);
+  }
+  #themeToggle {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: transform 0.15s ease, background 0.2s ease;
+  }
+  #themeToggle:hover { transform: translateY(-1px); }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 28px 20px 80px; }
+
+  header.hero {
+    text-align: center;
+    padding: 36px 20px 20px;
+  }
+  header.hero h1 {
+    font-size: 1.9rem;
+    margin: 0 0 10px;
+    color: var(--text-main);
+  }
+  header.hero p {
+    color: var(--text-muted);
+    font-size: 0.98rem;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  section {
+    margin: 46px 0;
+    scroll-margin-top: 80px;
+  }
+  .section-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    background: var(--bg-accent);
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  h2.section-title {
+    font-size: 1.5rem;
+    margin: 4px 0 18px;
+    color: var(--text-main);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 12px;
+  }
+  h3 {
+    color: var(--text-main);
+    font-size: 1.15rem;
+    margin: 26px 0 10px;
+  }
+  p { color: var(--text-sub); margin: 10px 0; }
+  ul, ol { color: var(--text-sub); padding-right: 4px; }
+  li { margin: 6px 0; }
+  strong { color: var(--text-main); }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin: 16px 0;
+    box-shadow: var(--shadow);
+  }
+
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    margin: 18px 0;
+  }
+  .flow .step {
+    background: var(--bg-accent);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-align: center;
+  }
+  .flow .arrow { color: var(--accent); font-weight: 700; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.92rem;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    text-align: center;
+    color: var(--text-sub);
+  }
+  th {
+    background: var(--bg-accent);
+    color: var(--text-main);
+    font-weight: 700;
+  }
+  tr:nth-child(even) td { background: rgba(128,128,128,0.04); }
+
+  .tip-box, .misconception-box, .key-box {
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    border: 1px solid var(--border);
+  }
+  .key-box {
+    background: var(--bg-accent);
+    border-color: var(--border);
+  }
+  .key-box .label { color: var(--accent); font-weight: 700; margin-bottom: 6px; display:block; }
+
+  .tip-box {
+    background: var(--tip-bg);
+    border-color: var(--tip-border);
+  }
+  .tip-box .label { color: var(--accent-2); font-weight: 700; margin-bottom: 6px; display:block; }
+
+  .misconception-box {
+    background: var(--danger-bg);
+    border-color: var(--danger-border);
+  }
+  .misconception-box .label { color: var(--danger); font-weight: 700; margin-bottom: 6px; display:block; }
+  .misconception-box .wrong { color: var(--danger); text-decoration: line-through; opacity: 0.85; }
+  .misconception-box .right { color: var(--accent-2); font-weight: 600; }
+
+  .o2 { color: var(--o2-color); font-weight: 700; }
+  .co2 { color: var(--co2-color); font-weight: 700; }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    nav.topnav { justify-content: flex-start; overflow-x: auto; }
+    header.hero h1 { font-size: 1.5rem; }
+  }
+
+  .toc-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin: 20px 0 40px;
+    box-shadow: var(--shadow);
+  }
+  .toc-card h2 { margin-top: 0; font-size: 1.1rem; color: var(--text-main); border:none; padding:0;}
+  .toc-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 20px; list-style: none; padding: 0; margin: 0;}
+  .toc-list li a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.92rem;
+  }
+  .toc-list li a:hover { text-decoration: underline; }
+  @media (max-width: 640px) { .toc-list { grid-template-columns: 1fr; } }
+
+  footer {
+    text-align: center;
+    padding: 30px 20px 60px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+  }
+
+  code {
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-size: 0.88em;
+    color: var(--text-main);
+  }
+</style>
+</head>
+<body data-theme="light">
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">🫁 ระบบหายใจ <span>| สรุป BIO ม.ต้น–ม.ปลาย</span></div>
+    <nav class="topnav">
+      <a href="#overview" data-target="overview">ภาพรวม</a>
+      <a href="#lung-heart" data-target="lung-heart">ปอด-หัวใจ</a>
+      <a href="#gas-exchange" data-target="gas-exchange">แลกเปลี่ยนแก๊ส</a>
+      <a href="#transport" data-target="transport">ขนส่งแก๊ส</a>
+      <a href="#diaphragm" data-target="diaphragm">กะบังลม</a>
+      <a href="#pressure" data-target="pressure">ความดันปอด</a>
+      <a href="#control" data-target="control">ศูนย์ควบคุม</a>
+      <a href="#misconceptions" data-target="misconceptions">ข้อเข้าใจผิด</a>
+      <a href="#summary" data-target="summary">สรุปรวม</a>
+    </nav>
+    <button id="themeToggle" onclick="toggleTheme()">🌙 <span id="themeLabel">โหมดมืด</span></button>
+  </div>
+</div>
+
+<div class="container">
+
+  <header class="hero">
+    <h1>ระบบหายใจและการแลกเปลี่ยนแก๊สในร่างกายมนุษย์</h1>
+    <p>สรุปเนื้อหาและหลักการสำคัญ ครอบคลุมความสัมพันธ์ระหว่างปอด หัวใจ ถุงลม หลอดเลือดฝอย กะบังลม และกลไกความดัน พร้อมประเด็นที่เข้าใจผิดบ่อยจากข้อสอบ</p>
+  </header>
+
+  <div class="toc-card">
+    <h2>📑 สารบัญ</h2>
+    <ul class="toc-list">
+      <li><a href="#overview">1. ภาพรวมระบบหายใจ</a></li>
+      <li><a href="#lung-heart">2. ปอดกับหัวใจ (การไหลเวียนเลือด)</a></li>
+      <li><a href="#gas-exchange">3. การแลกเปลี่ยนแก๊สที่ถุงลม-หลอดเลือดฝอย</a></li>
+      <li><a href="#transport">4. การนำส่งแก๊สไปยังเนื้อเยื่อ</a></li>
+      <li><a href="#diaphragm">5. กะบังลมกับอวัยวะที่เกี่ยวข้อง</a></li>
+      <li><a href="#pressure">6. กะบังลมกับความดันปอด (Boyle's Law)</a></li>
+      <li><a href="#control">7. ศูนย์ควบคุมการหายใจ (เนื้อหาเพิ่มเติม)</a></li>
+      <li><a href="#misconceptions">8. ประเด็นที่เข้าใจผิดบ่อย</a></li>
+      <li><a href="#summary">9. สรุปภาพรวมทั้งหมด</a></li>
+    </ul>
+  </div>
+
+  <!-- 1. OVERVIEW -->
+  <section id="overview">
+    <span class="section-tag">Part 0</span>
+    <h2 class="section-title">1. ภาพรวมระบบหายใจ</h2>
+    <p>ระบบหายใจทำหน้าที่หลัก 2 อย่าง คือ <strong>นำแก๊สออกซิเจน (O₂) เข้าสู่ร่างกาย</strong> เพื่อใช้ในการสลายสารอาหารให้เป็นพลังงาน และ<strong>กำจัดแก๊สคาร์บอนไดออกไซด์ (CO₂)</strong> ซึ่งเป็นของเสียจากกระบวนการนั้นออกจากร่างกาย</p>
+    <div class="flow">
+      <div class="step">จมูก/ปาก</div><div class="arrow">→</div>
+      <div class="step">หลอดลม (Trachea)</div><div class="arrow">→</div>
+      <div class="step">หลอดลมฝอย (Bronchiole)</div><div class="arrow">→</div>
+      <div class="step">ถุงลมปอด (Alveolus)</div><div class="arrow">→</div>
+      <div class="step">หลอดเลือดฝอย</div><div class="arrow">→</div>
+      <div class="step">หัวใจ</div><div class="arrow">→</div>
+      <div class="step">เซลล์ทั่วร่างกาย</div>
+    </div>
+    <div class="key-box">
+      <span class="label">🔑 ใจความสำคัญ</span>
+      โครงสร้างที่ทำหน้าที่แลกเปลี่ยนแก๊สทุกชนิด (ถุงลมปอด เหงือกปลา ผิวหนังไส้เดือน) มีลักษณะร่วมกันคือ <strong>ผนังบางและชุ่มชื้นเสมอ</strong> (เพื่อให้แก๊สละลายน้ำก่อนแพร่ผ่านได้) และ <strong>มีพื้นที่ผิวมากเมื่อเทียบกับปริมาตร</strong> ส่วน "มีเส้นเลือดฝอยมาเลี้ยง" และ "แลกเปลี่ยนได้ทั้งบนบก-ในน้ำ" ไม่ใช่คุณสมบัติร่วมพื้นฐาน เพราะแมลงใช้ระบบท่อลมนำแก๊สเข้าเซลล์โดยตรงโดยไม่ผ่านเลือด และสิ่งมีชีวิตแต่ละชนิดมักแลกเปลี่ยนแก๊สได้ดีในสภาพแวดล้อมเดียวเท่านั้น
+    </div>
+  </section>
+
+  <!-- 2. LUNG-HEART -->
+  <section id="lung-heart">
+    <span class="section-tag">Part 1</span>
+    <h2 class="section-title">2. ปอดกับหัวใจ: การเชื่อมโยงการไหลเวียนเลือด</h2>
+    <p>หัวใจและปอดทำงานร่วมกันผ่าน <strong>วงจรไหลเวียนเลือดแบบปิด</strong> ซึ่งแบ่งเป็น 2 วงจรย่อย:</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>🫀 วงจรปอด (Pulmonary circulation)</h3>
+        <p>หัวใจ (ห้องล่างขวา) → หลอดเลือดแดงปอด (นำเลือดที่มี <span class="co2">CO₂ สูง</span>) → ถุงลมปอด (แลกเปลี่ยนแก๊ส) → หลอดเลือดดำปอด (นำเลือดที่มี <span class="o2">O₂ สูง</span>) → หัวใจ (ห้องบนซ้าย)</p>
+      </div>
+      <div class="card">
+        <h3>🧍 วงจรทั่วร่างกาย (Systemic circulation)</h3>
+        <p>หัวใจ (ห้องล่างซ้าย) → หลอดเลือดเอออร์ตา (นำเลือดที่มี <span class="o2">O₂ สูง</span>) → เซลล์เนื้อเยื่อ (แลกเปลี่ยนแก๊ส) → หลอดเลือดเวนาคาวา (นำเลือดที่มี <span class="co2">CO₂ สูง</span>) → หัวใจ (ห้องบนขวา)</p>
+      </div>
+    </div>
+    <p><strong>ลำดับการหมุนเวียนเลือดในร่างกาย</strong> (โจทย์พบบ่อย): หัวใจ → หลอดเลือดแดง → หลอดเลือดฝอย → หลอดเลือดดำ → ปอด → (กลับเข้าหัวใจ) การแลกเปลี่ยนแก๊สจะเกิดขึ้นเฉพาะที่ <strong>หลอดเลือดฝอย</strong> เท่านั้น ไม่ว่าจะเป็นที่ปอดหรือที่เนื้อเยื่อ เพราะผนังหลอดเลือดฝอยบางเพียงชั้นเดียว</p>
+    <div class="tip-box">
+      <span class="label">💡 เทคนิคทำโจทย์</span>
+      เมื่อโจทย์ถามหา "ตำแหน่งที่มี CO₂ สูงที่สุด" ให้มองหาตำแหน่ง<strong>ก่อนเข้าปอด</strong> (หลอดเลือดแดงปอด) และเมื่อถามหา "ตำแหน่งที่มี O₂ สูงที่สุด" ให้มองหาตำแหน่ง<strong>หลังออกจากปอด</strong> (หลอดเลือดดำปอด) — สองตำแหน่งนี้เป็นข้อยกเว้นที่ชื่อหลอดเลือด "แดง-ดำ" สลับกับปริมาณแก๊สที่คุ้นเคย
+    </div>
+  </section>
+
+  <!-- 3. GAS EXCHANGE -->
+  <section id="gas-exchange">
+    <span class="section-tag">Part 2</span>
+    <h2 class="section-title">3. การแลกเปลี่ยนแก๊สระหว่างหลอดเลือดฝอยกับถุงลมปอด</h2>
+    <p>การแลกเปลี่ยนแก๊สเกิดจาก <strong>การแพร่ (diffusion)</strong> ของแก๊สจากบริเวณที่มีความเข้มข้น (ความดันย่อย) สูง ไปยังบริเวณที่มีความเข้มข้นต่ำกว่า โดยไม่ใช้พลังงานจากเซลล์ (passive transport)</p>
+    <table>
+      <tr><th>ตำแหน่ง</th><th>แก๊สที่แพร่เข้าถุงลม/ปอด</th><th>แก๊สที่แพร่เข้าเลือด</th></tr>
+      <tr><td>ถุงลมปอด ↔ หลอดเลือดฝอย</td><td class="co2">CO₂ (จากเลือด → ถุงลม)</td><td class="o2">O₂ (จากถุงลม → เลือด)</td></tr>
+      <tr><td>เซลล์เนื้อเยื่อ ↔ หลอดเลือดฝอย</td><td class="o2">O₂ (จากเลือด → เซลล์)</td><td class="co2">CO₂ (จากเซลล์ → เลือด)</td></tr>
+    </table>
+    <p>ทิศทางตรงข้ามกันนี้เกิดเพราะที่ถุงลม อากาศที่หายใจเข้าใหม่มี O₂ เข้มข้นสูงกว่าในเลือด ส่วนที่เซลล์เนื้อเยื่อ เซลล์ใช้ O₂ ไปสลายพลังงานตลอดเวลาทำให้ O₂ ในเซลล์ต่ำกว่าในเลือดเสมอ</p>
+    <h3>โรคถุงลมโป่งพอง (Emphysema)</h3>
+    <p>เมื่อผนังถุงลมถูกทำลายและรวมตัวกันเป็นถุงลมขนาดใหญ่ <strong>พื้นที่ผิวรวมทั้งหมดจะลดลง</strong> แม้ปริมาตรอากาศที่หายใจเข้าเท่าเดิม แต่ประสิทธิภาพการแลกเปลี่ยนแก๊สลดลง ทำให้ O₂ เข้าสู่เลือดได้น้อยลงและเกิดภาวะหายใจลำบาก</p>
+    <div class="misconception-box">
+      <span class="label">⚠️ เข้าใจผิดบ่อย</span>
+      <span class="wrong">ถุงลมและหลอดเลือดฝอยมีผนังหลายชั้นเพื่อความแข็งแรง</span><br>
+      <span class="right">✓ ที่จริงผนังถุงลมและหลอดเลือดฝอยเป็นเซลล์ชั้นเดียว (เยื่อบาง) เพื่อให้แก๊สแพร่ผ่านได้ง่ายและรวดเร็วที่สุด</span>
+    </div>
+  </section>
+
+  <!-- 4. TRANSPORT -->
+  <section id="transport">
+    <span class="section-tag">Part 3</span>
+    <h2 class="section-title">4. การนำส่งแก๊สไปยังเนื้อเยื่อ</h2>
+    <p>เมื่อ O₂ แพร่เข้าสู่หลอดเลือดฝอยที่ถุงลมแล้ว จะถูกลำเลียงไปยังเซลล์ทั่วร่างกายได้ 2 รูปแบบ:</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>1) ละลายในน้ำเลือด</h3>
+        <p>O₂ ประมาณ <strong>3–5%</strong> ละลายในพลาสมาโดยตรง (Dissolved O₂)</p>
+      </div>
+      <div class="card">
+        <h3>2) จับกับฮีโมโกลบิน</h3>
+        <p>O₂ ส่วนใหญ่จับกับ<strong>ฮีโมโกลบิน (Hb)</strong> ในเม็ดเลือดแดง กลายเป็น <strong>Oxyhemoglobin (HbO₂)</strong> ซึ่งขนส่ง O₂ ได้มากกว่าการละลายในน้ำเลือดถึงประมาณ 65 เท่า</p>
+      </div>
+    </div>
+    <p>ตำแหน่งที่ O₂ จับกับฮีโมโกลบินคือตำแหน่งที่มี <strong>ธาตุเหล็ก (Fe)</strong> อยู่ในโมเลกุลฮีโมโกลบิน ดังนั้นหากร่างกายขาดธาตุเหล็ก จะสร้างฮีโมโกลบินได้ไม่เพียงพอ ส่งผลให้การขนส่ง O₂ บกพร่อง (เกิดภาวะโลหิตจาง) แม้ระบบหายใจ (ปอด) เองจะปกติดีก็ตาม</p>
+    <div class="key-box">
+      <span class="label">🔑 ใจความสำคัญ</span>
+      เมื่อเลือดไหลผ่านเซลล์เนื้อเยื่อที่ขาด O₂ ฮีโมโกลบินจะปล่อย O₂ ออกมาให้เซลล์ใช้ในกระบวนการหายใจระดับเซลล์ (Cellular respiration) เพื่อสลายสารอาหารให้เป็นพลังงาน ส่วน CO₂ ที่เกิดขึ้นจะแพร่กลับเข้าสู่เลือดเพื่อถูกส่งกลับไปกำจัดที่ปอด
+    </div>
+    <h3>การหายใจระดับเซลล์ vs การเผาไหม้</h3>
+    <table>
+      <tr><th></th><th>การหายใจระดับเซลล์</th><th>การเผาไหม้</th></tr>
+      <tr><td>สารตั้งต้น</td><td>สารอาหาร + O₂</td><td>เชื้อเพลิง + O₂</td></tr>
+      <tr><td>ผลิตภัณฑ์</td><td>CO₂ + น้ำ + พลังงาน</td><td>CO₂ + น้ำ + พลังงาน</td></tr>
+      <tr><td>อุณหภูมิที่เกิดปฏิกิริยา</td><td>อุณหภูมิร่างกาย (ต่ำ)</td><td>อุณหภูมิสูง</td></tr>
+      <tr><td>ลักษณะการปลดปล่อยพลังงาน</td><td>หลายขั้นตอน ปลดปล่อยทีละน้อย</td><td>รวดเร็วในครั้งเดียว</td></tr>
+    </table>
+    <div class="misconception-box">
+      <span class="label">⚠️ เข้าใจผิดบ่อย</span>
+      <span class="wrong">การแลกเปลี่ยนแก๊สที่ถุงลมปอดคือ "การหายใจระดับเซลล์"</span><br>
+      <span class="right">✓ การแลกเปลี่ยนแก๊สที่ถุงลม/เนื้อเยื่อเป็นเพียงการแพร่แก๊สทางกายภาพ ส่วน "การหายใจระดับเซลล์" หมายถึงกระบวนการทางเคมีภายในเซลล์ (ที่ไมโทคอนเดรีย) ที่ใช้ O₂ สลายสารอาหารให้เป็นพลังงาน ATP
+    </div>
+  </section>
+
+  <!-- 5. DIAPHRAGM -->
+  <section id="diaphragm">
+    <span class="section-tag">Part 4</span>
+    <h2 class="section-title">5. กะบังลมกับอวัยวะที่เกี่ยวข้อง</h2>
+    <p>การหายใจเข้า-ออกเกิดจากการเปลี่ยนแปลง<strong>ปริมาตรช่องอก</strong> ซึ่งควบคุมโดยการทำงานร่วมกันของ <strong>กะบังลม (Diaphragm)</strong> และ <strong>กล้ามเนื้อยึดกระดูกซี่โครง</strong> โดยทั้งสองเคลื่อนที่ใน "ทิศทางตรงกันข้าม" เสมอ:</p>
+    <table>
+      <tr><th>อวัยวะ</th><th>ขณะหายใจเข้า (Inhalation)</th><th>ขณะหายใจออก (Exhalation)</th></tr>
+      <tr><td>กะบังลม</td><td><strong>หดตัว</strong> → เคลื่อนต่ำลง (แบนราบ)</td><td>คลายตัว → โค้งสูงขึ้น (กลับตำแหน่งเดิม)</td></tr>
+      <tr><td>กระดูกซี่โครง</td><td>ยกตัวสูงขึ้น</td><td>เลื่อนต่ำลง (กลับตำแหน่งเดิม)</td></tr>
+      <tr><td>ปริมาตรช่องอก</td><td>เพิ่มขึ้น</td><td>ลดลง</td></tr>
+      <tr><td>ความดันในช่องอก</td><td>ลดลง (ต่ำกว่าบรรยากาศ)</td><td>เพิ่มขึ้น (สูงกว่าบรรยากาศ)</td></tr>
+      <tr><td>ทิศทางการไหลของอากาศ</td><td>ไหลเข้าสู่ปอด</td><td>ไหลออกจากปอด</td></tr>
+    </table>
+    <div class="tip-box">
+      <span class="label">💡 เทคนิคจำ</span>
+      "กะบังลม<strong>หดตัว-ต่ำลง</strong> = หายใจ<strong>เข้า</strong>" ส่วนกระดูกซี่โครงกับกะบังลมสวนทางกันเสมอ: เมื่อกะบังลมลดต่ำ กระดูกซี่โครงจะยกสูงขึ้น ทั้งสองช่วยกันขยายปริมาตรช่องอกไปพร้อมกัน (ไม่ใช่แข่งกัน)
+    </div>
+    <h3>แบบจำลองการหายใจ (Bell-jar model)</h3>
+    <p>แบบจำลองขวดโหลที่มีแผ่นยางด้านล่างและลูกโป่งด้านใน ใช้แสดง<strong>ทิศทางการไหลของอากาศ</strong>เท่านั้น เมื่อดึงแผ่นยางลง (จำลองกะบังลมหดตัว) ปริมาตรในขวดเพิ่ม ความดันลด ลูกโป่งจะพองตัว (จำลองอากาศเข้าปอด)</p>
+    <div class="misconception-box">
+      <span class="label">⚠️ เข้าใจผิดบ่อย</span>
+      <span class="wrong">แบบจำลองนี้บอกได้ว่า O₂ กำลังเข้าไปในลูกโป่ง</span><br>
+      <span class="right">✓ แบบจำลองบอกได้เพียงว่า "อากาศ" ไหลเข้า/ออกทิศทางใด แต่ไม่สามารถระบุชนิดของแก๊ส (O₂ หรือ CO₂) ที่กำลังเคลื่อนที่ได้ เพราะแบบจำลองไม่มีกลไกการแลกเปลี่ยนแก๊สจริง
+    </div>
+  </section>
+
+  <!-- 6. PRESSURE -->
+  <section id="pressure">
+    <span class="section-tag">Part 4</span>
+    <h2 class="section-title">6. กะบังลมกับความดันปอด (หลักการของบอยล์)</h2>
+    <p>หลักการสำคัญที่อธิบายการหายใจคือ <strong>กฎของบอยล์ (Boyle's Law):</strong> ที่อุณหภูมิคงที่ ความดันของแก๊สจะแปรผกผันกับปริมาตร (เมื่อปริมาตรเพิ่ม ความดันจะลด และในทางกลับกัน)</p>
+    <div class="flow">
+      <div class="step">กะบังลมหดตัว/เคลื่อนต่ำ</div><div class="arrow">→</div>
+      <div class="step">ปริมาตรช่องอกเพิ่ม</div><div class="arrow">→</div>
+      <div class="step">ความหนาแน่นอากาศในช่องอกลด</div><div class="arrow">→</div>
+      <div class="step">ความดันในช่องอกลดลง<br>(ต่ำกว่าภายนอก)</div><div class="arrow">→</div>
+      <div class="step">อากาศจากภายนอก<br>ไหลเข้าสู่ปอด</div>
+    </div>
+    <p><strong>กฎสำคัญที่ต้องจำ:</strong> อากาศเคลื่อนที่จากบริเวณที่มี<strong>ความดันสูงไปยังบริเวณที่มีความดันต่ำกว่าเสมอ</strong> ไม่ใช่ในทิศทางตรงข้าม</p>
+    <div class="misconception-box">
+      <span class="label">⚠️ เข้าใจผิดบ่อยที่สุด</span>
+      <span class="wrong">อากาศเคลื่อนที่จากความดันต่ำไปความดันสูง</span><br>
+      <span class="right">✓ อากาศ (และแก๊สทุกชนิด) เคลื่อนที่จากบริเวณความดัน/ความเข้มข้นสูง ไปยังบริเวณความดัน/ความเข้มข้นต่ำกว่าเสมอ ไม่ว่าจะเป็นการไหลของอากาศเข้าปอด หรือการแพร่ของแก๊สที่ถุงลม</span>
+    </div>
+    <h3>กราฟความดันแก๊สในถุงลม (O₂ vs CO₂)</h3>
+    <p>โจทย์มักให้กราฟความดันย่อยของ O₂ และ CO₂ ในถุงลมที่เปลี่ยนแปลงตามเวลา หลักการอ่านกราฟ:</p>
+    <ul>
+      <li>ช่วงที่ความดัน O₂ ในถุงลม<strong>ลดลง</strong> และ CO₂ <strong>เพิ่มขึ้น</strong> → กำลังเกิด<strong>การหายใจออก</strong> (กะบังลมยกตัวสูงขึ้น ปริมาตรปอดลดลง)</li>
+      <li>ช่วงที่ความดัน O₂ ในถุงลม<strong>เพิ่มขึ้น</strong> (จากอากาศใหม่ที่เข้ามา) และ CO₂ <strong>ลดลง</strong> → กำลังเกิด<strong>การหายใจเข้า</strong></li>
+      <li>ความดัน O₂ ในถุงลมจะ<strong>สูงกว่า</strong> ความดัน CO₂ เสมอ เพราะสัดส่วน O₂ ในอากาศ (~21%) สูงกว่า CO₂ (~0.04%) มาก</li>
+    </ul>
+    <div class="tip-box">
+      <span class="label">💡 เทคนิคทำโจทย์กราฟ</span>
+      หากสับสนว่ากราฟเส้นใดคือ O₂ หรือ CO₂ ให้เพ่งดูที่ "เส้นออกซิเจน" เป็นหลัก เพราะทิศทางของออกซิเจนจะสวนทางกับ CO₂ เสมอ และมักตีความง่ายกว่า
+    </div>
+  </section>
+
+  <!-- 7. CONTROL - additional content -->
+  <section id="control">
+    <span class="section-tag">เนื้อหาเพิ่มเติม</span>
+    <h2 class="section-title">7. ศูนย์ควบคุมการหายใจ (เสริมนอกเหนือจากเอกสาร)</h2>
+    <p>เนื้อหานี้ไม่ได้อยู่ในเอกสารต้นฉบับโดยตรง แต่เป็นความรู้ต่อยอดที่ช่วยอธิบายกราฟ "อัตราการหายใจกับความเข้มข้นของแก๊ส" ที่ปรากฏในแบบฝึกหัดได้ลึกซึ้งขึ้น</p>
+    <p>อัตราการหายใจถูกควบคุมโดย <strong>ศูนย์ควบคุมการหายใจ (Respiratory center)</strong> ที่ก้านสมองส่วน<strong>เมดัลลาออบลองกาตา (Medulla oblongata)</strong> ซึ่งตรวจจับการเปลี่ยนแปลงหลักผ่านตัวรับสารเคมี (Chemoreceptors):</p>
+    <ul>
+      <li><strong>ปัจจัยหลักที่กระตุ้นการหายใจ:</strong> ระดับ CO₂ ในเลือดที่เพิ่มขึ้น (ซึ่งทำให้เลือดมีสภาพเป็นกรดมากขึ้นจากการเกิดกรดคาร์บอนิก H₂CO₃) มีผลกระตุ้นศูนย์ควบคุมการหายใจให้เพิ่มอัตราการหายใจ<strong>ได้ไวและมากกว่า</strong>การเปลี่ยนแปลงของระดับ O₂</li>
+      <li><strong>ปัจจัยรอง:</strong> ระดับ O₂ ในเลือดที่ลดลงอย่างมาก จะกระตุ้นตัวรับที่หลอดเลือดแดง (Carotid & aortic bodies) แต่มีผลน้อยกว่า CO₂ ในสภาวะปกติ</li>
+    </ul>
+    <div class="key-box">
+      <span class="label">🔑 เชื่อมโยงกับกราฟในแบบฝึกหัด</span>
+      นี่คือเหตุผลที่กราฟ "อัตราเร็วการหายใจ" จะไวต่อการเปลี่ยนแปลงความเข้มข้นของ CO₂ มากกว่า O₂ เสมอ — สอดคล้องกับข้อสรุปในแบบฝึกหัดที่ระบุว่า "อัตราเร็วในการหายใจได้รับผลกระทบจากการเปลี่ยนแปลงความเข้มข้นของ CO₂ มากกว่า O₂"
+    </div>
+    <h3>ปัจจัยอื่นที่ส่งผลต่อการหายใจ</h3>
+    <p>การรับประทานอาหารมากเกินไปทำให้กระเพาะอาหารขยายตัวไปเบียดกะบังลม ทำให้กะบังลมหดตัว/เคลื่อนต่ำได้ยากขึ้น และปริมาตรช่องอกเพิ่มได้น้อยลง จึงทำให้ <strong>ความแตกต่างระหว่างความดันในช่องอกกับความดันภายนอกลดลง</strong> ส่งผลให้อากาศเข้าสู่ปอดได้ยากขึ้น (หายใจลำบาก)</p>
+  </section>
+
+  <!-- 8. MISCONCEPTIONS SUMMARY -->
+  <section id="misconceptions">
+    <span class="section-tag">สำคัญมาก</span>
+    <h2 class="section-title">8. รวมประเด็นที่เข้าใจผิดบ่อย (Misconceptions)</h2>
+
+    <div class="misconception-box">
+      <span class="label">1) ทิศทางการไหลของอากาศ/แก๊ส</span>
+      <span class="wrong">คิดว่าแก๊สไหลจากความเข้มข้นต่ำไปสูง</span><br>
+      <span class="right">✓ แก๊สและอากาศเคลื่อนที่จาก "มาก/สูง" ไป "น้อย/ต่ำ" เสมอ ทั้งการไหลของอากาศเข้า-ออกปอด และการแพร่ของ O₂/CO₂ ที่ถุงลม</span>
+    </div>
+
+    <div class="misconception-box">
+      <span class="label">2) กะบังลมกับกระดูกซี่โครง</span>
+      <span class="wrong">คิดว่ากะบังลมกับกระดูกซี่โครงเคลื่อนที่ไปทิศทางเดียวกัน</span><br>
+      <span class="right">✓ ทั้งสองเคลื่อนที่ "สวนทางกัน" เสมอ แต่ทำงานร่วมกันให้ปริมาตรช่องอกเปลี่ยนไปในทิศทางเดียวกัน (เพิ่มพร้อมกันตอนหายใจเข้า)</span>
+    </div>
+
+    <div class="misconception-box">
+      <span class="label">3) การหายใจระดับเซลล์ vs การแลกเปลี่ยนแก๊ส</span>
+      <span class="wrong">คิดว่าการแลกเปลี่ยนแก๊สที่ถุงลมคือการหายใจระดับเซลล์</span><br>
+      <span class="right">✓ การแลกเปลี่ยนแก๊สเป็นการแพร่ทางกายภาพระหว่างถุงลม/เซลล์กับเลือด ส่วนการหายใจระดับเซลล์คือปฏิกิริยาเคมีในไมโทคอนเดรียที่สลายสารอาหารเป็นพลังงาน</span>
+    </div>
+
+    <div class="misconception-box">
+      <span class="label">4) หลอดเลือดแดง-ดำ กับปริมาณแก๊ส</span>
+      <span class="wrong">คิดว่าหลอดเลือดแดงมี O₂ สูงและหลอดเลือดดำมี CO₂ สูงเสมอ</span><br>
+      <span class="right">✓ กฎนี้ใช้ไม่ได้กับวงจรปอด — หลอดเลือดแดงปอด (Pulmonary artery) นำเลือดที่มี CO₂ สูงออกจากหัวใจไปยังปอด ส่วนหลอดเลือดดำปอด (Pulmonary vein) นำเลือดที่มี O₂ สูงกลับเข้าสู่หัวใจ (ชื่อ "แดง-ดำ" อ้างอิงทิศทางที่ไหลออก/เข้าหัวใจ ไม่ได้อ้างอิงปริมาณแก๊ส)</span>
+    </div>
+
+    <div class="misconception-box">
+      <span class="label">5) แบบจำลองการหายใจ</span>
+      <span class="wrong">คิดว่าแบบจำลอง (ขวดโหล-ลูกโป่ง) บอกชนิดของแก๊สที่เคลื่อนที่ได้</span><br>
+      <span class="right">✓ แบบจำลองบอกได้เพียงทิศทางการไหลของ "อากาศ" เท่านั้น ไม่สามารถระบุว่าเป็น O₂ หรือ CO₂ เพราะไม่มีกลไกแลกเปลี่ยนแก๊สจริงอยู่ในแบบจำลอง</span>
+    </div>
+
+    <div class="misconception-box">
+      <span class="label">6) ปัจจัยกระตุ้นการหายใจ</span>
+      <span class="wrong">คิดว่า O₂ ต่ำเป็นตัวกระตุ้นหลักให้หายใจเร็วขึ้น</span><br>
+      <span class="right">✓ ตัวกระตุ้นหลักคือระดับ CO₂ ในเลือดที่สูงขึ้น (ทำให้เลือดเป็นกรดมากขึ้น) ซึ่งมีผลต่ออัตราการหายใจมากกว่าการเปลี่ยนแปลงของ O₂</span>
+    </div>
+
+    <div class="misconception-box">
+      <span class="label">7) โครงสร้างแลกเปลี่ยนแก๊สของสิ่งมีชีวิตต่างๆ</span>
+      <span class="wrong">คิดว่า "มีเส้นเลือดฝอยมาเลี้ยง" เป็นคุณสมบัติพื้นฐานร่วมของทุกโครงสร้างแลกเปลี่ยนแก๊ส</span><br>
+      <span class="right">✓ ไม่ใช่ทุกกรณี เช่น ระบบท่อลม (Tracheal system) ของแมลงนำแก๊สเข้าสู่เซลล์โดยตรงโดยไม่ผ่านระบบเลือด คุณสมบัติร่วมที่แท้จริงคือ "ผนังบางชุ่มชื้น" และ "มีพื้นที่ผิวมากเทียบกับปริมาตร"</span>
+    </div>
+  </section>
+
+  <!-- 9. SUMMARY -->
+  <section id="summary">
+    <span class="section-tag">สรุปรวม</span>
+    <h2 class="section-title">9. สรุปภาพรวมทั้งหมด</h2>
+    <div class="card">
+      <h3>🔄 ห่วงโซ่เหตุการณ์ตอนหายใจเข้า (ครบวงจร)</h3>
+      <div class="flow">
+        <div class="step">กะบังลมหดตัว + ซี่โครงยกตัว</div><div class="arrow">→</div>
+        <div class="step">ปริมาตรช่องอกเพิ่ม</div><div class="arrow">→</div>
+        <div class="step">ความดันช่องอกลด</div><div class="arrow">→</div>
+        <div class="step">อากาศไหลเข้าปอด</div><div class="arrow">→</div>
+        <div class="step">O₂ แพร่เข้าเลือดที่ถุงลม</div><div class="arrow">→</div>
+        <div class="step">Hb จับ O₂ → HbO₂</div><div class="arrow">→</div>
+        <div class="step">เลือดพา O₂ ไปเซลล์</div><div class="arrow">→</div>
+        <div class="step">เซลล์ใช้ O₂ สร้างพลังงาน + CO₂</div>
+      </div>
+    </div>
+    <table>
+      <tr><th>หัวข้อ</th><th>ประเด็นสำคัญที่สุด</th></tr>
+      <tr><td>ปอด-หัวใจ</td><td>แลกเปลี่ยนแก๊สเกิดที่หลอดเลือดฝอยเท่านั้น ทั้งที่ปอดและที่เนื้อเยื่อ</td></tr>
+      <tr><td>ถุงลม-หลอดเลือดฝอย</td><td>O₂ เข้าเลือด, CO₂ ออกจากเลือด ผ่านการแพร่ตามความเข้มข้น</td></tr>
+      <tr><td>การขนส่งแก๊ส</td><td>O₂ ส่วนใหญ่ (~95%+) ขนส่งโดยจับกับฮีโมโกลบิน (ต้องใช้ธาตุเหล็ก)</td></tr>
+      <tr><td>กะบังลม-ซี่โครง</td><td>เคลื่อนที่สวนทางกัน แต่ทำให้ปริมาตรช่องอกเปลี่ยนไปทิศทางเดียวกัน</td></tr>
+      <tr><td>ความดันปอด</td><td>ปริมาตรเพิ่ม → ความดันลด → อากาศไหลเข้า (กฎของบอยล์)</td></tr>
+      <tr><td>การควบคุม</td><td>เมดัลลาออบลองกาตาไวต่อ CO₂ ในเลือดมากกว่า O₂</td></tr>
+    </table>
+  </section>
+
+  <footer>
+    สรุปเนื้อหาจากแบบฝึกหัดชีววิทยา ระบบหายใจและการแลกเปลี่ยนแก๊ส (ปอด, กะบังลม) — จัดทำเพื่อการทบทวนเนื้อหา ระดับมัธยมต้น–ปลาย
+  </footer>
+
+</div>
+
+<script>
+// Robust in-page navigation: manually scroll instead of relying on native
+// anchor jump, since native hash scrolling can fail inside sandboxed/iframe
+// viewers. Also compensates for the sticky top bar height.
+document.querySelectorAll('nav.topnav a[data-target]').forEach(function(link) {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    var targetId = link.getAttribute('data-target');
+    var targetEl = document.getElementById(targetId);
+    if (!targetEl) return;
+    var topbar = document.querySelector('.topbar');
+    var offset = (topbar ? topbar.offsetHeight : 0) + 12;
+    var top = targetEl.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({ top: top, behavior: 'smooth' });
+    history.replaceState(null, '', '#' + targetId);
+  });
+});
+
+function toggleTheme() {
+  const body = document.body;
+  const label = document.getElementById('themeLabel');
+  const btn = document.getElementById('themeToggle');
+  const isDark = body.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    body.setAttribute('data-theme', 'light');
+    label.textContent = 'โหมดมืด';
+    btn.innerHTML = '🌙 <span id="themeLabel">โหมดมืด</span>';
+  } else {
+    body.setAttribute('data-theme', 'dark');
+    label.textContent = 'โหมดสว่าง';
+    btn.innerHTML = '☀️ <span id="themeLabel">โหมดสว่าง</span>';
+  }
+}
+</script>
+
+</body>
+</html>
