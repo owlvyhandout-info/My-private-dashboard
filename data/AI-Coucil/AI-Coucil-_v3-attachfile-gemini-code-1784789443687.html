@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สภาคำตอบ (Answer Council)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Sarabun:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- โหลด Mammoth.js สำหรับอ่านไฟล์ Word (.docx) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<style>
+  :root{
+    --bg: #11152A;
+    --bg-soft: #171C36;
+    --card: #1C2244;
+    --card-border: #333B66;
+    --brass: #C9A227;
+    --brass-soft: #8A742A;
+    --text: #E8E4D8;
+    --text-dim: #9AA0BE;
+    --agree: #5C8A66;
+    --disagree: #B15252;
+    --parchment: #EDE6D2;
+    --parchment-ink: #262115;
+    --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, #232A52 0%, transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Sarabun',sans-serif;
+    min-height:100vh;
+    padding:48px 20px 80px;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--brass);
+    text-align:center;
+    margin-bottom:10px;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-optical-sizing:auto;
+    font-weight:700;
+    font-size:clamp(32px,6vw,52px);
+    text-align:center;
+    margin:0 0 8px;
+    letter-spacing:-.01em;
+  }
+  .subtitle{
+    text-align:center;
+    color:var(--text-dim);
+    font-size:16px;
+    max-width:480px;
+    margin:0 auto 40px;
+    line-height:1.6;
+  }
+
+  .rule{
+    display:flex;align-items:center;gap:12px;
+    margin:36px 0 24px;
+    color:var(--brass-soft);
+  }
+  .rule::before,.rule::after{
+    content:"";flex:1;height:1px;
+    background:linear-gradient(90deg, transparent, var(--card-border), transparent);
+  }
+  .rule span{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);
+    white-space:nowrap;
+  }
+
+  .question-card{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:var(--radius);
+    padding:22px 24px;
+  }
+  label{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--brass);
+    margin-bottom:10px;
+  }
+  textarea, input[type=text]{
+    width:100%;
+    background:var(--bg-soft);
+    border:1px solid var(--card-border);
+    border-radius:8px;
+    color:var(--text);
+    font-family:'Sarabun',sans-serif;
+    font-size:15px;
+    padding:12px 14px;
+    resize:vertical;
+    line-height:1.55;
+  }
+  textarea:focus, input[type=text]:focus{
+    outline:none;
+    border-color:var(--brass-soft);
+  }
+  #question{min-height:90px;}
+
+  /* File Upload Area */
+  .file-upload-box {
+    margin-bottom: 14px;
+    background: var(--bg-soft);
+    border: 1px dashed var(--brass-soft);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+    transition: background .2s, border-color .2s;
+  }
+  .file-upload-box:hover {
+    background: rgba(201, 162, 39, 0.05);
+    border-color: var(--brass);
+  }
+  .file-input-label {
+    cursor: pointer;
+    color: var(--brass);
+    font-size: 13.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  #doc-file { display: none; }
+  .file-status {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 6px;
+  }
+  .extracted-images-wrap {
+    display: none;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--card-border);
+  }
+  .extracted-images-title {
+    font-size: 12px;
+    color: var(--brass);
+    margin-bottom: 8px;
+  }
+  .image-preview-grid {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+  .image-preview-grid img {
+    height: 70px;
+    border-radius: 6px;
+    border: 1px solid var(--card-border);
+    object-fit: cover;
+  }
+
+  #witnesses{display:flex;flex-direction:column;gap:16px;}
+  .witness{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    position:relative;
+  }
+  .witness-top{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .witness-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--brass);
+    border:1px solid var(--brass-soft);
+    border-radius:100px;
+    width:24px;height:24px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .witness-name{
+    flex:1;
+    background:transparent;
+    border:none;
+    border-bottom:1px dashed var(--card-border);
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:17px;
+    color:var(--text);
+    padding:4px 2px 6px;
+  }
+  .witness-name:focus{outline:none;border-bottom-color:var(--brass);}
+  .remove-btn{
+    background:none;border:none;
+    color:var(--text-dim);
+    font-size:13px;
+    cursor:pointer;
+    font-family:'JetBrains Mono',monospace;
+    padding:4px 8px;
+    border-radius:6px;
+    transition:color .15s, background .15s;
+    flex-shrink:0;
+  }
+  .remove-btn:hover{color:var(--disagree);background:rgba(177,82,82,0.12);}
+  .witness textarea{min-height:90px;}
+
+  .add-row{display:flex;justify-content:center;margin-top:6px;}
+  #open-select-modal{
+    background:transparent;
+    border:1px dashed var(--brass-soft);
+    color:var(--brass);
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:.06em;
+    padding:11px 20px;
+    border-radius:100px;
+    cursor:pointer;
+    transition:background .15s, border-color .15s;
+  }
+  #open-select-modal:hover{background:rgba(201,162,39,.08);border-color:var(--brass);}
+
+  /* Workflow Step Box */
+  .workflow-box {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-top: 32px;
+  }
+  .step-item {
+    background: var(--bg-soft);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .step-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .tag-app { background: rgba(201,162,39,0.2); color: var(--brass); border: 1px solid var(--brass-soft); }
+  .tag-ai { background: rgba(92,138,102,0.2); color: #82C993; border: 1px solid var(--agree); }
+  
+  .step-title {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .step-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .btn-primary {
+    background: var(--brass);
+    color: #181205;
+    border: none;
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 12px 24px;
+    border-radius: 100px;
+    cursor: pointer;
+    box-shadow: 0 6px 18px -4px rgba(201,162,39,0.4);
+    transition: transform .15s, box-shadow .15s;
+    width: 100%;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 22px -4px rgba(201,162,39,0.6); }
+  .btn-success {
+    background: var(--agree);
+    color: #fff;
+    border: none;
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 12px 24px;
+    border-radius: 100px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .error-msg{color:var(--disagree);font-size:13.5px;text-align:center;margin-top:8px;}
+
+  /* Verdict Card & Blueprints */
+  #verdict-wrap{display:none;margin-top:44px;}
+  .verdict-card{
+    background:var(--parchment);
+    color:var(--parchment-ink);
+    border-radius:6px;
+    padding:38px 34px 32px;
+    position:relative;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.55);
+  }
+  .seal{
+    position:absolute;
+    top:-22px;right:28px;
+    width:64px;height:64px;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.4));
+  }
+  .verdict-eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--brass-soft);
+    margin-bottom:6px;
+  }
+  .verdict-title{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:23px;
+    margin:0 0 18px;
+    line-height:1.35;
+    padding-right:60px;
+  }
+  .verdict-section{margin-top:22px;}
+  .verdict-section h3{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    margin:0 0 10px;
+    display:flex;align-items:center;gap:7px;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .dot.agree{background:var(--agree);}
+  .dot.disagree{background:var(--disagree);}
+  .verdict-section ul{margin:0;padding-left:20px;line-height:1.7;font-size:14.5px;}
+  .verdict-section li{margin-bottom:6px;}
+  .confidence-badge{
+    display:inline-block;
+    margin-top:12px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.08em;
+    padding:4px 10px;
+    border-radius:100px;
+    border:1px solid var(--parchment-ink);
+    opacity:.75;
+  }
+  .divider-hair{height:1px;background:rgba(38,33,20,.18);margin:22px 0;}
+
+  .blueprint-card{
+    background:var(--bg-soft);
+    border:1px dashed var(--brass-soft);
+    border-radius:var(--radius);
+    padding:22px 24px 24px;
+    margin-top:20px;
+  }
+  .blueprint-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:6px;
+  }
+  .blueprint-eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--brass);
+  }
+  .blueprint-sub{color:var(--text-dim);font-size:13px;margin:4px 0 16px;line-height:1.6;}
+  .copy-btn{
+    background:transparent;
+    border:1px solid var(--brass-soft);
+    color:var(--brass);
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:.05em;
+    padding:7px 14px;
+    border-radius:100px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .15s, color .15s;
+    flex-shrink:0;
+  }
+  .copy-btn:hover{background:rgba(201,162,39,.12);}
+  .copy-btn.copied{background:var(--agree);border-color:var(--agree);color:#fff;}
+  .prompt-box{
+    background:var(--bg);
+    border:1px solid var(--card-border);
+    border-radius:8px;
+    padding:14px 16px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    line-height:1.75;
+    color:var(--text);
+    white-space:pre-wrap;
+    word-break:break-word;
+    max-height:280px;
+    overflow-y:auto;
+  }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(10, 13, 26, 0.85);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    max-width: 480px;
+    width: 100%;
+    padding: 24px;
+  }
+  .modal-header {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    color: var(--brass);
+    margin-bottom: 16px;
+  }
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-soft);
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .checkbox-item input[type="checkbox"] { accent-color: var(--brass); }
+  .custom-add-row { display: flex; gap: 8px; margin-bottom: 20px; }
+  .custom-add-row input { flex: 1; padding: 8px 12px; font-size: 13px; }
+  .custom-add-row button {
+    background: var(--bg-soft);
+    border: 1px solid var(--card-border);
+    color: var(--brass);
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+  .btn-confirm { background: var(--brass); color: #181205; border: none; padding: 10px 20px; border-radius: 100px; font-weight: 600; cursor: pointer; }
+  .btn-cancel { background: transparent; color: var(--text-dim); border: 1px solid var(--card-border); padding: 10px 20px; border-radius: 100px; cursor: pointer; }
+
+  @media (max-width:520px){
+    body{padding:32px 14px 60px;}
+    .question-card,.witness{padding:16px;}
+    .verdict-card{padding:30px 20px 26px;}
+    .checkbox-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">Answer Council</div>
+  <h1>สภาคำตอบ</h1>
+  <p class="subtitle">ระบบเปรียบเทียบคำตอบจาก AI หลายเจ้า สรุปจุดโต้แย้ง และสร้าง Prompt สำหรับออกแบบสื่อ</p>
+
+  <div class="rule"><span>ขั้นตอนที่ 1: ตั้งคำถาม / อัปโหลดเอกสาร</span></div>
+  <div class="question-card">
+    <div class="file-upload-box">
+      <label for="doc-file" class="file-input-label">
+        📄 <span>แนบไฟล์ Word (.docx) เพื่อดึงข้อความ/ตาราง/รูปภาพ</span>
+      </label>
+      <input type="file" id="doc-file" accept=".docx">
+      <div class="file-status" id="file-status">รองรับไฟล์ .docx (ข้อความและตารางจะถูกแปลงเป็นข้อความให้อัตโนมัติ)</div>
+      
+      <div class="extracted-images-wrap" id="images-wrap">
+        <div class="extracted-images-title">🖼️ ตรวจพบรูปภาพในเอกสาร (ก๊อบปี้ส่งแนบในแชท AI ได้):</div>
+        <div class="image-preview-grid" id="image-grid"></div>
+      </div>
+    </div>
+
+    <label for="question">คำถาม หรือ ข้อความเนื้อหาจากเอกสาร</label>
+    <textarea id="question" placeholder="พิมพ์คำถาม หรือ อัปโหลดไฟล์ Word ด้านบนเพื่อดึงเนื้อหาตารางและข้อความเข้าสู่ช่องนี้..."></textarea>
+  </div>
+
+  <div class="rule"><span>ขั้นตอนที่ 2: วางคำตอบของพยาน</span></div>
+  <div id="witnesses"></div>
+  <div class="add-row">
+    <button id="open-select-modal" type="button">+ เพิ่มพยาน (เลือกพยานเพิ่มเติม)</button>
+  </div>
+
+  <div class="rule"><span>ขั้นตอนที่ 3: ประมวลผลผ่าน AI (ทำตามลำดับ 1 → 2 → 3)</span></div>
+  
+  <div class="workflow-box">
+    
+    <!-- Step 1 -->
+    <div class="step-item">
+      <span class="step-tag tag-app">ขั้นที่ 1 [ทำในเว็บนี้]</span>
+      <div class="step-title">1. คัดลอก Prompt สำหรับส่งประมวลผล</div>
+      <div class="step-desc">ระบบจะรวมคำถาม/เนื้อหาตาราง และคำตอบจากพยานทุกตัว แปลงเป็น Prompt โครงสร้างพิเศษให้กดคัดลอก</div>
+      <button class="btn-primary" id="btn-copy-prompt" type="button">📋 กดคัดลอก Prompt</button>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-item">
+      <span class="step-tag tag-ai">ขั้นที่ 2 [สลับไปหน้าต่างแชท AI]</span>
+      <div class="step-title">2. สลับหน้าต่างไปวางใน AI (Gemini / Claude / ChatGPT)</div>
+      <div class="step-desc">
+        เปิดแชทกับ AI แล้ว<b>วาง Prompt ที่คัดลอกมาลงในช่องแชทสั่งงานทันที</b> (หากมีรูปภาพใน Word สามารถแนบรูปส่งไปด้วยได้)<br>
+        เมื่อ AI ตอบกลับมาเป็นชุดโค้ด <code>{ JSON }</code> ให้<b>คัดลอกข้อความ JSON นั้นทั้งหมดกลับมา</b>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-item">
+      <span class="step-tag tag-app">ขั้นที่ 3 [กลับมาทำในเว็บนี้]</span>
+      <div class="step-title">3. วางผลลัพธ์ JSON แล้วกดแสดงผล</div>
+      <div class="step-desc">นำข้อความ JSON ที่ได้จาก AI ในขั้นที่ 2 มาวางลงในช่องด้านล่าง แล้วกดปุ่มสรุปผลลัพธ์</div>
+      <textarea id="json-input" style="min-height: 90px; margin-bottom: 10px;" placeholder="วางข้อความ { JSON... } ที่ได้จาก AI ที่นี่..."></textarea>
+      <button class="btn-success" id="btn-parse-json" type="button">✨ แสดงคำวินิจฉัยและ Blueprint</button>
+    </div>
+
+    <div class="error-msg" id="error-msg"></div>
+
+  </div>
+
+  <div id="verdict-wrap"></div>
+
+</div>
+
+<!-- Modal เลือกพยาน -->
+<div class="modal-overlay" id="witness-modal">
+  <div class="modal-card">
+    <div class="modal-header">เลือกพยานที่ต้องการเพิ่ม</div>
+    <div class="checkbox-grid" id="modal-checkbox-grid"></div>
+    <div class="custom-add-row">
+      <input type="text" id="custom-witness-input" placeholder="หรือพิมพ์ชื่อพยานอื่นๆ...">
+      <button type="button" id="btn-add-custom">เพิ่มชื่อ</button>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" id="btn-modal-cancel">ยกเลิก</button>
+      <button type="button" class="btn-confirm" id="btn-modal-confirm">ตกลงเพิ่มพยาน</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const witnessesEl = document.getElementById('witnesses');
+const errorMsg = document.getElementById('error-msg');
+let witnessCount = 0;
+
+const baseWitnesses = ['ChatGPT', 'Gemini', 'Claude'];
+let availableWitnesses = ['Perplexity', 'GLM-5.1', 'Qwen', 'Grok', 'DeepSeek'];
+
+// ---------------- Word Document Reader (.docx) ----------------
+document.getElementById('doc-file').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const statusEl = document.getElementById('file-status');
+  const questionArea = document.getElementById('question');
+  const imagesWrap = document.getElementById('images-wrap');
+  const imageGrid = document.getElementById('image-grid');
+
+  statusEl.textContent = '⏳ กำลังอ่านไฟล์ Word และดึงข้อมูลตาราง/รูปภาพ...';
+  imagesWrap.style.display = 'none';
+  imageGrid.innerHTML = '';
+
+  const reader = new FileReader();
+  reader.onload = function(loadEvent) {
+    const arrayBuffer = loadEvent.target.result;
+
+    // แปลงไฟล์ Word เป็น HTML เพื่อรักษารูปแบบตาราง
+    mammoth.convertToHtml({ arrayBuffer: arrayBuffer })
+      .then(function(result) {
+        let htmlText = result.value;
+        
+        // แปลงตาราง HTML ให้อยู่ในรูปแบบอ่านง่ายสำหรับ AI
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(htmlText, 'text/html');
+        
+        // แปลง <table> เป็น Plain Text Format ที่มีโครงสร้างชัดเจน
+        let tables = doc.querySelectorAll('table');
+        tables.forEach((table, index) => {
+          let tableText = `\n\n[ตารางที่ ${index + 1}]\n`;
+          let rows = table.querySelectorAll('tr');
+          rows.forEach(row => {
+            let cells = row.querySelectorAll('th, td');
+            let rowData = [];
+            cells.forEach(cell => rowData.push(cell.textContent.trim()));
+            tableText += `| ${rowData.join(' | ')} |\n`;
+          });
+          table.insertAdjacentText('afterend', tableText);
+          table.remove();
+        });
+
+        const extractedText = doc.body.textContent.trim();
+        questionArea.value = extractedText;
+        statusEl.textContent = `✓ อ่านไฟล์สำเร็จ: ${file.name}`;
+      })
+      .catch(function(err) {
+        console.error(err);
+        showError('ไม่สามารถอ่านไฟล์ Word นี้ได้ กรุณาตรวจสอบว่าเป็นไฟล์ .docx');
+        statusEl.textContent = 'เกิดข้อผิดพลาดในการอ่านไฟล์';
+      });
+
+    // สกัดดึงรูปภาพในไฟล์ Word ออกมาแสดง preview
+    mammoth.images.inline(function(element) {
+      return element.read("base64").then(function(imageBuffer) {
+        return "data:" + element.contentType + ";base64," + imageBuffer;
+      });
+    });
+
+    mammoth.convertToHtml({ arrayBuffer: arrayBuffer }, {
+      convertImage: mammoth.images.inline(function(element) {
+        return element.read("base64").then(function(imageBuffer) {
+          const src = "data:" + element.contentType + ";base64," + imageBuffer;
+          const img = document.createElement('img');
+          img.src = src;
+          img.title = "คลิกขวาเพื่อคัดลอกรูปภาพ";
+          imageGrid.appendChild(img);
+          imagesWrap.style.display = 'block';
+          return { src: src };
+        });
+      })
+    });
+  };
+
+  reader.readAsArrayBuffer(file);
+});
+
+function addWitness(prefillName){
+  witnessCount++;
+  const id = witnessCount;
+  const div = document.createElement('div');
+  div.className = 'witness';
+  div.dataset.id = id;
+  div.innerHTML = `
+    <div class="witness-top">
+      <div class="witness-num">${id}</div>
+      <input type="text" class="witness-name" value="${prefillName || ''}">
+      <button type="button" class="remove-btn">ลบ ✕</button>
+    </div>
+    <textarea class="witness-answer" placeholder="วางคำตอบของแชทนี้ที่นี่..."></textarea>
+  `;
+  div.querySelector('.remove-btn').addEventListener('click', () => {
+    if (witnessesEl.children.length <= 2){
+      showError('ต้องมีอย่างน้อย 2 พยานเสมอ');
+      return;
+    }
+    div.remove();
+    renumber();
+  });
+  witnessesEl.appendChild(div);
+  renumber();
+}
+
+function renumber(){
+  [...witnessesEl.children].forEach((el, i) => {
+    el.querySelector('.witness-num').textContent = i + 1;
+  });
+}
+
+function showError(msg){
+  errorMsg.textContent = msg;
+  setTimeout(() => { if(errorMsg.textContent === msg) errorMsg.textContent=''; }, 4000);
+}
+
+// ---------------- Modal Logic ----------------
+const modal = document.getElementById('witness-modal');
+const modalGrid = document.getElementById('modal-checkbox-grid');
+const customInput = document.getElementById('custom-witness-input');
+
+function renderModalCheckboxes() {
+  const currentNames = [...witnessesEl.querySelectorAll('.witness-name')].map(i => i.value.trim().toLowerCase());
+  modalGrid.innerHTML = availableWitnesses.map(name => {
+    const isAlreadyAdded = currentNames.includes(name.toLowerCase());
+    return `
+      <label class="checkbox-item" style="${isAlreadyAdded ? 'opacity: 0.5;' : ''}">
+        <input type="checkbox" value="${name}" ${isAlreadyAdded ? 'disabled' : ''}>
+        <span>${name} ${isAlreadyAdded ? '(มีแล้ว)' : ''}</span>
+      </label>
+    `;
+  }).join('');
+}
+
+document.getElementById('open-select-modal').addEventListener('click', () => {
+  renderModalCheckboxes();
+  modal.classList.add('active');
+});
+
+document.getElementById('btn-modal-cancel').addEventListener('click', () => modal.classList.remove('active'));
+
+document.getElementById('btn-add-custom').addEventListener('click', () => {
+  const val = customInput.value.trim();
+  if (val && !availableWitnesses.some(w => w.toLowerCase() === val.toLowerCase())) {
+    availableWitnesses.push(val);
+    customInput.value = '';
+    renderModalCheckboxes();
+  }
+});
+
+document.getElementById('btn-modal-confirm').addEventListener('click', () => {
+  const checkedBoxes = modalGrid.querySelectorAll('input[type="checkbox"]:checked');
+  checkedBoxes.forEach(cb => addWitness(cb.value));
+  modal.classList.remove('active');
+});
+
+// Initialize พยานเริ่มต้น 3 ตัวแรก
+baseWitnesses.forEach(name => addWitness(name));
+
+// ---------------- Copy Prompt Logic ----------------
+document.getElementById('btn-copy-prompt').addEventListener('click', async () => {
+  const question = document.getElementById('question').value.trim();
+  const witnessEls = [...witnessesEl.children];
+  const witnesses = witnessEls.map(el => ({
+    name: el.querySelector('.witness-name').value.trim() || 'ไม่ระบุชื่อ',
+    answer: el.querySelector('.witness-answer').value.trim()
+  }));
+
+  const filled = witnesses.filter(w => w.answer.length > 0);
+  if (filled.length < 2){
+    showError('กรุณาใส่คำตอบอย่างน้อย 2 พยานก่อนสร้าง Prompt');
+    return;
+  }
+  if (!question){
+    showError('กรุณาระบุคำถามหรือแนบไฟล์เอกสารก่อน');
+    return;
+  }
+
+  const witnessBlock = filled.map((w,i) => `[พยานที่ ${i+1}: ${w.name}]\n${w.answer}`).join('\n\n');
+
+  const fullPrompt = `คุณคือผู้พิพากษาในสภาที่เปรียบเทียบคำตอบจาก AI แชทหลายเจ้าที่ตอบคำถามเดียวกัน หน้าที่ของคุณคือวิเคราะห์อย่างเป็นกลาง ไม่เข้าข้างพยานเจ้าใดเจ้าหนึ่ง แล้วตอบกลับเป็น JSON เท่านั้น ห้ามมีข้อความอื่นนอก JSON ห้ามใช้ markdown code fence
+
+คำถาม/เนื้อหาอ้างอิง:
+${question}
+
+${witnessBlock}
+
+รูปแบบ JSON ที่ต้องการตอบกลับ:
+{
+  "verdict_title": "สรุปคำตอบสั้นๆ 1 บรรทัด (ภาษาไทย)",
+  "agreements": ["ประเด็นที่พยานส่วนใหญ่หรือทั้งหมดเห็นตรงกัน (2-5 ข้อ)"],
+  "disagreements": ["ประเด็นที่พยานขัดแย้งกัน พร้อมระบุว่าใครว่าอย่างไร (0-5 ข้อ ถ้าไม่มีให้เป็น array ว่าง)"],
+  "final_answer": "คำตอบสุดท้ายที่กลั่นกรองแล้ว เขียนเป็นย่อหน้า 3-6 ประโยค ให้คำตอบที่ดีที่สุดโดยชั่งน้ำหนักจากทุกพยาน",
+  "confidence": "high" หรือ "medium" หรือ "low",
+  "deep_dive_topics": [
+    {
+      "title": "ชื่อประเด็นสั้นๆ ที่น่าสนใจหรือชวนสับสน (ภาษาไทย)",
+      "why_it_matters": "อธิบาย 1-2 ประโยคว่าทำไมประเด็นนี้น่าสนใจ/ชวนสับสน มักเข้าใจผิดตรงไหน (ภาษาไทย)",
+      "explanation": "เนื้อหาอธิบายประเด็นนี้แบบรายละเอียดพอใช้งานได้จริง ครบถ้วนในระดับหนึ่ง เขียนเป็น 4-8 ประโยคหรือย่อหน้าสั้นๆ ไม่ใช่แค่สรุปสั้นๆ (ภาษาไทย)",
+      "image_prompt": "prompt ภาษาอังกฤษสำหรับส่งให้โมเดลสร้างภาพ วาด infographic เฉพาะประเด็นนี้ประเด็นเดียว ต้องระบุ: layout ของภาพ, ถ้าเป็นการเปรียบเทียบให้แบ่งสองฝั่งพร้อมเหตุผลที่ต่างกัน, ถ้าเป็นขั้นตอนให้วาดเป็น flow diagram ตามลำดับ, label ข้อความที่ต้องปรากฏในภาพเป็นภาษาไทยตรงตามเนื้อหา (ใส่ในเครื่องหมายคำพูด), สไตล์ภาพแบบ flat vector / minimal เหมาะกับสื่อการศึกษา เขียนเป็นย่อหน้าเดียวพร้อมนำไปวางใช้ได้ทันที"
+    }
+  ]
+}`;
+
+  try {
+    await navigator.clipboard.writeText(fullPrompt);
+    const btn = document.getElementById('btn-copy-prompt');
+    const oldText = btn.textContent;
+    btn.textContent = '✓ คัดลอก Prompt เรียบร้อยแล้ว! (สลับไปวางในแชท AI ได้เลย)';
+    setTimeout(() => btn.textContent = oldText, 3000);
+  } catch(e) {
+    showError('ไม่สามารถคัดลอกอัตโนมัติได้');
+  }
+});
+
+// ---------------- Parse JSON & Render Verdict ----------------
+document.getElementById('btn-parse-json').addEventListener('click', () => {
+  const rawInput = document.getElementById('json-input').value.trim();
+  if (!rawInput) {
+    showError('กรุณาวางข้อความ JSON จาก AI ก่อนกดแสดงผล');
+    return;
+  }
+
+  try {
+    let clean = rawInput.replace(/^```json/i,'').replace(/^```/,'').replace(/```$/,'').trim();
+    const parsed = JSON.parse(clean);
+    const witnessEls = [...witnessesEl.children];
+    const filledCount = witnessEls.filter(el => el.querySelector('.witness-answer').value.trim().length > 0).length;
+    renderVerdict(parsed, filledCount || 3);
+  } catch(err) {
+    console.error(err);
+    showError('รูปแบบ JSON ไม่ถูกต้อง กรุณาตรวจสอบข้อความที่ก๊อบปี้มาจาก AI');
+  }
+});
+
+function esc(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function renderVerdict(v, witnessCountUsed){
+  const confMap = { high: 'มั่นใจสูง', medium: 'มั่นใจปานกลาง', low: 'มั่นใจต่ำ / ควรตรวจสอบเพิ่ม' };
+  const agreements = (v.agreements || []).map(a => `<li>${esc(a)}</li>`).join('');
+  const disagreements = (v.disagreements || []);
+  const disagreementsHtml = disagreements.length
+    ? disagreements.map(a => `<li>${esc(a)}</li>`).join('')
+    : `<li style="opacity:.65">ไม่มีประเด็นขัดแย้งที่ชัดเจน — พยานทั้งหมดสอดคล้องกัน</li>`;
+
+  const wrap = document.getElementById('verdict-wrap');
+  wrap.innerHTML = `
+    <div class="verdict-card">
+      <svg class="seal" viewBox="0 0 100 100" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#8A742A" stroke-width="3"/>
+        <circle cx="50" cy="50" r="38" fill="none" stroke="#8A742A" stroke-width="1.5"/>
+        <text x="50" y="46" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#8A742A" letter-spacing="1">VERDICT</text>
+        <text x="50" y="62" text-anchor="middle" font-family="Fraunces, serif" font-size="16" font-weight="700" fill="#8A742A">${witnessCountUsed}</text>
+        <text x="50" y="72" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.5" fill="#8A742A" letter-spacing="1">WITNESSES</text>
+      </svg>
+      <div class="verdict-eyebrow">คำวินิจฉัยของสภา</div>
+      <div class="verdict-title">${esc(v.verdict_title || 'สรุปคำตอบ')}</div>
+
+      <div class="verdict-section">
+        <h3><span class="dot agree"></span>จุดที่เห็นตรงกัน</h3>
+        <ul>${agreements || '<li style="opacity:.65">ไม่พบประเด็นที่ตรงกันชัดเจน</li>'}</ul>
+      </div>
+
+      <div class="verdict-section">
+        <h3><span class="dot disagree"></span>จุดที่ขัดแย้งกัน</h3>
+        <ul>${disagreementsHtml}</ul>
+      </div>
+
+      <div class="divider-hair"></div>
+
+      <div class="verdict-section">
+        <h3>คำตอบสุดท้ายของสภา</h3>
+        <p style="font-size:15px;line-height:1.75;margin:0;">${esc(v.final_answer || '')}</p>
+        <div class="confidence-badge">${confMap[v.confidence] || v.confidence || ''}</div>
+      </div>
+    </div>
+
+    ${(v.deep_dive_topics && v.deep_dive_topics.length) ? `
+    <div class="rule" style="margin-top:36px;"><span>ประเด็นที่ควรอธิบายเพิ่มด้วยภาพ</span></div>
+    ${v.deep_dive_topics.map((t, i) => `
+    <div class="blueprint-card">
+      <div class="blueprint-top">
+        <div class="blueprint-eyebrow">ประเด็นที่ ${i + 1} · ${esc(t.title || '')}</div>
+        <button type="button" class="copy-btn" data-idx="${i}">คัดลอก Prompt</button>
+      </div>
+      <p class="blueprint-sub"><strong style="color:var(--text);">ทำไมน่าสนใจ:</strong> ${esc(t.why_it_matters || '')}</p>
+      <p class="blueprint-sub" style="margin-bottom:14px;">${esc(t.explanation || '')}</p>
+      <div class="prompt-box">${esc(t.image_prompt || '')}</div>
+    </div>`).join('')}
+    ` : ''}
+  `;
+  wrap.style.display = 'block';
+  wrap.scrollIntoView({behavior:'smooth', block:'start'});
+
+  wrap.querySelectorAll('.copy-btn[data-idx]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const idx = Number(btn.dataset.idx);
+      const text = (v.deep_dive_topics[idx] || {}).image_prompt || '';
+      try{
+        await navigator.clipboard.writeText(text);
+        const original = btn.textContent;
+        btn.textContent = 'คัดลอกแล้ว ✓';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 2000);
+      }catch(e){
+        showError('คัดลอกไม่สำเร็จ');
+      }
+    });
+  });
+}
+</script>
+</body>
+</html>
