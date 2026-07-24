@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owlvy House — รายงานคะแนนหมวด ASTRO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EEF1F6;
+    --paper: #FFFFFF;
+    --line: #DCE1EB;
+    --ink: #1B2340;
+    --ink-soft: #5B6478;
+    --gold: #E3A62F;
+    --gold-soft: #FBEBC7;
+    --astro: #5B5FEF;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 8% 4%, rgba(91,95,239,0.07), transparent 40%),
+      radial-gradient(circle at 92% 0%, rgba(227,166,47,0.10), transparent 38%);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3 { font-family: 'Kanit', 'IBM Plex Sans Thai', sans-serif; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 64px; }
+
+  /* Header */
+  header.top {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end;
+    gap: 18px; margin-bottom: 22px;
+  }
+  .eyebrow {
+    font-size: 12px; letter-spacing: .12em; font-weight: 700; color: var(--gold);
+    text-transform: uppercase; margin: 0 0 6px;
+  }
+  h1.title { font-size: clamp(24px, 3.4vw, 34px); font-weight: 800; margin: 0; line-height: 1.15; }
+  .subtitle { color: var(--ink-soft); font-size: 14.5px; margin-top: 6px; max-width: 60ch; }
+
+  /* Selector */
+  .selector {
+    display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 16px;
+    margin-bottom: 12px; border-bottom: 1px solid var(--line);
+  }
+  .selector::-webkit-scrollbar { height: 5px; }
+  .selector::-webkit-scrollbar-thumb { background: var(--line); border-radius: 5px; }
+  .pill-btn {
+    display: flex; align-items: center; gap: 8px; flex: 0 0 auto;
+    background: var(--paper); border: 1.5px solid var(--line); border-radius: 999px;
+    padding: 6px 14px 6px 6px; cursor: pointer; font-family: 'IBM Plex Sans Thai';
+    font-size: 14px; font-weight: 600; color: var(--ink-soft); transition: all .15s ease;
+  }
+  .pill-btn .avatar {
+    width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 12.5px; font-family:'Kanit';
+  }
+  .pill-btn:hover { border-color: var(--ink); }
+  .pill-btn.active { border-color: var(--ink); color: var(--ink); background: var(--gold-soft); }
+
+  /* Grid Layout */
+  .grid-top { display: grid; grid-template-columns: 260px 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 760px) { .grid-top { grid-template-columns: 1fr; } }
+
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+  .ring-card { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align:center; gap: 6px; }
+  .ring-wrap { position: relative; width: 168px; height: 168px; }
+  .ring-wrap svg { transform: rotate(-90deg); }
+  .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring-center b { font-family:'Kanit'; font-size: 30px; font-weight: 800; }
+  .ring-center span { font-size: 11px; color: var(--ink-soft); }
+  .ring-name { font-family:'Kanit'; font-size: 20px; font-weight: 700; margin-top: 4px; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; height: 100%; }
+  @media (max-width: 520px) { .kpi-row { grid-template-columns: 1fr; } }
+  .kpi {
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px; display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .kpi .label { font-size: 12.5px; color: var(--ink-soft); font-weight: 600; }
+  .kpi .value { font-family:'Kanit'; font-size: 28px; font-weight: 800; margin-top: 10px; }
+  .kpi .value small { font-size: 14px; font-weight: 500; color: var(--ink-soft); }
+
+  /* Overview */
+  .class-row { display: grid; grid-template-columns: 120px 1fr 140px; gap: 12px; align-items: center; margin-bottom: 10px; }
+  .class-row .cname { font-weight: 600; font-size: 13.5px; display:flex; align-items:center; gap:8px; }
+  .class-row .mini-avatar { width: 22px; height: 22px; border-radius: 50%; color:#fff; font-size:10px; display:flex; align-items:center; justify-content:center; font-family:'Kanit'; font-weight:700; }
+  .class-row .track { height: 8px; background: #EEF0F5; border-radius: 6px; overflow:hidden; }
+  .class-row .fill { height: 100%; background: var(--astro); border-radius: 6px; }
+  .class-row .pct { font-family:'Kanit'; font-weight:700; font-size: 13px; text-align:right; }
+  .section-title { margin: 24px 0 12px; }
+  .section-title h2 { font-size: 19px; font-weight: 700; margin: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <p class="eyebrow">Owlvy House · แผงติดตามความคืบหน้า</p>
+      <h1 class="title">รายงานคะแนนสรุปหมวด ASTRO (เต็ม 232 ข้อ)</h1>
+      <p class="subtitle">แสดงคะแนนรวมและสัดส่วนความสำเร็จที่ถูกต้องของนักเรียนทั้ง 9 คน</p>
+    </div>
+  </header>
+
+  <!-- ปุ่มเลือกนักเรียน 9 คน -->
+  <nav class="selector" id="selector"></nav>
+
+  <section class="grid-top">
+    <div class="card ring-card">
+      <div class="ring-wrap">
+        <svg width="168" height="168" viewBox="0 0 168 168">
+          <circle cx="84" cy="84" r="74" fill="none" stroke="#EEF0F5" stroke-width="14"/>
+          <circle id="ringFill" cx="84" cy="84" r="74" fill="none" stroke="var(--astro)" stroke-width="14" stroke-linecap="round"/>
+        </svg>
+        <div class="ring-center">
+          <b id="ringPct">0%</b>
+          <span>สัดส่วนคะแนนรวม</span>
+        </div>
+      </div>
+      <div class="ring-name" id="ringName">—</div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi">
+        <span class="label">จำนวนข้อเต็มหมวด ASTRO</span>
+        <div class="value">232<small> ข้อ</small></div>
+      </div>
+      <div class="kpi">
+        <span class="label">คะแนนรวมที่ได้</span>
+        <div class="value" id="kpiScore">0<small> / 232</small></div>
+      </div>
+      <div class="kpi">
+        <span class="label">เปอร์เซ็นต์รวมหมวด</span>
+        <div class="value" id="kpiAvg">0%</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-title">
+    <h2>สรุปอันดับคะแนนรวมหมวด ASTRO ทั้งชั้นเรียน (เต็ม 232 คะแนน)</h2>
+  </div>
+  <div class="card">
+    <div id="classList"></div>
+  </div>
+
+</div>
+
+<script>
+// ข้อมูลคะแนนรวมหมวด ASTRO จากสเปรดชีตที่ถูกต้องเรียบร้อยแล้ว
+const ASTRO_SUMMARY = {
+  "เพลง": 134,
+  "ยูโร": 18,
+  "ออโต้": 0,
+  "ไตตั้น": 132,
+  "ของขวัญ": 73,
+  "แก้มใส": 0,
+  "ทับทิม": 2,
+  "Sense": 27,
+  "Bike": 0
+};
+
+const STUDENTS = Object.keys(ASTRO_SUMMARY);
+const TOTAL_ASTRO_ITEMS = 232;
+const AVATAR_COLORS = ['#5B5FEF','#C1662F','#3F8F5C','#9B4F96','#2E7DD1','#E3A62F','#D14D72','#2AA198','#7A5CFA'];
+
+let current = STUDENTS[0];
+
+function buildSelector() {
+  const el = document.getElementById('selector');
+  el.innerHTML = STUDENTS.map((s, i) => `
+    <button class="pill-btn ${s === current ? 'active' : ''}" onclick="selectStudent('${s}')">
+      <span class="avatar" style="background:${AVATAR_COLORS[i % AVATAR_COLORS.length]}">${s[0]}</span>
+      ${s}
+    </button>
+  `).join('');
+}
+
+function selectStudent(name) {
+  current = name;
+  buildSelector();
+  render();
+}
+
+function render() {
+  const score = ASTRO_SUMMARY[current] || 0;
+  const pct = ((score / TOTAL_ASTRO_ITEMS) * 100).toFixed(1);
+
+  document.getElementById('ringPct').textContent = `${pct}%`;
+  document.getElementById('ringName').textContent = current;
+  document.getElementById('kpiScore').innerHTML = `${score}<small> / ${TOTAL_ASTRO_ITEMS}</small>`;
+  document.getElementById('kpiAvg').textContent = `${pct}%`;
+
+  // Ring Animation
+  const r = 74, circumference = 2 * Math.PI * r;
+  const offset = circumference * (1 - (score / TOTAL_ASTRO_ITEMS));
+  const ring = document.getElementById('ringFill');
+  ring.setAttribute('stroke-dasharray', circumference);
+  ring.setAttribute('stroke-dashoffset', offset);
+
+  renderOverview();
+}
+
+function renderOverview() {
+  const list = document.getElementById('classList');
+  const studentTotals = STUDENTS.map((s, i) => ({
+    name: s,
+    score: ASTRO_SUMMARY[s],
+    pct: ((ASTRO_SUMMARY[s] / TOTAL_ASTRO_ITEMS) * 100).toFixed(1),
+    index: i
+  })).sort((a, b) => b.score - a.score);
+
+  list.innerHTML = studentTotals.map(s => `
+    <div class="class-row ${s.name === current ? 'active' : ''}">
+      <div class="cname">
+        <span class="mini-avatar" style="background:${AVATAR_COLORS[s.index % AVATAR_COLORS.length]}">${s.name[0]}</span>
+        ${s.name}
+      </div>
+      <div class="track"><div class="fill" style="width:${s.pct}%"></div></div>
+      <div class="pct">${s.score} คะแนน (${s.pct}%)</div>
+    </div>
+  `).join('');
+}
+
+// Initial Kickoff
+buildSelector();
+render();
+</script>
+</body>
+</html>
