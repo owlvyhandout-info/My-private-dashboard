@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปความสัมพันธ์และการทำงานของฟิลด์ข้อมูล JSON ข้อสอบ</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Sarabun', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            margin-top: 30px;
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 10px;
+        }
+
+        h3 {
+            color: var(--primary-color);
+        }
+
+        .card {
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .highlight-box {
+            background-color: #eef7fc;
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box {
+            background-color: #fdf2f2;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        code {
+            background-color: #f1f1f1;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #c7254e;
+        }
+
+        pre {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .tag-required { background-color: #27ae60; }
+        .tag-optional { background-color: #f39c12; }
+        .tag-html { background-color: #8e44ad; }
+
+        .workflow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .workflow-step {
+            flex: 1;
+            min-width: 200px;
+            background: #f0f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #d0dbe5;
+        }
+
+        .workflow-arrow {
+            font-size: 24px;
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .workflow { flex-direction: column; }
+            .workflow-arrow { transform: rotate(90deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📘 สรุปการทำงานและความสัมพันธ์ของฟิลด์ในโครงสร้าง JSON ข้อสอบ</h1>
+    <p>เอกสารนี้สรุปหลักการสำคัญในการจัดการฟิลด์ข้อมูล JSON สำหรับชุดข้อสอบ ทั้งในมุมมองของการสร้างข้อมูล (Data Creation / AI Prompt) และการนำไปแสดงผลบนหน้าเว็บ (Frontend Rendering) เพื่อให้แน่ใจว่าระบบทำงานได้อย่างถูกต้อง สมบูรณ์ และไม่เกิดข้อผิดพลาด</p>
+
+    <!-- SECTION 1: FIELD MATRIX -->
+    <h2>1. ตารางสรุปหน้าที่และความสัมพันธ์ของแต่ละฟิลด์</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ชื่อฟิลด์ (Key)</th>
+                <th>ประเภท (Type)</th>
+                <th>สถานะ</th>
+                <th>หน้าที่และการแสดงผล</th>
+                <th>การใช้งานตามสถานะหน้าจอ (State)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>id</code></td>
+                <td>Integer</td>
+                <td><span class="tag tag-required">จำเป็น</span></td>
+                <td>รหัสประจำข้อสอบ (Unique ID)</td>
+                <td>ใช้งานตลอดเวลา (ใช้เป็น Index)</td>
+            </tr>
+            <tr>
+                <td><code>topic</code></td>
+                <td>String</td>
+                <td><span class="tag tag-required">จำเป็น</span></td>
+                <td>หมวดหมู่วิชา (เช่น "Bio", "Phys")</td>
+                <td>ใช้คัดกรอง / จัดหมวดหมู่ข้อสอบ</td>
+            </tr>
+            <tr>
+                <td><code>title</code></td>
+                <td>String (HTML)</td>
+                <td><span class="tag tag-required">จำเป็น</span></td>
+                <td>ข้อความโจทย์ + ตารางข้อมูล (HTML Table)</td>
+                <td>แสดงผลทั้ง <b>หน้าทำข้อสอบ</b> และ <b>หน้าเฉลย</b></td>
+            </tr>
+            <tr>
+                <td><code>image</code></td>
+                <td>String</td>
+                <td><span class="tag tag-required">จำเป็น</span></td>
+                <td>Path ไฟล์รูปภาพประกอบโจทย์ (ถ้าไม่มีใส่ <code>""</code>)</td>
+                <td>แสดงผลทั้ง <b>หน้าทำข้อสอบ</b> และ <b>หน้าเฉลย</b></td>
+            </tr>
+            <tr>
+                <td><code>options</code></td>
+                <td>Array [String]</td>
+                <td><span class="tag tag-required">จำเป็น</span></td>
+                <td>รายการตัวเลือกคำตอบ (รองรับ 2, 4, 5 ตัวเลือก)</td>
+                <td>แสดงผลทั้ง <b>หน้าทำข้อสอบ</b> และ <b>หน้าเฉลย</b></td>
+            </tr>
+            <tr>
+                <td><code>answer</code></td>
+                <td>Integer</td>
+                <td><span class="tag tag-required">จำเป็น</span></td>
+                <td>ตัวเลขระบุตัวเลือกที่ถูกต้อง (1, 2, 3, ...)</td>
+                <td><b>หน้าทำข้อสอบ:</b> ซ่อนไว้<br><b>หน้าเฉลย:</b> ใช้ตรวจคำตอบ</td>
+            </tr>
+            <tr>
+                <td><code>Hint</code></td>
+                <td>String</td>
+                <td><span class="tag tag-optional">Optional</span></td>
+                <td>คำใบ้สำหรับผู้สอบ (ถ้าไม่มีใส่ <code>""</code>)</td>
+                <td>แสดงเมื่อผู้สอบกดขอคำใบ้ หรือซ่อนไว้</td>
+            </tr>
+            <tr>
+                <td><code>Explanation</code></td>
+                <td>String (HTML)</td>
+                <td><span class="tag tag-optional">Optional</span></td>
+                <td>คำอธิบายเฉลยอย่างละเอียด (ถ้าไม่มีใส่ <code>""</code>)</td>
+                <td><b>หน้าทำข้อสอบ:</b> ❌ ซ่อนไว้เด็ดขาด<br><b>หน้าเฉลย:</b> ✅ แสดงผลใต้ตัวเลือก</td>
+            </tr>
+            <tr>
+                <td><code>info</code></td>
+                <td>String (HTML)</td>
+                <td><span class="tag tag-html">HTML Link</span></td>
+                <td>ลิงก์แท็ก <code>&lt;a&gt;</code> อ่านเพิ่ม (ถ้าไม่มีใส่ <code>""</code>)</td>
+                <td><b>หน้าทำข้อสอบ:</b> ❌ ซ่อนไว้<br><b>หน้าเฉลย:</b> ✅ แสดงผลล่างสุด</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- SECTION 2: WORKFLOW & DISPLAY STATE -->
+    <h2>2. วงจรชีวิตและการแสดงผลข้อมูล (Data Workflow)</h2>
+    <p>การเก็บฟิลด์ทั้งหมดไว้ใน Object เดียวกันช่วยให้บริหารจัดการข้อมูลได้ง่าย แต่ฝั่ง Frontend ต้องควบคุมการสั่ง Render ตามสถานะหน้าจอ (State Control) เพื่อไม่ให้เกิดการแอบดูเฉลย:</p>
+
+    <div class="workflow">
+        <div class="workflow-step">
+            <h3>1. 📄 JSON Data</h3>
+            <p>เก็บข้อมูลครบทุกฟิลด์ใน 1 Object (โจทย์, ตัวเลือก, เฉลย, ลิงก์)</p>
+        </div>
+        <div class="workflow-arrow">➔</div>
+        <div class="workflow-step">
+            <h3>2. 📝 Exam Mode</h3>
+            <p><b>Fetch เฉพาะ:</b><br><code>title</code>, <code>image</code>, <code>options</code><br><i>(ซ่อน answer, Explanation, info)</i></p>
+        </div>
+        <div class="workflow-arrow">➔</div>
+        <div class="workflow-step">
+            <h3>3. 💡 Solution Mode</h3>
+            <p><b>Fetch ทั้งหมด:</b><br>เปรียบเทียบ <code>answer</code> และสั่งเปิดการแสดงผล <code>Explanation</code> + <code>info</code></p>
+        </div>
+    </div>
+
+    <!-- SECTION 3: KEY RULES FOR DATA & HTML -->
+    <h2>3. กฎสำคัญในการจัดการฟิลด์โครงสร้างพิเศษ</h2>
+
+    <div class="card">
+        <h3>ก. การจัดการตารางในโจทย์ (Table Handling)</h3>
+        <p>หากในโจทย์มีข้อมูลที่เป็นตาราง <b>ห้ามใช้การเว้นบรรทัดด้วย <code>&lt;br&gt;</code> เด็ดขาด</b> เพราะจะทำให้โครงสร้างตารางพัง ให้แปลงตารางเป็น HTML Table เสมอ:</p>
+        <div class="highlight-box">
+            <b>รูปแบบที่ถูกต้อง:</b><br>
+            <code>&lt;table border='1'&gt;&lt;tr&gt;&lt;th&gt;หัวข้อ&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;ข้อมูล&lt;/td&gt;&lt;/tr&gt;&lt;&lt;/table&gt;</code>
+        </div>
+        <p><i>กรณีพิเศษ:</i> หากตัวเลือก 1-4 ถูกจัดอยู่ในรูปตาราง ให้ดึงตารางนั้นมาวางไว้ใน <code>title</code> แล้วสรุปตัวเลือกใน <code>options</code> ให้กระชับ เช่น <code>["(1) 1", "(2) 2", "(3) 3", "(4) 4"]</code></p>
+    </div>
+
+    <div class="card">
+        <h3>ข. การจัดการฟิลด์ HTML Link (<code>info</code>)</h3>
+        <p>ฟิลด์ <code>info</code> ใช้เก็บลิงก์อ้างอิงภายนอก ต้องเขียนแท็ก HTML ให้สมบูรณ์ และระบุ <code>target='_blank'</code> เพื่อให้กดแล้วเปิดแท็บใหม่ ไม่กระทบกับหน้าทำข้อสอบเดิม</p>
+        <pre><code>"info": "&lt;br&gt;&lt;a href='https://...' target='_blank'&gt;ลิงก์อ้างอิง 1&lt;/a&gt;"</code></pre>
+    </div>
+
+    <!-- SECTION 4: FRONTEND IMPLEMENTATION -->
+    <h2>4. การนำไปปฏิบัติฝั่ง Frontend (Coding Standards)</h2>
+
+    <div class="warning-box">
+        <b>ข้อควรระวังเรื่อง HTML Rendering:</b> ฟิลด์ที่มีโครงสร้าง HTML เช่น <code>title</code>, <code>Explanation</code> และ <code>info</code> หากดึงไปแสดงผลเป็น Text ธรรมดา หน้าจอจะโชว์โค้ดดิบๆ ไม่กลายเป็นตารางหรือลิงก์ให้กด!
+    </div>
+
+    <h3>ก. การตั้งค่าการ Render ของแต่ละ Framework</h3>
+    <ul>
+        <li><b>Vanilla JavaScript:</b> ต้องใช้ <code>.innerHTML</code> (ห้ามใช้ <code>.innerText</code>)
+            <pre><code>document.getElementById("info-container").innerHTML = item.info;</code></pre>
+        </li>
+        <li><b>React:</b> ต้องใช้ <code>dangerouslySetInnerHTML</code>
+            <pre><code>&lt;div dangerouslySetInnerHTML={{ __html: item.info }} /&gt;</code></pre>
+        </li>
+        <li><b>Vue.js:</b> ต้องใช้ดิเรกทีฟ <code>v-html</code>
+            <pre><code>&lt;div v-html="item.info"&gt;&lt;/div&gt;</code></pre>
+        </li>
+    </ul>
+
+    <h3>ข. การจัดการฟิลด์ที่ไม่แน่นอน (Optional Fields Handling)</h3>
+    <p>เนื่องจากฟิลด์อย่าง <code>Explanation</code>, <code>Hint</code> หรือ <code>info</code> บางข้ออาจมีข้อมูล แต่บางข้อเป็นค่าว่าง <code>""</code> เพื่อป้องกันไม่ให้หน้าจอขึ้นพื้นที่ว่างเปล่า (Empty Space) หรือเกิด Error ควรสร้าง <b>Helper Function กลาง</b> มาจัดการดังนี้:</p>
+
+<pre><code>// ฟังก์ชันกลางสำหรับ Render ฟิลด์ทางเลือก
+function renderOptionalContent(elementId, content) {
+    const el = document.getElementById(elementId);
+    if (!el) return; // ป้องกัน Error ถ้าหา Element ไม่เจอ
+
+    // เช็กว่ามีข้อมูลจริง และไม่ใช่แค่เว้นวรรคว่าง
+    if (content && content.trim() !== "") {
+        el.innerHTML = content;
+        el.style.display = "block"; // แสดงกล่องเมื่อมีข้อมูล
+    } else {
+        el.innerHTML = "";
+        el.style.display = "none";  // ซ่อนกล่องเมื่อไม่มีข้อมูล
+    }
+}
+
+// 🚀 การนำไปใช้งานจริง (บรรทัดเดียวต่อ 1 ฟิลด์)
+renderOptionalContent("explain-container", item.Explanation);
+renderOptionalContent("info-container", item.info);
+renderOptionalContent("hint-container", item.Hint);
+</code></pre>
+
+    <!-- SECTION 5: DOM STRUCTURE -->
+    <h2>5. โครงสร้าง HTML Element บนหน้าเว็บที่ต้องเตรียมไว้ (DOM Structure)</h2>
+    <p>ฝั่ง HTML หน้าเว็บต้องทำการสร้าง "กล่องรับข้อมูล" (Element Container) มารองรับไว้ล่วงหน้า ดังตัวอย่างนี้:</p>
+
+<pre><code>&lt;!-- โครงสร้างหน้าเฉลยข้อสอบ --&gt;
+&lt;div class="question-card"&gt;
+  &lt;div id="title-container"&gt;&lt;/div&gt;      &lt;!-- จุดแสดงโจทย์ + ตาราง --&gt;
+  &lt;div id="image-container"&gt;&lt;/div&gt;      &lt;!-- จุดแสดงรูปภาพ --&gt;
+  &lt;div id="options-container"&gt;&lt;/div&gt;    &lt;!-- จุดแสดงตัวเลือก --&gt;
+  
+  &lt;!-- ฟิลด์ส่วนเสริมที่จะถูกเปิดใช้งานในหน้าเฉลย --&gt;
+  &lt;div id="explain-container" style="display:none;"&gt;&lt;/div&gt;  &lt;!-- กล่องคำอธิบายเฉลย --&gt;
+  &lt;div id="info-container" style="display:none;"&gt;&lt;/div&gt;     &lt;!-- กล่องลิงก์อ้างอิง --&gt;
+&lt;/div&gt;
+</code></pre>
+
+</div>
+
+</body>
+</html>
