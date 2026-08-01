@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ภารกิจติว ม.1 — แผงติดตามความคืบหน้ารายบุคคล</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EEF1F6;
+    --paper: #FFFFFF;
+    --line: #DCE1EB;
+    --ink: #1B2340;
+    --ink-soft: #5B6478;
+    --gold: #E3A62F;
+    --gold-soft: #FBEBC7;
+    --live: #2E9E5B;
+    --cached: #C1662F;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 8% 4%, rgba(91,95,239,0.07), transparent 40%),
+      radial-gradient(circle at 92% 0%, rgba(227,166,47,0.10), transparent 38%);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3, .display { font-family: 'Kanit', 'IBM Plex Sans Thai', sans-serif; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 64px; }
+
+  header.top {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end;
+    gap: 18px; margin-bottom: 14px;
+  }
+  .eyebrow {
+    font-size: 12px; letter-spacing: .12em; font-weight: 700; color: var(--gold);
+    text-transform: uppercase; margin: 0 0 6px;
+  }
+  h1.title { font-size: clamp(24px, 3.4vw, 34px); font-weight: 800; margin: 0; line-height: 1.15; }
+  .subtitle { color: var(--ink-soft); font-size: 14.5px; margin-top: 6px; max-width: 60ch; }
+
+  .stat-strip { display: flex; gap: 10px; flex-wrap: wrap; }
+  .stat-pill {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 16px; text-align: center; min-width: 90px;
+  }
+  .stat-pill b { display:block; font-family:'Kanit'; font-size: 17px; font-weight: 700; }
+  .stat-pill span { font-size: 10.5px; color: var(--ink-soft); }
+
+  .source-bar {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
+    padding: 9px 14px; margin-bottom: 20px; font-size: 12.5px; color: var(--ink-soft);
+  }
+  .source-bar .badge {
+    display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px;
+  }
+  .source-bar .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cached); }
+  .source-bar.live .dot { background: var(--live); animation: pulse 1.8s infinite; }
+  .source-bar.live .badge { color: var(--live); }
+  .source-bar.cached .badge { color: var(--cached); }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.35; } }
+  .refresh-btn {
+    border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 5px 12px;
+    font-family: 'IBM Plex Sans Thai'; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--ink);
+  }
+  .refresh-btn:hover { border-color: var(--ink); }
+  .refresh-btn:disabled { opacity: .5; cursor: default; }
+
+  .selector {
+    display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 16px;
+    margin-bottom: 8px; border-bottom: 1px solid var(--line);
+  }
+  .selector::-webkit-scrollbar { height: 5px; }
+  .selector::-webkit-scrollbar-thumb { background: var(--line); border-radius: 5px; }
+  .pill-btn {
+    display: flex; align-items: center; gap: 8px; flex: 0 0 auto;
+    background: var(--paper); border: 1.5px solid var(--line); border-radius: 999px;
+    padding: 6px 14px 6px 6px; cursor: pointer; font-family: 'IBM Plex Sans Thai';
+    font-size: 14px; font-weight: 600; color: var(--ink-soft); transition: all .15s ease;
+  }
+  .pill-btn .avatar {
+    width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 12.5px; font-family:'Kanit';
+  }
+  .pill-btn:hover { border-color: var(--ink); }
+  .pill-btn.active { border-color: var(--ink); color: var(--ink); background: var(--gold-soft); }
+
+  .grid-top { display: grid; grid-template-columns: 260px 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 760px) { .grid-top { grid-template-columns: 1fr; } }
+
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+
+  .ring-card { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align:center; gap: 6px; }
+  .ring-wrap { position: relative; width: 168px; height: 168px; }
+  .ring-wrap svg { transform: rotate(-90deg); }
+  .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring-center b { font-family:'Kanit'; font-size: 30px; font-weight: 800; }
+  .ring-center span { font-size: 11px; color: var(--ink-soft); }
+  .ring-name { font-family:'Kanit'; font-size: 20px; font-weight: 700; margin-top: 4px; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; height: 100%; }
+  @media (max-width: 520px) { .kpi-row { grid-template-columns: 1fr; } }
+  .kpi { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; justify-content: space-between; }
+  .kpi .label { font-size: 12.5px; color: var(--ink-soft); font-weight: 600; }
+  .kpi .value { font-family:'Kanit'; font-size: 28px; font-weight: 800; margin-top: 10px; }
+  .kpi .value small { font-size: 14px; font-weight: 500; color: var(--ink-soft); }
+
+  .section-title { display:flex; align-items:baseline; gap:8px; margin: 30px 0 12px; }
+  .section-title h2 { font-size: 19px; font-weight: 700; margin: 0; }
+  .section-title .hint { font-size: 12.5px; color: var(--ink-soft); }
+
+  .subject-block { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 12px; }
+  .subject-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .subject-name { display: flex; align-items: center; gap: 8px; font-weight: 700; font-family:'Kanit'; font-size: 15.5px; }
+  .dot-chip { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .subject-nums { font-size: 12.5px; color: var(--ink-soft); }
+  .subject-nums b { color: var(--ink); }
+
+  .bar-track { height: 7px; border-radius: 6px; background: #EEF0F5; overflow: hidden; margin-bottom: 12px; }
+  .bar-fill { height: 100%; border-radius: 6px; transition: width .4s ease; }
+
+  .trail { display: flex; flex-wrap: wrap; gap: 6px; }
+  .node { width: 15px; height: 15px; border-radius: 50%; border: 2px solid var(--line); background: #fff; cursor: default; transition: transform .1s ease; }
+  .node.done { border-color: transparent; }
+  .node:hover { transform: scale(1.35); }
+
+  .log-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-soft); padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  tbody td { padding: 12px 14px; border-bottom: 1px solid #F1F3F8; }
+  tbody tr:last-child td { border-bottom: none; }
+  .subj-tag { display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius: 999px; color:#fff; font-family:'Kanit'; }
+  .score-cell { font-family:'Kanit'; font-weight:700; }
+  .empty-state { padding: 34px 20px; text-align: center; color: var(--ink-soft); font-size: 13.5px; }
+  .empty-state .big { font-size: 30px; margin-bottom: 6px; }
+
+  .class-list { display: flex; flex-direction: column; gap: 10px; }
+  .class-row { display: grid; grid-template-columns: 120px 1fr 70px; gap: 12px; align-items: center; }
+  .class-row .cname { font-weight: 600; font-size: 13.5px; display:flex; align-items:center; gap:8px; }
+  .class-row .mini-avatar { width: 22px; height: 22px; border-radius: 50%; color:#fff; font-size:10px; display:flex; align-items:center; justify-content:center; font-family:'Kanit'; font-weight:700; }
+  .class-row .track { height: 8px; background: #EEF0F5; border-radius: 6px; overflow:hidden; }
+  .class-row .fill { height: 100%; background: var(--gold); border-radius: 6px; }
+  .class-row .pct { font-family:'Kanit'; font-weight:700; font-size: 13px; text-align:right; }
+  .class-row.active .cname { color: var(--gold); }
+
+  footer { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 12px; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <p class="eyebrow">แผงติดตามภารกิจ · เตรียมสอบเข้า ม.1</p>
+      <h1 class="title">แผนที่ความคืบหน้ารายบุคคล</h1>
+      <p class="subtitle">ติดตามว่านักเรียนแต่ละคนเดินทางไปถึงไหนแล้วในคลังข้อสอบแต่ละหมวดวิชา ก่อนสอบเข้า ม.1</p>
+    </div>
+    <div class="stat-strip" id="statStrip"></div>
+  </header>
+
+  <div class="source-bar" id="sourceBar">
+    <span class="badge"><span class="dot"></span><span id="sourceLabel">กำลังโหลดข้อมูลสด…</span></span>
+    <button class="refresh-btn" id="refreshBtn">↻ รีเฟรชข้อมูล</button>
+  </div>
+
+  <nav class="selector" id="selector"></nav>
+
+  <section class="grid-top">
+    <div class="card ring-card">
+      <div class="ring-wrap">
+        <svg width="168" height="168" viewBox="0 0 168 168">
+          <circle cx="84" cy="84" r="74" fill="none" stroke="#EEF0F5" stroke-width="14"/>
+          <circle id="ringFill" cx="84" cy="84" r="74" fill="none" stroke="var(--gold)" stroke-width="14" stroke-linecap="round"/>
+        </svg>
+        <div class="ring-center">
+          <b id="ringPct">0%</b>
+          <span>ของคลังข้อสอบทั้งหมด</span>
+        </div>
+      </div>
+      <div class="ring-name" id="ringName">—</div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi">
+        <span class="label">ชุดข้อสอบที่ทำแล้ว</span>
+        <div class="value" id="kpiSets">0<small> / — ชุด</small></div>
+      </div>
+      <div class="kpi">
+        <span class="label">จำนวนข้อที่ทำแล้ว</span>
+        <div class="value" id="kpiItems">0<small> / — ข้อ</small></div>
+      </div>
+      <div class="kpi">
+        <span class="label">คะแนนเฉลี่ย (จากชุดที่ทำ)</span>
+        <div class="value" id="kpiAvg">—</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-title">
+    <h2>เส้นทางภารกิจแยกตามวิชา</h2>
+    <span class="hint">แต่ละจุด = ข้อสอบ 1 ชุด · จุดทึบ = ทำแล้ว</span>
+  </div>
+  <div id="subjectBlocks"></div>
+
+  <div class="section-title">
+    <h2>ประวัติชุดที่ทำแล้ว</h2>
+    <span class="hint" id="logHint"></span>
+  </div>
+  <div class="log-card">
+    <table id="logTable">
+      <thead><tr><th>วิชา</th><th>ชุดข้อสอบ</th><th>จำนวนข้อ</th><th>คะแนน</th><th>สัดส่วน</th></tr></thead>
+      <tbody id="logBody"></tbody>
+    </table>
+    <div class="empty-state" id="logEmpty" style="display:none;">
+      <div class="big">🗺️</div>
+      ยังไม่มีชุดข้อสอบที่บันทึกคะแนนไว้สำหรับนักเรียนคนนี้<br>เมื่อทำชุดแรกและกรอกคะแนนในสเปรดชีต ประวัติจะแสดงที่นี่โดยอัตโนมัติ
+    </div>
+  </div>
+
+  <div class="section-title">
+    <h2>ภาพรวมทั้งชั้น</h2>
+    <span class="hint" id="classHint"></span>
+  </div>
+  <div class="card"><div class="class-list" id="classList"></div></div>
+
+  <footer id="footerNote"></footer>
+</div>
+
+<script>
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0EbF7pIL_d4dsNzRbfoHf4uJ89JVSyyaczvhTccOM5CZtN_dD813-ZZFSXwZFDN8eYjqjR6qIGN15/pub?gid=1278100255&single=true&output=csv";
+const STUDENTS = ["เพลง", "ยูโร", "ออโต้", "ไตตั้น", "ของขวัญ", "แก้มใส", "ทับทิม", "Sense", "Bike"];
+const TOPIC_META = {"ASTRO": {"th": "ดาราศาสตร์", "color": "#5B5FEF"}, "EARTH": {"th": "โลกและอวกาศ", "color": "#C1662F"}, "BIO": {"th": "ชีววิทยา", "color": "#3F8F5C"}, "CHM": {"th": "เคมี", "color": "#9B4F96"}, "PHY": {"th": "ฟิสิกส์", "color": "#2E7DD1"}};
+const TOPIC_PREFERRED_ORDER = ["ASTRO", "EARTH", "BIO", "CHM", "PHY"];
+
+const AVATAR_COLORS = ['#5B5FEF','#C1662F','#3F8F5C','#9B4F96','#2E7DD1','#E3A62F','#D14D72','#2AA198','#7A5CFA'];
+const EXTRA_TOPIC_COLORS = ['#8B6F4E','#4E8B8B','#B84E7A','#5E8B4E','#4E5E8B'];
+const avatarColor = (i) => AVATAR_COLORS[i % AVATAR_COLORS.length];
+const initials = (name) => name.slice(0,1);
+
+let DATA = [];
+let TOPIC_ORDER = [];
+let current = STUDENTS[0];
+
+function buildTopicOrder(data) {
+  const present = [...new Set(data.map(d => d.topic))];
+  const known = TOPIC_PREFERRED_ORDER.filter(t => present.includes(t));
+  const unknown = present.filter(t => !TOPIC_PREFERRED_ORDER.includes(t)).sort();
+  unknown.forEach((t,i) => {
+    if (!TOPIC_META[t]) TOPIC_META[t] = { th: t, color: EXTRA_TOPIC_COLORS[i % EXTRA_TOPIC_COLORS.length] };
+  });
+  return [...known, ...unknown];
+}
+
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = '', inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i], next = text[i+1];
+    if (inQuotes) {
+      if (c === '"' && next === '"') { field += '"'; i++; }
+      else if (c === '"') { inQuotes = false; }
+      else { field += c; }
+    } else {
+      if (c === '"') { inQuotes = true; }
+      else if (c === ',') { row.push(field); field = ''; }
+      else if (c === '\r') { }
+      else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+      else { field += c; }
+    }
+  }
+  if (field.length || row.length) { row.push(field); rows.push(row); }
+  return rows;
+}
+
+function detectColumns(rows) {
+  const nameRow = rows[0] || [];
+  const labelRow = rows[1] || [];
+  const subRow = rows[2] || [];
+  let docCol = -1, itemsCol = -1;
+  labelRow.forEach((v,i) => {
+    const t = (v || '').trim();
+    if (t.includes('ชื่อเอกสาร')) docCol = i;
+    if (t.includes('จำนวนข้อในชุด')) itemsCol = i;
+  });
+  const studentCol = {};
+  nameRow.forEach((v,i) => {
+    const t = (v || '').trim();
+    if (STUDENTS.includes(t) && !(t in studentCol)) {
+      let scoreIdx = i + 1;
+      if (!(subRow[scoreIdx] || '').includes('คะแนน')) {
+        for (let k = i; k < Math.min(i+4, subRow.length); k++) {
+          if ((subRow[k] || '').includes('คะแนน')) { scoreIdx = k; break; }
+        }
+      }
+      studentCol[t] = scoreIdx;
+    }
+  });
+  return { docCol, itemsCol, studentCol };
+}
+
+function parseSheetRows(rows) {
+  const { docCol, itemsCol, studentCol } = detectColumns(rows);
+  if (docCol === -1 || itemsCol === -1 || Object.keys(studentCol).length < STUDENTS.length) {
+    throw new Error('ไม่พบคอลัมน์ที่คาดไว้ในชีท');
+  }
+  const docs = [];
+  for (let r = 3; r < rows.length; r++) {
+    const row = rows[r];
+    if (!row) continue;
+    const colDoc = (row[docCol] || '').trim();
+    const colItems = (row[itemsCol] || '').trim();
+    if (!colDoc || colDoc.startsWith('#')) continue;
+    const items = parseFloat(colItems);
+    if (!isFinite(items) || items <= 0) continue;
+    const m = colDoc.match(/@([A-Za-z]+)/);
+    const topic = m ? m[1].toUpperCase() : 'OTHER';
+    let label = colDoc.includes('@') ? colDoc.split('@').slice(1).join('@') : colDoc;
+    label = label.replace(/#/g,'').trim().replace(/^-+|-+$/g,'');
+    const studentsObj = {};
+    STUDENTS.forEach(s => {
+      const idx = studentCol[s];
+      const raw = (row[idx] || '').trim();
+      studentsObj[s] = { score: raw === '' ? null : parseFloat(raw), done: raw !== '' };
+    });
+    docs.push({ topic, label, items, students: studentsObj });
+  }
+  return docs;
+}
+
+function computeStudentStats(name) {
+  let setsDone = 0, itemsDone = 0, scoreSum = 0, itemsScoredBasis = 0;
+  DATA.forEach(d => {
+    const s = d.students[name];
+    if (s && s.done) {
+      setsDone++; itemsDone += d.items; scoreSum += s.score; itemsScoredBasis += d.items;
+    }
+  });
+  const avgPct = itemsScoredBasis > 0 ? (scoreSum / itemsScoredBasis * 100) : null;
+  return { setsDone, itemsDone, avgPct };
+}
+
+function totalItems() { return DATA.reduce((s,d)=>s+d.items,0); }
+function totalDocs() { return DATA.length; }
+
+function buildStatStrip() {
+  const el = document.getElementById('statStrip');
+  const chips = [
+    [totalItems().toLocaleString(), 'ข้อทั้งหมด'],
+    [totalDocs(), 'ชุดข้อสอบ'],
+    [TOPIC_ORDER.length, 'หมวดวิชา'],
+    [STUDENTS.length, 'นักเรียน'],
+  ];
+  el.innerHTML = chips.map(([v,l]) => `<div class="stat-pill"><b>${v}</b><span>${l}</span></div>`).join('');
+}
+
+function buildSelector() {
+  const el = document.getElementById('selector');
+  el.innerHTML = STUDENTS.map((s,i) => `
+    <button class="pill-btn" data-name="${s}">
+      <span class="avatar" style="background:${avatarColor(i)}">${initials(s)}</span>${s}
+    </button>`).join('');
+  el.querySelectorAll('.pill-btn').forEach(btn => {
+    btn.addEventListener('click', () => { current = btn.dataset.name; render(); });
+  });
+}
+
+function renderRing(name) {
+  const stats = computeStudentStats(name);
+  const total = totalItems();
+  const pct = total > 0 ? (stats.itemsDone / total * 100) : 0;
+  const r = 74, circumference = 2 * Math.PI * r;
+  const offset = circumference * (1 - pct/100);
+  const ring = document.getElementById('ringFill');
+  ring.setAttribute('stroke-dasharray', circumference);
+  ring.setAttribute('stroke-dashoffset', circumference);
+  requestAnimationFrame(() => {
+    ring.style.transition = 'stroke-dashoffset .6s ease';
+    ring.setAttribute('stroke-dashoffset', offset);
+  });
+  document.getElementById('ringPct').textContent = (pct > 0 && pct < 1 ? pct.toFixed(1) : Math.round(pct)) + '%';
+  document.getElementById('ringName').textContent = name;
+  document.getElementById('kpiSets').innerHTML = stats.setsDone + `<small> / ${totalDocs()} ชุด</small>`;
+  document.getElementById('kpiItems').innerHTML = stats.itemsDone + `<small> / ${total.toLocaleString()} ข้อ</small>`;
+  document.getElementById('kpiAvg').innerHTML = stats.avgPct === null ? '—' : stats.avgPct.toFixed(0) + '<small>%</small>';
+}
+
+function renderSubjects(name) {
+  const el = document.getElementById('subjectBlocks');
+  el.innerHTML = TOPIC_ORDER.map(topic => {
+    const meta = TOPIC_META[topic];
+    const docs = DATA.filter(d => d.topic === topic);
+    const totalI = docs.reduce((s,d)=>s+d.items,0);
+    const doneDocs = docs.filter(d => d.students[name] && d.students[name].done);
+    const doneItems = doneDocs.reduce((s,d)=>s+d.items,0);
+    const pct = totalI > 0 ? (doneItems/totalI*100) : 0;
+    const nodes = docs.map(d => {
+      const sd = d.students[name];
+      const done = sd && sd.done;
+      const title = `${d.label} · ${d.items} ข้อ` + (done ? ` · คะแนน ${sd.score}` : ' · ยังไม่ทำ');
+      return `<span class="node ${done?'done':''}" title="${title.replace(/"/g,'&quot;')}" style="${done ? `background:${meta.color}` : ''}"></span>`;
+    }).join('');
+    return `
+      <div class="subject-block">
+        <div class="subject-head">
+          <div class="subject-name"><span class="dot-chip" style="background:${meta.color}"></span>${topic} · ${meta.th}</div>
+          <div class="subject-nums"><b>${doneDocs.length}</b>/${docs.length} ชุด &nbsp;·&nbsp; <b>${doneItems}</b>/${totalI} ข้อ</div>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%; background:${meta.color}"></div></div>
+        <div class="trail">${nodes}</div>
+      </div>`;
+  }).join('');
+}
+
+function renderLog(name) {
+  const rows = DATA.filter(d => d.students[name] && d.students[name].done);
+  const body = document.getElementById('logBody');
+  const empty = document.getElementById('logEmpty');
+  const table = document.getElementById('logTable');
+  document.getElementById('logHint').textContent = rows.length ? `${rows.length} ชุดที่มีการบันทึกคะแนน` : '';
+  if (!rows.length) { table.style.display = 'none'; empty.style.display = 'block'; return; }
+  table.style.display = 'table'; empty.style.display = 'none';
+  body.innerHTML = rows.map(d => {
+    const s = d.students[name];
+    const meta = TOPIC_META[d.topic];
+    const pct = (s.score / d.items * 100).toFixed(0);
+    return `<tr>
+      <td><span class="subj-tag" style="background:${meta.color}">${d.topic}</span></td>
+      <td>${d.label}</td><td>${d.items}</td>
+      <td class="score-cell">${s.score}</td><td>${pct}%</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderClassOverview(name) {
+  const el = document.getElementById('classList');
+  const total = totalItems();
+  document.getElementById('classHint').textContent = `เทียบสัดส่วนข้อที่ทำแล้วจากทั้งหมด ${total.toLocaleString()} ข้อ`;
+  const stats = STUDENTS.map((s,i) => {
+    const st = computeStudentStats(s);
+    return { name: s, i, itemsDone: st.itemsDone, pct: total ? st.itemsDone/total*100 : 0 };
+  }).sort((a,b) => b.itemsDone - a.itemsDone);
+  el.innerHTML = stats.map(s => `
+    <div class="class-row ${s.name===name?'active':''}">
+      <div class="cname"><span class="mini-avatar" style="background:${avatarColor(s.i)}">${initials(s.name)}</span>${s.name}</div>
+      <div class="track"><div class="fill" style="width:${Math.max(s.pct,1.2)}%"></div></div>
+      <div class="pct">${s.itemsDone} ข้อ</div>
+    </div>`).join('');
+}
+
+function render() {
+  document.querySelectorAll('.pill-btn').forEach(b => b.classList.toggle('active', b.dataset.name === current));
+  buildStatStrip();
+  renderRing(current);
+  renderSubjects(current);
+  renderLog(current);
+  renderClassOverview(current);
+}
+
+function setSourceBadge(state, when) {
+  const bar = document.getElementById('sourceBar');
+  const label = document.getElementById('sourceLabel');
+  const footer = document.getElementById('footerNote');
+  bar.classList.remove('live','cached');
+  if (state === 'loading') {
+    label.textContent = 'กำลังโหลดข้อมูลสด…';
+  } else if (state === 'live') {
+    bar.classList.add('live');
+    label.textContent = `ข้อมูลสดจาก Google Sheets · ดึงล่าสุด ${when}`;
+    footer.textContent = 'ข้อมูลนี้ดึงสดจาก Google Sheets ทุกครั้งที่เปิดหน้านี้ — คอลัมน์ที่ใช้: คะแนนล่าสุดของนักเรียนแต่ละคน';
+  } else {
+    bar.classList.add('cached');
+    label.textContent = `เชื่อมต่อ Google Sheets ไม่สำเร็จ`;
+    footer.textContent = 'ไม่สามารถดึงข้อมูลสดได้ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ตหรือกดปุ่มรีเฟรชข้อมูลอีกครั้ง';
+  }
+}
+
+async function loadLive() {
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  setSourceBadge('loading');
+  try {
+    const res = await fetch(CSV_URL, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    const rows = parseCSV(text);
+    const parsed = parseSheetRows(rows);
+    if (!parsed.length) throw new Error('no rows parsed');
+    DATA = parsed;
+    const now = new Date();
+    setSourceBadge('live', now.toLocaleString('th-TH', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' }));
+  } catch (err) {
+    setSourceBadge('cached');
+    console.warn('Fetch failed:', err);
+  }
+  TOPIC_ORDER = buildTopicOrder(DATA);
+  render();
+  btn.disabled = false;
+}
+
+document.getElementById('refreshBtn').addEventListener('click', loadLive);
+
+buildSelector();
+loadLive();
+</script>
+</body>
+</html>
