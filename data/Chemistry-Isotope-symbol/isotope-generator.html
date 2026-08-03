@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Isotope Symbol Generator</title>
+<style>
+  body {
+    font-family: sans-serif;
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background: #fff;
+  }
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  label {
+    display: block;
+    margin-top: 10px;
+  }
+  input {
+    width: 100%;
+    padding: 6px 10px;
+    margin-top: 4px;
+    font-size: 16px;
+  }
+  button {
+    margin-top: 16px;
+    padding: 8px 12px;
+    font-size: 16px;
+    width: 100%;
+    cursor: pointer;
+  }
+  #output {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+  <h2>Isotope Symbol Generator</h2>
+
+  <label>Atomic Number (เลขอะตอม, subscript):</label>
+  <input type="number" id="atomic" placeholder="เช่น 6">
+
+  <label>Mass Number (เลขมวล, superscript):</label>
+  <input type="number" id="mass" placeholder="เช่น 12">
+
+  <label>Element Symbol (สัญลักษณ์ธาตุ):</label>
+  <input type="text" id="element" placeholder="เช่น C">
+
+  <button onclick="generate()">Generate</button>
+
+  <div id="output"></div>
+  <button id="copyBtn" style="display:none;" onclick="copyText()">Copy</button>
+
+<script>
+function toSubscript(num) {
+  const subs = {'0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉'};
+  return num.toString().split('').map(c => subs[c] || c).join('');
+}
+function toSuperscript(num) {
+  const sups = {'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+  return num.toString().split('').map(c => sups[c] || c).join('');
+}
+function generate() {
+  const atomic = document.getElementById("atomic").value;
+  const mass = document.getElementById("mass").value;
+  const element = document.getElementById("element").value.trim();
+  if (!atomic || !mass || !element) {
+    alert("กรอกข้อมูลให้ครบทั้ง 3 ช่อง");
+    return;
+  }
+  const result = toSubscript(atomic) + toSuperscript(mass) + element;
+  document.getElementById("output").innerText = result;
+  document.getElementById("copyBtn").style.display = "block";
+}
+function copyText() {
+  const text = document.getElementById("output").innerText;
+  navigator.clipboard.writeText(text);
+  alert("Copied: " + text);
+}
+</script>
+</body>
+</html>
