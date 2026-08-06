@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ตารางเปรียบเทียบเชิงสรุป 4 ทางเลือกการพัฒนา Google Quiz</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --success-bg: #dcfce7;
+      --success-text: #15803d;
+      --warning-bg: #fef3c7;
+      --warning-text: #b45309;
+      --danger-bg: #fee2e2;
+      --danger-text: #b91c1c;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 24px 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header h2 {
+      margin: 0 0 8px 0;
+      color: var(--text);
+      font-size: 1.5rem;
+    }
+
+    .header p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+      min-width: 750px;
+    }
+
+    th {
+      background-color: #f1f5f9;
+      color: var(--text);
+      font-weight: 700;
+      padding: 14px 16px;
+      border-bottom: 2px solid var(--border);
+      vertical-align: middle;
+    }
+
+    th:first-child {
+      width: 22%;
+    }
+
+    th:not(:first-child) {
+      width: 19.5%;
+      text-align: center;
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    td:not(:first-child) {
+      text-align: center;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: #f8fafc;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      line-height: 1.3;
+    }
+
+    .badge-success {
+      background-color: var(--success-bg);
+      color: var(--success-text);
+    }
+
+    .badge-warning {
+      background-color: var(--warning-bg);
+      color: var(--warning-text);
+    }
+
+    .badge-danger {
+      background-color: var(--danger-bg);
+      color: var(--danger-text);
+    }
+
+    .sub-text {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: normal;
+      margin-top: 2px;
+      opacity: 0.85;
+    }
+
+    .highlight-col {
+      background-color: #eff6ff;
+    }
+
+    th.highlight-col {
+      background-color: #dbeafe;
+      color: #1e40af;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h2>ตารางเปรียบเทียบเชิงสรุป 4 ทางเลือกในการพัฒนา Google Quiz</h2>
+    <p>สรุปการวิเคราะห์เปรียบเทียบข้อดี ข้อจำกัด และความเป็นไปได้ในการใช้งานจริง</p>
+  </div>
+
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>หัวข้อเปรียบเทียบ</th>
+          <th class="highlight-col">ทางเลือกที่ 1:<br>Apps Script (Execute as: Me)</th>
+          <th>ทางเลือกที่ 2:<br>Google Identity (OAuth)</th>
+          <th>ทางเลือกที่ 3:<br>Google Forms</th>
+          <th>ทางเลือกที่ 4:<br>Firebase Auth</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. หน้าเตือนความปลอดภัย</strong></td>
+          <td class="highlight-col">
+            <span class="badge badge-success">ไม่มีเลย 100%</span>
+          </td>
+          <td>
+            <span class="badge badge-danger">มี</span>
+            <span class="sub-text">(ถ้าไม่ Verify App)</span>
+          </td>
+          <td>
+            <span class="badge badge-success">ไม่มีเลย 100%</span>
+          </td>
+          <td>
+            <span class="badge badge-success">ไม่มีเลย 100%</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>2. ความถูกต้องบัญชีเด็ก</strong></td>
+          <td class="highlight-col">
+            <span class="badge badge-warning">ไม่แน่ใจ</span>
+            <span class="sub-text">(เด็กกรอกเอง)</span>
+          </td>
+          <td>
+            <span class="badge badge-success">ยืนยันจริง 100%</span>
+          </td>
+          <td>
+            <span class="badge badge-success">ยืนยันจริง 100%</span>
+          </td>
+          <td>
+            <span class="badge badge-success">ยืนยันจริง 100%</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>3. รักษาฟังก์ชันจุดขาย</strong><br><span style="font-size: 0.8em; color: var(--text-muted);">(ทำซ้ำข้อผิด/โจทย์เสริม)</span></td>
+          <td class="highlight-col">
+            <span class="badge badge-success">ทำได้ 100%</span>
+          </td>
+          <td>
+            <span class="badge badge-success">ทำได้ 100%</span>
+          </td>
+          <td>
+            <span class="badge badge-danger">ทำไม่ได้เลย</span>
+          </td>
+          <td>
+            <span class="badge badge-success">ทำได้ 100%</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>4. ความง่ายในการตั้งค่า</strong></td>
+          <td class="highlight-col">
+            <span class="badge badge-success">ง่ายที่สุด</span>
+            <span class="sub-text">(ทำครั้งเดียวจบ)</span>
+          </td>
+          <td>
+            <span class="badge badge-danger">ยาก / ซับซ้อน</span>
+          </td>
+          <td>
+            <span class="badge badge-success">ง่ายที่สุด</span>
+          </td>
+          <td>
+            <span class="badge badge-warning">ปานกลาง - ซับซ้อน</span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>5. การเปิดผ่าน LINE / แอปอื่น</strong></td>
+          <td class="highlight-col">
+            <span class="badge badge-success">ราบรื่น 100%</span>
+          </td>
+          <td>
+            <span class="badge badge-warning">อาจติด Pop-up บล็อก</span>
+          </td>
+          <td>
+            <span class="badge badge-success">ราบรื่น 100%</span>
+          </td>
+          <td>
+            <span class="badge badge-warning">อาจติด Pop-up บล็อก</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>
