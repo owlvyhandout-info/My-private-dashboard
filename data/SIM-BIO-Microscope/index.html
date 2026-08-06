@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microscope Virtual Lab - คลินิกกล้องจุลทรรศน์</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Prompt', sans-serif; background-color: #f0fdfa; }
+        
+        /* สไตล์กล้องจำลอง */
+        .lens-view {
+            width: 250px; height: 250px;
+            border: 12px solid #334155;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.1), 0 10px 15px -3px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden; margin: 0 auto;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* ตัวหนังสือกลับหัว */
+        .microscope-text {
+            font-size: 6rem;
+            font-weight: bold;
+            color: #0f172a;
+            transform: rotate(180deg);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        /* ระบบเลื่อนภาพในเลนส์ */
+        .lens-movement-wrapper {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            transition: transform 0.2s ease-out;
+            width: 150px; height: 150px;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* รูปภาพในเลนส์ต้องกลับหัว 180 องศา */
+        .lens-specimen-img {
+            width: 100%; height: 100%;
+            object-fit: contain;
+            transform: rotate(180deg);
+        }
+
+        /* แท่นวางสไลด์จริง */
+        .stage-view {
+            width: 260px; height: 200px;
+            background: #cbd5e1;
+            border: 3px solid #94a3b8;
+            border-radius: 12px;
+            position: relative;
+            margin: 0 auto;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+            box-shadow: inset 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* แผ่นสไลด์กระจก */
+        .glass-slide {
+            width: 130px; height: 60px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: absolute;
+            transition: transform 0.2s ease-out;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* รูปภาพบนสไลด์จริง */
+        .specimen-actual-img {
+            width: 80%; height: 80%;
+            object-fit: contain;
+        }
+
+        /* ปุ่มคุมทิศทาง D-pad */
+        .d-pad-btn {
+            background-color: #3b82f6; color: white;
+            border-radius: 8px; font-weight: bold;
+            display: flex; justify-content: center; align-items: center;
+            transition: all 0.1s; box-shadow: 0 4px 0 #2563eb;
+        }
+        .d-pad-btn:active {
+            transform: translateY(4px); box-shadow: 0 0 0 #2563eb;
+        }
+        .d-pad-grid {
+            display: grid; grid-template-columns: repeat(3, 60px); grid-template-rows: repeat(3, 60px); gap: 8px; justify-content: center;
+        }
+
+        /* แท็บเมนูคำนวณ */
+        .tab-active { background-color: #0ea5e9; color: white; }
+        .tab-inactive { background-color: #e0f2fe; color: #0369a1; }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col items-center">
+
+    <div class="max-w-5xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-teal-200 mb-10">
+        
+        <div class="bg-gradient-to-b from-teal-400 to-teal-600 p-8 text-center text-white flex flex-col items-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" style="background-image: radial-gradient(#fff 2px, transparent 2px); background-size: 30px 30px;"></div>
+            
+            <img src="owlvybot.png" alt="Owlvy Mascot" class="w-40 h-40 object-cover rounded-full shadow-xl border-4 border-white z-10 mb-4 bg-black" onerror="this.style.display='none'">
+            
+            <h1 class="text-4xl font-bold z-10 drop-shadow-md">🔬 คลินิกกล้องจุลทรรศน์</h1>
+            <p class="mt-2 text-teal-50 text-lg z-10 font-medium">เรียนรู้หลักการเกิดภาพ การคำนวณ และการควบคุมอย่างถูกวิธี</p>
+        </div>
+
+        <div class="p-6 md:p-10 space-y-12 bg-slate-50">
+
+            <section class="bg-white p-6 md:p-8 rounded-2xl border-2 border-slate-100 shadow-sm flex flex-col md:flex-row gap-8 items-center">
+                <div class="flex-1 space-y-4">
+                    <h2 class="text-2xl font-bold text-teal-700 flex items-center gap-2">
+                        <span class="bg-teal-100 text-teal-800 w-10 h-10 rounded-full flex justify-center items-center">1</span>
+                        ทดสอบภาพเสมือนหัวกลับ
+                    </h2>
+                    <p class="text-slate-600">กล้องจุลทรรศน์ใช้เลนส์นูน 2 ชุด ทำให้ภาพที่ปรากฏในเลนส์ใกล้ตาเป็น <strong>ภาพเสมือนหัวกลับ (กลับซ้ายเป็นขวา และกลับบนลงล่าง)</strong></p>
+                    <div class="mt-4">
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">ลองพิมพ์ตัวอักษร (เช่น ก, A, R)</label>
+                        <input type="text" id="textInput" maxlength="3" value="ก" class="w-full p-4 border-2 border-teal-300 rounded-xl text-center text-xl focus:ring-teal-500 focus:border-teal-500 outline-none transition" placeholder="พิมพ์ที่นี่...">
+                    </div>
+                </div>
+                <div class="flex-none">
+                    <div class="lens-view bg-blue-50">
+                        <div class="absolute inset-0 flex justify-center items-center pointer-events-none opacity-20">
+                            <div class="w-full h-px bg-black"></div><div class="absolute h-full w-px bg-black"></div>
+                        </div>
+                        <div id="textOutput" class="microscope-text">ก</div>
+                    </div>
+                    <p class="text-center mt-3 font-semibold text-teal-600">ภาพที่เห็นในกล้อง</p>
+                </div>
+            </section>
+
+            <section class="bg-white p-6 md:p-8 rounded-2xl border-2 border-slate-100 shadow-sm">
+                <h2 class="text-2xl font-bold text-sky-700 flex items-center gap-2 mb-6">
+                    <span class="bg-sky-100 text-sky-800 w-10 h-10 rounded-full flex justify-center items-center">2</span>
+                    สูตรคำนวณกำลังขยาย
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <div class="flex mb-6 rounded-xl overflow-hidden font-bold shadow-sm">
+                            <button id="btnF1" class="flex-1 py-3 tab-active transition" onclick="switchTab(1)">สูตร 1: ขนาดภาพ</button>
+                            <button id="btnF2" class="flex-1 py-3 tab-inactive transition" onclick="switchTab(2)">สูตร 2: พลังเลนส์</button>
+                        </div>
+
+                        <div id="formF1" class="space-y-4">
+                            <div class="bg-slate-100 p-3 rounded-lg text-center font-semibold text-slate-700">กำลังขยาย = ขนาดภาพ ÷ ขนาดวัตถุจริง</div>
+                            <div>
+                                <label class="block text-sm text-slate-600 mb-1">ขนาดภาพที่วัดได้ (mm)</label>
+                                <input type="number" id="valImgSize" class="w-full p-3 border-2 border-slate-200 rounded-xl" placeholder="เช่น 10">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-slate-600 mb-1">ขนาดวัตถุจริง (mm)</label>
+                                <input type="number" id="valObjSize" class="w-full p-3 border-2 border-slate-200 rounded-xl" placeholder="เช่น 0.1">
+                            </div>
+                            <button onclick="calcM1()" class="w-full bg-sky-500 text-white py-3 rounded-xl font-bold hover:bg-sky-600 shadow-md">คำนวณผลลัพธ์</button>
+                        </div>
+
+                        <div id="formF2" class="space-y-4 hidden">
+                            <div class="bg-slate-100 p-3 rounded-lg text-center font-semibold text-slate-700">กำลังขยาย = เลนส์ใกล้ตา × เลนส์ใกล้วัตถุ</div>
+                            <div class="flex items-center gap-3">
+                                <div class="text-3xl">👁️</div>
+                                <div class="flex-1">
+                                    <label class="block text-sm text-slate-600 mb-1">กำลังขยายเลนส์ใกล้ตา</label>
+                                    <select id="valEyeLens" class="w-full p-3 border-2 border-slate-200 rounded-xl">
+                                        <option value="10">10X</option>
+                                        <option value="15">15X</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="text-3xl">🔬</div>
+                                <div class="flex-1">
+                                    <label class="block text-sm text-slate-600 mb-1">กำลังขยายเลนส์ใกล้วัตถุ</label>
+                                    <select id="valObjLens" class="w-full p-3 border-2 border-slate-200 rounded-xl">
+                                        <option value="4">4X (Scanning)</option>
+                                        <option value="10">10X (Low Power)</option>
+                                        <option value="40">40X (High Power)</option>
+                                        <option value="100">100X (Oil Immersion)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button onclick="calcM2()" class="w-full bg-sky-500 text-white py-3 rounded-xl font-bold hover:bg-sky-600 shadow-md">คำนวณผลลัพธ์</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-sky-50 rounded-2xl border-2 border-sky-100 flex flex-col justify-center items-center p-8">
+                        <p class="text-sky-800 font-semibold mb-2">กำลังขยายของกล้อง</p>
+                        <div class="bg-white w-full py-6 rounded-xl shadow-inner text-center border-2 border-sky-200">
+                            <span id="calcResult" class="text-5xl font-bold text-sky-600">-</span>
+                            <span class="text-xl font-bold text-sky-600 ml-2">เท่า</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white p-6 md:p-8 rounded-2xl border-2 border-slate-100 shadow-sm">
+                <h2 class="text-2xl font-bold text-indigo-700 flex items-center gap-2 mb-2">
+                    <span class="bg-indigo-100 text-indigo-800 w-10 h-10 rounded-full flex justify-center items-center">3</span>
+                    จำลองการเลื่อนแผ่นสไลด์
+                </h2>
+                <p class="text-slate-600 mb-6">เมื่อเลื่อนแผ่นสไลด์จริง ภาพที่เห็นในเลนส์จะเคลื่อนที่ไปใน <strong>ทิศทางตรงกันข้าม</strong> เสมอ</p>
+
+                <div class="mb-8 flex justify-center items-center gap-4 bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                    <label class="font-bold text-indigo-900">เลือกตัวอย่างสไลด์:</label>
+                    <select id="specimenImgSelect" class="p-2 border-2 border-indigo-300 rounded-lg font-medium outline-none cursor-pointer" onchange="updateSpecimenImage()">
+                        <option value="amoeba.png">🦠 อะมีบา (Amoeba)</option>
+                        <option value="paramecium.png">🥿 พารามีเซียม (Paramecium)</option>
+                        <option value="euglena.png">🍃 ยูกลีนา (Euglena)</option>
+                    </select>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-10 items-center">
+                    
+                    <div class="flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-4 text-slate-700">แท่นวางวัตถุ (แผ่นสไลด์จริง)</h3>
+                        <div class="stage-view mb-6">
+                            <div id="actualSlideBox" class="glass-slide">
+                                <img id="actualImg" src="amoeba.png" alt="Specimen" class="specimen-actual-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text x=\'50\' y=\'55\' text-anchor=\'middle\' font-size=\'40\'>🦠</text></svg>'">
+                            </div>
+                        </div>
+                        
+                        <div class="d-pad-grid">
+                            <div></div>
+                            <button class="d-pad-btn text-2xl" onclick="moveSlide(0, -1)" title="เลื่อนขึ้น">⬆️</button>
+                            <div></div>
+                            <button class="d-pad-btn text-2xl" onclick="moveSlide(-1, 0)" title="เลื่อนซ้าย">⬅️</button>
+                            <button class="d-pad-btn text-sm bg-slate-500 shadow-[0_4px_0_#475569] hover:bg-slate-600" onclick="resetSlide()">รีเซ็ต</button>
+                            <button class="d-pad-btn text-2xl" onclick="moveSlide(1, 0)" title="เลื่อนขวา">➡️</button>
+                            <div></div>
+                            <button class="d-pad-btn text-2xl" onclick="moveSlide(0, 1)" title="เลื่อนลง">⬇️</button>
+                            <div></div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-4 text-indigo-700">ภาพที่ปรากฏในเลนส์</h3>
+                        <div class="lens-view border-indigo-900 bg-indigo-50/30">
+                            <div class="absolute inset-0 flex justify-center items-center pointer-events-none opacity-20 z-10">
+                                <div class="w-full h-px bg-black"></div><div class="absolute h-full w-px bg-black"></div>
+                            </div>
+                            <div id="lensMovementBox" class="lens-movement-wrapper">
+                                <img id="lensImg" src="amoeba.png" alt="Lens View" class="lens-specimen-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text x=\'50\' y=\'55\' text-anchor=\'middle\' font-size=\'40\'>🦠</text></svg>'">
+                            </div>
+                        </div>
+                        <div class="mt-6 bg-yellow-50 border border-yellow-200 p-4 rounded-xl text-sm text-yellow-800 text-center shadow-sm">
+                            <strong>💡 สังเกตการเคลื่อนที่:</strong> หากเลื่อนสไลด์จริงไปทางซ้าย ภาพในเลนส์จะหนีไปทางขวาเสมอ
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script>
+        // --- APP 1: Text Inversion ---
+        const textInput = document.getElementById('textInput');
+        const textOutput = document.getElementById('textOutput');
+        textInput.addEventListener('input', (e) => {
+            textOutput.textContent = e.target.value || '-';
+        });
+
+        // --- APP 2: Calculator ---
+        function switchTab(tab) {
+            const f1 = document.getElementById('formF1');
+            const f2 = document.getElementById('formF2');
+            const b1 = document.getElementById('btnF1');
+            const b2 = document.getElementById('btnF2');
+            document.getElementById('calcResult').textContent = '-';
+
+            if(tab === 1) {
+                f1.classList.remove('hidden'); f2.classList.add('hidden');
+                b1.className = 'flex-1 py-3 tab-active transition';
+                b2.className = 'flex-1 py-3 tab-inactive transition';
+            } else {
+                f1.classList.add('hidden'); f2.classList.remove('hidden');
+                b1.className = 'flex-1 py-3 tab-inactive transition';
+                b2.className = 'flex-1 py-3 tab-active transition';
+            }
+        }
+
+        function calcM1() {
+            const img = parseFloat(document.getElementById('valImgSize').value);
+            const obj = parseFloat(document.getElementById('valObjSize').value);
+            if(img > 0 && obj > 0) {
+                const result = img / obj;
+                document.getElementById('calcResult').textContent = result.toLocaleString();
+            } else { alert("กรุณากรอกตัวเลขให้ถูกต้องและมากกว่า 0"); }
+        }
+
+        function calcM2() {
+            const eye = parseFloat(document.getElementById('valEyeLens').value);
+            const obj = parseFloat(document.getElementById('valObjLens').value);
+            const result = eye * obj;
+            document.getElementById('calcResult').textContent = result.toLocaleString();
+        }
+
+        // --- APP 3: Slide Movement (X-Y) ---
+        let sX = 0; let sY = 0;
+        const step = 15; // ระยะการเลื่อนต่อคลิก
+        const actualSlideBox = document.getElementById('actualSlideBox');
+        const lensMovementBox = document.getElementById('lensMovementBox');
+        
+        function updateSpecimenImage() {
+            const imgSrc = document.getElementById('specimenImgSelect').value;
+            document.getElementById('actualImg').src = imgSrc;
+            document.getElementById('lensImg').src = imgSrc;
+        }
+
+        function moveSlide(dx, dy) {
+            sX += dx * step;
+            sY += dy * step;
+            // ล็อคขอบเขตไม่ให้เลื่อนหลุดกรอบ
+            sX = Math.max(-50, Math.min(50, sX));
+            sY = Math.max(-50, Math.min(50, sY));
+            renderSlide();
+        }
+
+        function renderSlide() {
+            // ขยับสไลด์จริง
+            actualSlideBox.style.transform = `translate(${sX}px, ${sY}px)`;
+            
+            // ขยับภาพในเลนส์ (สวนทางและคูณอัตราขยาย)
+            const lX = -sX * 1.5;
+            const lY = -sY * 1.5;
+            lensMovementBox.style.transform = `translate(calc(-50% + ${lX}px), calc(-50% + ${lY}px))`;
+        }
+
+        function resetSlide() {
+            sX = 0; sY = 0;
+            renderSlide();
+        }
+    </script>
+</body>
+</html>

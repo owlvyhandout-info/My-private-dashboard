@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>กล้องจุลทรรศน์ — สื่อการเรียนรู้</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --emerald:    #059669;
+    --emerald-lt: #d1fae5;
+    --emerald-dk: #065f46;
+    --sky:        #0284c7;
+    --sky-lt:     #e0f2fe;
+    --sky-dk:     #0c4a6e;
+    --amber:      #d97706;
+    --amber-lt:   #fef3c7;
+    --amber-dk:   #78350f;
+    --coral:      #dc2626;
+    --coral-lt:   #fee2e2;
+    --coral-dk:   #7f1d1d;
+    --purple:     #7c3aed;
+    --purple-lt:  #ede9fe;
+    --purple-dk:  #3b0764;
+    --bg:         #f0fdf4;
+    --surface:    #ffffff;
+    --border:     #d1fae5;
+    --text:       #1a2e1a;
+    --text-muted: #6b7280;
+    --radius:     12px;
+    --radius-sm:  8px;
+    --shadow:     0 4px 24px rgba(5,150,105,0.10);
+    --shadow-lg:  0 8px 40px rgba(5,150,105,0.15);
+  }
+
+  html { font-family: 'Sarabun', sans-serif; font-size: 16px; }
+
+  body {
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 40%, #eff6ff 100%);
+    min-height: 100vh;
+    color: var(--text);
+  }
+
+  /* ─── HEADER ─────────────────────────────────── */
+  .header {
+    background: linear-gradient(135deg, #065f46 0%, #047857 50%, #0c4a6e 100%);
+    padding: 2rem 1.5rem 3.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+  }
+  .header-icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: .5rem;
+    position: relative;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  .header h1 {
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    position: relative;
+  }
+  .header p {
+    color: rgba(255,255,255,.75);
+    font-size: .95rem;
+    margin-top: .4rem;
+    position: relative;
+  }
+
+  /* ─── NAV TABS ────────────────────────────────── */
+  .nav-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: -1.5rem;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 10;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .nav-tab {
+    background: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 22px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .nav-tab:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.15); }
+  .nav-tab.active {
+    background: linear-gradient(135deg, var(--emerald), var(--sky));
+    color: white;
+    box-shadow: 0 4px 20px rgba(5,150,105,.35);
+  }
+
+  /* ─── MAIN CONTENT ────────────────────────────── */
+  .main { max-width: 800px; margin: 0 auto; padding: 2rem 1rem 3rem; }
+
+  .page { display: none; animation: fadeIn .3s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ─── CARDS ───────────────────────────────────── */
+  .card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    border: 1.5px solid var(--border);
+  }
+  .card-title {
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--emerald);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 16px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, var(--emerald), var(--sky));
+  }
+
+  /* ─── SECTION 1: INVERSION ────────────────────── */
+  .invert-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  @media(max-width:500px){ .invert-grid{ grid-template-columns:1fr; } }
+
+  .view-box {
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    text-align: center;
+  }
+  .view-box.real {
+    background: linear-gradient(135deg, var(--sky-lt), #dbeafe);
+    border: 1.5px solid #93c5fd;
+  }
+  .view-box.scope {
+    background: linear-gradient(135deg, #111827, #1f2937);
+    border: 1.5px solid #374151;
+  }
+
+  .view-label {
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    margin-bottom: .75rem;
+  }
+  .view-box.real .view-label { color: var(--sky-dk); }
+  .view-box.scope .view-label { color: #9ca3af; }
+
+  .letter-frame {
+    width: 100%;
+    height: 110px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    font-weight: 800;
+    margin-bottom: .75rem;
+    border: 2px solid rgba(255,255,255,.2);
+    background: white;
+    color: var(--sky-dk);
+    letter-spacing: -.02em;
+  }
+  .letter-frame.inverted {
+    background: radial-gradient(circle at 50% 50%, #1e3a5f 30%, #0a1628 100%);
+    color: #86efac;
+    transform: rotate(180deg);
+    text-shadow: 0 0 20px rgba(134,239,172,.6);
+    border-color: #374151;
+  }
+  .scope-ring {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #1a3a2a 50%, #0a1a10 100%);
+    border: 6px solid #4b5563;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto .75rem;
+    position: relative;
+    box-shadow: inset 0 0 20px rgba(0,0,0,.5), 0 0 0 2px #374151;
+  }
+  .scope-ring::before {
+    content: '';
+    position: absolute; inset: 4px;
+    border-radius: 50%;
+    border: 1px solid rgba(134,239,172,.15);
+  }
+  .scope-char {
+    font-size: 3.8rem;
+    font-weight: 800;
+    color: #86efac;
+    transform: rotate(180deg);
+    text-shadow: 0 0 16px rgba(134,239,172,.7);
+    line-height: 1;
+  }
+  .view-note {
+    font-size: .78rem;
+    font-weight: 500;
+  }
+  .view-box.real .view-note { color: var(--sky-dk); }
+  .view-box.scope .view-note { color: #9ca3af; }
+
+  .letter-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    background: var(--sky-lt);
+    border-radius: 50px;
+    padding: .6rem 1.25rem;
+    border: 1.5px solid #93c5fd;
+  }
+  .letter-input-wrap label { font-size: .9rem; font-weight: 600; color: var(--sky-dk); white-space: nowrap; }
+  .letter-input-wrap input {
+    flex: 1;
+    border: none;
+    background: white;
+    border-radius: 50px;
+    padding: .4rem .9rem;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  }
+
+  .info-banner {
+    background: linear-gradient(135deg, var(--emerald-lt), var(--sky-lt));
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+    border-left: 4px solid var(--emerald);
+    font-size: .9rem;
+    line-height: 1.7;
+    color: var(--emerald-dk);
+    margin-top: 1rem;
+  }
+  .info-banner strong { color: var(--emerald-dk); font-weight: 700; }
+
+  .tip-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+    margin-top: 1rem;
+  }
+  .tip-card {
+    border-radius: var(--radius-sm);
+    padding: .85rem 1rem;
+    font-size: .88rem;
+    line-height: 1.5;
+  }
+  .tip-card.blue { background: var(--sky-lt); border-left: 3px solid var(--sky); color: var(--sky-dk); }
+  .tip-card.coral { background: var(--coral-lt); border-left: 3px solid var(--coral); color: var(--coral-dk); }
+  .tip-card span { font-size: .76rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; display: block; margin-bottom: 4px; opacity: .75; }
+
+  /* ─── FORMULA PILLS ───────────────────────────── */
+  .formula-pills {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .formula-pill {
+    flex: 1;
+    min-width: 160px;
+    border: none;
+    border-radius: 50px;
+    padding: .65rem 1.2rem;
+    font-family: 'Sarabun', sans-serif;
+    font-size: .88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    background: white;
+    color: var(--text-muted);
+    border: 1.5px solid #e5e7eb;
+    text-align: center;
+  }
+  .formula-pill:hover { border-color: var(--emerald); color: var(--emerald); }
+  .formula-pill.active {
+    background: linear-gradient(135deg, var(--emerald), #047857);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(5,150,105,.3);
+  }
+
+  .fsec { display: none; }
+  .fsec.active { display: block; animation: fadeIn .25s ease; }
+
+  /* ─── FORMULA BOX ─────────────────────────────── */
+  .formula-display {
+    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    border: 2px solid var(--emerald);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.5rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--emerald-dk);
+    text-align: center;
+    margin-bottom: 1.25rem;
+    font-family: Georgia, serif;
+    letter-spacing: .01em;
+  }
+
+  /* ─── MAGNIFY VISUAL ──────────────────────────── */
+  .magnify-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, #f8fafc, #f0fdf4);
+    border-radius: var(--radius-sm);
+    border: 1.5px dashed #a7f3d0;
+    margin-bottom: 1.25rem;
+  }
+  .obj-col { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .obj-bar { border-radius: 4px; transition: all .35s cubic-bezier(.34,1.56,.64,1); }
+  .obj-bar.obj-color { background: linear-gradient(135deg, var(--sky), #2563eb); }
+  .obj-bar.img-color { background: linear-gradient(135deg, #f59e0b, var(--coral)); }
+  .obj-bar-label { font-size: .75rem; font-weight: 600; color: var(--text-muted); }
+  .scope-icon { font-size: 2.5rem; filter: drop-shadow(0 2px 6px rgba(5,150,105,.3)); }
+  .arrow-icon { font-size: 1.4rem; color: var(--emerald); font-weight: 700; }
+
+  /* ─── INPUT GRID ──────────────────────────────── */
+  .input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .85rem;
+    margin-bottom: 1rem;
+  }
+  @media(max-width:480px){ .input-grid{ grid-template-columns:1fr; } }
+
+  .input-group { display: flex; flex-direction: column; gap: 5px; }
+  .input-group label {
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .input-group input, .input-group select {
+    padding: .65rem .9rem;
+    border: 2px solid #e5e7eb;
+    border-radius: var(--radius-sm);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+    background: white;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .input-group input:focus, .input-group select:focus {
+    border-color: var(--emerald);
+    box-shadow: 0 0 0 3px rgba(5,150,105,.12);
+  }
+
+  /* ─── RESULT BOX ──────────────────────────────── */
+  .result-box {
+    background: linear-gradient(135deg, #065f46, #047857, #0c4a6e);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    box-shadow: 0 4px 20px rgba(5,150,105,.3);
+  }
+  .result-label { font-size: .82rem; font-weight: 600; color: rgba(255,255,255,.65); margin-bottom: 2px; }
+  .result-value { font-size: 2.5rem; font-weight: 800; color: #6ee7b7; line-height: 1; }
+  .result-unit { font-size: .9rem; color: rgba(255,255,255,.6); }
+  .result-equation {
+    font-size: .88rem;
+    color: rgba(255,255,255,.75);
+    background: rgba(255,255,255,.1);
+    border-radius: var(--radius-sm);
+    padding: .5rem .85rem;
+    font-weight: 600;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  /* ─── FORMULA 2 — LENS SELECTOR ───────────────── */
+  .lens-panel {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    gap: 0;
+    background: linear-gradient(135deg, #f0fdf4, #eff6ff);
+    border-radius: var(--radius);
+    border: 1.5px solid #a7f3d0;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+  }
+  .lens-side {
+    padding: 1.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .75rem;
+  }
+  .lens-side.eye { background: linear-gradient(135deg, rgba(14,165,233,.08), transparent); }
+  .lens-side.obj { background: linear-gradient(135deg, transparent, rgba(217,119,6,.08)); }
+  .lens-multiplier {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: var(--text-muted);
+  }
+  .lens-badge {
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 50px;
+  }
+  .lens-badge.eye { background: var(--sky-lt); color: var(--sky-dk); }
+  .lens-badge.obj { background: var(--amber-lt); color: var(--amber-dk); }
+  .lens-mag-display {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .lens-mag-display.eye { color: var(--sky); }
+  .lens-mag-display.obj { color: var(--amber); }
+  .lens-select {
+    width: 100%;
+    padding: .55rem .8rem;
+    border-radius: 50px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: .95rem;
+    font-weight: 600;
+    background: white;
+    outline: none;
+    cursor: pointer;
+  }
+  .lens-select.eye { border: 2px solid #93c5fd; color: var(--sky-dk); }
+  .lens-select.obj { border: 2px solid #fcd34d; color: var(--amber-dk); }
+
+  /* ─── SVG MICROSCOPE ─────────────────────────── */
+  .scope-svg-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
+  }
+  .scope-svg-wrap svg { max-width: 320px; width: 100%; }
+
+  /* ─── PAGE 3: SLIDE MOVEMENT ─────────────────── */
+  .org-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: .85rem .5rem;
+    border: 2px solid #e5e7eb;
+    border-radius: var(--radius);
+    background: white;
+    cursor: pointer;
+    font-family: 'Sarabun', sans-serif;
+    transition: all .2s;
+  }
+  .org-btn:hover { border-color: var(--emerald); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(5,150,105,.15); }
+  .org-btn.active { border-color: var(--emerald); background: var(--emerald-lt); box-shadow: 0 4px 14px rgba(5,150,105,.2); }
+  .org-name { font-size: .95rem; font-weight: 700; color: var(--text); }
+  .org-sci { font-size: .72rem; color: var(--text-muted); font-style: italic; }
+
+  .slide-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  @media(max-width:580px){ .slide-panels{ grid-template-columns:1fr; } }
+  .panel-card { display: flex; flex-direction: column; }
+
+  /* Microscope viewport */
+  .scope-viewport-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: .75rem; }
+  .scope-viewport {
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    border: 10px solid #374151;
+    box-shadow: 0 0 0 4px #1f2937, 0 0 0 6px #4b5563, 0 8px 32px rgba(0,0,0,.4);
+    overflow: hidden;
+    position: relative;
+    background: #0a1628;
+  }
+  .scope-bezel {
+    width: 100%; height: 100%;
+    position: relative;
+    background: radial-gradient(circle at 50% 50%, #0d2136 0%, #071020 100%);
+  }
+  .scope-field {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .scope-crosshair { position: absolute; inset: 0; pointer-events: none; }
+  .ch-h { position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(100,200,100,.25); transform: translateY(-50%); }
+  .ch-v { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(100,200,100,.25); transform: translateX(-50%); }
+  .scope-vignette {
+    position: absolute; inset: 0; border-radius: 50%;
+    background: radial-gradient(circle, transparent 55%, rgba(0,0,0,.7) 100%);
+    pointer-events: none;
+  }
+  .scope-hint { font-size: .75rem; color: var(--text-muted); font-weight: 500; }
+
+  .pos-readout { display: flex; gap: 8px; justify-content: center; }
+  .pos-chip {
+    font-size: .8rem; padding: 4px 10px;
+    background: var(--emerald-lt); border-radius: 50px;
+    color: var(--emerald-dk); border: 1px solid #a7f3d0;
+  }
+
+  /* Stage top-down view */
+  .stage-wrap { display: flex; justify-content: center; margin-bottom: 1rem; }
+  .stage-area {
+    width: 220px; height: 180px;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    border: 2px solid #94a3b8;
+    border-radius: var(--radius-sm);
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,.08);
+  }
+  .stage-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(148,163,184,.2) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148,163,184,.2) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .slide-glass {
+    position: absolute;
+    width: 120px; height: 78px;
+    background: rgba(186,230,253,.55);
+    border: 2px solid #38bdf8;
+    border-radius: 4px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px;
+    cursor: grab;
+    transition: box-shadow .15s;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    box-shadow: 0 2px 8px rgba(56,189,248,.25);
+    user-select: none;
+  }
+  .slide-glass:active { cursor: grabbing; }
+  .slide-label { font-size: .65rem; font-weight: 700; color: #0c4a6e; letter-spacing: .04em; text-transform: uppercase; }
+  .aperture-ring {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 2px dashed rgba(5,150,105,.6);
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none; z-index: 5;
+  }
+  .aperture-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(5,150,105,.5); }
+  .axis-lbl { position: absolute; font-size: .65rem; font-weight: 700; color: #64748b; letter-spacing: .04em; }
+
+  /* D-pad */
+  .dpad-wrap { display: flex; align-items: center; gap: 1rem; justify-content: center; margin-bottom: .75rem; }
+  .dpad {
+    display: grid;
+    grid-template-columns: 44px 44px 44px;
+    grid-template-rows: 44px 44px 44px;
+    gap: 4px;
+  }
+  .dpad-btn {
+    border: none; border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--emerald), #047857);
+    color: white; font-size: 1.1rem; cursor: pointer;
+    box-shadow: 0 3px 8px rgba(5,150,105,.3);
+    transition: all .12s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .dpad-btn:hover { transform: scale(1.08); box-shadow: 0 4px 14px rgba(5,150,105,.4); }
+  .dpad-btn:active { transform: scale(0.94); }
+  .dpad-up    { grid-column: 2; grid-row: 1; }
+  .dpad-left  { grid-column: 1; grid-row: 2; }
+  .dpad-center{ grid-column: 2; grid-row: 2; display:flex;align-items:center;justify-content:center;font-size:1.2rem; }
+  .dpad-right { grid-column: 3; grid-row: 2; }
+  .dpad-down  { grid-column: 2; grid-row: 3; }
+
+  .dpad-hint-box {
+    background: var(--emerald-lt); border-radius: var(--radius-sm);
+    padding: .65rem .9rem; border: 1px solid #a7f3d0;
+    min-width: 110px;
+  }
+  .dpad-hint-title { font-size: .75rem; font-weight: 700; color: var(--emerald-dk); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
+  .slide-pos-readout { font-size: .9rem; color: var(--text); font-weight: 500; }
+  .slide-pos-readout strong { color: var(--emerald-dk); }
+
+  .reset-btn {
+    width: 100%; padding: .6rem;
+    border: 2px solid #e5e7eb; border-radius: 50px;
+    background: white; font-family: 'Sarabun', sans-serif;
+    font-size: .9rem; font-weight: 600; color: var(--text-muted);
+    cursor: pointer; transition: all .2s;
+  }
+  .reset-btn:hover { border-color: var(--coral); color: var(--coral); }
+
+  /* Explanation */
+  .explain-card { }
+  .explain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+  @media(max-width:480px){ .explain-grid{ grid-template-columns:1fr; } }
+  .explain-item {
+    border-radius: var(--radius-sm); padding: 1rem;
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: .88rem; line-height: 1.6;
+  }
+  .explain-item.sky { background: var(--sky-lt); border-left: 3px solid var(--sky); color: var(--sky-dk); }
+  .explain-item.coral { background: var(--coral-lt); border-left: 3px solid var(--coral); color: var(--coral-dk); }
+  .explain-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
+
+  /* ─── FOOTER ──────────────────────────────────── */
+  .footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-muted);
+    font-size: .82rem;
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <span class="header-icon">🔬</span>
+  <h1>กล้องจุลทรรศน์</h1>
+  <p>สื่อการเรียนรู้เรื่องกล้องจุลทรรศน์ — วิทยาศาสตร์ชั้นมัธยม</p>
+</header>
+
+<div class="nav-wrap">
+  <button class="nav-tab active" onclick="showPage('p1')">🖼️ ภาพในกล้อง</button>
+  <button class="nav-tab" onclick="showPage('p2')">🔢 กำลังขยาย</button>
+  <button class="nav-tab" onclick="showPage('p3')">🧫 เลื่อนสไลด์</button>
+</div>
+
+<main class="main">
+
+  <!-- ═══════════════════════════════════════════ PAGE 1 ══ -->
+  <div class="page active" id="p1">
+
+    <div class="card">
+      <div class="card-title">ทดลองมองผ่านกล้องจุลทรรศน์</div>
+      <p style="font-size:.9rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.7">
+        พิมพ์ตัวอักษรหรือข้อความด้านล่าง แล้วสังเกตว่าภาพที่เห็นในกล้องจะกลับด้านอย่างไร
+      </p>
+
+      <div class="letter-input-wrap" style="margin-bottom:1.25rem">
+        <label>พิมพ์ตัวอักษร :</label>
+        <input type="text" id="letterIn" maxlength="3" value="A" oninput="updateLetter(this.value)" placeholder="A, B, ก, ข …">
+      </div>
+
+      <div class="invert-grid">
+        <div class="view-box real">
+          <div class="view-label">👁️ ตาเปล่า (ภาพจริง)</div>
+          <div class="letter-frame" id="realFrame">A</div>
+          <div class="view-note">มองเห็นปกติ ทิศทางถูกต้อง</div>
+        </div>
+        <div class="view-box scope">
+          <div class="view-label">🔬 ภาพในกล้องจุลทรรศน์</div>
+          <div class="scope-ring">
+            <span class="scope-char" id="scopeChar">A</span>
+          </div>
+          <div class="view-note">กลับซ้าย↔ขวา และ บน↕ล่าง</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">เหตุใดภาพจึงกลับด้าน?</div>
+      <div class="info-banner">
+        <strong>หลักการทางแสงศาสตร์ :</strong> เลนส์ใกล้วัตถุ สร้างภาพจริงกลับหัวกลับหาง จากนั้นเลนส์ใกล้ตา ขยายภาพดังกล่าวอีกครั้ง ผลลัพธ์คือภาพที่เห็นจะกลับทั้ง <strong>แนวตั้ง</strong> (บน-ล่าง) และ <strong>แนวนอน</strong> (ซ้าย-ขวา) เมื่อเทียบกับวัตถุจริง
+      </div>
+      <div class="tip-grid">
+        <div class="tip-card blue">
+          <span>↔ แนวนอน</span>
+          เลื่อนสไลด์ไปทาง <b>ขวา</b><br>ภาพจะเคลื่อนไปทาง <b>ซ้าย</b>
+        </div>
+        <div class="tip-card coral">
+          <span>↕ แนวตั้ง</span>
+          เลื่อนสไลด์ขึ้น <b>บน</b><br>ภาพจะเคลื่อนลง <b>ล่าง</b>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ PAGE 2 ══ -->
+  <div class="page" id="p2">
+
+    <div class="formula-pills">
+      <button class="formula-pill active" onclick="showFormula('f1')">📐 สูตร 1 — ขนาดภาพ/วัตถุ</button>
+      <button class="formula-pill" onclick="showFormula('f2')">🔭 สูตร 2 — เลนส์ × เลนส์</button>
+    </div>
+
+    <!-- ── FORMULA 1 ── -->
+    <div class="fsec active" id="f1">
+      <div class="card">
+        <div class="card-title">สูตรที่ 1 — จากขนาดภาพและวัตถุ</div>
+        <div class="formula-display">กำลังขยาย &nbsp;=&nbsp; ขนาดภาพ &nbsp;÷&nbsp; ขนาดวัตถุ</div>
+
+        <div class="magnify-visual">
+          <div class="obj-col">
+            <div class="obj-bar obj-color" id="objBar" style="width:30px;height:20px"></div>
+            <div class="obj-bar-label">วัตถุ</div>
+          </div>
+          <div class="arrow-icon">→</div>
+          <div class="scope-icon">🔬</div>
+          <div class="arrow-icon">→</div>
+          <div class="obj-col">
+            <div class="obj-bar img-color" id="imgBar" style="width:60px;height:40px"></div>
+            <div class="obj-bar-label">ภาพ</div>
+          </div>
+        </div>
+
+        <div class="input-grid">
+          <div class="input-group">
+            <label>ขนาดภาพ (มิลลิเมตร)</label>
+            <input type="number" id="imgSize" value="60" min="1" step="1" oninput="calcF1()">
+          </div>
+          <div class="input-group">
+            <label>ขนาดวัตถุ (มิลลิเมตร)</label>
+            <input type="number" id="objSize" value="10" min="0.001" step="0.1" oninput="calcF1()">
+          </div>
+        </div>
+
+        <div class="result-box">
+          <div>
+            <div class="result-label">กำลังขยาย</div>
+            <div style="display:flex;align-items:baseline;gap:6px">
+              <span class="result-value" id="res1">6</span>
+              <span class="result-unit">เท่า</span>
+            </div>
+          </div>
+          <div class="result-equation" id="res1eq">60 ÷ 10 = 6×</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FORMULA 2 ── -->
+    <div class="fsec" id="f2">
+      <div class="card">
+        <div class="card-title">สูตรที่ 2 — กำลังขยายรวมของกล้องจุลทรรศน์</div>
+        <div class="formula-display">กำลังขยายรวม &nbsp;=&nbsp; เลนส์ใกล้ตา &nbsp;×&nbsp; เลนส์ใกล้วัตถุ</div>
+
+        <!-- SVG microscope diagram -->
+        <div class="scope-svg-wrap">
+          <svg viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg">
+            <!-- Arm -->
+            <rect x="162" y="35" width="14" height="195" rx="5" fill="#9ca3af" stroke="#6b7280" stroke-width="1"/>
+            <!-- Body tube -->
+            <rect x="132" y="35" width="52" height="105" rx="7" fill="#d1d5db" stroke="#9ca3af" stroke-width="1.5"/>
+            <!-- Eyepiece tube -->
+            <rect x="145" y="12" width="28" height="32" rx="5" fill="#6b7280" stroke="#4b5563" stroke-width="1.5"/>
+            <!-- Eyepiece top rim -->
+            <ellipse cx="159" cy="12" rx="16" ry="5" fill="#374151"/>
+
+            <!-- Revolving nosepiece -->
+            <rect x="127" y="138" width="62" height="14" rx="5" fill="#9ca3af" stroke="#6b7280" stroke-width="1"/>
+            <!-- Objective barrel -->
+            <rect x="146" y="152" width="26" height="46" rx="4" fill="#4b5563" stroke="#374151" stroke-width="1.5"/>
+            <!-- Objective tip -->
+            <ellipse cx="159" cy="200" rx="14" ry="5" fill="#374151" stroke="#1f2937" stroke-width="1"/>
+
+            <!-- Stage -->
+            <rect x="108" y="210" width="102" height="9" rx="3" fill="#9ca3af" stroke="#6b7280" stroke-width="1"/>
+            <!-- Slide -->
+            <rect x="128" y="205" width="62" height="5" rx="1.5" fill="#bfdbfe" stroke="#93c5fd" stroke-width="0.8"/>
+            <!-- Specimen -->
+            <ellipse cx="159" cy="207" rx="7" ry="2.5" fill="#dc2626" opacity="0.65"/>
+            <!-- Condenser -->
+            <rect x="138" y="220" width="42" height="8" rx="3" fill="#6b7280"/>
+            <!-- Base -->
+            <rect x="98" y="255" width="122" height="18" rx="7" fill="#6b7280" stroke="#4b5563" stroke-width="1.5"/>
+            <!-- Light cone -->
+            <polygon points="159,228 149,202 169,202" fill="#fef08a" opacity="0.5" stroke="#eab308" stroke-width="0.5"/>
+
+            <!-- Eyepiece label bubble -->
+            <rect x="8" y="8" width="112" height="42" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+            <text x="64" y="24" font-size="11" fill="#0c4a6e" text-anchor="middle" font-family="Sarabun,sans-serif" font-weight="700">เลนส์ใกล้ตา</text>
+            <text x="64" y="44" font-size="16" fill="#0284c7" text-anchor="middle" font-family="Sarabun,sans-serif" font-weight="800" id="svgEye">10×</text>
+            <!-- Arrow -->
+            <path d="M120,28 L145,20" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrowB)"/>
+
+            <!-- Objective label bubble -->
+            <rect x="202" y="152" width="112" height="42" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+            <text x="258" y="168" font-size="11" fill="#78350f" text-anchor="middle" font-family="Sarabun,sans-serif" font-weight="700">เลนส์ใกล้วัตถุ</text>
+            <text x="258" y="188" font-size="16" fill="#d97706" text-anchor="middle" font-family="Sarabun,sans-serif" font-weight="800" id="svgObj">40×</text>
+            <!-- Arrow -->
+            <path d="M202,173 L172,173" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrowA)"/>
+
+            <defs>
+              <marker id="arrowA" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="#d97706"/>
+              </marker>
+              <marker id="arrowB" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="#0284c7"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+
+        <!-- Lens selectors -->
+        <div class="lens-panel">
+          <div class="lens-side eye">
+            <span class="lens-badge eye">เลนส์ใกล้ตา (Eyepiece)</span>
+            <div class="lens-mag-display eye" id="eyeDisp">10×</div>
+            <select class="lens-select eye" id="eyeSel" onchange="calcF2()">
+              <option value="5">5×</option>
+              <option value="8">8×</option>
+              <option value="10" selected>10×</option>
+              <option value="12.5">12.5×</option>
+              <option value="15">15×</option>
+            </select>
+          </div>
+          <div class="lens-multiplier">×</div>
+          <div class="lens-side obj">
+            <span class="lens-badge obj">เลนส์ใกล้วัตถุ (Objective)</span>
+            <div class="lens-mag-display obj" id="objDisp">40×</div>
+            <select class="lens-select obj" id="objSel" onchange="calcF2()">
+              <option value="4">4×</option>
+              <option value="10">10×</option>
+              <option value="40" selected>40×</option>
+              <option value="100">100×</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="result-box">
+          <div>
+            <div class="result-label">กำลังขยายรวม</div>
+            <div style="display:flex;align-items:baseline;gap:6px">
+              <span class="result-value" id="res2">400</span>
+              <span class="result-unit">เท่า</span>
+            </div>
+          </div>
+          <div class="result-equation" id="res2eq">10× × 40× = 400×</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ PAGE 3 ══ -->
+  <div class="page" id="p3">
+
+    <!-- Organism selector -->
+    <div class="card" style="margin-bottom:1rem">
+      <div class="card-title">เลือกสิ่งมีชีวิต</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem">
+        <button class="org-btn active" onclick="selectOrg('amoeba')" id="btn-amoeba">
+          <span style="font-size:1.6rem">🦠</span>
+          <span class="org-name">อะมีบา</span>
+          <span class="org-sci">Amoeba</span>
+        </button>
+        <button class="org-btn" onclick="selectOrg('paramecium')" id="btn-paramecium">
+          <span style="font-size:1.6rem">🔬</span>
+          <span class="org-name">พารามีเซียม</span>
+          <span class="org-sci">Paramecium</span>
+        </button>
+        <button class="org-btn" onclick="selectOrg('euglena')" id="btn-euglena">
+          <span style="font-size:1.6rem">🌿</span>
+          <span class="org-name">ยูกลีนา</span>
+          <span class="org-sci">Euglena</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Two-panel layout -->
+    <div class="slide-panels">
+
+      <!-- LEFT: Microscope view -->
+      <div class="card panel-card">
+        <div class="card-title">ภาพที่เห็นจากกล้องจุลทรรศน์</div>
+        <div class="scope-viewport-wrap">
+          <div class="scope-viewport">
+            <div class="scope-bezel">
+              <div class="scope-field" id="scopeField">
+                <canvas id="scopeCanvas" width="220" height="220"></canvas>
+              </div>
+              <div class="scope-crosshair">
+                <div class="ch-h"></div><div class="ch-v"></div>
+              </div>
+              <div class="scope-vignette"></div>
+            </div>
+          </div>
+          <div class="scope-hint">ภาพกลับซ้าย↔ขวา และ บน↕ล่าง</div>
+        </div>
+        <div class="pos-readout">
+          <div class="pos-chip">ตำแหน่งภาพ X: <strong id="scopeX">0</strong></div>
+          <div class="pos-chip">ตำแหน่งภาพ Y: <strong id="scopeY">0</strong></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Slide control -->
+      <div class="card panel-card">
+        <div class="card-title">การเลื่อนแผ่นสไลด์</div>
+
+        <!-- Slide stage top-down view -->
+        <div class="stage-wrap">
+          <div class="stage-area" id="stageArea">
+            <!-- grid lines -->
+            <div class="stage-grid"></div>
+            <!-- slide glass -->
+            <div class="slide-glass" id="slideGlass">
+              <canvas id="slideCanvas" width="120" height="80"></canvas>
+              <div class="slide-label">แผ่นสไลด์</div>
+            </div>
+            <!-- aperture ring -->
+            <div class="aperture-ring">
+              <div class="aperture-dot"></div>
+            </div>
+            <!-- axis labels -->
+            <div class="axis-lbl" style="top:4px;left:50%;transform:translateX(-50%)">↑ ขึ้น</div>
+            <div class="axis-lbl" style="bottom:4px;left:50%;transform:translateX(-50%)">↓ ลง</div>
+            <div class="axis-lbl" style="left:4px;top:50%;transform:translateY(-50%)">← ซ้าย</div>
+            <div class="axis-lbl" style="right:4px;top:50%;transform:translateY(-50%)">ขวา →</div>
+          </div>
+        </div>
+
+        <!-- Direction buttons -->
+        <div class="dpad-wrap">
+          <div class="dpad">
+            <button class="dpad-btn dpad-up" onclick="moveSlide(0,-1)" title="เลื่อนสไลด์ขึ้น">▲</button>
+            <button class="dpad-btn dpad-left" onclick="moveSlide(-1,0)" title="เลื่อนสไลด์ซ้าย">◀</button>
+            <div class="dpad-center">🎯</div>
+            <button class="dpad-btn dpad-right" onclick="moveSlide(1,0)" title="เลื่อนสไลด์ขวา">▶</button>
+            <button class="dpad-btn dpad-down" onclick="moveSlide(0,1)" title="เลื่อนสไลด์ลง">▼</button>
+          </div>
+          <div class="dpad-labels">
+            <div class="dpad-hint-box">
+              <div class="dpad-hint-title">เลื่อนสไลด์</div>
+              <div class="slide-pos-readout">
+                X: <strong id="slideX">0</strong> &nbsp; Y: <strong id="slideY">0</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="reset-btn" onclick="resetSlide()">↺ รีเซ็ตตำแหน่ง</button>
+      </div>
+    </div>
+
+    <!-- Explanation card -->
+    <div class="card explain-card">
+      <div class="card-title">หลักการเลื่อนสไลด์</div>
+      <div class="explain-grid">
+        <div class="explain-item sky">
+          <div class="explain-icon">↔</div>
+          <div class="explain-text">
+            <strong>แกน X (ซ้าย–ขวา)</strong><br>
+            เลื่อนสไลด์ไป <b>ขวา</b> → ภาพในกล้องเคลื่อนไปทาง <b>ซ้าย</b><br>
+            เลื่อนสไลด์ไป <b>ซ้าย</b> → ภาพในกล้องเคลื่อนไปทาง <b>ขวา</b>
+          </div>
+        </div>
+        <div class="explain-item coral">
+          <div class="explain-icon">↕</div>
+          <div class="explain-text">
+            <strong>แกน Y (บน–ล่าง)</strong><br>
+            เลื่อนสไลด์ <b>ขึ้น</b> → ภาพในกล้องเคลื่อนลง <b>ล่าง</b><br>
+            เลื่อนสไลด์ <b>ลง</b> → ภาพในกล้องเคลื่อนขึ้น <b>บน</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer class="footer">
+  🔬 สื่อการเรียนรู้กล้องจุลทรรศน์ &nbsp;|&nbsp; วิทยาศาสตร์ชั้นมัธยมศึกษา
+</footer>
+
+<script>
+  /* ── navigation ── */
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    const idx = {p1:0,p2:1,p3:2}[id];
+    document.querySelectorAll('.nav-tab')[idx].classList.add('active');
+    if (id === 'p3') { initSlide(); }
+  }
+
+  function showFormula(id) {
+    document.querySelectorAll('.fsec').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.formula-pill').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.formula-pill')[id === 'f1' ? 0 : 1].classList.add('active');
+  }
+
+  /* ── letter inversion ── */
+  function updateLetter(v) {
+    const t = v || 'A';
+    document.getElementById('realFrame').textContent = t;
+    document.getElementById('scopeChar').textContent = t;
+  }
+
+  /* ── formula 1 ── */
+  function calcF1() {
+    const img = parseFloat(document.getElementById('imgSize').value) || 0;
+    const obj = parseFloat(document.getElementById('objSize').value) || 1;
+    const mag = obj === 0 ? 0 : img / obj;
+    const r = Math.round(mag * 100) / 100;
+    document.getElementById('res1').textContent = r;
+    document.getElementById('res1eq').textContent = img + ' ÷ ' + obj + ' = ' + r + '×';
+
+    // animate bars
+    const ratio = Math.min(Math.max(mag, 0.5), 10);
+    const base = 24;
+    document.getElementById('objBar').style.cssText = `width:${base}px;height:${Math.max(4,base*0.65)}px`;
+    document.getElementById('imgBar').style.cssText = `width:${Math.min(130,base*ratio)}px;height:${Math.min(86,base*ratio*0.65)}px`;
+  }
+
+  /* ── formula 2 ── */
+  function calcF2() {
+    const eye = parseFloat(document.getElementById('eyeSel').value);
+    const obj = parseFloat(document.getElementById('objSel').value);
+    const total = eye * obj;
+    document.getElementById('res2').textContent = total;
+    document.getElementById('res2eq').textContent = eye + '× × ' + obj + '× = ' + total + '×';
+    document.getElementById('eyeDisp').textContent = eye + '×';
+    document.getElementById('objDisp').textContent = obj + '×';
+    document.getElementById('svgEye').textContent = eye + '×';
+    document.getElementById('svgObj').textContent = obj + '×';
+  }
+
+  calcF1(); calcF2();
+
+  /* ══════════════════════════════════════
+     PAGE 3 — SLIDE SIMULATION
+  ══════════════════════════════════════ */
+  let currentOrg = 'amoeba';
+  // slidePos = position of the slide relative to center (stage coords)
+  // When slide moves right (+X), organism in scope appears to move left (−X)
+  let slidePos = { x: 0, y: 0 };   // range roughly −80..80 (px on stage)
+  const STEP = 18;
+  const STAGE_W = 220, STAGE_H = 180;
+  const GLASS_W = 120, GLASS_H = 78;
+  const SCOPE_W = 220, SCOPE_H = 220;
+  let slideInited = false;
+
+  /* ─── Organism drawing helpers ─── */
+  const organisms = {
+    amoeba: {
+      color: '#a78bfa', outline: '#7c3aed', nucleus: '#5b21b6',
+      draw(ctx, cx, cy, t) {
+        ctx.save();
+        // irregular blob using bezier
+        const r = 28 + 6 * Math.sin(t * 0.8);
+        ctx.beginPath();
+        const pts = 8;
+        for (let i = 0; i <= pts; i++) {
+          const a = (i / pts) * Math.PI * 2;
+          const rv = r + 10 * Math.sin(a * 3 + t) + 6 * Math.cos(a * 5 + t * 1.3);
+          const x = cx + rv * Math.cos(a);
+          const y = cy + rv * Math.sin(a);
+          i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fillStyle = this.color + 'cc';
+        ctx.strokeStyle = this.outline;
+        ctx.lineWidth = 2;
+        ctx.fill(); ctx.stroke();
+        // pseudopods
+        for (let i = 0; i < 3; i++) {
+          const a = (i / 3) * Math.PI * 2 + t * 0.4;
+          const len = 16 + 8 * Math.sin(t + i);
+          ctx.beginPath();
+          ctx.moveTo(cx + (r-4)*Math.cos(a), cy + (r-4)*Math.sin(a));
+          ctx.lineTo(cx + (r+len)*Math.cos(a), cy + (r+len)*Math.sin(a));
+          ctx.strokeStyle = this.color + 'aa'; ctx.lineWidth = 8;
+          ctx.lineCap = 'round'; ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(cx + (r-4)*Math.cos(a), cy + (r-4)*Math.sin(a));
+          ctx.lineTo(cx + (r+len)*Math.cos(a), cy + (r+len)*Math.sin(a));
+          ctx.strokeStyle = this.outline + '88'; ctx.lineWidth = 2; ctx.stroke();
+        }
+        // nucleus
+        ctx.beginPath();
+        ctx.ellipse(cx - 4, cy - 4, 10, 8, t * 0.1, 0, Math.PI * 2);
+        ctx.fillStyle = this.nucleus + 'cc'; ctx.fill();
+        ctx.strokeStyle = this.nucleus; ctx.lineWidth = 1.5; ctx.stroke();
+        ctx.restore();
+      }
+    },
+    paramecium: {
+      color: '#34d399', outline: '#059669', cilia: '#6ee7b7',
+      draw(ctx, cx, cy, t) {
+        ctx.save();
+        // oval body
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, 18, 36, Math.PI/12, 0, Math.PI*2);
+        ctx.fillStyle = this.color + 'bb';
+        ctx.strokeStyle = this.outline; ctx.lineWidth = 2;
+        ctx.fill(); ctx.stroke();
+        // cilia
+        const ciliaCount = 18;
+        for (let i = 0; i < ciliaCount; i++) {
+          const a = (i / ciliaCount) * Math.PI * 2;
+          const wave = Math.sin(a * 3 + t * 2) * 5;
+          const rx = 18, ry = 36;
+          const bx = cx + rx * Math.cos(a), by = cy + ry * Math.sin(a);
+          const nx = Math.cos(a), ny = Math.sin(a);
+          ctx.beginPath();
+          ctx.moveTo(bx, by);
+          ctx.quadraticCurveTo(bx + nx*8 + wave, by + ny*8, bx + nx*12, by + ny*12);
+          ctx.strokeStyle = this.cilia; ctx.lineWidth = 1.5; ctx.stroke();
+        }
+        // macronucleus (bean shape)
+        ctx.beginPath();
+        ctx.ellipse(cx, cy-6, 7, 14, 0.2, 0, Math.PI*2);
+        ctx.fillStyle = '#065f46aa'; ctx.fill();
+        // oral groove
+        ctx.beginPath();
+        ctx.moveTo(cx-6, cy-10); ctx.quadraticCurveTo(cx+4, cy, cx-6, cy+10);
+        ctx.strokeStyle = this.outline+'cc'; ctx.lineWidth = 1.5; ctx.stroke();
+        ctx.restore();
+      }
+    },
+    euglena: {
+      color: '#86efac', outline: '#16a34a', flagella: '#bbf7d0',
+      draw(ctx, cx, cy, t) {
+        ctx.save();
+        // spindle-shaped body
+        ctx.beginPath();
+        ctx.ellipse(cx, cy+4, 10, 34, Math.sin(t*0.3)*0.1, 0, Math.PI*2);
+        ctx.fillStyle = this.color + 'cc';
+        ctx.strokeStyle = this.outline; ctx.lineWidth = 2;
+        ctx.fill(); ctx.stroke();
+        // flagella (wavy line at top)
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - 30);
+        for (let i = 0; i <= 20; i++) {
+          const fy = cy - 30 - i*3;
+          const fx = cx + Math.sin(i * 0.8 + t * 3) * (4 + i*0.3);
+          ctx.lineTo(fx, fy);
+        }
+        ctx.strokeStyle = this.flagella; ctx.lineWidth = 1.5; ctx.lineCap = 'round'; ctx.stroke();
+        // eyespot (stigma)
+        ctx.beginPath();
+        ctx.ellipse(cx+4, cy-22, 4, 3, -0.4, 0, Math.PI*2);
+        ctx.fillStyle = '#dc2626dd'; ctx.fill();
+        // chloroplasts
+        for (let i = -1; i <= 1; i++) {
+          ctx.beginPath();
+          ctx.ellipse(cx + i*4, cy + i*10, 4, 9, i*0.3, 0, Math.PI*2);
+          ctx.fillStyle = '#15803daa'; ctx.fill();
+        }
+        // nucleus
+        ctx.beginPath();
+        ctx.ellipse(cx, cy+8, 6, 8, 0, 0, Math.PI*2);
+        ctx.fillStyle = '#166534aa'; ctx.fill();
+        ctx.restore();
+      }
+    }
+  };
+
+  let animFrame = null;
+  let animT = 0;
+
+  function initSlide() {
+    if (slideInited) { startAnim(); return; }
+    slideInited = true;
+    slidePos = { x: 0, y: 0 };
+    updateSlideUI();
+    startAnim();
+  }
+
+  function startAnim() {
+    if (animFrame) cancelAnimationFrame(animFrame);
+    function loop() {
+      animT += 0.04;
+      drawScope();
+      drawSlideMini();
+      animFrame = requestAnimationFrame(loop);
+    }
+    loop();
+  }
+
+  function selectOrg(name) {
+    currentOrg = name;
+    document.querySelectorAll('.org-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-' + name).classList.add('active');
+  }
+
+  function moveSlide(dx, dy) {
+    // Clamp within stage bounds (accounting for glass size)
+    const maxX = (STAGE_W - GLASS_W) / 2 - 10;
+    const maxY = (STAGE_H - GLASS_H) / 2 - 10;
+    slidePos.x = Math.max(-maxX, Math.min(maxX, slidePos.x + dx * STEP));
+    slidePos.y = Math.max(-maxY, Math.min(maxY, slidePos.y + dy * STEP));
+    updateSlideUI();
+  }
+
+  function resetSlide() {
+    slidePos = { x: 0, y: 0 };
+    updateSlideUI();
+  }
+
+  function updateSlideUI() {
+    // Update slide glass position on stage
+    const glass = document.getElementById('slideGlass');
+    glass.style.transform = `translate(calc(-50% + ${slidePos.x}px), calc(-50% + ${slidePos.y}px))`;
+
+    // Readouts — slide position
+    document.getElementById('slideX').textContent = slidePos.x >= 0 ? '+' + slidePos.x : slidePos.x;
+    document.getElementById('slideY').textContent = slidePos.y >= 0 ? '+' + slidePos.y : slidePos.y;
+
+    // Scope image moves OPPOSITE to slide
+    const scopeOrgX = -slidePos.x * 1.6;
+    const scopeOrgY = -slidePos.y * 1.6;
+    document.getElementById('scopeX').textContent = Math.round(scopeOrgX) >= 0 ? '+' + Math.round(scopeOrgX) : Math.round(scopeOrgX);
+    document.getElementById('scopeY').textContent = Math.round(scopeOrgY) >= 0 ? '+' + Math.round(scopeOrgY) : Math.round(scopeOrgY);
+  }
+
+  function drawScope() {
+    const canvas = document.getElementById('scopeCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+
+    // The scope image is rotated 180° (both axes flipped).
+    // We draw the organism at offset +slidePos BEFORE the 180° rotation,
+    // so after rotation the apparent motion becomes −slidePos (opposite to slide) — correct!
+    const cx = W/2 + (slidePos.x * 1.5);
+    const cy = H/2 + (slidePos.y * 1.5);
+
+    // Draw organism inverted (rotate 180° around canvas center = flip both axes)
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    ctx.rotate(Math.PI);
+    ctx.translate(-W/2, -H/2);
+    organisms[currentOrg].draw(ctx, cx, cy, animT);
+    ctx.restore();
+
+    // Subtle background texture (cells floating)
+    ctx.save();
+    ctx.globalAlpha = 0.06;
+    for (let i = 0; i < 6; i++) {
+      const bx = (W * ((i * 137 + 50) % 100)) / 100;
+      const by = (H * ((i * 79 + 30) % 100)) / 100;
+      ctx.beginPath();
+      ctx.arc(bx, by, 4 + i%3*3, 0, Math.PI*2);
+      ctx.fillStyle = '#86efac'; ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function drawSlideMini() {
+    const canvas = document.getElementById('slideCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    // Draw tiny organism on slide (real orientation)
+    ctx.save();
+    ctx.scale(0.45, 0.45);
+    organisms[currentOrg].draw(ctx, W/0.45/2, H/0.45/2, animT);
+    ctx.restore();
+    // aperture overlay to show what's "under the lens"
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(W/2, H/2, 12, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(5,150,105,0.7)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([3,2]);
+    ctx.stroke();
+    ctx.restore();
+  }
+</script>
+</body>
+</html>
