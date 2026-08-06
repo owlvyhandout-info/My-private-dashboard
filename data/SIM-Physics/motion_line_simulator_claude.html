@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>เส้นทางแห่งอัตราเร็ว — Motion Line Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F5EF;
+    --grid:#E4DFD3;
+    --ink:#22303F;
+    --ink-soft:#5B6B78;
+    --line:#C9C2AE;
+    --accent1:#2A9D8F;
+    --accent2:#E07A5F;
+    --accent3:#E9B44C;
+    --accent4:#8E7CC3;
+    --accent5:#4472A8;
+    --panel:#FFFFFF;
+    --danger:#C1443C;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Sarabun',sans-serif;
+    color:var(--ink);
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/100% 28px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/28px 100%,
+      var(--paper);
+    padding:28px 20px 60px;
+    min-height:100vh;
+  }
+  .wrap{max-width:980px;margin:0 auto;}
+  header{margin-bottom:22px;}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  h1{
+    font-size:30px;margin:6px 0 8px;font-weight:700;
+    border-bottom:3px solid var(--ink);
+    display:inline-block;padding-bottom:4px;
+  }
+  .sub{color:var(--ink-soft);font-size:15px;line-height:1.6;max-width:680px;}
+
+  .card{
+    background:var(--panel);
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    padding:18px 20px;
+    margin-bottom:18px;
+    box-shadow:0 1px 0 rgba(0,0,0,0.03);
+  }
+  .card h2{
+    font-size:16px;margin:0 0 12px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;background:var(--ink);color:var(--paper);
+    padding:2px 7px;border-radius:5px;
+  }
+
+  .setup-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .setup-row label{font-size:14px;color:var(--ink-soft);}
+  select, input[type=number]{
+    font-family:'JetBrains Mono',monospace;
+    font-size:14px;
+    border:1.5px solid var(--line);
+    border-radius:6px;
+    padding:6px 8px;
+    background:#fff;
+    color:var(--ink);
+  }
+  select:focus, input:focus{outline:2px solid var(--accent5);outline-offset:1px;}
+
+  .segment{
+    border-left:6px solid var(--seg-color, var(--accent1));
+    padding-left:14px;
+    margin-bottom:14px;
+  }
+  .segment .seg-head{
+    display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;
+    width:100%;
+  }
+  .segment .seg-head .name{font-weight:700;font-size:15px;flex:0 0 auto;white-space:nowrap;}
+  .segment .seg-head label{flex:0 0 auto;white-space:nowrap;}
+  .mode-select{
+    font-size:13px;
+    flex:1 1 220px;
+    min-width:200px;
+    padding:8px 10px;
+  }
+  .var-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:12px;
+  }
+  @media (max-width:720px){ .var-grid{grid-template-columns:1fr;} }
+  .var-box{
+    background:#FBFAF6;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:10px 12px;
+    min-width:0;
+  }
+  .var-box.computed{background:#F1F7F5;}
+  .var-box .vlabel{
+    font-size:12px;color:var(--ink-soft);margin-bottom:6px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .var-box .vlabel .pill{
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    padding:1px 6px;border-radius:10px;
+    background:var(--ink);color:var(--paper);
+  }
+  .var-box .vlabel .pill.out{background:var(--accent1);}
+  .var-row{display:flex;gap:6px;min-width:0;}
+  .var-row input{flex:1 1 0;min-width:0;width:0;}
+  .var-row select{flex:0 1 auto;min-width:0;}
+  .var-box input:disabled{background:#eee;color:var(--ink-soft);}
+
+  .link-row{margin-top:8px;font-size:13px;color:var(--ink-soft);display:flex;align-items:center;gap:6px;}
+  .link-row select{font-size:12px;}
+
+  .btn{
+    font-family:'Sarabun',sans-serif;
+    font-weight:600;font-size:15px;
+    background:var(--ink);color:var(--paper);
+    border:none;border-radius:8px;
+    padding:11px 20px;cursor:pointer;
+    transition:transform .08s ease, background .15s ease;
+  }
+  .btn:hover{background:#334657;}
+  .btn:active{transform:scale(.97);}
+  .btn.secondary{background:transparent;color:var(--ink);border:1.5px solid var(--ink);}
+  .btn.secondary:hover{background:#eee;}
+
+  .error{color:var(--danger);font-size:13px;margin-top:8px;font-weight:600;}
+
+  .chart-wrap{overflow-x:auto;}
+  svg{display:block;font-family:'JetBrains Mono',monospace;}
+
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--ink-soft);}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .swatch{width:10px;height:10px;border-radius:2px;display:inline-block;}
+
+  .summary-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+  }
+  @media (max-width:720px){ .summary-grid{grid-template-columns:1fr;} }
+  .summary-box{
+    background:#F1F7F5;border:1px solid var(--accent1);border-radius:8px;
+    padding:14px;text-align:center;
+  }
+  .summary-box .big{
+    font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--ink);
+  }
+  .summary-box .lbl{font-size:13px;color:var(--ink-soft);margin-top:4px;}
+  .note{
+    font-size:13px;color:var(--ink-soft);background:#FBF3E6;border:1px solid var(--accent3);
+    border-radius:8px;padding:10px 12px;margin-top:14px;line-height:1.6;
+  }
+  footer{text-align:center;color:var(--ink-soft);font-size:12px;margin-top:20px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">PHYSICS · MOTION · v = s / t</div>
+    <h1>เส้นทางแห่งอัตราเร็ว</h1>
+    <p class="sub">จำลองการเคลื่อนที่หลายช่วง กำหนดระยะทาง เวลา หรือความเร็วในแต่ละช่วง (เลือกได้ 2 ค่า อีกค่าคำนวณให้) แล้วดูเส้นจำนวนคู่ที่เทียบ "ระยะทาง" กับ "เวลา" ของแต่ละช่วงให้เห็นภาพว่าความเร็วเฉลี่ยรวมไม่ใช่ค่าเฉลี่ยของความเร็วแต่ละช่วง</p>
+  </header>
+
+  <div class="card">
+    <h2><span class="tag">ตั้งค่า</span> จำนวนช่วงการเคลื่อนที่</h2>
+    <div class="setup-row">
+      <label for="numSeg">จำนวนช่วง:</label>
+      <select id="numSeg"></select>
+      <button class="btn secondary" id="resetBtn" type="button">รีเซ็ตค่าทั้งหมด</button>
+    </div>
+  </div>
+
+  <div id="segmentsHost"></div>
+
+  <div class="setup-row" style="margin-bottom:18px;">
+    <button class="btn" id="calcBtn" type="button">คำนวณและวาดเส้นจำนวน</button>
+    <span id="errorMsg" class="error"></span>
+  </div>
+
+  <div class="card" id="resultCard" style="display:none;">
+    <h2><span class="tag">ผลลัพธ์</span> เส้นจำนวนเทียบระยะทาง ⇄ เวลา</h2>
+    <div class="chart-wrap"><svg id="chartSvg"></svg></div>
+    <div class="legend" id="legendHost"></div>
+
+    <div class="summary-grid" style="margin-top:18px;">
+      <div class="summary-box"><div class="big" id="totalDist">-</div><div class="lbl">ระยะทางทั้งหมด</div></div>
+      <div class="summary-box"><div class="big" id="totalTime">-</div><div class="lbl">เวลาทั้งหมด</div></div>
+      <div class="summary-box"><div class="big" id="avgSpeed">-</div><div class="lbl">ความเร็วเฉลี่ยตลอดเส้นทาง</div></div>
+    </div>
+    <div class="note" id="avgNote"></div>
+  </div>
+
+  <footer>สร้างเพื่อการเรียนการสอนฟิสิกส์ระดับพื้นฐาน · แถบสีเอียง = ช่วงที่ "เร็ว" กินสัดส่วนระยะทางมากกว่าสัดส่วนเวลา</footer>
+</div>
+
+<script>
+const COLORS = ['#2A9D8F','#E07A5F','#E9B44C','#8E7CC3','#4472A8','#C1443C'];
+
+const DIST_UNITS = {m:1, km:1000, cm:0.01};
+const TIME_UNITS = {s:1, min:60, hr:3600};
+const SPEED_UNITS = {'m/s':1, 'km/h':1000/3600, 'km/min':1000/60};
+
+const DIST_LABEL = {m:'ม.', km:'กม.', cm:'ซม.'};
+const TIME_LABEL = {s:'วิ.', min:'นาที', hr:'ชม.'};
+
+let numSegments = 3;
+let segments = [];
+
+function defaultSegment(i){
+  return {
+    mode: 'dt', // 'dt' -> compute v, 'dv' -> compute t, 'tv' -> compute d
+    d: {value:'', unit:'m'},
+    t: {value:'', unit:'s'},
+    v: {value:'', unit:'m/s'},
+    link: {enabled:false, to: i>0 ? i-1 : 0}
+  };
+}
+
+function initSegments(){
+  const numSegSel = document.getElementById('numSeg');
+  numSegSel.innerHTML = '';
+  for(let n=1;n<=6;n++){
+    const opt = document.createElement('option');
+    opt.value = n; opt.textContent = n + ' ช่วง';
+    if(n===numSegments) opt.selected = true;
+    numSegSel.appendChild(opt);
+  }
+  segments = [];
+  for(let i=0;i<numSegments;i++) segments.push(defaultSegment(i));
+  renderSegments();
+}
+
+function renderSegments(){
+  const host = document.getElementById('segmentsHost');
+  host.innerHTML = '';
+  segments.forEach((seg, i) => {
+    const color = COLORS[i % COLORS.length];
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="segment" style="--seg-color:${color}">
+        <div class="seg-head">
+          <span class="name" style="color:${color}">ช่วงที่ ${i+1}</span>
+          <label style="font-size:13px;color:var(--ink-soft);">โจทย์กำหนด:</label>
+          <select class="mode-select" data-i="${i}" data-role="mode">
+            <option value="dt" ${seg.mode==='dt'?'selected':''}>ระยะทาง + เวลา → หาความเร็ว</option>
+            <option value="dv" ${seg.mode==='dv'?'selected':''}>ระยะทาง + ความเร็ว → หาเวลา</option>
+            <option value="tv" ${seg.mode==='tv'?'selected':''}>เวลา + ความเร็ว → หาระยะทาง</option>
+          </select>
+        </div>
+        <div class="var-grid">
+          ${varBox(i,'d','ระยะทาง', seg, DIST_UNITS, DIST_LABEL, seg.mode==='tv')}
+          ${varBox(i,'t','เวลา', seg, TIME_UNITS, TIME_LABEL, seg.mode==='dv')}
+          ${varBox(i,'v','ความเร็ว', seg, SPEED_UNITS, null, seg.mode==='dt')}
+        </div>
+        ${ (seg.mode==='dv' || seg.mode==='tv') && segments.length>1 ? linkRow(i,seg) : '' }
+      </div>
+    `;
+    host.appendChild(card);
+  });
+  attachSegmentListeners();
+}
+
+function varBox(i, key, thLabel, seg, unitsMap, labelMap, isComputed){
+  const obj = seg[key];
+  const units = Object.keys(unitsMap);
+  const unitOptions = units.map(u => `<option value="${u}" ${obj.unit===u?'selected':''}>${labelMap?labelMap[u]+' ('+u+')':u}</option>`).join('');
+  const linked = key==='v' && seg.link.enabled && seg.mode!=='dt';
+  return `
+    <div class="var-box ${isComputed?'computed':''}">
+      <div class="vlabel"><span>${thLabel}</span><span class="pill ${isComputed?'out':''}">${isComputed?'คำนวณ':'กำหนด'}</span></div>
+      <div class="var-row">
+        <input type="number" step="any" data-i="${i}" data-role="val-${key}"
+               value="${obj.value}" ${isComputed || linked ? 'disabled' : ''} placeholder="ค่า">
+        <select data-i="${i}" data-role="unit-${key}" ${isComputed?'disabled':''}>${unitOptions}</select>
+      </div>
+    </div>
+  `;
+}
+
+function linkRow(i, seg){
+  const opts = segments.map((s,j)=> j!==i ? `<option value="${j}" ${seg.link.to===j?'selected':''}>ช่วงที่ ${j+1}</option>` : '').join('');
+  return `
+    <div class="link-row">
+      <input type="checkbox" data-i="${i}" data-role="linkEnabled" ${seg.link.enabled?'checked':''} id="link-${i}">
+      <label for="link-${i}">ความเร็วเท่ากับ</label>
+      <select data-i="${i}" data-role="linkTo" ${seg.link.enabled?'':'disabled'}>${opts}</select>
+    </div>
+  `;
+}
+
+function attachSegmentListeners(){
+  document.querySelectorAll('[data-role="mode"]').forEach(el=>{
+    el.addEventListener('change', e=>{
+      const i = +e.target.dataset.i;
+      segments[i].mode = e.target.value;
+      renderSegments();
+    });
+  });
+  ['d','t','v'].forEach(key=>{
+    document.querySelectorAll(`[data-role="val-${key}"]`).forEach(el=>{
+      el.addEventListener('input', e=>{
+        segments[+e.target.dataset.i][key].value = e.target.value;
+      });
+    });
+    document.querySelectorAll(`[data-role="unit-${key}"]`).forEach(el=>{
+      el.addEventListener('change', e=>{
+        segments[+e.target.dataset.i][key].unit = e.target.value;
+      });
+    });
+  });
+  document.querySelectorAll('[data-role="linkEnabled"]').forEach(el=>{
+    el.addEventListener('change', e=>{
+      const i = +e.target.dataset.i;
+      segments[i].link.enabled = e.target.checked;
+      renderSegments();
+    });
+  });
+  document.querySelectorAll('[data-role="linkTo"]').forEach(el=>{
+    el.addEventListener('change', e=>{
+      segments[+e.target.dataset.i].link.to = +e.target.value;
+    });
+  });
+}
+
+document.getElementById('numSeg').addEventListener('change', e=>{
+  const n = +e.target.value;
+  const old = segments;
+  numSegments = n;
+  segments = [];
+  for(let i=0;i<n;i++) segments.push(old[i] ? old[i] : defaultSegment(i));
+  renderSegments();
+});
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  initSegments();
+  document.getElementById('resultCard').style.display='none';
+  document.getElementById('errorMsg').textContent='';
+});
+
+function fmt(n, decimals=2){
+  if(!isFinite(n)) return '-';
+  const r = Math.round(n*Math.pow(10,decimals))/Math.pow(10,decimals);
+  return r.toLocaleString('th-TH', {maximumFractionDigits:decimals});
+}
+
+function niceDist(m){
+  if(m >= 1000) return {value: m/1000, unit:'km'};
+  return {value: m, unit:'m'};
+}
+function niceTime(s){
+  if(s >= 3600) return {value: s/3600, unit:'ชม.'};
+  if(s >= 60) return {value: s/60, unit:'นาที'};
+  return {value: s, unit:'วิ.'};
+}
+
+document.getElementById('calcBtn').addEventListener('click', ()=>{
+  const errEl = document.getElementById('errorMsg');
+  errEl.textContent = '';
+  const results = [];
+  try{
+    for(let i=0;i<segments.length;i++){
+      const seg = segments[i];
+      let d_m, t_s, v_ms;
+
+      // Resolve link first if applicable
+      if(seg.link.enabled && (seg.mode==='dv' || seg.mode==='tv')){
+        const refIdx = seg.link.to;
+        if(refIdx === i || refIdx < 0 || refIdx >= segments.length || !results[refIdx]){
+          if(refIdx >= segments.length || refIdx===i) throw new Error(`ช่วงที่ ${i+1}: อ้างอิงความเร็วช่วงที่ไม่ถูกต้อง`);
+          throw new Error(`ช่วงที่ ${i+1}: ต้องอ้างอิงถึงช่วงก่อนหน้าที่คำนวณแล้ว`);
+        }
+        v_ms = results[refIdx].v_ms;
+      }
+
+      if(seg.mode==='dt'){
+        d_m = parseFloat(seg.d.value) * DIST_UNITS[seg.d.unit];
+        t_s = parseFloat(seg.t.value) * TIME_UNITS[seg.t.unit];
+        if(!isFinite(d_m) || !isFinite(t_s) || t_s<=0) throw new Error(`ช่วงที่ ${i+1}: กรอกระยะทางและเวลาให้ครบและถูกต้อง`);
+        v_ms = d_m / t_s;
+      } else if(seg.mode==='dv'){
+        d_m = parseFloat(seg.d.value) * DIST_UNITS[seg.d.unit];
+        if(v_ms===undefined){
+          v_ms = parseFloat(seg.v.value) * SPEED_UNITS[seg.v.unit];
+        }
+        if(!isFinite(d_m) || !isFinite(v_ms) || v_ms<=0) throw new Error(`ช่วงที่ ${i+1}: กรอกระยะทางและความเร็วให้ครบและถูกต้อง`);
+        t_s = d_m / v_ms;
+      } else { // tv
+        t_s = parseFloat(seg.t.value) * TIME_UNITS[seg.t.unit];
+        if(v_ms===undefined){
+          v_ms = parseFloat(seg.v.value) * SPEED_UNITS[seg.v.unit];
+        }
+        if(!isFinite(t_s) || !isFinite(v_ms) || t_s<=0 || v_ms<=0) throw new Error(`ช่วงที่ ${i+1}: กรอกเวลาและความเร็วให้ครบและถูกต้อง`);
+        d_m = v_ms * t_s;
+      }
+      results.push({d_m, t_s, v_ms});
+    }
+  } catch(err){
+    errEl.textContent = err.message;
+    document.getElementById('resultCard').style.display='none';
+    return;
+  }
+
+  drawChart(results);
+});
+
+function drawChart(results){
+  document.getElementById('resultCard').style.display='block';
+
+  const totalD = results.reduce((a,r)=>a+r.d_m,0);
+  const totalT = results.reduce((a,r)=>a+r.t_s,0);
+  const avgV = totalD/totalT;
+
+  const nd = niceDist(totalD), nt = niceTime(totalT), nv = niceDist(avgV*3.6*1000/1000); // placeholder replaced below
+  document.getElementById('totalDist').textContent = fmt(nd.value) + ' ' + nd.unit;
+  document.getElementById('totalTime').textContent = fmt(nt.value) + ' ' + nt.unit;
+  const avgKmh = avgV * 3.6;
+  document.getElementById('avgSpeed').textContent = fmt(avgV) + ' m/s (' + fmt(avgKmh) + ' km/h)';
+
+  const meanOfSpeeds = results.reduce((a,r)=>a+r.v_ms,0)/results.length;
+  document.getElementById('avgNote').innerHTML =
+    `<b>ข้อสังเกต:</b> ความเร็วเฉลี่ยตลอดเส้นทาง = ระยะทางทั้งหมด ÷ เวลาทั้งหมด = <b>${fmt(avgV)} m/s</b> ` +
+    `ซึ่ง<u>ไม่เท่ากับ</u>ค่าเฉลี่ยเลขคณิตของความเร็วแต่ละช่วง (${fmt(meanOfSpeeds)} m/s) ` +
+    `เพราะแต่ละช่วงใช้ "เวลา" ไม่เท่ากัน — สังเกตจากเส้นจำนวนด้านล่าง แถบที่ความเร็วสูงจะกิน "สัดส่วนระยะทาง" มากกว่า "สัดส่วนเวลา" ทำให้แถบเอียงไปทางขวา`;
+
+  // ---- SVG chart: dual number line with connecting trapezoids ----
+  const svg = document.getElementById('chartSvg');
+  const W = Math.max(700, segments.length*160);
+  const H = 260;
+  const margin = {left:70, right:30, top:40, bottom:40};
+  const axisW = W - margin.left - margin.right;
+  const yTop = 70, yBot = 190;
+
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('width', '100%');
+  svg.setAttribute('height', H);
+
+  let cumD = 0, cumT = 0;
+  const bands = [];
+  results.forEach((r,i)=>{
+    const d0 = cumD, d1 = cumD + r.d_m;
+    const t0 = cumT, t1 = cumT + r.t_s;
+    bands.push({d0,d1,t0,t1,...r,i});
+    cumD = d1; cumT = t1;
+  });
+
+  const xD = v => margin.left + (v/totalD)*axisW;
+  const xT = v => margin.left + (v/totalT)*axisW;
+
+  let svgParts = [];
+  svgParts.push(`<line x1="${margin.left}" y1="${yTop}" x2="${W-margin.right}" y2="${yTop}" stroke="#22303F" stroke-width="2"/>`);
+  svgParts.push(`<line x1="${margin.left}" y1="${yBot}" x2="${W-margin.right}" y2="${yBot}" stroke="#22303F" stroke-width="2"/>`);
+  svgParts.push(`<text x="${margin.left-10}" y="${yTop+4}" text-anchor="end" font-size="12" fill="#5B6B78">s (m)</text>`);
+  svgParts.push(`<text x="${margin.left-10}" y="${yBot+4}" text-anchor="end" font-size="12" fill="#5B6B78">t (s)</text>`);
+
+  const legendItems = [];
+  bands.forEach(b=>{
+    const color = COLORS[b.i % COLORS.length];
+    const x0D = xD(b.d0), x1D = xD(b.d1);
+    const x0T = xT(b.t0), x1T = xT(b.t1);
+    // trapezoid connecting distance segment to time segment
+    svgParts.push(`<polygon points="${x0D},${yTop} ${x1D},${yTop} ${x1T},${yBot} ${x0T},${yBot}" fill="${color}" fill-opacity="0.18" stroke="${color}" stroke-opacity="0.35"/>`);
+    // top tick band
+    svgParts.push(`<rect x="${x0D}" y="${yTop-8}" width="${Math.max(1,x1D-x0D)}" height="16" fill="${color}"/>`);
+    svgParts.push(`<rect x="${x0T}" y="${yBot-8}" width="${Math.max(1,x1T-x0T)}" height="16" fill="${color}"/>`);
+    // boundary ticks
+    svgParts.push(`<line x1="${x0D}" y1="${yTop-14}" x2="${x0D}" y2="${yTop+14}" stroke="#22303F" stroke-width="1"/>`);
+    svgParts.push(`<line x1="${x0T}" y1="${yBot-14}" x2="${x0T}" y2="${yBot+14}" stroke="#22303F" stroke-width="1"/>`);
+    // labels above/below
+    const midD = (x0D+x1D)/2, midT = (x0T+x1T)/2;
+    const dn = niceDist(b.d1-b.d0), tn = niceTime(b.t1-b.t0);
+    svgParts.push(`<text x="${midD}" y="${yTop-20}" text-anchor="middle" font-size="11" fill="#22303F">${fmt(dn.value)} ${dn.unit}</text>`);
+    svgParts.push(`<text x="${midT}" y="${yBot+30}" text-anchor="middle" font-size="11" fill="#22303F">${fmt(tn.value)} ${tn.unit}</text>`);
+    legendItems.push({color, text: `ช่วงที่ ${b.i+1}: v = ${fmt(b.v_ms)} m/s (${fmt(b.v_ms*3.6)} km/h)`});
+  });
+  // final boundary ticks
+  svgParts.push(`<line x1="${xD(totalD)}" y1="${yTop-14}" x2="${xD(totalD)}" y2="${yTop+14}" stroke="#22303F" stroke-width="1"/>`);
+  svgParts.push(`<line x1="${xT(totalT)}" y1="${yBot-14}" x2="${xT(totalT)}" y2="${yBot+14}" stroke="#22303F" stroke-width="1"/>`);
+  svgParts.push(`<text x="${xD(totalD)}" y="${yTop-20}" text-anchor="middle" font-size="11" font-weight="700" fill="#22303F">รวม</text>`);
+  svgParts.push(`<text x="${xT(totalT)}" y="${yBot+30}" text-anchor="middle" font-size="11" font-weight="700" fill="#22303F">รวม</text>`);
+
+  svg.innerHTML = svgParts.join('');
+
+  const legendHost = document.getElementById('legendHost');
+  legendHost.innerHTML = legendItems.map(li=>`<span><span class="swatch" style="background:${li.color}"></span>${li.text}</span>`).join('');
+}
+
+initSegments();
+</script>
+</body>
+</html>
