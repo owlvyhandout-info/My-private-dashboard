@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สมุดพกดิจิทัล — ติดตามแบบฝึกหัดรายบุคคล</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4F0E4;
+    --paper-line:#E3DCC8;
+    --ink:#16332B;
+    --ink-soft:#3E5C51;
+    --chalk-gold:#D9A441;
+    --chalk-gold-dim:#EFDBAB;
+    --sage:#7C9A82;
+    --coral:#BE4A3C;
+    --card:#FFFDF6;
+    --shadow: 0 1px 0 rgba(22,51,43,0.08);
+    --track:#E9E2CC;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      repeating-linear-gradient(180deg, transparent 0 38px, var(--paper-line) 38px 39px),
+      var(--paper);
+    color:var(--ink);
+    font-family:'Sarabun',sans-serif;
+    padding:28px 18px 64px;
+    min-height:100vh;
+  }
+  .wrap{max-width:1120px;margin:0 auto;}
+
+  header{
+    display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;
+    border-bottom:3px solid var(--ink);
+    padding-bottom:18px; margin-bottom:22px;
+  }
+  .brand-eyebrow{
+    font-family:'Kanit',sans-serif; font-weight:500; letter-spacing:.14em;
+    font-size:12px; text-transform:uppercase; color:var(--chalk-gold);
+    background:var(--ink); display:inline-block; padding:4px 10px; border-radius:3px;
+    margin-bottom:10px;
+  }
+  h1{
+    font-family:'Kanit',sans-serif; font-weight:700; font-size:clamp(26px,4vw,38px);
+    margin:0; color:var(--ink); line-height:1.15;
+  }
+  .subhead{font-size:14px; color:var(--ink-soft); margin-top:6px;}
+  .header-meta{text-align:right; font-size:13px; color:var(--ink-soft); line-height:1.7;}
+  .header-meta b{color:var(--ink); font-family:'Kanit',sans-serif; font-weight:600;}
+
+  /* ---------- Student selector (pills) ---------- */
+  .selector{
+    display:flex; gap:10px; overflow-x:auto; padding:6px 2px 18px; margin-bottom:6px;
+    border-bottom:1px solid var(--paper-line);
+  }
+  .selector::-webkit-scrollbar{height:5px;}
+  .selector::-webkit-scrollbar-thumb{background:var(--paper-line); border-radius:5px;}
+  .pill-btn{
+    display:flex; align-items:center; gap:9px; flex:0 0 auto;
+    background:var(--card); border:1.5px solid var(--paper-line); border-radius:999px;
+    padding:6px 16px 6px 6px; cursor:pointer; font-family:'Kanit',sans-serif; font-size:14px;
+    font-weight:500; color:var(--ink-soft); transition:all .15s ease;
+  }
+  .pill-btn:hover{border-color:var(--ink);}
+  .pill-btn.active{border-color:var(--ink); color:var(--ink); background:var(--chalk-gold-dim);}
+  .pill-avatar{
+    width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-family:'Kanit',sans-serif; font-weight:600; font-size:13px; color:#fff; flex:none;
+  }
+
+  /* ---------- Overview: ring + KPIs ---------- */
+  .grid-top{display:grid; grid-template-columns:238px 1fr; gap:16px; margin:22px 0 8px;}
+  @media (max-width:760px){ .grid-top{grid-template-columns:1fr;} }
+  .panel{
+    background:var(--card); border:1px solid var(--paper-line); border-radius:10px;
+    padding:20px; box-shadow:var(--shadow);
+  }
+  .ring-card{display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:6px;}
+  .ring-wrap{position:relative; width:168px; height:168px;}
+  .ring-wrap svg{transform:rotate(-90deg);}
+  .ring-center{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .ring-center b{font-family:'Kanit',sans-serif; font-size:32px; font-weight:700; color:var(--ink);}
+  .ring-center span{font-size:11px; color:var(--ink-soft); margin-top:2px;}
+  .ring-name{font-family:'Kanit',sans-serif; font-size:19px; font-weight:600; margin-top:6px; color:var(--ink);}
+
+  .kpi-row{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; height:100%;}
+  @media (max-width:560px){ .kpi-row{grid-template-columns:1fr;} }
+  .kpi{
+    background:var(--card); border:1px solid var(--paper-line); border-radius:10px; padding:16px;
+    display:flex; flex-direction:column; justify-content:space-between; box-shadow:var(--shadow);
+    position:relative; overflow:hidden;
+  }
+  .kpi::before{content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--chalk-gold);}
+  .kpi .label{font-size:12.5px; color:var(--ink-soft); font-weight:500;}
+  .kpi .value{font-family:'Kanit',sans-serif; font-size:27px; font-weight:700; margin-top:10px; color:var(--ink);}
+  .kpi .value small{font-size:13px; font-weight:400; color:var(--ink-soft);}
+
+  /* ---------- Section titles ---------- */
+  .section-title{display:flex; align-items:baseline; gap:10px; margin:34px 0 14px;}
+  .section-title .num-tag{
+    font-family:'Kanit',sans-serif; font-weight:600; color:var(--chalk-gold);
+    background:var(--ink); border-radius:50%; width:26px; height:26px; min-width:26px;
+    display:flex; align-items:center; justify-content:center; font-size:13px;
+  }
+  .section-title h2{font-family:'Kanit',sans-serif; font-weight:600; font-size:19px; margin:0; color:var(--ink);}
+  .section-title .rule{flex:1; height:1px; background:var(--paper-line);}
+  .section-title .hint{font-size:12.5px; color:var(--ink-soft);}
+
+  /* ---------- Category donut cards ---------- */
+  .cat-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:14px;}
+  .cat-card{
+    background:var(--card); border:1px solid var(--paper-line); border-radius:10px;
+    padding:16px; box-shadow:var(--shadow); display:flex; flex-direction:column; align-items:center; text-align:center;
+    border-top:4px solid var(--chalk-gold);
+  }
+  .cat-card .cat-name{font-family:'Kanit',sans-serif; font-weight:600; font-size:13.5px; margin-top:10px; min-height:36px; display:flex; align-items:center;}
+  .cat-card .cat-donut-wrap{position:relative; width:104px; height:104px;}
+  .cat-card .cat-donut-wrap svg{transform:rotate(-90deg);}
+  .cat-donut-center{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .cat-donut-center b{font-family:'Kanit',sans-serif; font-size:20px; font-weight:700;}
+  .cat-donut-center span{font-size:9.5px; color:var(--ink-soft);}
+  .cat-card .cat-sub{font-size:11.5px; color:var(--ink-soft); margin-top:6px;}
+  .cat-card .cat-badge{
+    font-family:'Kanit',sans-serif; font-size:10.5px; font-weight:500; padding:2px 9px; border-radius:20px;
+    margin-top:8px; display:inline-block;
+  }
+  .badge-due{background:#EDE3F6; color:#6A4C93;}
+  .badge-open{background:var(--chalk-gold-dim); color:#8A6415;}
+  .cat-card.no-data .cat-donut-center b{color:#B9B2A0;}
+
+  /* ---------- Log table ---------- */
+  .table-scroll{overflow-x:auto; border:1px solid var(--paper-line); border-radius:8px;}
+  table.log-table{width:100%; border-collapse:collapse; font-size:13px; min-width:640px;}
+  table.log-table thead th{
+    background:var(--ink); color:var(--chalk-gold-dim);
+    font-family:'Kanit',sans-serif; font-weight:500; font-size:11px; text-transform:uppercase;
+    letter-spacing:.03em; padding:10px 10px; text-align:left; white-space:nowrap;
+  }
+  table.log-table tbody td{padding:9px 10px; border-bottom:1px solid var(--paper-line); vertical-align:middle;}
+  table.log-table tbody tr:nth-child(even){background:#FBF8EF;}
+  table.log-table tbody tr:hover{background:var(--chalk-gold-dim);}
+  .doc-name{max-width:380px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:inline-block; vertical-align:middle;}
+  .subj-tag{
+    display:inline-block; font-family:'Kanit',sans-serif; font-size:10.5px; font-weight:600;
+    padding:2px 8px; border-radius:999px; color:#fff; white-space:nowrap;
+  }
+  .score-pill{
+    font-family:'Kanit',sans-serif; font-weight:600; font-size:12px; padding:2px 9px; border-radius:999px;
+    display:inline-block;
+  }
+  .pending-txt{color:#B9B2A0; font-style:italic; font-size:12.5px;}
+
+  .pagination{display:flex; align-items:center; justify-content:space-between; margin-top:14px; flex-wrap:wrap; gap:10px;}
+  .page-info{font-size:13px; color:var(--ink-soft);}
+  .page-btns{display:flex; gap:8px; align-items:center;}
+  .page-btns button{
+    font-family:'Kanit',sans-serif; font-weight:500; font-size:13.5px; cursor:pointer;
+    background:var(--ink); color:var(--chalk-gold-dim); border:none; padding:8px 16px; border-radius:6px;
+    transition:opacity .15s ease, transform .1s ease;
+  }
+  .page-btns button:hover:not(:disabled){opacity:.88;}
+  .page-btns button:active:not(:disabled){transform:translateY(1px);}
+  .page-btns button:disabled{opacity:.35; cursor:not-allowed;}
+  .page-btns .page-dots{font-family:'Kanit',sans-serif; font-size:13px; color:var(--ink-soft); padding:0 4px;}
+
+  .empty-state{padding:34px 20px; text-align:center; color:var(--ink-soft); font-size:13.5px;}
+
+  /* ---------- Class overview bars ---------- */
+  .class-list{display:flex; flex-direction:column; gap:10px;}
+  .class-row{display:grid; grid-template-columns:120px 1fr 74px; gap:12px; align-items:center;}
+  .class-row .cname{font-weight:500; font-family:'Kanit',sans-serif; font-size:13.5px; display:flex; align-items:center; gap:8px;}
+  .class-row .mini-avatar{width:22px; height:22px; border-radius:50%; color:#fff; font-size:10px; display:flex; align-items:center; justify-content:center; font-family:'Kanit',sans-serif; font-weight:700; flex:none;}
+  .class-row .track{height:9px; background:var(--track); border-radius:6px; overflow:hidden;}
+  .class-row .fill{height:100%; border-radius:6px;}
+  .class-row .pct{font-family:'Kanit',sans-serif; font-weight:600; font-size:13px; text-align:right; color:var(--ink-soft);}
+  .class-row.active .cname{color:var(--chalk-gold); }
+  .class-row.active .cname b{color:var(--ink);}
+
+  footer{margin-top:40px; text-align:center; font-size:12px; color:var(--ink-soft);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <span class="brand-eyebrow">ห้อง #G7 · ปีการศึกษา 2569</span>
+      <h1>สมุดพกดิจิทัล</h1>
+      <div class="subhead">เลือกดูความคืบหน้าแบบฝึกหัดรายบุคคล — TEDET และชีววิทยา (พืช)</div>
+    </div>
+    <div class="header-meta">
+      อัปเดตข้อมูลล่าสุดจากชีต<br>
+      <b id="dueRange">—</b>
+    </div>
+  </header>
+
+  <nav class="selector" id="selector"></nav>
+
+  <section class="grid-top">
+    <div class="panel ring-card">
+      <div class="ring-wrap">
+        <svg width="168" height="168" viewBox="0 0 168 168">
+          <circle cx="84" cy="84" r="74" fill="none" stroke="var(--track)" stroke-width="14"/>
+          <circle id="ringFill" cx="84" cy="84" r="74" fill="none" stroke="var(--chalk-gold)" stroke-width="14" stroke-linecap="round"/>
+        </svg>
+        <div class="ring-center"><b id="ringPct">0%</b><span>ของคลังข้อสอบทั้งหมด</span></div>
+      </div>
+      <div class="ring-name" id="ringName">—</div>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi"><span class="label">ชุดที่ทำแล้ว</span><div class="value" id="kpiSets">0<small> / — ชุด</small></div></div>
+      <div class="kpi"><span class="label">จำนวนข้อที่ทำแล้ว</span><div class="value" id="kpiItems">0<small> / — ข้อ</small></div></div>
+      <div class="kpi"><span class="label">คะแนนเฉลี่ย (จากชุดที่ทำ)</span><div class="value" id="kpiAvg">—</div></div>
+    </div>
+  </section>
+
+  <div class="section-title">
+    <div class="num-tag">1</div>
+    <h2>คะแนนแยกตามหมวดหมู่</h2>
+    <div class="rule"></div>
+    <span class="hint">วงกลม = สัดส่วนข้อที่ทำถูก/ทำแล้วในหมวดนั้น</span>
+  </div>
+  <div class="cat-grid" id="catGrid"></div>
+
+  <div class="section-title">
+    <div class="num-tag">2</div>
+    <h2>ประวัติการทำแบบฝึกหัด</h2>
+    <div class="rule"></div>
+    <span class="hint" id="logHint"></span>
+  </div>
+  <div class="panel">
+    <div class="table-scroll">
+      <table class="log-table">
+        <thead><tr><th>วันที่</th><th>หมวด</th><th>ชุดที่</th><th>ชื่อแบบฝึกหัด</th><th>จำนวนข้อ</th><th>คะแนน</th><th>สัดส่วน</th></tr></thead>
+        <tbody id="logBody"></tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <div class="page-info" id="pageInfo"></div>
+      <div class="page-btns">
+        <button id="prevBtn">‹ ก่อนหน้า</button>
+        <span class="page-dots" id="pageDots"></span>
+        <button id="nextBtn">ถัดไป ›</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <div class="num-tag">3</div>
+    <h2>ภาพรวมทั้งชั้น</h2>
+    <div class="rule"></div>
+    <span class="hint" id="classHint"></span>
+  </div>
+  <div class="panel"><div class="class-list" id="classList"></div></div>
+
+  <footer>สมุดพกดิจิทัล · แสดงประวัติ 15 รายการต่อหน้า</footer>
+</div>
+
+<script>
+/* ============ DATA ============ */
+const DATA = {"students": ["เก้า", "ลันตา", "สิงโต", "กิมกิม", "อั่งเปา", "ภูมิ", "น้ำมนต์", "ใบพลู"], "emails": {"เก้า": "prin@", "ลันตา": "tun@", "สิงโต": "", "กิมกิม": "emornsg07@", "อั่งเปา": "angpaooooo.12@", "ภูมิ": "Padinjjj430235@", "น้ำมนต์": "punjarat.nammon567@", "ใบพลู": "baiplu2111@"}, "exercises": [{"date": "06/07/2569", "category": "TEDETรายปี", "set": "1", "name": "ข้อสอบ TEDET 2568 วิชาวิทยาศาสตร์ ชั้นมัธยมศึกษาปีที่ 1(#G7)", "items": 30, "scores": {"เก้า": 0, "ลันตา": 22, "สิงโต": 4, "กิมกิม": 0, "อั่งเปา": 0, "ภูมิ": 17, "น้ำมนต์": 0, "ใบพลู": 0}}, {"date": "13/07/2569", "category": "TEDETรายปี", "set": "2", "name": "ข้อสอบ TEDET 2567 วิชาวิทยาศาสตร์ ชั้นมัธยมศึกษาปีที่ 1(#G7)", "items": 30, "scores": {"เก้า": 0, "ลันตา": 18, "สิงโต": 6, "กิมกิม": 0, "อั่งเปา": 0, "ภูมิ": 19, "น้ำมนต์": 0, "ใบพลู": 0}}, {"date": "20/07/2569", "category": "TEDETรายปี", "set": "3", "name": "ข้อสอบ TEDET 2566 วิชาวิทยาศาสตร์ ชั้นมัธยมศึกษาปีที่ 1(#G7)", "items": 30, "scores": {"เก้า": 0, "ลันตา": 18, "สิงโต": 4, "กิมกิม": 0, "อั่งเปา": 0, "ภูมิ": 16, "น้ำมนต์": 0, "ใบพลู": 0}}, {"date": "27/07/2569", "category": "TEDETรายปี", "set": "4", "name": "ข้อสอบ TEDET 2565 วิชาวิทยาศาสตร์ ชั้นมัธยมศึกษาปีที่ 1(#G7)", "items": 30, "scores": {"เก้า": 0, "ลันตา": 25, "สิงโต": 4, "กิมกิม": 0, "อั่งเปา": 0, "ภูมิ": 19, "น้ำมนต์": 0, "ใบพลู": 0}}, {"date": "03/08/2569", "category": "TEDETรายปี", "set": "5", "name": "ข้อสอบ TEDET 2564 วิชาวิทยาศาสตร์ ชั้นมัธยมศึกษาปีที่ 1(#G7)", "items": 30, "scores": {"เก้า": 0, "ลันตา": 0, "สิงโต": 5, "กิมกิม": 0, "อั่งเปา": 0, "ภูมิ": 22, "น้ำมนต์": 0, "ใบพลู": 0}}, {"date": "10/08/2569", "category": "BIO/สังเคราะห์แสง (1)", "set": "1", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART01-A-กระบวนการสังเคราะห์แสง-01-ปัจจัยในการสังเคราะห์แสง-#No01-05 (13 ข้อ)", "items": 13, "scores": {"เก้า": 0, "ลันตา": 0, "สิงโต": 0, "กิมกิม": 0, "อั่งเปา": 8, "ภูมิ": 9, "น้ำมนต์": 0, "ใบพลู": 0}}, {"date": "10/08/2569", "category": "BIO/สังเคราะห์แสง (1)", "set": "2", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART01-A-กระบวนการสังเคราะห์แสง-01-ปัจจัยในการสังเคราะห์แสง-#No06-10 (15 ข้อ)", "items": 15, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": 0, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "10/08/2569", "category": "BIO/สังเคราะห์แสง (1)", "set": "3", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART01-A-กระบวนการสังเคราะห์แสง-01-ปัจจัยในการสังเคราะห์แสง-#No11-20 (19 ข้อ)", "items": 19, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": 0, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "10/08/2569", "category": "BIO/สังเคราะห์แสง (1)", "set": "4", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART01-A-กระบวนการสังเคราะห์แสง-01-ปัจจัยในการสังเคราะห์แสง-#No21-30 (10 ข้อ)", "items": 10, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": 0, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "17/08/2569", "category": "BIO/สังเคราะห์แสง (2)", "set": "1", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART01-A-กระบวนการสังเคราะห์แสง-01-ปัจจัยในการสังเคราะห์แสง-#No31&More (15 ข้อ)", "items": 15, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": null, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "17/08/2569", "category": "BIO/สังเคราะห์แสง (2)", "set": "2", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART01-A-กระบวนการสังเคราะห์แสง-03-ปัจจัยในการสังเคราะห์แสง-รงควัตถุ-SECT01", "items": 11, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": null, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "17/08/2569", "category": "BIO/สังเคราะห์แสง (2)", "set": "3", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART01-A-กระบวนการสังเคราะห์แสง-03-ปัจจัยในการสังเคราะห์แสง-รงควัตถุ-SECT02", "items": 12, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": null, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "17/08/2569", "category": "BIO/สังเคราะห์แสง (2)", "set": "4", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART01-A-กระบวนการสังเคราะห์แสง-04-Organelleและกลไกการสังเคราะห์แสง", "items": 18, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": null, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "31/08/2569", "category": "BIO/ลำเลียงน้ำและอาหาร", "set": "1", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART02-A-01-การลำเลียงน้ำและอาหาร-01-ภาพรวม-#No01-05 (15 ข้อ)", "items": 15, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": 6, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "31/08/2569", "category": "BIO/ลำเลียงน้ำและอาหาร", "set": "2", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART02-A-01-การลำเลียงน้ำและอาหาร-01-ภาพรวม-#No06-10 (16 ข้อ)", "items": 16, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": 0, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "31/08/2569", "category": "BIO/ลำเลียงน้ำและอาหาร", "set": "3", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART02-A-01-การลำเลียงน้ำและอาหาร-01-ภาพรวม-#No11-20 (11 ข้อ)", "items": 11, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": 9, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "31/08/2569", "category": "BIO/ลำเลียงน้ำและอาหาร", "set": "4", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART02-A-01-การลำเลียงน้ำและอาหาร-01-ภาพรวม-#No21&More", "items": 21, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": 18, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "31/08/2569", "category": "BIO/ลำเลียงน้ำและอาหาร", "set": "5", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART02-A-01-การลำเลียงน้ำและอาหาร-02-ภาคตัดขวาง-#No01-20 (24 ข้อ)", "items": 25, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": 16, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "31/08/2569", "category": "BIO/ลำเลียงน้ำและอาหาร", "set": "6", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART02-A-01-การลำเลียงน้ำและอาหาร-02-ภาคตัดขวาง-#No21-100 (20 ข้อ)", "items": 20, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": 12, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "31/08/2569", "category": "BIO/คายน้ำ", "set": "1", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART02-B-01-การคายน้ำ-STD-#No01-10 (21 ข้อ)", "items": 21, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": 19, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "31/08/2569", "category": "BIO/คายน้ำ", "set": "2", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-กิจกรรมของพืช-PART02-B-01-การคายน้ำ-STD-#No11-30 (19 ข้อ)", "items": 19, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": 18, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "05/09/2569", "category": "BIO/ถ่ายละอองเรณู", "set": "1", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-โครงสร้างพืช-ดอก-โครงสร้างดอก, การถ่ายละอองเรณู และการเกิดผล-#SP-TEDET+IPST-#No01-05 (17 ข้อ)", "items": 17, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": null, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "05/09/2569", "category": "BIO/ถ่ายละอองเรณู", "set": "2", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-โครงสร้างพืช-ดอก-โครงสร้างดอก, การถ่ายละอองเรณู และการเกิดผล-#SP-TEDET+IPST-#No06-10 (13 ข้อ)", "items": 13, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": null, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "05/09/2569", "category": "BIO/ถ่ายละอองเรณู", "set": "3", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-โครงสร้างพืช-ดอก-โครงสร้างดอก, การถ่ายละอองเรณู และการเกิดผล-#SP-TEDET+IPST-#No11-20 (9 ข้อ)", "items": 9, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": null, "น้ำมนต์": null, "ใบพลู": null}}, {"date": "05/09/2569", "category": "BIO/ถ่ายละอองเรณู", "set": "4", "name": "#G7-2569-TED-สำเนาของ OW2_แบบฝึกหัด@BIO-พืช-โครงสร้างพืช-ดอก-โครงสร้างดอก, การถ่ายละอองเรณู และการเกิดผล-#SP-TEDET+IPST-#No21-40 (16 ข้อ)", "items": 16, "scores": {"เก้า": null, "ลันตา": null, "สิงโต": null, "กิมกิม": null, "อั่งเปา": null, "ภูมิ": null, "น้ำมนต์": null, "ใบพลู": null}}], "category_summary": {"TEDETรายปี": {"total": 150, "scores": {"ลันตา": 83, "สิงโต": 23, "ภูมิ": 93}}, "BIO/สังเคราะห์แสง (1)": {"total": 57, "scores": {"อั่งเปา": 8, "ภูมิ": 9}}, "BIO/สังเคราะห์แสง (2)": {"total": 56, "scores": {}}, "BIO/ลำเลียงน้ำและอาหาร": {"total": 108, "scores": {"ภูมิ": 61}}, "BIO/คายน้ำ": {"total": 40, "scores": {"ภูมิ": 37}}, "BIO/ถ่ายละอองเรณู": {"total": 55, "scores": {}}}, "student_totals": {"เก้า": 0, "ลันตา": 83, "สิงโต": 23, "กิมกิม": 0, "อั่งเปา": 8, "ภูมิ": 200, "น้ำมนต์": 0, "ใบพลู": 0}, "grand_total": 466};
+
+const STUDENT_COLORS = {
+  'เก้า':'#9B7EDE','ลันตา':'#4C8C6B','สิงโต':'#D98A3D',
+  'กิมกิม':'#5C9EAD','อั่งเปา':'#C1443D','ภูมิ':'#2E6E5C',
+  'น้ำมนต์':'#B8860B','ใบพลู':'#7C6A9E'
+};
+const CAT_COLORS = {
+  'TEDETรายปี':'#6A4C93',
+  'BIO/สังเคราะห์แสง (1)':'#3F8F5C',
+  'BIO/สังเคราะห์แสง (2)':'#2E7D65',
+  'BIO/ลำเลียงน้ำและอาหาร':'#2E86AB',
+  'BIO/คายน้ำ':'#D98A3D',
+  'BIO/ถ่ายละอองเรณู':'#C1443D'
+};
+const CAT_ORDER = Object.keys(DATA.category_summary);
+const TODAY = new Date(2026,7,9); // 9 Aug 2026 reference "today"
+const PAGE_SIZE = 15;
+
+let current = DATA.students[0];
+let logPage = 1;
+
+function parseThaiDate(d){
+  if(!d) return null;
+  const [dd,mm,yyyy] = d.split('/').map(Number);
+  return new Date(yyyy-543, mm-1, dd);
+}
+function initials(name){ return name.charAt(0); }
+function pctColor(p){
+  if(p===null||p===undefined) return '#B9B2A0';
+  if(p>=70) return '#3E7D3F';
+  if(p>=40) return '#8A6415';
+  return '#BE4A3C';
+}
+
+/* first due-date per category (for status badge) */
+const catDueDate = {};
+DATA.exercises.forEach(e=>{ if(!catDueDate[e.category]) catDueDate[e.category]=e.date; });
+
+/* ============ Student stats ============ */
+function computeStudentStats(name){
+  let itemsDone=0, setsDone=0, scoreSum=0, scoreSetCount=0;
+  DATA.exercises.forEach(e=>{
+    const sc = e.scores[name];
+    if(sc!==null && sc!==undefined){
+      itemsDone += sc;
+      if(sc>0 || e.items){ setsDone += (sc>0?1:0); }
+      if(e.items){ scoreSum += sc; scoreSetCount += e.items; }
+    }
+  });
+  // sets actually attempted (score entry present, not null)
+  const attempted = DATA.exercises.filter(e=> e.scores[name]!==null && e.scores[name]!==undefined);
+  const avgPct = attempted.length ? (attempted.reduce((a,e)=>a+e.scores[name],0) / attempted.reduce((a,e)=>a+(e.items||0),0) * 100) : null;
+  return { itemsDone, setsAttempted: attempted.length, avgPct };
+}
+
+function totalItems(){ return DATA.grand_total; }
+
+/* ============ Selector ============ */
+function buildSelector(){
+  const el = document.getElementById('selector');
+  el.innerHTML = DATA.students.map(s=>{
+    const color = STUDENT_COLORS[s] || '#888';
+    return `<div class="pill-btn" data-name="${s}">
+      <span class="pill-avatar" style="background:${color}">${initials(s)}</span>${s}
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.pill-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      current = btn.dataset.name;
+      logPage = 1;
+      render();
+    });
+  });
+}
+
+/* ============ Ring (overall) ============ */
+function renderRing(name){
+  const st = computeStudentStats(name);
+  const total = totalItems();
+  const pct = total ? (st.itemsDone/total*100) : 0;
+  const circle = document.getElementById('ringFill');
+  const r = 74, circumference = 2*Math.PI*r;
+  circle.setAttribute('stroke-dasharray', circumference);
+  circle.setAttribute('stroke-dashoffset', circumference - (pct/100*circumference));
+  circle.setAttribute('stroke', STUDENT_COLORS[name] || 'var(--chalk-gold)');
+  document.getElementById('ringPct').textContent = pct.toFixed(1)+'%';
+  document.getElementById('ringName').textContent = name;
+
+  document.getElementById('kpiSets').innerHTML = `${st.setsAttempted}<small> / ${DATA.exercises.length} ชุด</small>`;
+  document.getElementById('kpiItems').innerHTML = `${st.itemsDone}<small> / ${total.toLocaleString()} ข้อ</small>`;
+  document.getElementById('kpiAvg').innerHTML = st.avgPct===null ? '—' : `${st.avgPct.toFixed(0)}<small>%</small>`;
+}
+
+/* ============ Category donut grid ============ */
+function renderCatGrid(name){
+  const el = document.getElementById('catGrid');
+  el.innerHTML = CAT_ORDER.map(cat=>{
+    const info = DATA.category_summary[cat];
+    const color = CAT_COLORS[cat] || '#888';
+    const dueDate = catDueDate[cat];
+    const dueObj = parseThaiDate(dueDate);
+    const isDue = dueObj <= TODAY;
+
+    const catExercises = DATA.exercises.filter(e=>e.category===cat);
+    let scoreSum = 0, hasAny = false;
+    catExercises.forEach(e=>{
+      const sc = e.scores[name];
+      if(sc!==null && sc!==undefined){ scoreSum += sc; hasAny = true; }
+    });
+    const pct = isDue ? (scoreSum/info.total*100) : null;
+    const r = 42, circumference = 2*Math.PI*r;
+    const dash = pct===null ? circumference : circumference - ((pct/100)*circumference);
+    const ringColor = pct===null ? '#D8D2BE' : color;
+
+    return `
+    <div class="cat-card ${pct===null?'no-data':''}">
+      <div class="cat-donut-wrap">
+        <svg width="104" height="104" viewBox="0 0 104 104" style="transform:rotate(-90deg)">
+          <circle cx="52" cy="52" r="${r}" fill="none" stroke="var(--track)" stroke-width="11"/>
+          <circle cx="52" cy="52" r="${r}" fill="none" stroke="${ringColor}" stroke-width="11" stroke-linecap="round"
+            stroke-dasharray="${circumference}" stroke-dashoffset="${dash}"/>
+        </svg>
+        <div class="cat-donut-center">
+          <b style="color:${pct===null?'#B9B2A0':pctColor(pct)}">${pct===null?'—':pct.toFixed(0)+'%'}</b>
+          <span>${pct===null?'ยังไม่ถึงกำหนด':scoreSum+' / '+info.total+' ข้อ'}</span>
+        </div>
+      </div>
+      <div class="cat-name">${cat}</div>
+      <span class="cat-badge ${isDue?'badge-due':'badge-open'}">${isDue?'กำหนดส่ง '+dueDate:'เปิดรับ '+dueDate}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ============ Log table (per student, paginated) ============ */
+function renderLog(name){
+  const rows = DATA.exercises;
+  const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  logPage = Math.min(logPage, totalPages);
+  const start = (logPage-1)*PAGE_SIZE;
+  const pageItems = rows.slice(start, start+PAGE_SIZE);
+
+  document.getElementById('logHint').textContent = `${name} · ${rows.length} ชุดในคลังข้อสอบทั้งหมด`;
+
+  document.getElementById('logBody').innerHTML = pageItems.map(e=>{
+    const sc = e.scores[name];
+    const color = CAT_COLORS[e.category] || '#888';
+    const hasScore = sc!==null && sc!==undefined;
+    const pct = hasScore && e.items ? (sc/e.items*100) : null;
+    return `
+    <tr>
+      <td>${e.date}</td>
+      <td><span class="subj-tag" style="background:${color}">${e.category}</span></td>
+      <td>#${e.set}</td>
+      <td><span class="doc-name" title="${e.name.replace(/"/g,'&quot;')}">${e.name}</span></td>
+      <td>${e.items ?? '–'}</td>
+      <td>${hasScore ? `<b style="font-family:'Kanit',sans-serif">${sc}</b>` : `<span class="pending-txt">ยังไม่ทำ</span>`}</td>
+      <td>${pct===null ? '—' : `<span class="score-pill" style="background:${pctColor(pct)}22; color:${pctColor(pct)}">${pct.toFixed(0)}%</span>`}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('pageInfo').textContent =
+    `แสดง ${rows.length===0?0:start+1}–${Math.min(start+PAGE_SIZE, rows.length)} จากทั้งหมด ${rows.length} รายการ`;
+  document.getElementById('pageDots').textContent = `หน้า ${logPage} / ${totalPages}`;
+  document.getElementById('prevBtn').disabled = logPage<=1;
+  document.getElementById('nextBtn').disabled = logPage>=totalPages;
+}
+
+document.getElementById('prevBtn').addEventListener('click', ()=>{
+  if(logPage>1){ logPage--; renderLog(current); }
+});
+document.getElementById('nextBtn').addEventListener('click', ()=>{
+  const totalPages = Math.max(1, Math.ceil(DATA.exercises.length / PAGE_SIZE));
+  if(logPage<totalPages){ logPage++; renderLog(current); }
+});
+
+/* ============ Class overview ============ */
+function renderClassOverview(name){
+  const el = document.getElementById('classList');
+  const total = totalItems();
+  document.getElementById('classHint').textContent = `เทียบสัดส่วนข้อที่ทำแล้วจากทั้งหมด ${total.toLocaleString()} ข้อ`;
+  const stats = DATA.students.map(s=>{
+    const st = computeStudentStats(s);
+    return { name:s, itemsDone: st.itemsDone, pct: total ? st.itemsDone/total*100 : 0 };
+  }).sort((a,b)=>b.itemsDone-a.itemsDone);
+
+  el.innerHTML = stats.map(s=>{
+    const color = STUDENT_COLORS[s.name] || '#888';
+    return `
+    <div class="class-row ${s.name===name?'active':''}">
+      <div class="cname"><span class="mini-avatar" style="background:${color}">${initials(s.name)}</span>${s.name===name?'<b>'+s.name+'</b>':s.name}</div>
+      <div class="track"><div class="fill" style="width:${Math.max(s.pct,1.2)}%; background:${color}"></div></div>
+      <div class="pct">${s.itemsDone} ข้อ</div>
+    </div>`;
+  }).join('');
+}
+
+/* ============ Render orchestrator ============ */
+function render(){
+  document.querySelectorAll('.pill-btn').forEach(b=>b.classList.toggle('active', b.dataset.name===current));
+  renderRing(current);
+  renderCatGrid(current);
+  renderLog(current);
+  renderClassOverview(current);
+}
+
+/* ============ Init ============ */
+const dates = DATA.exercises.map(e=>e.date);
+document.getElementById('dueRange').textContent = dates[0] + ' – ' + dates[dates.length-1] + ' (พ.ศ.)';
+
+buildSelector();
+render();
+</script>
+</body>
+</html>
