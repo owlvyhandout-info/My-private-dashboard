@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ภารกิจติว ม.1 — แผงติดตามความคืบหน้ารายบุคคล</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EEF1F6;
+    --paper: #FFFFFF;
+    --line: #DCE1EB;
+    --ink: #1B2340;
+    --ink-soft: #5B6478;
+    --gold: #E3A62F;
+    --gold-soft: #FBEBC7;
+    --live: #2E9E5B;
+    --cached: #C1662F;
+    --radius: 14px;
+    --radius-sm: 10px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 8% 4%, rgba(91,95,239,0.07), transparent 40%),
+      radial-gradient(circle at 92% 0%, rgba(227,166,47,0.10), transparent 38%);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3, .display { font-family: 'Kanit', 'IBM Plex Sans Thai', sans-serif; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 64px; }
+
+  header.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 18px; margin-bottom: 14px; }
+  .eyebrow { font-size: 12px; letter-spacing: .12em; font-weight: 700; color: var(--gold); text-transform: uppercase; margin: 0 0 6px; }
+  h1.title { font-size: clamp(24px, 3.4vw, 34px); font-weight: 800; margin: 0; line-height: 1.15; }
+  .subtitle { color: var(--ink-soft); font-size: 14.5px; margin-top: 6px; max-width: 60ch; }
+
+  .stat-strip { display: flex; gap: 10px; flex-wrap: wrap; }
+  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+  .countdown-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+  .countdown-card {
+    background: var(--ink); color: #fff; border-radius: 12px; padding: 10px 16px;
+    text-align: center; min-width: 128px;
+  }
+  .countdown-card .cd-tag { font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; opacity: .65; font-weight: 700; }
+  .countdown-card .days { font-family: 'Kanit'; font-size: 32px; font-weight: 800; line-height: 1.1; color: var(--gold); margin-top: 2px; }
+  .countdown-card .days .unit { font-size: 12px; font-weight: 500; color: #fff; opacity: .8; margin-left: 2px; }
+  .countdown-card .cd-label { font-size: 11px; margin-top: 4px; opacity: .92; line-height: 1.3; }
+  .countdown-card .cd-date { font-size: 9.5px; opacity: .55; margin-top: 2px; }
+  @media (max-width: 760px) { .header-right { align-items: flex-start; width: 100%; } .countdown-row { justify-content: flex-start; } }
+  .stat-pill { background: var(--paper); border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; text-align: center; min-width: 90px; }
+  .stat-pill b { display:block; font-family:'Kanit'; font-size: 17px; font-weight: 700; }
+  .stat-pill span { font-size: 10.5px; color: var(--ink-soft); }
+
+  .source-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 9px 14px; margin-bottom: 20px; font-size: 12.5px; color: var(--ink-soft); }
+  .source-bar .badge { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; }
+  .source-bar .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cached); }
+  .source-bar.live .dot { background: var(--live); animation: pulse 1.8s infinite; }
+  .source-bar.live .badge { color: var(--live); }
+  .source-bar.cached .badge { color: var(--cached); }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.35; } }
+  .refresh-btn { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 5px 12px; font-family: 'IBM Plex Sans Thai'; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--ink); }
+  .refresh-btn:hover { border-color: var(--ink); }
+  .refresh-btn:disabled { opacity: .5; cursor: default; }
+
+  .selector { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 16px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+  .selector::-webkit-scrollbar { height: 5px; }
+  .selector::-webkit-scrollbar-thumb { background: var(--line); border-radius: 5px; }
+  .pill-btn { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; background: var(--paper); border: 1.5px solid var(--line); border-radius: 999px; padding: 6px 14px 6px 6px; cursor: pointer; font-family: 'IBM Plex Sans Thai'; font-size: 14px; font-weight: 600; color: var(--ink-soft); transition: all .15s ease; }
+  .pill-btn .avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 12.5px; font-family:'Kanit'; }
+  .pill-btn:hover { border-color: var(--ink); }
+  .pill-btn.active { border-color: var(--ink); color: var(--ink); background: var(--gold-soft); }
+
+  .grid-top { display: grid; grid-template-columns: 260px 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 760px) { .grid-top { grid-template-columns: 1fr; } }
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+  .ring-card { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align:center; gap: 6px; }
+  .ring-wrap { position: relative; width: 168px; height: 168px; }
+  .ring-wrap svg { transform: rotate(-90deg); }
+  .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring-center b { font-family:'Kanit'; font-size: 30px; font-weight: 800; }
+  .ring-center span { font-size: 11px; color: var(--ink-soft); }
+  .ring-name { font-family:'Kanit'; font-size: 20px; font-weight: 700; margin-top: 4px; }
+  .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; height: 100%; }
+  @media (max-width: 520px) { .kpi-row { grid-template-columns: 1fr; } }
+  .kpi { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; justify-content: space-between; }
+  .kpi .label { font-size: 12.5px; color: var(--ink-soft); font-weight: 600; }
+  .kpi .value { font-family:'Kanit'; font-size: 28px; font-weight: 800; margin-top: 10px; }
+  .kpi .value small { font-size: 14px; font-weight: 500; color: var(--ink-soft); }
+
+  .section-title { display:flex; align-items:baseline; gap:8px; margin: 30px 0 12px; }
+  .section-title h2 { font-size: 19px; font-weight: 700; margin: 0; }
+  .section-title .hint { font-size: 12.5px; color: var(--ink-soft); }
+
+  /* ---- Level 1: Subject ---- */
+  .subject-block { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 14px; }
+  .subject-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .subject-name { display: flex; align-items: center; gap: 8px; font-weight: 700; font-family:'Kanit'; font-size: 16.5px; }
+  .dot-chip { width: 11px; height: 11px; border-radius: 50%; flex: none; }
+  .subject-nums { font-size: 12.5px; color: var(--ink-soft); }
+  .subject-nums b { color: var(--ink); }
+  .bar-track { height: 8px; border-radius: 6px; background: #EEF0F5; overflow: hidden; margin-bottom: 10px; }
+  .bar-fill { height: 100%; border-radius: 6px; transition: width .4s ease; }
+
+  .subject-status { font-size: 12.5px; font-weight: 600; margin-bottom: 12px; }
+  .subject-status.incomplete { color: var(--ink-soft); font-style: italic; }
+  .subject-status.nodata { color: var(--ink-soft); }
+  .subject-status.scored { font-family:'Kanit'; font-size: 14px; }
+
+  .section-scorechart {
+    display: flex; align-items: flex-end; gap: 10px; height: 92px;
+    padding: 6px 6px 0; margin-bottom: 16px; border-bottom: 1px solid var(--line);
+  }
+  .chart-bar-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex: 1 1 0; min-width: 38px; height: 100%; }
+  .chart-bar-pct { font-size: 10.5px; font-weight: 700; font-family:'Kanit'; margin-bottom: 3px; }
+  .chart-bar { width: 58%; border-radius: 4px 4px 0 0; transition: height .4s ease; min-height: 2px; }
+  .chart-bar-label {
+    font-size: 9.5px; color: var(--ink-soft); margin-top: 5px; text-align: center;
+    line-height: 1.15; max-width: 64px; overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap; width: 100%;
+  }
+
+  /* ---- Level 2: Section (native <details>) ---- */
+  .section-list { display: flex; flex-direction: column; gap: 8px; }
+  details.section-item { border: 1px solid var(--line); border-radius: var(--radius-sm); background: #FBFCFE; overflow: hidden; }
+  details.section-item[open] { background: #fff; }
+  details.section-item summary {
+    list-style: none; cursor: pointer; padding: 11px 14px; display: grid;
+    grid-template-columns: 1fr auto auto auto 16px; gap: 10px 14px; align-items: center;
+  }
+  details.section-item summary::-webkit-details-marker { display: none; }
+  .sec-name { font-weight: 600; font-size: 13.5px; }
+  .sec-stat { font-size: 12px; color: var(--ink-soft); white-space: nowrap; }
+  .sec-stat b { color: var(--ink); font-family:'Kanit'; }
+  .sec-avg { font-family:'Kanit'; font-weight: 700; font-size: 13px; white-space: nowrap; min-width: 46px; text-align:right; }
+  .chev { transition: transform .15s ease; color: var(--ink-soft); font-size: 12px; }
+  details.section-item[open] .chev { transform: rotate(90deg); }
+  .sec-mini-track { grid-column: 1 / -1; height: 5px; border-radius: 4px; background: #EEF0F5; overflow: hidden; margin-top: 8px; }
+  .sec-mini-fill { height: 100%; border-radius: 4px; }
+
+  /* ---- Level 3: Test-set cards ---- */
+  .testset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 8px; padding: 4px 14px 14px; }
+  .testset-card { border: 1px solid var(--line); border-radius: 10px; padding: 10px 11px; background: #fff; border-left-width: 4px; }
+  .testset-card.pending { opacity: .6; }
+  .ts-label { font-weight: 700; font-size: 12.5px; font-family:'Kanit'; margin-bottom: 4px; line-height:1.25; }
+  .ts-meta { font-size: 11px; color: var(--ink-soft); display: flex; justify-content: space-between; }
+  .ts-score { font-family:'Kanit'; font-weight: 700; }
+  .ts-pct { font-size: 10.5px; padding: 1px 6px; border-radius: 999px; font-weight: 700; }
+
+  /* ---- log table & class overview (unchanged) ---- */
+  .log-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-soft); padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  tbody td { padding: 12px 14px; border-bottom: 1px solid #F1F3F8; }
+  tbody tr:last-child td { border-bottom: none; }
+  .subj-tag { display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius: 999px; color:#fff; font-family:'Kanit'; }
+  .score-cell { font-family:'Kanit'; font-weight:700; }
+  .empty-state { padding: 34px 20px; text-align: center; color: var(--ink-soft); font-size: 13.5px; }
+  .empty-state .big { font-size: 30px; margin-bottom: 6px; }
+
+  .class-list { display: flex; flex-direction: column; gap: 10px; }
+  .class-row { display: grid; grid-template-columns: 120px 1fr 70px; gap: 12px; align-items: center; }
+  .class-row .cname { font-weight: 600; font-size: 13.5px; display:flex; align-items:center; gap:8px; }
+  .class-row .mini-avatar { width: 22px; height: 22px; border-radius: 50%; color:#fff; font-size:10px; display:flex; align-items:center; justify-content:center; font-family:'Kanit'; font-weight:700; }
+  .class-row .track { height: 8px; background: #EEF0F5; border-radius: 6px; overflow:hidden; }
+  .class-row .fill { height: 100%; background: var(--gold); border-radius: 6px; }
+  .class-row .pct { font-family:'Kanit'; font-weight:700; font-size: 13px; text-align:right; }
+  .class-row.active .cname { color: var(--gold); }
+
+  .seg-group { display: flex; gap: 6px; }
+  .seg-btn {
+    border: 1.5px solid var(--line); background: #fff; border-radius: 999px;
+    padding: 5px 13px; font-family: 'IBM Plex Sans Thai'; font-size: 12px; font-weight: 600;
+    color: var(--ink-soft); cursor: pointer; transition: all .15s ease;
+  }
+  .seg-btn:hover { border-color: var(--ink); }
+  .seg-btn.active { border-color: var(--ink); color: var(--ink); background: var(--gold-soft); }
+  .section-title { flex-wrap: wrap; }
+
+  .log-pager { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 14px; border-top: 1px solid var(--line); }
+  .pager-btn {
+    border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 6px 14px;
+    font-family: 'IBM Plex Sans Thai'; font-size: 12.5px; font-weight: 600; color: var(--ink); cursor: pointer;
+  }
+  .pager-btn:hover:not(:disabled) { border-color: var(--ink); }
+  .pager-btn:disabled { opacity: .4; cursor: default; }
+  .pager-info { font-size: 12.5px; color: var(--ink-soft); }
+
+  footer { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 12px; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <p class="eyebrow">แผงติดตามภารกิจ · เตรียมสอบเข้า ม.1</p>
+      <h1 class="title">แผนที่ความคืบหน้ารายบุคคล</h1>
+      <p class="subtitle">ติดตามว่านักเรียนแต่ละคนเดินทางไปถึงไหนแล้ว แยกตามหมวดวิชา → Section → ชุดข้อสอบ</p>
+    </div>
+    <div class="header-right">
+      <div class="countdown-row" id="countdownRow"></div>
+      <div class="stat-strip" id="statStrip"></div>
+    </div>
+  </header>
+
+  <div class="source-bar" id="sourceBar">
+    <span class="badge"><span class="dot"></span><span id="sourceLabel">กำลังโหลดข้อมูลสด…</span></span>
+    <button class="refresh-btn" id="refreshBtn">↻ รีเฟรชข้อมูล</button>
+  </div>
+
+  <nav class="selector" id="selector"></nav>
+
+  <div class="section-title" style="margin-top:6px;">
+    <h2>ภาพรวมทั้งชั้น</h2>
+    <span class="hint" id="classHint"></span>
+    <div class="seg-group" id="classLimitGroup" style="margin-left:auto;">
+      <button class="seg-btn" data-limit="3">Top 3</button>
+      <button class="seg-btn" data-limit="5">Top 5</button>
+      <button class="seg-btn" data-limit="all">ทั้งหมด</button>
+    </div>
+  </div>
+  <div class="card"><div class="class-list" id="classList"></div></div>
+
+  <section class="grid-top">
+    <div class="card ring-card">
+      <div class="ring-wrap">
+        <svg width="168" height="168" viewBox="0 0 168 168">
+          <circle cx="84" cy="84" r="74" fill="none" stroke="#EEF0F5" stroke-width="14"/>
+          <circle id="ringFill" cx="84" cy="84" r="74" fill="none" stroke="var(--gold)" stroke-width="14" stroke-linecap="round"/>
+        </svg>
+        <div class="ring-center"><b id="ringPct">0%</b><span>ของคลังข้อสอบทั้งหมด</span></div>
+      </div>
+      <div class="ring-name" id="ringName">—</div>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi"><span class="label">ชุดข้อสอบที่ทำแล้ว</span><div class="value" id="kpiSets">0<small> / — ชุด</small></div></div>
+      <div class="kpi"><span class="label">จำนวนข้อที่ทำแล้ว</span><div class="value" id="kpiItems">0<small> / — ข้อ</small></div></div>
+      <div class="kpi"><span class="label">คะแนนเฉลี่ย (จากชุดที่ทำ)</span><div class="value" id="kpiAvg">—</div></div>
+    </div>
+  </section>
+
+  <div class="section-title">
+    <h2>หมวดวิชา → Section → ชุดข้อสอบ</h2>
+    <span class="hint">คลิกที่ Section เพื่อดูรายชุดข้อสอบ</span>
+  </div>
+  <div id="subjectBlocks"></div>
+
+  <div class="section-title">
+    <h2>ประวัติชุดที่ทำแล้ว</h2>
+    <span class="hint" id="logHint"></span>
+  </div>
+  <div class="log-card">
+    <table id="logTable">
+      <thead><tr><th>วิชา</th><th>Section</th><th>ชุดข้อสอบ</th><th>จำนวนข้อ</th><th>คะแนน</th><th>สัดส่วน</th></tr></thead>
+      <tbody id="logBody"></tbody>
+    </table>
+    <div class="empty-state" id="logEmpty" style="display:none;">
+      <div class="big">🗺️</div>
+      ยังไม่มีชุดข้อสอบที่บันทึกคะแนนไว้สำหรับนักเรียนคนนี้<br>เมื่อทำชุดแรกและกรอกคะแนนในสเปรดชีต ประวัติจะแสดงที่นี่โดยอัตโนมัติ
+    </div>
+    <div class="log-pager" id="logPager" style="display:none;">
+      <button class="pager-btn" id="logPrevBtn">‹ ก่อนหน้า</button>
+      <span class="pager-info" id="logPageInfo"></span>
+      <button class="pager-btn" id="logNextBtn">ถัดไป ›</button>
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center; padding: 14px;">
+    <img src="target.jpg" alt="เป้าหมาย" style="max-width:100%; height:auto; border-radius: 12px; display:block; margin:0 auto;"
+         onerror="this.parentElement.innerHTML='<div class=&quot;empty-state&quot;>ไม่พบไฟล์ target.jpg — วางไฟล์รูปนี้ไว้ในโฟลเดอร์เดียวกับไฟล์ dashboard นี้</div>';">
+  </div>
+
+  <footer id="footerNote"></footer>
+</div>
+
+<script>
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0EbF7pIL_d4dsNzRbfoHf4uJ89JVSyyaczvhTccOM5CZtN_dD813-ZZFSXwZFDN8eYjqjR6qIGN15/pub?gid=1278100255&single=true&output=csv";
+
+/* ===== แก้ไขได้ตรงนี้: รายการนับถอยหลัง (เพิ่ม/ลบ/แก้ label หรือวันที่ได้อิสระ) =====
+   targetDateISO ใช้รูปแบบ "YYYY-MM-DD" แบบปี ค.ศ. (พ.ศ. - 543)
+   เช่น 8 พฤศจิกายน 2569 (พ.ศ.) = 8 พฤศจิกายน 2026 (ค.ศ.) -> "2026-11-08" */
+const COUNTDOWNS = [
+  { label: 'วันสอบเข้าจุฬาภรณ์ รอบที่ 1', targetDateISO: '2026-11-08' },
+  { label: 'วันสอบเข้า ระยองวิทยาคม ห้องเรียนพิเศษ', targetDateISO: '2027-03-15' },
+];
+/* ============================================================================ */
+
+const STUDENTS = ["เพลง", "ยูโร", "ออโต้", "ไตตั้น", "ของขวัญ", "แก้มใส", "ทับทิม", "Sense", "Bike"];
+const TOPIC_META = {"ASTRO": {"th": "ดาราศาสตร์", "color": "#5B5FEF"}, "EARTH": {"th": "โลกและอวกาศ", "color": "#C1662F"}, "BIO": {"th": "ชีววิทยา", "color": "#3F8F5C"}, "CHM": {"th": "เคมี", "color": "#9B4F96"}, "PHY": {"th": "ฟิสิกส์", "color": "#2E7DD1"}};
+const TOPIC_PREFERRED_ORDER = ["ASTRO", "EARTH", "BIO", "CHM", "PHY"];
+const FALLBACK_DATA = [{"topic": "ASTRO", "section": "ASTRO1-No01-20", "label": "ASTRO-เน้นปรากฏการณ์โคจร-No01-10(14 ข้อ)", "items": 14.0, "students": {"เพลง": {"score": 10.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 12.0, "done": true}, "ของขวัญ": {"score": 10.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": 6.0, "done": true}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO1-No01-20", "label": "ASTRO-เน้นปรากฏการณ์โคจร-No11-20(19 ข้อ)", "items": 18.0, "students": {"เพลง": {"score": 0.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 13.0, "done": true}, "ของขวัญ": {"score": 0.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": 5.0, "done": true}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO1-No21-40", "label": "ASTRO-เน้นปรากฏการณ์โคจร-No21-25(15 ข้อ)", "items": 15.0, "students": {"เพลง": {"score": 9.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 0.0, "done": true}, "ของขวัญ": {"score": 6.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": 3.0, "done": true}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO1-No21-40", "label": "ASTRO-เน้นปรากฏการณ์โคจร-No26-27(12 ข้อ)", "items": 12.0, "students": {"เพลง": {"score": 10.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 7.0, "done": true}, "ของขวัญ": {"score": 10.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": 1.0, "done": true}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO1-No21-40", "label": "ASTRO-เน้นปรากฏการณ์โคจร-No28(13 ข้อ)", "items": 13.0, "students": {"เพลง": {"score": 8.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 9.0, "done": true}, "ของขวัญ": {"score": 12.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": 4.0, "done": true}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO1-No21-40", "label": "ASTRO-เน้นปรากฏการณ์โคจร-No29(12 ข้อ)", "items": 12.0, "students": {"เพลง": {"score": 8.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 2.0, "done": true}, "ของขวัญ": {"score": 0.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": 0.0, "done": true}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO1-No21-40", "label": "ASTRO-เน้นปรากฏการณ์โคจร-No30( ข้อ)", "items": 8.0, "students": {"เพลง": {"score": 4.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 1.0, "done": true}, "ของขวัญ": {"score": 0.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": 2.0, "done": true}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO1-No21-40", "label": "ASTRO-เน้นปรากฏการณ์โคจร-No31-40(14 ข้อ)", "items": 15.0, "students": {"เพลง": {"score": 9.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 10.0, "done": true}, "ของขวัญ": {"score": 6.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": 6.0, "done": true}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO1-No041-100", "label": "ASTRO-เน้นปรากฏการณ์โคจร-No41-45(11 ข้อ)", "items": 11.0, "students": {"เพลง": {"score": 7.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 4.0, "done": true}, "ของขวัญ": {"score": 9.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO1-No041-100", "label": "ASTRO-เน้นปรากฏการณ์โคจร-No46-50(15 ข้อ)", "items": 15.0, "students": {"เพลง": {"score": 12.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 9.0, "done": true}, "ของขวัญ": {"score": 0.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO1-No041-100", "label": "ASTRO-เน้นปรากฏการณ์โคจร-No51-60(4 ข้อ)", "items": 4.0, "students": {"เพลง": {"score": 3.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 2.0, "done": true}, "ของขวัญ": {"score": 3.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO1-No041-100", "label": "ASTRO-เน้นปรากฏการณ์โคจร-No61-100 (15 ข้อ)", "items": 15.0, "students": {"เพลง": {"score": 12.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 8.0, "done": true}, "ของขวัญ": {"score": 3.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO2-No01-100", "label": "ASTRO-การปรากฏของดวงดาว-SP-MainConcepts&Keyword-ผัง และภาพปรากฏ-No01-20 (11 ข้อ)", "items": 11.0, "students": {"เพลง": {"score": 6.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 10.0, "done": true}, "ของขวัญ": {"score": 5.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO2-No01-100", "label": "ASTRO-การปรากฏของดวงดาว-SP-MainConcepts&Keyword-ผัง และภาพปรากฏ-No21-25 (16 ข้อ)", "items": 16.0, "students": {"เพลง": {"score": 9.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 11.0, "done": true}, "ของขวัญ": {"score": 0.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO2-No01-100", "label": "ASTRO-การปรากฏของดวงดาว-SP-MainConcepts&Keyword-ผัง และภาพปรากฏ-No26-28 (13 ข้อ)", "items": 13.0, "students": {"เพลง": {"score": 11.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 11.0, "done": true}, "ของขวัญ": {"score": 3.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO2-No01-100", "label": "ASTRO-การปรากฏของดวงดาว-SP-MainConcepts&Keyword-ผัง และภาพปรากฏ-No29-30 (11 ข้อ)", "items": 11.0, "students": {"เพลง": {"score": 8.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 8.0, "done": true}, "ของขวัญ": {"score": 0.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO2-No01-100", "label": "ASTRO-การปรากฏของดวงดาว-SP-MainConcepts&Keyword-ผัง และภาพปรากฏ-No31-40 (11 ข้อ)", "items": 11.0, "students": {"เพลง": {"score": 7.0, "done": true}, "ยูโร": {"score": 6.0, "done": true}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 3.0, "done": true}, "ของขวัญ": {"score": 2.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO2-No01-100", "label": "ASTRO-การปรากฏของดวงดาว-SP-MainConcepts&Keyword-ผัง และภาพปรากฏ-No41-60 (10 ข้อ)", "items": 10.0, "students": {"เพลง": {"score": 5.0, "done": true}, "ยูโร": {"score": 7.0, "done": true}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 6.0, "done": true}, "ของขวัญ": {"score": 3.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "ASTRO", "section": "ASTRO2-No01-100", "label": "ASTRO-การปรากฏของดวงดาว-SP-MainConcepts&Keyword-ผัง และภาพปรากฏ-No61-100 (8 ข้อ)", "items": 8.0, "students": {"เพลง": {"score": 5.0, "done": true}, "ยูโร": {"score": 5.0, "done": true}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 6.0, "done": true}, "ของขวัญ": {"score": 1.0, "done": true}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": 2.0, "done": true}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No01-05", "label": "BIO-No01(23 ข้อ)", "items": 24.0, "students": {"เพลง": {"score": 13.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 19.0, "done": true}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": 6.0, "done": true}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": 5.0, "done": true}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No01-05", "label": "BIO-No02(24 ข้อ)", "items": 25.0, "students": {"เพลง": {"score": 17.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 16.0, "done": true}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": 6.0, "done": true}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": 0.0, "done": true}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No01-05", "label": "BIO-No03(28 ข้อ)", "items": 28.0, "students": {"เพลง": {"score": 21.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 17.0, "done": true}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": 9.0, "done": true}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No01-05", "label": "BIO-No04(19 ข้อ)", "items": 20.0, "students": {"เพลง": {"score": 11.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 15.0, "done": true}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": 7.0, "done": true}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No01-05", "label": "BIO-No05(15 ข้อ)", "items": 15.0, "students": {"เพลง": {"score": 8.0, "done": true}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": 12.0, "done": true}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": 2.0, "done": true}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIONo06-10", "label": "BIO-No06(20 ข้อ)", "items": 20.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIONo06-10", "label": "BIO-No07(20 ข้อ)", "items": 20.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIONo06-10", "label": "BIO-No08(21 ข้อ)", "items": 21.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIONo06-10", "label": "BIO-No09(19 ข้อ)", "items": 19.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIONo06-10", "label": "BIO-No10(10 ข้อ)", "items": 10.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No11-20", "label": "BIO-No11(12 ข้อ)", "items": 12.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No11-20", "label": "BIO-No12(14 ข้อ)", "items": 14.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No11-20", "label": "BIO-No13(13 ข้อ)", "items": 13.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No11-20", "label": "BIO-No14(9 ข้อ)", "items": 9.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No11-20", "label": "BIO-No15(8 ข้อ)", "items": 8.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No11-20", "label": "BIO-No16(9 ข้อ)", "items": 9.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No11-20", "label": "BIO-No17(6 ข้อ)", "items": 6.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No11-20", "label": "BIO-No18(7 ข้อ)", "items": 7.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No11-20", "label": "BIO-No19-20(6 ข้อ)", "items": 6.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No21-52", "label": "BIO-No21(8 ข้อ)", "items": 8.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No21-52", "label": "BIO-No22-24(3+5+5=13 ข้อ)", "items": 13.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No21-52", "label": "BIO-No25(10 ข้อ)", "items": 10.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No21-52", "label": "BIO-No26-27(19 ข้อ)", "items": 19.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No21-52", "label": "BIO-No28-30(3+8+5=16 ข้อ) RemLog", "items": 16.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No21-52", "label": "BIO-No31-33(2+2+4=8 ข้อ)", "items": 8.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No21-52", "label": "BIO-No34-35(3+6=9 ข้อ)", "items": 9.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No21-52", "label": "BIO-No36(2 ข้อ)", "items": 2.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No21-52", "label": "BIO-No37-39(7+1+4=12 ข้อ)", "items": 12.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No21-52", "label": "BIO-No40(2 ข้อ)", "items": 2.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No21-52", "label": "BIO-No43-45(3+2+5=10 ข้อ)", "items": 10.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No21-52", "label": "BIO-No46-48(3+5+2=10 ข้อ)", "items": 10.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No21-52", "label": "BIO-No49-50(1+9=10 ข้อ)", "items": 10.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No21-52", "label": "BIO-No51 (1 ข้อ)", "items": 11.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "BIO", "section": "BIO-No21-52", "label": "BIO-No52-60(4 ข้อ)", "items": 4.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No01-14", "label": "CHM-No01-03(2+6+2=10 ข้อ)", "items": 10.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No01-14", "label": "CHM-No04-05(4+6=10 ข้อ)", "items": 10.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No01-14", "label": "CHM-No06(5 ข้อ)", "items": 5.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No01-14", "label": "CHM-No07-09(7+9+7=23 ข้อ)", "items": 23.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No01-14", "label": "CHM-No10(8 ข้อ)", "items": 8.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No01-14", "label": "CHM-No11(10 ข้อ)", "items": 10.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No01-14", "label": "CHM-No12(16 ข้อ)", "items": 16.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No01-14", "label": "CHM-No13(21 ข้อ)", "items": 21.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No01-14", "label": "CHM-No14(18 ข้อ)", "items": 21.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No15-30", "label": "CHM-No15(22 ข้อ)", "items": 22.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No15-30", "label": "CHM-No16(22 ข้อ)", "items": 22.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No15-30", "label": "CHM-No17(11 ข้อ)", "items": 11.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No15-30", "label": "CHM-No18 (14 ข้อ)", "items": 14.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No15-30", "label": "CHM-No19(18 ข้อ)", "items": 18.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No15-30", "label": "CHM-No20(12 ข้อ)", "items": 12.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No15-30", "label": "CHM-No21(17 ข้อ)", "items": 17.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No15-30", "label": "CHM-No22(16 ข้อ)", "items": 16.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No15-30", "label": "CHM-No23(13 ข้อ)", "items": 13.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No15-30", "label": "CHM-No24(7 ข้อ)", "items": 7.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No15-30", "label": "CHM-No25(7 ข้อ)", "items": 7.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No15-30", "label": "CHM-No26-27(7+8=15 ข้อ)", "items": 15.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No15-30", "label": "CHM-No28-30(9+10+4=24 ข้อ)", "items": 24.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No31-50", "label": "CHM-No31 (11 ข้อ)", "items": 11.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No31-50", "label": "CHM-No32-33(4+3=7 ข้อ)", "items": 7.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No31-50", "label": "CHM-No34-35(9 ข้อ)", "items": 9.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No31-50", "label": "CHM-No36(1 ข้อ)", "items": 1.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No31-50", "label": "CHM-No37-39(5+8+3=16 ข้อ)", "items": 16.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No31-50", "label": "CHM-No40(9 ข้อ)", "items": 9.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No31-50", "label": "CHM-No41-42(15 ข้อ)", "items": 6.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No31-50", "label": "CHM-No43-45(6+6+4=16 ข้อ)", "items": 16.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No31-50", "label": "CHM-No46-48(12 ข้อ)", "items": 12.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "CHM", "section": "CHM-No31-50", "label": "CHM-No49-50(6+3=9 ข้อ)", "items": 9.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "EARTH", "section": "EARTH-No01-25", "label": "EARTH-No01-10(11 ข้อ)", "items": 11.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "EARTH", "section": "EARTH-No01-25", "label": "EARTH-No11-15(24 ข้อ)", "items": 24.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "EARTH", "section": "EARTH-No01-25", "label": "EARTH-No16-20(25 ข้อ)", "items": 25.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "EARTH", "section": "EARTH-No01-25", "label": "EARTH-No21-24(2+3+6+7=18 ข้อ)", "items": 18.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "EARTH", "section": "EARTH-No01-25", "label": "EARTH-No25 (11 ข้อ)", "items": 11.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "EARTH", "section": "EARTH-No26-60", "label": "EARTH-No26-27(19 ข้อ)", "items": 19.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "EARTH", "section": "EARTH-No26-60", "label": "EARTH-No28(10 ข้อ)", "items": 10.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "EARTH", "section": "EARTH-No26-60", "label": "EARTH-No29(14 ข้อ)", "items": 14.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "EARTH", "section": "EARTH-No26-60", "label": "EARTH-No30(17 ข้อ)", "items": 17.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "EARTH", "section": "EARTH-No26-60", "label": "EARTH-No31-35(13 ข้อ)", "items": 13.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "EARTH", "section": "EARTH-No26-60", "label": "EARTH-No36-40(13 ข้อ)", "items": 13.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "EARTH", "section": "EARTH-No26-60", "label": "EARTH-No41-50(10 ข้อ)", "items": 10.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "EARTH", "section": "EARTH-No26-60", "label": "EARTH-No51-60(12 ข้อ)", "items": 12.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No01-15", "label": "PHY-No01-03(10 ข้อ)", "items": 10.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No01-15", "label": "PHY-No04-06(15 ข้อ)", "items": 15.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No01-15", "label": "PHY-No07-09(13 ข้อ)", "items": 13.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No01-15", "label": "PHY-No10(12 ข้อ)", "items": 12.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No01-15", "label": "PHY-No11-12(15 ข้อ)", "items": 15.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No01-15", "label": "PHY-No13(11 ข้อ)", "items": 11.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No01-15", "label": "PHY-No14(8 ข้อ)", "items": 8.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No01-15", "label": "PHY-No15(11 ข้อ)", "items": 11.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No16-20", "label": "PHY-No16(12 ข้อ)*", "items": 12.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No16-20", "label": "PHY-No17(15 ข้อ)*", "items": 15.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No16-20", "label": "PHY-No18(21 ข้อ)*", "items": 22.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No16-20", "label": "PHY-No19(16 ข้อ)*", "items": 16.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No16-20", "label": "PHY-No20(15 ข้อ)*", "items": 16.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No21-30", "label": "PHY-No21(14 ข้อ)*", "items": 14.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No21-30", "label": "PHY-No22(12 ข้อ)*", "items": 12.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No21-30", "label": "PHY-No23(13 ข้อ)*", "items": 13.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No21-30", "label": "PHY-No24(12 ข้อ)*", "items": 12.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No21-30", "label": "PHY-No25-27(20 ข้อ)", "items": 20.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No21-30", "label": "PHY-No28-30(23 ข้อ)", "items": 23.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No31-50", "label": "PHY-No31-33(19 ข้อ)", "items": 19.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No31-50", "label": "PHY-No34-36(20 ข้อ)", "items": 20.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No31-50", "label": "PHY-No37-39(13 ข้อ)", "items": 13.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No31-50", "label": "PHY-No40(4 ข้อ)", "items": 4.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No31-50", "label": "PHY-No41-42(4 ข้อ)", "items": 4.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No31-50", "label": "PHY-No43-45(9 ข้อ)", "items": 9.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No31-50", "label": "PHY-No46-48(8 ข้อ)", "items": 8.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}, {"topic": "PHY", "section": "PHY-No31-50", "label": "PHY-No49-50(5 ข้อ)", "items": 5.0, "students": {"เพลง": {"score": null, "done": false}, "ยูโร": {"score": null, "done": false}, "ออโต้": {"score": null, "done": false}, "ไตตั้น": {"score": null, "done": false}, "ของขวัญ": {"score": null, "done": false}, "แก้มใส": {"score": null, "done": false}, "ทับทิม": {"score": null, "done": false}, "Sense": {"score": null, "done": false}, "Bike": {"score": null, "done": false}}}];
+
+const AVATAR_COLORS = ['#5B5FEF','#C1662F','#3F8F5C','#9B4F96','#2E7DD1','#E3A62F','#D14D72','#2AA198','#7A5CFA'];
+const EXTRA_TOPIC_COLORS = ['#8B6F4E','#4E8B8B','#B84E7A','#5E8B4E','#4E5E8B'];
+const avatarColor = (i) => AVATAR_COLORS[i % AVATAR_COLORS.length];
+const initials = (name) => name.slice(0,1);
+
+let DATA = FALLBACK_DATA;
+let TOPIC_ORDER = [];
+let current = STUDENTS[0];
+let openSections = new Set(); // remembers which <details> are open across re-renders
+
+function buildTopicOrder(data) {
+  const present = [...new Set(data.map(d => d.topic))];
+  const known = TOPIC_PREFERRED_ORDER.filter(t => present.includes(t));
+  const unknown = present.filter(t => !TOPIC_PREFERRED_ORDER.includes(t)).sort();
+  unknown.forEach((t,i) => {
+    if (!TOPIC_META[t]) TOPIC_META[t] = { th: t, color: EXTRA_TOPIC_COLORS[i % EXTRA_TOPIC_COLORS.length] };
+  });
+  return [...known, ...unknown];
+}
+
+/* ---------- Minimal RFC4180 CSV parser ---------- */
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = '', inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i], next = text[i+1];
+    if (inQuotes) {
+      if (c === '"' && next === '"') { field += '"'; i++; }
+      else if (c === '"') { inQuotes = false; }
+      else { field += c; }
+    } else {
+      if (c === '"') { inQuotes = true; }
+      else if (c === ',') { row.push(field); field = ''; }
+      else if (c === '\r') { /* skip */ }
+      else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+      else { field += c; }
+    }
+  }
+  if (field.length || row.length) { row.push(field); rows.push(row); }
+  return rows;
+}
+
+/* Locate columns by header text (scanning across the first 3 header rows combined)
+   instead of fixed index, so reordering/inserting columns in the sheet doesn't
+   silently break parsing. Expected headers: หมวดวิชา, SECTION/SECTON, ชื่อเอกสาร,
+   จำนวนข้อในชุด, then per-student name + (จำนวนครั้ง, คะแนนล่าสุด, คะแนนรายชุด) triplet. */
+function detectColumns(rows) {
+  const h0 = rows[0] || [], h1 = rows[1] || [], h2 = rows[2] || [];
+  const maxCols = Math.max(h0.length, h1.length, h2.length);
+  const combined = (j) => (h0[j]||'') + (h1[j]||'') + (h2[j]||'');
+  let topicCol = -1, sectionCol = -1, docCol = -1, itemsCol = -1, statusCol = -1;
+  for (let j = 0; j < maxCols; j++) {
+    const c = combined(j);
+    if (topicCol === -1 && c.includes('หมวดวิชา')) topicCol = j;
+    if (sectionCol === -1 && /SECT/i.test(c)) sectionCol = j;
+    if (docCol === -1 && c.includes('ชื่อเอกสาร')) docCol = j;
+    if (itemsCol === -1 && c.includes('จำนวนข้อในชุด')) itemsCol = j;
+    if (statusCol === -1 && c.includes('สถานะ')) statusCol = j;
+  }
+  const studentCol = {};
+  h0.forEach((v,i) => {
+    const t = (v || '').trim();
+    if (STUDENTS.includes(t) && !(t in studentCol)) {
+      let scoreIdx = i + 1;
+      if (!(h2[scoreIdx] || '').includes('คะแนน')) {
+        for (let k = i; k < Math.min(i+4, h2.length); k++) {
+          if ((h2[k] || '').includes('คะแนน')) { scoreIdx = k; break; }
+        }
+      }
+      studentCol[t] = scoreIdx;
+    }
+  });
+  return { topicCol, sectionCol, docCol, itemsCol, statusCol, studentCol };
+}
+
+function cleanTopic(v) { return v.replace(/หมวด/g, '').trim().toUpperCase(); }
+
+/* topicManualStatus: { TOPIC: '<raw status text, e.g. "ครบ">' } — only set when the
+   sheet author explicitly filled the optional "สถานะหมวด" column for that topic's first row.
+   Used to override the automatic completeness guess below. */
+let topicManualStatus = {};
+
+function parseSheetRows(rows) {
+  const { topicCol, sectionCol, docCol, itemsCol, statusCol, studentCol } = detectColumns(rows);
+  topicManualStatus = {};
+  if (docCol === -1 || itemsCol === -1 || Object.keys(studentCol).length < STUDENTS.length) {
+    throw new Error('ไม่พบคอลัมน์ที่คาดไว้ในชีท (ชื่อเอกสาร / จำนวนข้อในชุด / รายชื่อนักเรียน) — โครงสร้างอาจเปลี่ยนไปมาก');
+  }
+  const docs = [];
+  let curTopic = '', curSection = '';
+  for (let r = 3; r < rows.length; r++) {
+    const row = rows[r];
+    if (!row) continue;
+    const t0 = topicCol !== -1 ? (row[topicCol] || '').trim() : '';
+    const s0 = sectionCol !== -1 ? (row[sectionCol] || '').trim() : '';
+    if (t0 && !t0.startsWith('#')) {
+      curTopic = cleanTopic(t0);
+    }
+    if (s0 && !s0.startsWith('#')) curSection = s0;
+    if (statusCol !== -1) {
+      const st0 = (row[statusCol] || '').trim();
+      if (st0) topicManualStatus[curTopic] = st0;
+    }
+
+    const colDoc = (row[docCol] || '').trim();
+    const colItems = (row[itemsCol] || '').trim();
+    if (!colDoc || colDoc.startsWith('#')) continue;
+    const items = parseFloat(colItems);
+    if (!isFinite(items) || items <= 0) continue;
+
+    let topic = curTopic;
+    if (!topic) {
+      const m = colDoc.match(/@([A-Za-z]+)/);
+      topic = m ? m[1].toUpperCase() : 'อื่นๆ';
+    }
+    const section = curSection || (topic + ' · ทั่วไป');
+
+    let label = colDoc.includes('@') ? colDoc.split('@').slice(1).join('@') : colDoc;
+    label = label.replace(/#/g,'').trim().replace(/^-+|-+$/g,'');
+
+    const studentsObj = {};
+    STUDENTS.forEach(s => {
+      const idx = studentCol[s];
+      const raw = (row[idx] || '').trim();
+      const num = raw === '' ? null : parseFloat(raw);
+      const score = (num !== null && isFinite(num)) ? num : null;
+      studentsObj[s] = { score, done: raw !== '' };
+    });
+    docs.push({ topic, section, label, items, students: studentsObj });
+  }
+  return docs;
+}
+
+function computeStudentStats(name) {
+  let setsDone = 0, itemsDone = 0, scoreSum = 0, itemsScoredBasis = 0;
+  DATA.forEach(d => {
+    const s = d.students[name];
+    if (s && s.done) {
+      setsDone++; itemsDone += d.items;
+      if (s.score !== null) { scoreSum += s.score; itemsScoredBasis += d.items; }
+    }
+  });
+  const avgPct = itemsScoredBasis > 0 ? (scoreSum / itemsScoredBasis * 100) : null;
+  return { setsDone, itemsDone, avgPct };
+}
+
+function totalItems() { return DATA.reduce((s,d)=>s+d.items,0); }
+function totalDocs() { return DATA.length; }
+
+/* A topic (subject) is "complete" when every test-set in it has been attempted by
+   at least one student (i.e. the curriculum has been fully rolled out to the class) —
+   UNLESS the sheet author explicitly set the optional "สถานะหมวด" column, which always wins. */
+function isTopicComplete(topic, docs) {
+  if (topicManualStatus[topic]) return true; // any non-empty manual marker overrides
+  return docs.every(d => STUDENTS.some(s => d.students[s] && d.students[s].done));
+}
+
+/* Subject-level score for one student = (sum of scores achieved across sets they did)
+   / (total items in the WHOLE subject) — denominator does not shrink for skipped sets. */
+function topicStudentScore(name, docs) {
+  const totalI = docs.reduce((s,d)=>s+d.items,0);
+  const hasData = docs.some(d => d.students[name] && d.students[name].done);
+  if (!hasData) return { hasData: false, totalI };
+  const scoreSum = docs.reduce((s,d) => {
+    const sd = d.students[name];
+    return s + ((sd && sd.done && sd.score !== null) ? sd.score : 0);
+  }, 0);
+  return { hasData: true, totalI, scoreSum, pct: totalI > 0 ? (scoreSum/totalI*100) : 0 };
+}
+
+function computeDaysLeft(iso) {
+  const target = new Date(iso + 'T00:00:00');
+  const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.ceil((target - startOfToday) / 86400000);
+}
+
+function renderCountdowns() {
+  const el = document.getElementById('countdownRow');
+  el.innerHTML = COUNTDOWNS.map((c, i) => {
+    const days = computeDaysLeft(c.targetDateISO);
+    const dateLabel = new Date(c.targetDateISO + 'T00:00:00')
+      .toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
+    let daysHtml;
+    if (days > 0) daysHtml = `<div class="days">${days}<span class="unit">วัน</span></div>`;
+    else if (days === 0) daysHtml = `<div class="days" style="font-size:22px;">วันนี้!</div>`;
+    else daysHtml = `<div class="days" style="font-size:15px; opacity:.65;">ผ่านไปแล้ว</div>`;
+    return `
+      <div class="countdown-card">
+        <div class="cd-tag">Countdown ${i+1}</div>
+        ${daysHtml}
+        <div class="cd-label">${c.label}</div>
+        <div class="cd-date">${dateLabel}</div>
+      </div>`;
+  }).join('');
+}
+
+function buildStatStrip() {
+  const el = document.getElementById('statStrip');
+  const chips = [
+    [totalItems().toLocaleString(), 'ข้อทั้งหมด'],
+    [totalDocs(), 'ชุดข้อสอบ'],
+    [TOPIC_ORDER.length, 'หมวดวิชา'],
+    [STUDENTS.length, 'นักเรียน'],
+  ];
+  el.innerHTML = chips.map(([v,l]) => `<div class="stat-pill"><b>${v}</b><span>${l}</span></div>`).join('');
+}
+
+function buildSelector() {
+  const el = document.getElementById('selector');
+  el.innerHTML = STUDENTS.map((s,i) => `
+    <button class="pill-btn" data-name="${s}">
+      <span class="avatar" style="background:${avatarColor(i)}">${initials(s)}</span>${s}
+    </button>`).join('');
+  el.querySelectorAll('.pill-btn').forEach(btn => {
+    btn.addEventListener('click', () => { current = btn.dataset.name; logPage = 0; render(); });
+  });
+}
+
+function renderRing(name) {
+  const stats = computeStudentStats(name);
+  const total = totalItems();
+  const pct = total > 0 ? (stats.itemsDone / total * 100) : 0;
+  const r = 74, circumference = 2 * Math.PI * r;
+  const offset = circumference * (1 - pct/100);
+  const ring = document.getElementById('ringFill');
+  ring.setAttribute('stroke-dasharray', circumference);
+  ring.setAttribute('stroke-dashoffset', circumference);
+  requestAnimationFrame(() => {
+    ring.style.transition = 'stroke-dashoffset .6s ease';
+    ring.setAttribute('stroke-dashoffset', offset);
+  });
+  document.getElementById('ringPct').textContent = (pct > 0 && pct < 1 ? pct.toFixed(1) : Math.round(pct)) + '%';
+  document.getElementById('ringName').textContent = name;
+  document.getElementById('kpiSets').innerHTML = stats.setsDone + `<small> / ${totalDocs()} ชุด</small>`;
+  document.getElementById('kpiItems').innerHTML = stats.itemsDone + `<small> / ${total.toLocaleString()} ข้อ</small>`;
+  document.getElementById('kpiAvg').innerHTML = stats.avgPct === null ? '—' : stats.avgPct.toFixed(0) + '<small>%</small>';
+}
+
+/* group an array of docs by a key, preserving first-seen order */
+function groupByOrdered(arr, keyFn) {
+  const map = new Map();
+  arr.forEach(item => {
+    const k = keyFn(item);
+    if (!map.has(k)) map.set(k, []);
+    map.get(k).push(item);
+  });
+  return map;
+}
+
+function pctColor(pct) {
+  if (pct >= 70) return '#2E9E5B';
+  if (pct >= 50) return '#E3A62F';
+  return '#D14D4D';
+}
+
+function renderSubjects(name) {
+  const el = document.getElementById('subjectBlocks');
+  el.innerHTML = TOPIC_ORDER.map(topic => {
+    const meta = TOPIC_META[topic];
+    const topicDocs = DATA.filter(d => d.topic === topic);
+    const totalI = topicDocs.reduce((s,d)=>s+d.items,0);
+    const doneDocsAll = topicDocs.filter(d => d.students[name] && d.students[name].done);
+    const doneItemsAll = doneDocsAll.reduce((s,d)=>s+d.items,0);
+    const topicPct = totalI > 0 ? (doneItemsAll/totalI*100) : 0;
+
+    const sections = groupByOrdered(topicDocs, d => d.section);
+
+    // Consistency bar chart: one bar per section the student has touched at all,
+    // height = (score achieved in that section) / (full item total of that section) %.
+    const chartBars = [...sections.entries()].map(([secName, docs]) => {
+      const touched = docs.some(d => d.students[name] && d.students[name].done);
+      if (!touched) return null;
+      const secTotalItems = docs.reduce((s,d)=>s+d.items,0);
+      const achieved = docs.reduce((s,d) => {
+        const sd = d.students[name];
+        return s + ((sd && sd.done && sd.score !== null) ? sd.score : 0);
+      }, 0);
+      const pct = secTotalItems > 0 ? (achieved/secTotalItems*100) : 0;
+      return { secName, pct };
+    }).filter(Boolean);
+
+    const chartHtml = chartBars.length ? `
+      <div class="section-scorechart">
+        ${chartBars.map(b => `
+          <div class="chart-bar-col">
+            <div class="chart-bar-pct" style="color:${pctColor(b.pct)}">${b.pct.toFixed(0)}%</div>
+            <div class="chart-bar" style="height:${Math.max(b.pct,2)}%; background:${pctColor(b.pct)}"></div>
+            <div class="chart-bar-label" title="${b.secName.replace(/"/g,'&quot;')}">${b.secName}</div>
+          </div>`).join('')}
+      </div>` : '';
+
+    // Subject-level completeness + this student's whole-subject score
+    const complete = isTopicComplete(topic, topicDocs);
+    const tScore = topicStudentScore(name, topicDocs);
+    let subjectScoreHtml;
+    if (!complete) {
+      subjectScoreHtml = `<div class="subject-status incomplete">การทดสอบในหมวดนี้ยังไม่เสร็จสมบูรณ์</div>`;
+    } else if (!tScore.hasData) {
+      subjectScoreHtml = `<div class="subject-status nodata">ไม่มีข้อมูล</div>`;
+    } else {
+      subjectScoreHtml = `<div class="subject-status scored" style="color:${pctColor(tScore.pct)}">คะแนนรวมหมวด: ${tScore.scoreSum}/${tScore.totalI} (${tScore.pct.toFixed(0)}%)</div>`;
+    }
+
+    const sectionsHtml = [...sections.entries()].map(([secName, docs]) => {
+      const secItems = docs.reduce((s,d)=>s+d.items,0);
+      const doneDocs = docs.filter(d => d.students[name] && d.students[name].done);
+      const doneItems = doneDocs.reduce((s,d)=>s+d.items,0);
+      const secPct = secItems > 0 ? (doneItems/secItems*100) : 0;
+
+      // Section average score = arithmetic mean of each completed set's % (average of averages)
+      const scored = doneDocs.filter(d => d.students[name].score !== null);
+      const avgPct = scored.length
+        ? scored.reduce((s,d) => s + (d.students[name].score / d.items * 100), 0) / scored.length
+        : null;
+
+      const secId = `${topic}__${secName}`;
+      const defaultOpen = doneDocs.length > 0;
+      const open = openSections.has(secId) ? true : (openSections.has('closed:' + secId) ? false : defaultOpen);
+
+      const cardsHtml = docs.map(d => {
+        const sd = d.students[name];
+        const done = sd && sd.done;
+        const hasScore = done && sd.score !== null;
+        const pct = hasScore ? (sd.score / d.items * 100) : null;
+        const borderColor = done ? (hasScore ? pctColor(pct) : '#9AA3B5') : '#DCE1EB';
+        const shortLabel = (d.label.match(/No\s*\d+[\d\-–\s]*\d*/)||[d.label.slice(0,16)])[0];
+        return `
+          <div class="testset-card ${done?'':'pending'}" style="border-left-color:${borderColor}" title="${d.label.replace(/"/g,'&quot;')}">
+            <div class="ts-label">${shortLabel}</div>
+            <div class="ts-meta"><span>${d.items} ข้อ</span>
+              ${ done
+                  ? (hasScore
+                      ? `<span class="ts-score">${sd.score}</span>`
+                      : `<span style="color:#9AA3B5;">ทำแล้ว</span>`)
+                  : `<span style="color:#B9C0CE;">ยังไม่ทำ</span>` }
+            </div>
+            ${ hasScore ? `<div style="margin-top:5px;"><span class="ts-pct" style="background:${pctColor(pct)}22; color:${pctColor(pct)}">${pct.toFixed(0)}%</span></div>` : '' }
+          </div>`;
+      }).join('');
+
+      return `
+        <details class="section-item" data-secid="${secId}" ${open ? 'open' : ''}>
+          <summary>
+            <span class="sec-name">${secName}</span>
+            <span class="sec-stat"><b>${doneDocs.length}</b>/${docs.length} ชุด</span>
+            <span class="sec-stat"><b>${doneItems}</b>/${secItems} ข้อ</span>
+            <span class="sec-avg" style="color:${avgPct===null?'var(--ink-soft)':pctColor(avgPct)}">${avgPct===null?'—':avgPct.toFixed(0)+'%'}</span>
+            <span class="chev">▶</span>
+            <div class="sec-mini-track"><div class="sec-mini-fill" style="width:${secPct}%; background:${meta.color}"></div></div>
+          </summary>
+          <div class="testset-grid">${cardsHtml}</div>
+        </details>`;
+    }).join('');
+
+    return `
+      <div class="subject-block">
+        <div class="subject-head">
+          <div class="subject-name"><span class="dot-chip" style="background:${meta.color}"></span>${topic} · ${meta.th}</div>
+          <div class="subject-nums"><b>${doneDocsAll.length}</b>/${topicDocs.length} ชุด &nbsp;·&nbsp; <b>${doneItemsAll}</b>/${totalI} ข้อ</div>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${topicPct}%; background:${meta.color}"></div></div>
+        ${subjectScoreHtml}
+        ${chartHtml}
+        <div class="section-list">${sectionsHtml}</div>
+      </div>`;
+  }).join('');
+
+  // wire up open/close persistence
+  el.querySelectorAll('details.section-item').forEach(det => {
+    det.addEventListener('toggle', () => {
+      const id = det.dataset.secid;
+      if (det.open) { openSections.add(id); openSections.delete('closed:' + id); }
+      else { openSections.delete(id); openSections.add('closed:' + id); }
+    });
+  });
+}
+
+const LOG_PAGE_SIZE = 15;
+let logPage = 0;
+
+function renderLog(name) {
+  const rows = DATA.filter(d => d.students[name] && d.students[name].done && d.students[name].score !== null);
+  const body = document.getElementById('logBody');
+  const empty = document.getElementById('logEmpty');
+  const table = document.getElementById('logTable');
+  const pager = document.getElementById('logPager');
+
+  if (!rows.length) {
+    document.getElementById('logHint').textContent = '';
+    table.style.display = 'none'; empty.style.display = 'block'; pager.style.display = 'none';
+    return;
+  }
+  table.style.display = 'table'; empty.style.display = 'none';
+
+  const totalPages = Math.max(1, Math.ceil(rows.length / LOG_PAGE_SIZE));
+  if (logPage >= totalPages) logPage = totalPages - 1;
+  if (logPage < 0) logPage = 0;
+  const start = logPage * LOG_PAGE_SIZE;
+  const pageRows = rows.slice(start, start + LOG_PAGE_SIZE);
+
+  document.getElementById('logHint').textContent = `${rows.length} ชุดที่มีการบันทึกคะแนน`;
+  body.innerHTML = pageRows.map(d => {
+    const s = d.students[name];
+    const meta = TOPIC_META[d.topic];
+    const pct = (s.score / d.items * 100).toFixed(0);
+    return `<tr>
+      <td><span class="subj-tag" style="background:${meta.color}">${d.topic}</span></td>
+      <td>${d.section}</td>
+      <td>${d.label}</td><td>${d.items}</td>
+      <td class="score-cell">${s.score}</td><td>${pct}%</td>
+    </tr>`;
+  }).join('');
+
+  if (rows.length > LOG_PAGE_SIZE) {
+    pager.style.display = 'flex';
+    document.getElementById('logPageInfo').textContent = `หน้า ${logPage + 1} จาก ${totalPages}`;
+    document.getElementById('logPrevBtn').disabled = logPage === 0;
+    document.getElementById('logNextBtn').disabled = logPage >= totalPages - 1;
+  } else {
+    pager.style.display = 'none';
+  }
+}
+
+document.getElementById('logPrevBtn').addEventListener('click', () => { logPage--; renderLog(current); });
+document.getElementById('logNextBtn').addEventListener('click', () => { logPage++; renderLog(current); });
+
+let classOverviewLimit = 5; // default: Top 5
+
+function renderClassOverview(name) {
+  const el = document.getElementById('classList');
+  const total = totalItems();
+  document.getElementById('classHint').textContent = `เทียบสัดส่วนข้อที่ทำแล้วจากทั้งหมด ${total.toLocaleString()} ข้อ`;
+  let stats = STUDENTS.map((s,i) => {
+    const st = computeStudentStats(s);
+    return { name: s, i, itemsDone: st.itemsDone, pct: total ? st.itemsDone/total*100 : 0 };
+  }).sort((a,b) => b.itemsDone - a.itemsDone);
+  if (classOverviewLimit !== 'all') stats = stats.slice(0, classOverviewLimit);
+  el.innerHTML = stats.map(s => `
+    <div class="class-row ${s.name===name?'active':''}">
+      <div class="cname"><span class="mini-avatar" style="background:${avatarColor(s.i)}">${initials(s.name)}</span>${s.name}</div>
+      <div class="track"><div class="fill" style="width:${Math.max(s.pct,1.2)}%"></div></div>
+      <div class="pct">${s.itemsDone} ข้อ</div>
+    </div>`).join('');
+}
+
+document.querySelectorAll('#classLimitGroup .seg-btn').forEach(btn => {
+  btn.classList.toggle('active', btn.dataset.limit === String(classOverviewLimit));
+  btn.addEventListener('click', () => {
+    classOverviewLimit = btn.dataset.limit === 'all' ? 'all' : parseInt(btn.dataset.limit, 10);
+    document.querySelectorAll('#classLimitGroup .seg-btn').forEach(b => b.classList.toggle('active', b === btn));
+    renderClassOverview(current);
+  });
+});
+
+function render() {
+  document.querySelectorAll('.pill-btn').forEach(b => b.classList.toggle('active', b.dataset.name === current));
+  buildStatStrip();
+  renderRing(current);
+  renderSubjects(current);
+  renderLog(current);
+  renderClassOverview(current);
+}
+
+function setSourceBadge(state, when) {
+  const bar = document.getElementById('sourceBar');
+  const label = document.getElementById('sourceLabel');
+  const footer = document.getElementById('footerNote');
+  bar.classList.remove('live','cached');
+  if (state === 'loading') {
+    label.textContent = 'กำลังโหลดข้อมูลสด…';
+  } else if (state === 'live') {
+    bar.classList.add('live');
+    label.textContent = `ข้อมูลสดจาก Google Sheets · ดึงล่าสุด ${when}`;
+    footer.textContent = 'ข้อมูลนี้ดึงสดจาก Google Sheets ทุกครั้งที่เปิดหน้านี้ (หรือกดรีเฟรช) — โครงสร้าง: หมวดวิชา → SECTION → ชุดข้อสอบ, คอลัมน์คะแนนอ้างอิงจาก "คะแนนล่าสุด" ของนักเรียนแต่ละคน';
+  } else {
+    bar.classList.add('cached');
+    label.textContent = `ใช้ข้อมูลสำรอง (บันทึกไว้ตอนสร้างไฟล์ — อาจไม่ครบทุกหมวด) · โหลดสดไม่สำเร็จ`;
+    footer.textContent = 'โหลดข้อมูลสดจาก Google Sheets ไม่สำเร็จ (อาจเป็นเพราะไม่มีอินเทอร์เน็ต, เปิดไฟล์แบบ local file://, หรือลิงก์เปลี่ยน) จึงแสดงข้อมูลสำรองที่บันทึกไว้ล่าสุดแทน กดปุ่ม "รีเฟรชข้อมูล" เพื่อลองใหม่ หรือเปิดไฟล์นี้ผ่าน Claude / เว็บโฮสติ้งแทนการเปิดไฟล์ในเครื่องโดยตรง';
+  }
+}
+
+async function loadLive() {
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  setSourceBadge('loading');
+  try {
+    const res = await fetch(CSV_URL, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    const rows = parseCSV(text);
+    const parsed = parseSheetRows(rows);
+    if (!parsed.length) throw new Error('no rows parsed');
+    DATA = parsed;
+    const now = new Date();
+    setSourceBadge('live', now.toLocaleString('th-TH', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' }));
+  } catch (err) {
+    DATA = FALLBACK_DATA;
+    setSourceBadge('cached');
+    console.warn('Live fetch failed, using fallback snapshot:', err);
+  }
+  TOPIC_ORDER = buildTopicOrder(DATA);
+  render();
+  btn.disabled = false;
+}
+
+document.getElementById('refreshBtn').addEventListener('click', loadLive);
+
+TOPIC_ORDER = buildTopicOrder(DATA);
+renderCountdowns();
+buildSelector();
+render();
+loadLive();
+</script>
+</body>
+</html>
