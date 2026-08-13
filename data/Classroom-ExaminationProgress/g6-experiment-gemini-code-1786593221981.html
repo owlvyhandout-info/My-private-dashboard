@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Google Sheets Dashboard</title>
+    <!-- Tailwind CSS สำหรับจัดสไตล์ -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PapaParse สำหรับอ่านไฟล์ CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <!-- Chart.js สำหรับวาดกราฟ -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans p-6">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900">📊 Dynamic Real-time Dashboard</h1>
+                <p class="text-sm text-slate-500 mt-1">อัปเดตข้อมูลอัตโนมัติจาก Google Sheets CSV</p>
+            </div>
+            <div class="mt-4 md:mt-0 flex items-center gap-3">
+                <span id="lastUpdated" class="text-xs text-slate-400">กำลังโหลดข้อมูล...</span>
+                <button onclick="fetchData()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition shadow-sm">
+                    🔄 รีเฟรชข้อมูล
+                </button>
+            </div>
+        </div>
+
+        <!-- KPI Cards Summary -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="kpiContainer">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-sm text-slate-500 font-medium">จำนวนแถวทั้งหมด</p>
+                <h3 id="totalRows" class="text-3xl font-bold text-indigo-600 mt-2">-</h3>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-sm text-slate-500 font-medium">คอลัมน์ข้อมูล</p>
+                <h3 id="totalCols" class="text-3xl font-bold text-emerald-600 mt-2">-</h3>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-sm text-slate-500 font-medium">สถานะการเชื่อมต่อ</p>
+                <h3 id="statusText" class="text-lg font-bold text-slate-700 mt-3">⚡ กำลังเชื่อมต่อ...</h3>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <h2 class="text-lg font-bold text-slate-800 mb-4">สรุปภาพรวมข้อมูล</h2>
+            <div class="relative h-80">
+                <canvas id="mainChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Table Data Section -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <h2 class="text-lg font-bold text-slate-800 mb-4">ตารางข้อมูลล่าสุด</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm border-collapse" id="dataTable">
+                    <thead>
+                        <tr id="tableHeader" class="bg-slate-50 text-slate-600 border-b border-slate-200"></tr>
+                    </thead>
+                    <tbody id="tableBody" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0EbF7pIL_d4dsNzRbfoHf4uJ89JVSyyaczvhTccOM5CZtN_dD813-ZZFSXwZFDN8eYjqjR6qIGN15/pub?gid=1278100255&single=true&output=csv';
+        let chartInstance = null;
+
+        function fetchData() {
+            document.getElementById('statusText').innerText = '🔄 กำลังดึงข้อมูล...';
+            
+            Papa.parse(CSV_URL, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    const data = results.data;
+                    const fields = results.meta.fields;
+
+                    if (!data || data.length === 0) {
+                        document.getElementById('statusText').innerText = '❌ ไม่พบข้อมูล';
+                        return;
+                    }
+
+                    // 1. อัปเดต KPI
+                    document.getElementById('totalRows').innerText = data.length.toLocaleString();
+                    document.getElementById('totalCols').innerText = fields.length;
+                    document.getElementById('statusText').innerText = '✅ ปกติ (Auto-sync)';
+                    document.getElementById('lastUpdated').innerText = 'อัปเดตล่าสุด: ' + new Date().toLocaleTimeString('th-TH');
+
+                    // 2. แสดงตารางข้อมูล (แสดง 10 แถวแรก)
+                    renderTable(fields, data.slice(0, 10));
+
+                    // 3. วาดกราฟอัตโนมัติ
+                    renderChart(fields, data);
+                },
+                error: function(err) {
+                    document.getElementById('statusText').innerText = '❌ ดึงข้อมูลไม่สำเร็จ';
+                    console.error("Error fetching CSV:", err);
+                }
+            });
+        }
+
+        function renderTable(headers, rows) {
+            const headerRow = document.getElementById('tableHeader');
+            const tableBody = document.getElementById('tableBody');
+            
+            headerRow.innerHTML = headers.map(h => `<th class="py-3 px-4 font-semibold">${h}</th>`).join('');
+            
+            tableBody.innerHTML = rows.map(row => {
+                const cells = headers.map(h => `<td class="py-3 px-4">${row[h] || '-'}</td>`).join('');
+                return `<tr class="hover:bg-slate-50 transition">${cells}</tr>`;
+            }).join('');
+        }
+
+        function renderChart(headers, data) {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            
+            // สุ่มเลือกคอลัมน์แรกเป็นแกน X และคอลัมน์ถัดไปเป็นข้อมูล
+            const labelKey = headers[0];
+            const valueKey = headers[1] || headers[0];
+
+            const labels = data.map(d => d[labelKey] || 'N/A').slice(0, 15);
+            const values = data.map(d => parseFloat(d[valueKey]) || 1).slice(0, 15);
+
+            if (chartInstance) chartInstance.destroy();
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: valueKey,
+                        data: values,
+                        backgroundColor: 'rgba(99, 102, 241, 0.7)',
+                        borderColor: 'rgb(99, 102, 241)',
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: true } }
+                }
+            });
+        }
+
+        // ดึงข้อมูลครั้งแรก
+        fetchData();
+
+        // ตั้งเวลาดึงข้อมูลใหม่อัตโนมัติทุกๆ 60 วินาที (1 นาที)
+        setInterval(fetchData, 60000);
+    </script>
+</body>
+</html>
