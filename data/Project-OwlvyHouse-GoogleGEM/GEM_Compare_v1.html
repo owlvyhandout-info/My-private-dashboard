@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GEM Compare v1.0</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2f;--panel2:#17213b;--text:#eaf0ff;--muted:#9eabd0;--line:#2b385e;--accent:#7aa2ff;--critical:#ff5d73;--important:#ffb454;--medium:#f5df6b;--ok:#58d68d}
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--text)}
+header{padding:22px 26px;border-bottom:1px solid var(--line);background:#0e1528;position:sticky;top:0;z-index:3}
+h1{font-size:24px;margin:0 0 5px}.sub{color:var(--muted);font-size:14px}
+main{max-width:1500px;margin:auto;padding:22px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px}
+.card h2{font-size:16px;margin:0 0 10px} textarea{width:100%;min-height:330px;resize:vertical;background:#090e1b;color:#eaf0ff;border:1px solid var(--line);border-radius:10px;padding:13px;font:13px/1.55 Consolas,monospace}
+.actions{display:flex;flex-wrap:wrap;gap:9px;align-items:center;justify-content:center;margin:17px 0}
+button{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 15px;border-radius:9px;cursor:pointer;font-weight:650}
+button.primary{background:var(--accent);color:#071022;border-color:transparent}button:hover{filter:brightness(1.08)}
+.protected{display:flex;gap:8px;align-items:center;flex:1;min-width:300px}
+.protected input{width:100%;background:#090e1b;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.metric{padding:14px;border-radius:12px;background:var(--panel);border:1px solid var(--line)}
+.metric b{font-size:24px;display:block;margin-top:4px}.critical b{color:var(--critical)}.important b{color:var(--important)}.medium b{color:var(--medium)}
+.alert{border:1px solid var(--critical);background:#28131d;border-radius:12px;padding:13px 15px;margin-bottom:14px}
+.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:13px 0;color:var(--muted)}
+.toolbar input[type=search]{background:#090e1b;color:var(--text);border:1px solid var(--line);padding:9px;border-radius:8px;min-width:230px}
+.change{background:var(--panel);border:1px solid var(--line);border-radius:12px;margin:10px 0;overflow:hidden}
+.change summary{cursor:pointer;padding:13px 15px;font-weight:700;background:var(--panel2)}
+.body{padding:13px 15px}.badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;margin-right:8px;color:#08101d}
+.badge.Critical{background:var(--critical)}.badge.Important{background:var(--important)}.badge.Medium{background:var(--medium)}
+.kind{color:var(--muted);font-size:12px}.diff{font:13px/1.55 Consolas,monospace;white-space:pre-wrap;background:#090e1b;border-radius:9px;padding:11px;max-height:440px;overflow:auto}
+.add{color:#8bf0ad}.del{color:#ff8999}.same{color:#9aa7c8}.empty{text-align:center;color:var(--muted);padding:34px}
+@media(max-width:800px){.grid,.summary{grid-template-columns:1fr}.protected{min-width:100%}}
+</style>
+</head>
+<body>
+<header><h1>GEM Compare v1.0</h1><div class="sub">Prompt / GEM Integrity Checker — ตรวจสิ่งที่เพิ่ม หาย หรือเปลี่ยน โดยเน้นโครงสร้างก่อนรายละเอียด</div></header>
+<main>
+<div class="grid">
+ <section class="card"><h2>Version A — ต้นฉบับ / ก่อนแก้</h2><textarea id="a" placeholder="วาง GEM / Prompt / Markdown เดิมที่นี่..."></textarea></section>
+ <section class="card"><h2>Version B — หลัง Gemini แก้</h2><textarea id="b" placeholder="วางเวอร์ชันใหม่ที่นี่..."></textarea></section>
+</div>
+<div class="actions">
+ <button class="primary" onclick="compare()">Compare</button>
+ <button onclick="swap()">สลับ A ↔ B</button>
+ <button onclick="clearAll()">ล้าง</button>
+ <div class="protected"><span>🛡️ Protected:</span><input id="protected" value="Mission, Rules, Workflow, Output Format, JSON Schema" title="คั่นชื่อ Section ด้วย comma"></div>
+</div>
+<div id="out"><div class="empty">วางข้อความสองเวอร์ชันแล้วกด Compare</div></div>
+</main>
+<script>
+const esc=s=>(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function normalizeTitle(s){return s.trim().toLowerCase().replace(/\s+/g,' ')}
+function parseSections(text){
+ const lines=text.replace(/\r/g,'').split('\n'), arr=[]; let cur={title:'(Document root)',level:0,lines:[]};
+ const push=()=>{if(cur.lines.length||cur.title!=='(Document root)')arr.push(cur)}
+ for(const line of lines){
+   const m=line.match(/^(#{1,6})\s+(.+?)\s*$/);
+   if(m){push();cur={title:m[2].trim(),level:m[1].length,lines:[]}}
+   else cur.lines.push(line)
+ } push();
+ if(!arr.length) arr.push({title:'(Document root)',level:0,lines});
+ return arr;
+}
+function mapSections(arr){const m=new Map(); for(const s of arr){let k=normalizeTitle(s.title),i=2,base=k;while(m.has(k))k=base+' #'+i++;m.set(k,s)}return m}
+function severity(type,title,oldText,newText,isProtected){
+ if(type==='Removed') return 'Critical';
+ if(isProtected && type==='Modified') return 'Critical';
+ if(type==='Added') return 'Important';
+ if(title!== '(Document root)' && type==='Modified') return 'Important';
+ if(/\b(MUST|NEVER|ALWAYS|STRICT|REQUIRED|FORBIDDEN)\b/i.test(oldText+' '+newText)) return 'Important';
+ if((oldText.match(/\d+(?:\.\d+)?/g)||[]).join('|') !== (newText.match(/\d+(?:\.\d+)?/g)||[]).join('|')) return 'Important';
+ return 'Medium';
+}
+function lcsDiff(a,b){
+ const A=a.split('\n'),B=b.split('\n'),n=A.length,m=B.length;
+ if(n*m>1600000) return [{t:'del',s:a},{t:'add',s:b}];
+ const dp=Array.from({length:n+1},()=>new Uint32Array(m+1));
+ for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)dp[i][j]=A[i]===B[j]?dp[i+1][j+1]+1:Math.max(dp[i+1][j],dp[i][j+1]);
+ let i=0,j=0,o=[];
+ while(i<n&&j<m){if(A[i]===B[j]){o.push({t:'same',s:A[i++]});j++}else if(dp[i+1][j]>=dp[i][j+1])o.push({t:'del',s:A[i++]});else o.push({t:'add',s:B[j++]})}
+ while(i<n)o.push({t:'del',s:A[i++]});while(j<m)o.push({t:'add',s:B[j++]});return o;
+}
+function compare(){
+ const A=document.getElementById('a').value,B=document.getElementById('b').value;
+ if(!A.trim()&&!B.trim()){document.getElementById('out').innerHTML='<div class="empty">กรุณาวางข้อความอย่างน้อยหนึ่งเวอร์ชัน</div>';return}
+ const ma=mapSections(parseSections(A)),mb=mapSections(parseSections(B));
+ const keys=[...new Set([...ma.keys(),...mb.keys()])];
+ const protectedNames=document.getElementById('protected').value.split(',').map(normalizeTitle).filter(Boolean);
+ let changes=[];
+ for(const k of keys){
+   const x=ma.get(k),y=mb.get(k),title=(y||x).title,oldText=x?x.lines.join('\n'):'',newText=y?y.lines.join('\n'):'';
+   let type;if(!x)type='Added';else if(!y)type='Removed';else if(oldText===newText)continue;else type='Modified';
+   const prot=protectedNames.some(p=>normalizeTitle(title)===p||normalizeTitle(title).includes(p));
+   changes.push({title,type,oldText,newText,prot,severity:severity(type,title,oldText,newText,prot)});
+ }
+ const counts={Critical:0,Important:0,Medium:0};changes.forEach(x=>counts[x.severity]++);
+ const protChanged=changes.filter(x=>x.prot);
+ let html=`<div class="summary">
+ <div class="metric critical">🔴 Critical<b>${counts.Critical}</b></div>
+ <div class="metric important">🟠 Important<b>${counts.Important}</b></div>
+ <div class="metric medium">🟡 Medium<b>${counts.Medium}</b></div>
+ <div class="metric">Sections changed<b>${changes.length}</b></div></div>`;
+ if(protChanged.length)html+=`<div class="alert"><b>🚨 Protected Section Modified</b><br>${protChanged.map(x=>esc(x.title)+' — '+x.type).join('<br>')}</div>`;
+ html+=`<div class="toolbar"><label><input type="checkbox" id="crit" onchange="filter()"> Show Critical Only</label><input type="search" id="search" placeholder="ค้นหา Section / ข้อความ..." oninput="filter()"></div><div id="changes">`;
+ const order={Critical:0,Important:1,Medium:2};changes.sort((x,y)=>order[x.severity]-order[y.severity]);
+ if(!changes.length)html+='<div class="empty">✅ ไม่พบความแตกต่าง</div>';
+ for(const c of changes){
+   const diff=lcsDiff(c.oldText,c.newText).map(d=>`<span class="${d.t}">${d.t==='add'?'+ ':d.t==='del'?'- ':'  '}${esc(d.s)}</span>`).join('\n');
+   const searchable=(c.title+' '+c.type+' '+c.oldText+' '+c.newText).toLowerCase();
+   html+=`<details class="change item" data-sev="${c.severity}" data-search="${esc(searchable)}" ${c.severity==='Critical'?'open':''}>
+   <summary><span class="badge ${c.severity}">${c.severity}</span>${esc(c.title)} <span class="kind">— ${c.type}${c.prot?' · Protected':''}</span></summary>
+   <div class="body"><div class="diff">${diff||'(ไม่มีเนื้อหาภายใน Section)'}</div></div></details>`;
+ }
+ html+='</div>';document.getElementById('out').innerHTML=html;
+}
+function filter(){
+ const only=document.getElementById('crit')?.checked,q=(document.getElementById('search')?.value||'').toLowerCase();
+ document.querySelectorAll('.item').forEach(el=>{el.style.display=(!only||el.dataset.sev==='Critical')&&(!q||el.dataset.search.includes(q))?'block':'none'})
+}
+function swap(){const a=document.getElementById('a'),b=document.getElementById('b'),t=a.value;a.value=b.value;b.value=t}
+function clearAll(){document.getElementById('a').value='';document.getElementById('b').value='';document.getElementById('out').innerHTML='<div class="empty">วางข้อความสองเวอร์ชันแล้วกด Compare</div>'}
+</script>
+</body></html>
