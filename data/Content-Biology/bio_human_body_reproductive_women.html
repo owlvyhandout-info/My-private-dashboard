@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สรุป BIO · ระบบสืบพันธุ์เพศหญิง</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F3F1E9;
+    --bg-soft: #EBE8DC;
+    --surface: #FFFFFF;
+    --surface-2: #F9F7F1;
+    --ink: #1B2430;
+    --ink-soft: #55606E;
+    --line: #DCD7C7;
+    --navy: #142549;
+    --navy-2: #1D3564;
+    --gold: #B8863B;
+    --gold-soft: #E9CD98;
+    --teal: #2E7D6E;
+    --teal-soft: #D9EFE9;
+    --coral: #C1442A;
+    --coral-soft: #F6E1DA;
+    --plum: #6E4A9E;
+    --plum-soft: #EAE1F5;
+    --shadow: 0 10px 30px -12px rgba(20,37,73,0.18);
+    --radius: 16px;
+  }
+  html.dark{
+    --bg: #0A1730;
+    --bg-soft: #0E1F42;
+    --surface: #122A54;
+    --surface-2: #0F2246;
+    --ink: #EAF0FC;
+    --ink-soft: #A9B9DA;
+    --line: #24406E;
+    --navy: #0A1730;
+    --navy-2: #16294F;
+    --gold: #E8C077;
+    --gold-soft: #3A3319;
+    --teal: #6FD6BE;
+    --teal-soft: #123B36;
+    --coral: #F0917B;
+    --coral-soft: #3E1E17;
+    --plum: #C9AAEF;
+    --plum-soft: #2C1F45;
+    --shadow: 0 10px 34px -10px rgba(0,0,0,0.55);
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Noto Sans Thai','Noto Sans',sans-serif;
+    transition:background .4s ease,color .4s ease;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--gold-soft); }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:50;
+    background:var(--navy);
+    color:#F4F1E4;
+    padding:14px 20px;
+    box-shadow:var(--shadow);
+  }
+  .topbar-inner{
+    max-width:1180px; margin:0 auto;
+    display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    margin-right:auto;
+    font-family:'Noto Serif Thai',serif;
+  }
+  .brand-mark{
+    width:38px; height:38px; border-radius:10px;
+    background:linear-gradient(135deg,var(--gold),#8f6a24);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; color:#1B1204; font-size:15px; letter-spacing:.5px;
+    flex:none;
+  }
+  .brand-text b{ display:block; font-size:16.5px; font-weight:700; }
+  .brand-text span{ display:block; font-size:11.5px; color:#C7CEE6; letter-spacing:.4px;}
+
+  .theme-toggle{
+    display:flex; align-items:center; gap:8px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:999px;
+    padding:4px;
+    flex:none;
+  }
+  .theme-toggle button{
+    border:none; background:transparent; color:#DDE3F3;
+    font-family:'Noto Sans Thai',sans-serif; font-size:12.5px; font-weight:600;
+    padding:7px 13px; border-radius:999px; cursor:pointer;
+    display:flex; align-items:center; gap:6px;
+    transition:background .25s ease,color .25s ease;
+    white-space:nowrap;
+  }
+  .theme-toggle button.active{
+    background:var(--gold); color:#1B1204;
+  }
+
+  /* ---------- tabs ---------- */
+  .tabs-wrap{
+    background:var(--navy-2);
+    border-top:1px solid rgba(255,255,255,.08);
+  }
+  .tabs{
+    max-width:1180px; margin:0 auto;
+    display:flex; gap:6px; overflow-x:auto;
+    padding:10px 20px;
+    scrollbar-width:thin;
+  }
+  .tabs::-webkit-scrollbar{ height:6px; }
+  .tabs::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.2); border-radius:4px; }
+  .tab-btn{
+    flex:none;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.04);
+    color:#CBD4EC;
+    font-family:'Noto Sans Thai',sans-serif;
+    font-size:13px; font-weight:600;
+    padding:9px 15px; border-radius:11px; cursor:pointer;
+    display:flex; align-items:center; gap:8px;
+    transition:all .2s ease;
+  }
+  .tab-btn .num{
+    font-family:'Space Mono',monospace; font-size:10.5px;
+    color:var(--gold); font-weight:700;
+  }
+  .tab-btn:hover{ background:rgba(255,255,255,.1); color:#fff; }
+  .tab-btn.active{
+    background:var(--gold); color:#1B1204; border-color:var(--gold);
+  }
+  .tab-btn.active .num{ color:#1B1204; opacity:.65; }
+
+  /* ---------- layout ---------- */
+  main{ max-width:1180px; margin:0 auto; padding:34px 20px 90px; }
+  .hero{
+    text-align:center; padding:8px 0 30px;
+  }
+  .hero .eyebrow{
+    font-family:'Space Mono',monospace; letter-spacing:2.5px; font-size:11.5px;
+    color:var(--gold); text-transform:uppercase; margin-bottom:10px;
+  }
+  .hero h1{
+    font-family:'Noto Serif Thai',serif; font-weight:800;
+    font-size:clamp(26px,4vw,38px); margin:0 0 8px;
+    color:var(--ink);
+  }
+  .hero p{ color:var(--ink-soft); font-size:15px; margin:0; }
+
+  .panel{ display:none; animation:fade .35s ease; }
+  .panel.active{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  .section-head{
+    display:flex; align-items:center; gap:14px;
+    margin-bottom:20px; padding-bottom:14px;
+    border-bottom:2px solid var(--line);
+  }
+  .section-head .badge{
+    font-family:'Space Mono',monospace; font-weight:700; font-size:15px;
+    width:40px; height:40px; border-radius:10px;
+    background:var(--navy); color:var(--gold-soft);
+    display:flex; align-items:center; justify-content:center; flex:none;
+  }
+  html.dark .section-head .badge{ background:var(--surface-2); color:var(--gold); }
+  .section-head h2{
+    font-family:'Noto Serif Thai',serif; font-size:22px; margin:0; font-weight:700;
+  }
+  .section-head .part-tag{
+    font-size:11.5px; color:var(--ink-soft); font-weight:600;
+    display:block; margin-bottom:2px; letter-spacing:.3px;
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px 22px;
+    margin-bottom:18px;
+    box-shadow:var(--shadow);
+  }
+  .card h3{
+    font-size:15.5px; margin:0 0 12px; font-weight:700; color:var(--ink);
+    display:flex; align-items:center; gap:8px;
+  }
+  .card ul{ margin:0; padding-left:20px; }
+  .card li{ margin-bottom:9px; line-height:1.65; font-size:14.5px; }
+  .card li:last-child{ margin-bottom:0; }
+  .card li b{ color:var(--navy-2); }
+  html.dark .card li b{ color:var(--gold); }
+  .card p{ line-height:1.7; font-size:14.5px; margin:0 0 10px;}
+  .card p:last-child{ margin-bottom:0; }
+
+  /* table */
+  .tbl-wrap{ overflow-x:auto; margin-bottom:18px; border-radius:var(--radius); box-shadow:var(--shadow); }
+  table{ width:100%; border-collapse:collapse; background:var(--surface); min-width:560px; }
+  thead th{
+    background:var(--navy); color:#F3EFE1;
+    text-align:left; padding:12px 16px; font-size:13px; font-weight:700;
+    white-space:nowrap;
+  }
+  tbody td{
+    padding:12px 16px; font-size:14px; line-height:1.6;
+    border-bottom:1px solid var(--line); vertical-align:top;
+  }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:nth-child(even){ background:var(--surface-2); }
+  tbody td b{ color:var(--navy-2); }
+  html.dark tbody td b{ color:var(--gold); }
+
+  /* callouts */
+  .callout{
+    border-radius:14px; padding:16px 18px; margin-bottom:14px;
+    border:1.5px solid; position:relative;
+    box-shadow:var(--shadow);
+  }
+  .callout .c-label{
+    display:inline-flex; align-items:center; gap:7px;
+    font-size:11.5px; font-weight:800; letter-spacing:.4px;
+    text-transform:uppercase; margin-bottom:8px;
+    font-family:'Space Mono',monospace;
+  }
+  .callout p, .callout li{ font-size:14.3px; line-height:1.65; margin:0; }
+  .callout ul{ margin:0; padding-left:19px; }
+  .callout li{ margin-bottom:6px; }
+  .callout li:last-child{ margin-bottom:0; }
+  .callout b{ font-weight:800; }
+
+  .callout.key{ background:var(--teal-soft); border-color:var(--teal); }
+  .callout.key .c-label{ color:var(--teal); }
+  .callout.trap{ background:var(--coral-soft); border-color:var(--coral); }
+  .callout.trap .c-label{ color:var(--coral); }
+  .callout.exam{ background:var(--plum-soft); border-color:var(--plum); }
+  .callout.exam .c-label{ color:var(--plum); }
+
+  .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:720px){ .grid-2{ grid-template-columns:1fr; } }
+
+  .recap-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+  @media (max-width:720px){ .recap-grid{ grid-template-columns:1fr; } }
+
+  footer{
+    text-align:center; padding:26px 20px 40px; color:var(--ink-soft); font-size:12.5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">BIO</div>
+      <div class="brand-text">
+        <b>สรุป BIO · ระบบสืบพันธุ์เพศหญิง</b>
+        <span>การปฏิสนธิและการตั้งครรภ์ · จัดหมวดหมู่ตามข้อสอบ</span>
+      </div>
+    </div>
+    <div class="theme-toggle" id="themeToggle">
+      <button data-theme="light" class="active">☀️ Light</button>
+      <button data-theme="dark">🌙 Deep Navy</button>
+    </div>
+  </div>
+  <div class="tabs-wrap">
+    <div class="tabs" id="tabs"></div>
+  </div>
+</div>
+
+<main>
+  <div class="hero">
+    <div class="eyebrow">Quick-Recall Study Guide</div>
+    <h1>ร่างกายมนุษย์ — ระบบสืบพันธุ์เพศหญิง</h1>
+    <p>แตะปุ่มด้านบนเพื่อดูแต่ละหัวข้อ · กรอบสีบอกความสำคัญของเนื้อหาแต่ละจุด</p>
+  </div>
+
+  <div id="panels"></div>
+</main>
+
+<footer>สรุปจากแบบฝึกหัด BIO — ระบบสืบพันธุ์เพศหญิง · เพื่อการทบทวนก่อนสอบ</footer>
+
+<script>
+const sections = [
+  {
+    id:"organs", part:"PART 1 · โครงสร้างและรอบประจำเดือน", title:"1. โครงสร้างอวัยวะสืบพันธุ์เพศหญิง",
+    html:`
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>อวัยวะ</th><th>หน้าที่หลัก</th><th>จุดที่ออกสอบบ่อย</th></tr></thead>
+        <tbody>
+          <tr><td><b>รังไข่ (Ovary)</b></td><td>ผลิตไข่ + สร้างฮอร์โมนเพศหญิง (เอสโตรเจน โปรเจสเตอโรน) ควบคุมการเจริญของผนังมดลูก</td><td>ยึดติดกับมดลูกด้วย<b>เอ็นยึดรังไข่</b> ไม่ได้เชื่อมกับท่อนำไข่โดยตรง</td></tr>
+          <tr><td><b>ท่อนำไข่</b></td><td>ทางผ่านของไข่จากรังไข่สู่มดลูก เป็นบริเวณที่เกิด<b>การปฏิสนธิ</b></td><td>คำตอบตำแหน่งปฏิสนธิ = ท่อนำไข่ ไม่ใช่มดลูก</td></tr>
+          <tr><td><b>มดลูก (Uterus)</b></td><td>เยื่อบุโพรงมดลูกหนาตัวรองรับการฝังตัว หากไม่ปฏิสนธิจะหลุดลอกเป็นประจำเดือน</td><td>แยก “ปฏิสนธิ” (ท่อนำไข่) กับ “ฝังตัว” (มดลูก) ให้ชัด</td></tr>
+          <tr><td><b>ปากมดลูก/ช่องคลอด</b></td><td>ทางผ่านของอสุจิเข้าสู่ระบบสืบพันธุ์ และทางคลอดของทารก</td><td>มักเป็นตัวเลือกหลอกในแผนภาพ</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout trap">
+        <div class="c-label">⚠ สิ่งที่เข้าใจผิดบ่อย</div>
+        <p>หลายคนคิดว่ารังไข่ “ติดอยู่กับ” ท่อนำไข่โดยตรง — ที่จริงรังไข่ยึดกับมดลูกด้วย <b>เอ็นยึดรังไข่ (ovarian ligament)</b> เท่านั้น ไข่ที่ตกออกมาจะ “ลอย” เข้าสู่ปากท่อนำไข่ ไม่ได้เชื่อมต่อกันเป็นท่อเดียว</p>
+      </div>`
+  },
+  {
+    id:"cycle", part:"PART 1 · โครงสร้างและรอบประจำเดือน", title:"2. รอบประจำเดือน (Menstrual Cycle)",
+    html:`
+      <div class="card">
+        <h3>🗓 ภาพรวม 28 วัน</h3>
+        <ul>
+          <li>รอบมาตรฐานที่ข้อสอบใช้ = <b>28 วัน</b> แบ่งเป็น 3 ระยะ: <b>ก่อนตกไข่ → ตกไข่ → หลังตกไข่</b></li>
+          <li><b>วันที่ 1</b> ของรอบ = วันแรกที่มีประจำเดือน (ผนังมดลูกจากรอบก่อนหลุดลอกเพราะไม่มีการปฏิสนธิ)</li>
+          <li>ช่วงมีประจำเดือน (ปกติ 3–7 วัน): ผนังมดลูกที่หนาจากรอบก่อนหลุดลอกออกมาพร้อมเลือด</li>
+          <li>หลังหมดประจำเดือน: ผนังมดลูกเริ่มหนาตัวใหม่ พร้อมไข่ใบใหม่เจริญเต็มที่ในรังไข่</li>
+        </ul>
+      </div>
+      <div class="callout key">
+        <div class="c-label">🔑 ใจความสำคัญ — กฎทองที่ต้องจำ</div>
+        <p>การตกไข่เกิดขึ้นประมาณ <b>14 วัน ก่อนวันที่ประจำเดือนรอบถัดไปจะมา</b> (นับถอยหลังจากรอบถัดไป ไม่ใช่นับไปข้างหน้าจากวันเริ่มประจำเดือนเสมอไป)</p>
+      </div>
+      <div class="grid-2">
+        <div class="callout exam">
+          <div class="c-label">📌 ออกสอบบ่อย</div>
+          <ul>
+            <li>หลังตกไข่ ถ้า<b>ไม่มี</b>การปฏิสนธิ → อีกประมาณ <b>14 วัน</b> จะเริ่มมีประจำเดือนรอบถัดไป</li>
+            <li>ผนังมดลูกหนาที่สุดในช่วง <b>หลังตกไข่ ก่อนมีประจำเดือน</b></li>
+          </ul>
+        </div>
+        <div class="callout trap">
+          <div class="c-label">⚠ เข้าใจผิดบ่อย</div>
+          <p>มักจำผิดว่าหลังตกไข่ต้องรอ <b>28 วัน</b> กว่าจะมีประจำเดือน — ที่ถูกคือ <b>14 วัน</b> เท่านั้น (28 วัน คือความยาวรอบทั้งหมด ไม่ใช่ช่วงหลังตกไข่)</p>
+        </div>
+      </div>`
+  },
+  {
+    id:"hormones", part:"PART 1 · โครงสร้างและรอบประจำเดือน", title:"3. ฮอร์โมนที่เกี่ยวข้อง",
+    html:`
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>ฮอร์โมน</th><th>แหล่งสร้าง</th><th>หน้าที่สำคัญที่ออกสอบ</th></tr></thead>
+        <tbody>
+          <tr><td><b>FSH</b></td><td>ต่อมใต้สมอง</td><td>กระตุ้นการเจริญของไข่ในรังไข่</td></tr>
+          <tr><td><b>LH</b></td><td>ต่อมใต้สมอง</td><td>กระตุ้นการตกไข่ (LH surge ทำให้ไข่ตก)</td></tr>
+          <tr><td><b>เอสโตรเจน</b></td><td>รังไข่</td><td>กระตุ้นผนังมดลูกให้หนาตัวรองรับการฝังตัวของตัวอ่อน; ควบคุมลักษณะเพศหญิง</td></tr>
+          <tr><td><b>โปรเจสเตอโรน</b></td><td>รังไข่ (คอร์ปัสลูเทียม)</td><td>รักษาความหนาของผนังมดลูกหลังตกไข่ พยุงการตั้งครรภ์ระยะแรก</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout exam">
+        <div class="c-label">📌 ออกสอบบ่อยที่สุด</div>
+        <p>“เอสโตรเจนกระตุ้นการเจริญของผนังมดลูกเพื่อการฝังตัวของตัวอ่อน” — เป็นตัวเลือกที่ถูกเสมอในหลายชุดข้อสอบ ให้จำหน้าที่นี้ให้แม่น</p>
+      </div>
+      <div class="callout trap">
+        <div class="c-label">⚠ เข้าใจผิดบ่อย</div>
+        <p>เอสโตรเจนมีในเพศชายด้วย (ผลิตน้อยและลดลงตามอายุ) แต่ <b>ไม่ใช่</b>ฮอร์โมนหลักที่ทำให้เกิดลักษณะเพศชาย เช่น องคชาตใหญ่ขึ้น — ระวังตัวเลือกที่ผูกเอสโตรเจนกับลักษณะเพศชายแบบผิด ๆ</p>
+      </div>`
+  },
+  {
+    id:"ovulation", part:"PART 1 · โครงสร้างและรอบประจำเดือน", title:"4. การตกไข่ (Ovulation)",
+    html:`
+      <div class="card">
+        <h3>🥚 ตัวเลขที่ต้องจำ</h3>
+        <ul>
+          <li>การตกไข่ = รังไข่ปล่อยไข่ที่สุกแล้วเข้าสู่ท่อนำไข่</li>
+          <li>อายุที่เริ่มตกไข่ ≈ <b>12–13 ปี</b> ตกไข่เดือนละ <b>1 ครั้ง</b> จนถึงวัยหมดประจำเดือน</li>
+          <li>ไข่ที่ไม่ได้รับการปฏิสนธิมีชีวิตอยู่ได้ช่วงสั้น ๆ หลังตกไข่ (โจทย์บางชุดใช้ตัวเลขประมาณ 24–72 ชั่วโมง — ให้ยึดตามตัวเลขที่โจทย์ระบุเป็นหลัก)</li>
+        </ul>
+      </div>
+      <div class="callout key">
+        <div class="c-label">🔑 เทคนิคคำนวณ</div>
+        <p>จำนวนไข่ที่ตกตลอดชีวิต ≈ (อายุปัจจุบัน − อายุที่เริ่มตกไข่) × 12 เดือน<br>
+        ตัวอย่าง: อายุ 25 ปี เริ่มตกไข่ 12–13 ปี → (25−13)×12 ≈ 144 → ใกล้เคียงคำตอบ <b>150 ฟอง</b> มากที่สุด</p>
+      </div>
+      <div class="callout trap">
+        <div class="c-label">⚠ กับดักยอดฮิต</div>
+        <p>การตัดรังไข่ออก 1 ข้าง <b>ไม่ทำให้</b>ประจำเดือนมาแบบเดือนเว้นเดือน เพราะรังไข่ที่เหลือยังตกไข่ได้ทุกเดือนตามปกติ</p>
+      </div>`
+  },
+  {
+    id:"order", part:"PART 2 · การปฏิสนธิและการตั้งครรภ์", title:"5. ลำดับเหตุการณ์การสืบพันธุ์",
+    html:`
+      <div class="callout key">
+        <div class="c-label">🔑 ลำดับที่ถูกต้อง</div>
+        <p><b>การสร้างเซลล์ไข่ → ไข่สุก → การตกไข่ → การปฏิสนธิ → การเจริญเติบโตของตัวอ่อน</b></p>
+      </div>
+      <div class="callout exam">
+        <div class="c-label">📌 ออกสอบบ่อย</div>
+        <p>ข้อสอบชอบสลับลำดับ — เช็กว่า “การปฏิสนธิ” ต้องอยู่<b>หลัง</b>“การตกไข่”เสมอ และ “การเจริญเติบโตของตัวอ่อน” ต้องอยู่ท้ายสุด</p>
+      </div>`
+  },
+  {
+    id:"fertilize", part:"PART 2 · การปฏิสนธิและการตั้งครรภ์", title:"6. การปฏิสนธิและการฝังตัว",
+    html:`
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>ขั้นตอน</th><th>ตำแหน่งที่เกิด</th><th>รายละเอียดสำคัญ</th></tr></thead>
+        <tbody>
+          <tr><td><b>การปฏิสนธิ</b></td><td>ท่อนำไข่ (บริเวณส่วนต้น)</td><td>นิวเคลียสของอสุจิรวมกับนิวเคลียสของไข่ เกิดเป็นไซโกต</td></tr>
+          <tr><td><b>การแบ่งเซลล์ระยะแรก</b></td><td>ระหว่างเคลื่อนที่จากท่อนำไข่สู่มดลูก</td><td>จำนวนเซลล์เพิ่มขึ้นเรื่อย ๆ แต่ขนาดโดยรวมของตัวอ่อน<b>ไม่ได้ใหญ่ขึ้นทันที</b></td></tr>
+          <tr><td><b>การฝังตัว</b></td><td>ผนังมดลูก</td><td>เกิดในระยะ<b>บลาสโตซิสต์</b> ใช้เวลาประมาณ <b>5–7 วัน</b> หลังการปฏิสนธิ</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout trap">
+        <div class="c-label">⚠ สิ่งที่เข้าใจผิดบ่อย</div>
+        <p>“ปฏิสนธิ” ≠ “ตั้งครรภ์ทันที” — การตั้งครรภ์นับเมื่อตัวอ่อนฝังตัวที่ผนังมดลูกสำเร็จแล้วเท่านั้น ไม่ใช่ทันทีที่ไข่กับอสุจิรวมตัวกัน</p>
+      </div>`
+  },
+  {
+    id:"pregnancy", part:"PART 2 · การปฏิสนธิและการตั้งครรภ์", title:"7. อวัยวะสำคัญระหว่างตั้งครรภ์",
+    html:`
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>อวัยวะ/โครงสร้าง</th><th>หน้าที่</th></tr></thead>
+        <tbody>
+          <tr><td><b>รก (Placenta)</b></td><td>แลกเปลี่ยนสารอาหาร แก๊สออกซิเจน และของเสียระหว่างมารดากับทารก + สร้างฮอร์โมนที่จำเป็นต่อการตั้งครรภ์</td></tr>
+          <tr><td><b>ถุงน้ำคร่ำ</b></td><td>ปกป้องทารกจากแรงกระทบกระเทือนภายนอก</td></tr>
+          <tr><td><b>สายสะดือ</b></td><td>เชื่อมทารกกับรก ส่งผ่านสารอาหาร แก๊สออกซิเจน และของเสีย</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout trap">
+        <div class="c-label">⚠ กับดักที่ออกสอบบ่อยที่สุดในหมวดนี้</div>
+        <p>เลือดในหลอดเลือด <b>เวน</b> ของสายสะดือพาออกซิเจน/สารอาหารจากแม่สู่ลูก (<b>มากกว่า</b>) ส่วนหลอดเลือด <b>อาร์เทอรี</b> พาของเสียจากลูกสู่แม่ (<b>น้อยกว่า</b>) — สลับกับความเข้าใจทั่วไปเรื่องหลอดเลือดในร่างกายคน ระวังให้ดี!</p>
+      </div>`
+  },
+  {
+    id:"compare", part:"PART 2 · การปฏิสนธิและการตั้งครรภ์", title:"8. เปรียบเทียบเพศชาย ↔ เพศหญิง",
+    html:`
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>เพศชาย</th><th>เพศหญิง</th><th>หน้าที่ร่วม</th></tr></thead>
+        <tbody>
+          <tr><td><b>อัณฑะ (Testis)</b></td><td><b>รังไข่ (Ovary)</b></td><td>ผลิตเซลล์สืบพันธุ์ + สร้างฮอร์โมนเพศ</td></tr>
+          <tr><td><b>ท่อนำอสุจิ</b></td><td><b>ท่อนำไข่</b></td><td>ทางผ่านของเซลล์สืบพันธุ์</td></tr>
+          <tr><td><b>ต่อมสร้างน้ำเลี้ยงอสุจิ</b></td><td>—</td><td>สร้างของเหลวหล่อเลี้ยง/พาอสุจิ</td></tr>
+        </tbody>
+      </table></div>
+      <div class="callout exam">
+        <div class="c-label">📌 ออกสอบบ่อย</div>
+        <p>โจทย์แผนภาพมักถามว่า “อวัยวะใดของเพศชายทำหน้าที่เหมือนอวัยวะใดของเพศหญิง” — ให้จับคู่ตามหน้าที่ ไม่ใช่ตามรูปร่าง</p>
+      </div>`
+  },
+  {
+    id:"recap", part:"สรุปรวบยอด", title:"9. Quick Recap — กับดักข้อสอบที่พบบ่อยที่สุด",
+    html:`
+      <div class="recap-grid">
+        <div class="callout exam"><div class="c-label">📌 จำแม่น</div><p>การตกไข่นับถอยหลัง <b>14 วันก่อน</b>ประจำเดือนรอบถัดไป ไม่ใช่นับไปข้างหน้าจากวันเริ่มประจำเดือนเสมอ</p></div>
+        <div class="callout key"><div class="c-label">🔑 ตำแหน่ง</div><p>ปฏิสนธิเกิดที่ <b>ท่อนำไข่</b> ฝังตัวเกิดที่ <b>มดลูก</b> — อย่าสลับสองตำแหน่งนี้</p></div>
+        <div class="callout key"><div class="c-label">🔑 เวลา</div><p>การฝังตัวใช้เวลา <b>5–7 วัน</b> หลังปฏิสนธิ และเกิดในระยะ <b>บลาสโตซิสต์</b></p></div>
+        <div class="callout trap"><div class="c-label">⚠ โครงสร้าง</div><p>รังไข่ยึดกับมดลูกด้วย<b>เอ็นยึดรังไข่</b> ไม่ได้เชื่อมต่อโดยตรงกับท่อนำไข่</p></div>
+        <div class="callout trap"><div class="c-label">⚠ ตัดรังไข่</div><p>ตัดรังไข่ 1 ข้าง → ยังมีประจำเดือน<b>ทุกเดือนตามปกติ</b> (อีกข้างทำงานแทนได้)</p></div>
+        <div class="callout trap"><div class="c-label">⚠ สายสะดือ</div><p>หลอดเลือด<b>เวน</b>พาออกซิเจน/สารอาหาร (มากกว่า) หลอดเลือด<b>อาร์เทอรี</b>พาของเสีย (น้อยกว่า)</p></div>
+        <div class="callout key"><div class="c-label">🔑 ผนังมดลูก</div><p>หนาที่สุดในช่วง<b>หลังตกไข่</b> ไม่ใช่ช่วงมีประจำเดือน</p></div>
+        <div class="callout exam"><div class="c-label">📌 เอสโตรเจน</div><p>กระตุ้นผนังมดลูกให้หนาเพื่อรองรับการฝังตัว — หน้าที่หลักที่ข้อสอบเน้นถามซ้ำ ๆ</p></div>
+      </div>`
+  },
+];
+
+const tabsEl = document.getElementById('tabs');
+const panelsEl = document.getElementById('panels');
+
+sections.forEach((s, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'tab-btn' + (i===0 ? ' active' : '');
+  btn.dataset.target = s.id;
+  btn.innerHTML = `<span class="num">${String(i+1).padStart(2,'0')}</span><span>${s.title.replace(/^\d+\.\s*/,'')}</span>`;
+  btn.addEventListener('click', () => activate(s.id));
+  tabsEl.appendChild(btn);
+
+  const panel = document.createElement('section');
+  panel.className = 'panel' + (i===0 ? ' active' : '');
+  panel.id = 'panel-' + s.id;
+  panel.innerHTML = `
+    <div class="section-head">
+      <div class="badge">${String(i+1).padStart(2,'0')}</div>
+      <div>
+        <span class="part-tag">${s.part}</span>
+        <h2>${s.title}</h2>
+      </div>
+    </div>
+    ${s.html}
+  `;
+  panelsEl.appendChild(panel);
+});
+
+function activate(id){
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.target===id));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id==='panel-'+id));
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// theme toggle
+const themeButtons = document.querySelectorAll('.theme-toggle button');
+themeButtons.forEach(b=>{
+  b.addEventListener('click', ()=>{
+    const theme = b.dataset.theme;
+    document.documentElement.classList.toggle('dark', theme==='dark');
+    themeButtons.forEach(x=>x.classList.toggle('active', x===b));
+  });
+});
+</script>
+</body>
+</html>
