@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="th" class="h-full">
+<head>
+<!-- 
+      Template: OwlvyHouse Adaptive TRIO
+      Version: 2.0 (Dynamic Title, 3-Button Layout & AI Prompt Ready)
+      Last Updated: 16/08/2569 -Gemini
+      and Final Revised By Claude 16/08/69
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OwlvyHouse Adaptive TRIO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Sarabun', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+        .font-prompt {
+            font-family: 'Prompt', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col justify-between text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Top Navigation Header -->
+    <header class="w-full bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                </div>
+                <div>
+                        <h1 id="appTitle" class="font-prompt font-bold text-lg md:text-xl text-slate-900 leading-tight">OwlvyHouse Adaptive TRIO</h1>
+                                 <p class="text-xs text-slate-500">วิทยาศาสตร์และเคมีระดับประถม และมัธยมศึกษา</p>
+                </div>
+            </div>
+
+            <!-- Top Controls -->
+            <div class="flex items-center gap-2">
+                <!-- Sound Toggle -->
+                <button id="soundToggleBtn" onclick="toggleSound()" class="p-2.5 rounded-xl hover:bg-slate-100 text-slate-600 transition" title="เปิด/ปิด เสียง">
+                    <svg id="soundOnIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
+                    <svg id="soundOffIcon" class="w-5 h-5 hidden text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                    </svg>
+                </button>
+                
+                <!-- Reset App Button -->
+                <button onclick="resetApp()" class="p-2.5 rounded-xl hover:bg-slate-100 text-slate-600 transition" title="เริ่มใหม่">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-4xl w-full mx-auto px-4 py-6 flex-grow flex flex-col justify-center">
+
+        <!-- 1. START / MODE SELECTION SCREEN -->
+        <div id="startScreen" class="glass-card rounded-3xl p-6 md:p-10 shadow-xl border border-white text-center my-auto transition-all duration-300">
+            <div class="inline-flex items-center justify-center p-4 bg-brand-50 rounded-2xl mb-6 text-brand-600">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+            </div>
+           <h2 id="startScreenTitle" class="font-prompt font-bold text-2xl md:text-3xl text-slate-900 mb-3">แบบทดสอบวัดความเข้าใจ</h2>
+            <p class="text-slate-600 max-w-lg mx-auto mb-8 text-sm md:text-base leading-relaxed">
+                คลังข้อสอบ 30 ข้อ
+            </p>
+
+            <!-- Mode Selection Options -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-xl mx-auto mb-8 text-left">
+                <!-- Practice Mode -->
+                <label id="modePracticeLabel" onclick="selectMode('practice')" class="relative flex p-4 rounded-2xl border-2 border-brand-500 bg-brand-50/50 cursor-pointer hover:border-brand-600 transition shadow-sm">
+                    <input type="radio" name="quizMode" value="practice" checked class="hidden">
+                    <div class="flex items-start gap-3">
+                        <div class="p-2 rounded-xl bg-brand-500 text-white mt-0.5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="font-prompt font-semibold text-slate-900 text-base">โหมดฝึกฝน (Practice)</div>
+                            <div class="text-xs text-slate-500 mt-1">ตรวจคำตอบทันที มีคำใบ้ และคำอธิบายความเข้าใจคลาดเคลื่อนรายตัวเลือก</div>
+                        </div>
+                    </div>
+                </label>
+
+                <!-- Exam Mode -->
+                <label id="modeExamLabel" onclick="selectMode('exam')" class="relative flex p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer hover:border-slate-300 transition shadow-sm">
+                    <input type="radio" name="quizMode" value="exam" class="hidden">
+                    <div class="flex items-start gap-3">
+                        <div class="p-2 rounded-xl bg-slate-100 text-slate-600 mt-0.5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="font-prompt font-semibold text-slate-900 text-base">โหมดสอบจับเวลา (Exam)</div>
+                            <div class="text-xs text-slate-500 mt-1">จับเวลาข้อละ 60 วินาที ไม่มีคำใบ้ แสดงผลคะแนนรวมและเฉลยละเอียดตอนท้าย</div>
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <button onclick="startQuiz()" class="w-full sm:w-auto min-w-[200px] px-8 py-4 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-prompt font-semibold text-lg rounded-2xl shadow-lg shadow-brand-500/30 transform active:scale-95 transition">
+                เริ่มทำแบบทดสอบ
+            </button>
+        </div>
+
+        <!-- 2. QUIZ QUESTION SCREEN -->
+        <div id="quizScreen" class="hidden space-y-4">
+            
+            <!-- Progress & Stats Header -->
+            <div class="glass-card rounded-2xl p-4 shadow-sm border border-white flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <span id="questionNumBadge" class="font-prompt font-bold px-3 py-1 bg-brand-100 text-brand-700 rounded-xl text-sm">
+                        ข้อ 1/30
+                    </span>
+                    <span id="skillBadge" class="text-xs font-semibold px-2.5 py-1 bg-amber-100 text-amber-800 rounded-lg">
+                        ระดับ L3
+                    </span>
+                </div>
+
+                <div class="flex items-center gap-4 text-sm font-medium text-slate-600">
+                    <!-- Timer (Exam mode) -->
+                    <div id="timerDisplay" class="hidden items-center gap-1.5 font-mono text-amber-600 font-semibold bg-amber-50 px-3 py-1 rounded-lg">
+                        <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span id="timeLeft">60s</span>
+                    </div>
+
+                    <!-- Score Counter -->
+                    <div class="flex items-center gap-1.5 text-emerald-600 font-semibold bg-emerald-50 px-3 py-1 rounded-lg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span id="currentScore">0</span> คะแนน
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                <div id="progressBar" class="bg-gradient-to-r from-brand-500 to-indigo-600 h-full w-0 transition-all duration-300"></div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="glass-card rounded-3xl p-6 md:p-8 shadow-xl border border-white space-y-6">
+                <!-- Question Title -->
+                <div>
+                    <div class="text-xs font-semibold text-brand-600 tracking-wider uppercase mb-1" id="questionTopic">
+                        หมวดการแยกสารเนื้อผสม
+                    </div>
+                    <h2 id="questionText" class="font-prompt font-semibold text-lg md:text-xl text-slate-900 leading-relaxed">
+                        คำถามจะปรากฏที่นี่...
+                    </h2>
+                </div>
+
+                <!-- Options List -->
+                <div id="optionsContainer" class="space-y-3">
+                    <!-- Dynamic Options Inserted Here -->
+                </div>
+
+                <!-- Misconception / Explanation Card (Appears after answer in practice mode) -->
+                <div id="explanationCard" class="hidden p-4 rounded-2xl border transition-all duration-300">
+                    <div class="flex items-start gap-3">
+                        <div id="explanationIcon" class="mt-0.5 p-1 rounded-lg shrink-0"></div>
+                        <div>
+                            <h4 id="explanationTitle" class="font-prompt font-semibold text-sm"></h4>
+                            <p id="explanationText" class="text-xs md:text-sm mt-1 leading-relaxed"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hint Box -->
+                <div id="hintBox" class="hidden p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-sm flex items-start gap-3">
+                    <span class="text-xl shrink-0">💡</span>
+                    <div>
+                        <span class="font-prompt font-semibold block text-amber-900">คำใบ้สะกิดความคิด:</span>
+                        <span id="hintText" class="text-xs md:text-sm text-amber-800"></span>
+                    </div>
+                </div>
+
+                <!-- Bottom Control Actions -->
+                <div class="flex items-center justify-between pt-2">
+                    <button id="hintBtn" onclick="toggleHint()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-800 font-prompt text-xs md:text-sm font-semibold rounded-xl transition">
+                        <span>💡 ขอคำใบ้</span>
+                    </button>
+
+                    <button id="nextBtn" onclick="nextQuestion()" disabled class="inline-flex items-center gap-2 px-6 py-3 bg-brand-600 hover:bg-brand-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-prompt font-semibold text-sm md:text-base rounded-xl shadow-md transition disabled:shadow-none">
+                        <span>ข้อถัดไป</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. RESULTS SCREEN -->
+        <div id="resultScreen" class="hidden glass-card rounded-3xl p-6 md:p-10 shadow-xl border border-white my-auto">
+            <div class="text-center space-y-4 max-w-lg mx-auto">
+                <div class="inline-flex p-4 rounded-3xl bg-brand-50 text-brand-600 mb-2">
+                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                    </svg>
+                </div>
+
+                <h2 class="font-prompt font-bold text-2xl md:text-3xl text-slate-900">สรุปผลการทดสอบ</h2>
+                <p id="gradeBadge" class="text-sm font-semibold text-brand-600 bg-brand-50 inline-block px-4 py-1.5 rounded-full">
+                    ระดับความเข้าใจ: ยอดเยี่ยม
+                </p>
+
+                <!-- Score Circle / Card -->
+                <div class="py-4">
+                    <div class="text-5xl md:text-6xl font-prompt font-bold text-slate-900">
+                        <span id="finalScore" class="text-brand-600">0</span>
+                        <span class="text-slate-300 text-3xl font-normal">/ 30</span>
+                    </div>
+                    <p class="text-slate-500 text-xs md:text-sm mt-1">คิดเป็น <span id="finalPercentage">0</span>% ของคะแนนเต็ม</p>
+                </div>
+
+                <!-- Skill Mastery Breakdown -->
+                <div class="bg-slate-50 rounded-2xl p-4 text-left border border-slate-200 text-xs md:text-sm space-y-2">
+                    <div class="font-prompt font-semibold text-slate-700 mb-2">วิเคราะห์ความเชี่ยวชาญตามระดับทักษะ:</div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-600">L2 (ความเข้าใจพื้นฐาน)</span>
+                        <span id="skillL2Score" class="font-bold text-slate-800">0/0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-600">L3 (การประยุกต์และวิเคราะห์)</span>
+                        <span id="skillL3Score" class="font-bold text-slate-800">0/0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-600">L4 (การประเมินค่าและแก้ปัญหา)</span>
+                        <span id="skillL4Score" class="font-bold text-slate-800">0/0</span>
+                    </div>
+                </div>
+
+		<!-- Action Buttons แก้เพิ่มปุ่มทดสอบเพิ่มเติม+AI Gen-->
+            <div class="pt-4 flex flex-col sm:flex-row gap-3 justify-center items-center">
+                <!-- ปุ่มที่ 1: เฉลยแบบละเอียด (สีเทา) -->
+                <button onclick="toggleReviewMode()" class="w-full sm:w-auto px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-prompt font-semibold text-sm rounded-xl transition flex items-center justify-center gap-2">
+                    <span>📋 เฉลยแบบละเอียด</span>
+                </button>
+
+                <!-- ปุ่มที่ 2: ทำแบบทดสอบอีกครั้ง (สีส้ม/ฟ้า Brand) -->
+                <button onclick="restartQuiz()" class="w-full sm:w-auto px-5 py-3 bg-brand-600 hover:bg-brand-700 text-white font-prompt font-semibold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                    <span>🔄 ทำแบบทดสอบอีกครั้ง</span>
+                </button>
+
+                <!-- ปุ่มที่ 3: คำถามเพิ่มเติม AI (สีน้ำเงิน Indigo) -->
+                <button id="aiGenerateBtn" onclick="generateNewQuizWithAI()" class="w-full sm:w-auto px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-prompt font-semibold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                    <span>🤖 คำถามเพิ่มเติม (AI)</span>
+                </button>
+
+                <!-- ปุ่มที่ 4: ฝึกเพิ่มเติม 15 ข้อ (ไม่นับรวมคะแนน) แสดงเฉพาะเมื่อมีข้อ set="extra" -->
+                <button id="extraPracticeBtn" onclick="startExtraQuiz()" class="hidden w-full sm:w-auto px-5 py-3 bg-teal-600 hover:bg-teal-700 text-white font-prompt font-semibold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                    <span>📚 ฝึกเพิ่มเติมอีก 15 ข้อ</span>
+                </button>
+            </div>
+            </div>
+
+            <!-- Detailed Answer Review Drawer -->
+            <div id="reviewContainer" class="hidden mt-8 pt-8 border-t border-slate-200 space-y-4 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
+                <h3 class="font-prompt font-bold text-lg text-slate-900 sticky top-0 bg-white/90 backdrop-blur p-2 rounded-lg z-10 border-b">
+                    ทบทวนเฉลยรายข้อ
+                </h3>
+                <div id="reviewList" class="space-y-4 text-left">
+                    <!-- Dynamic Review Cards -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. EXTRA PRACTICE RESULT SCREEN (รอบฝึกเพิ่มเติม 15 ข้อ - ไม่นับรวมกับคะแนนหลัก, ไม่มี skill breakdown) -->
+        <div id="extraResultScreen" class="hidden glass-card rounded-3xl p-6 md:p-10 shadow-xl border border-white my-auto">
+            <div class="text-center space-y-4 max-w-lg mx-auto">
+                <div class="inline-flex p-4 rounded-3xl bg-teal-50 text-teal-600 mb-2">
+                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </div>
+
+                <h2 class="font-prompt font-bold text-2xl md:text-3xl text-slate-900">สรุปผลรอบฝึกเพิ่มเติม</h2>
+                <p class="text-xs text-slate-500">คะแนนรอบนี้เป็นการฝึกฝนเพิ่มเติม ไม่นับรวมกับผลคะแนนชุดข้อสอบหลัก</p>
+
+                <div class="py-4">
+                    <div class="text-5xl md:text-6xl font-prompt font-bold text-slate-900">
+                        <span id="extraFinalScore" class="text-teal-600">0</span>
+                        <span class="text-slate-300 text-3xl font-normal">/ <span id="extraFinalTotal">15</span></span>
+                    </div>
+                </div>
+
+                <div class="pt-4 flex flex-col sm:flex-row gap-3 justify-center items-center">
+                    <button onclick="restartExtraQuiz()" class="w-full sm:w-auto px-5 py-3 bg-teal-600 hover:bg-teal-700 text-white font-prompt font-semibold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                        <span>🔄 ฝึกรอบนี้อีกครั้ง</span>
+                    </button>
+                    <button onclick="resetApp()" class="w-full sm:w-auto px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-prompt font-semibold text-sm rounded-xl transition flex items-center justify-center gap-2">
+                        <span>🏠 กลับหน้าหลัก</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full text-center py-4 text-xs text-slate-400 border-t border-slate-200 bg-white/50">
+        © 2026 Adaptive Interactive Learning Tool • Owlvy House Program
+    </footer>
+
+    <script>
+//เพิ่ม 16-08-2569
+// === [วางโค้ดใหม่ตรงนี้] ===
+  let quizTitle = ""; // กำหนดชื่อชุดแบบทดสอบตรงนี้ (หากปล่อยว่างไว้ จะใช้ชื่อเริ่มต้นใน HTML)
+
+function applyQuizTitle() {
+    // เช็คว่ามีตัวแปร และค่าที่ป้อนเข้ามาไม่ใช่ข้อความว่างเปล่า
+    if (typeof quizTitle !== 'undefined' && quizTitle.trim() !== "") {
+        document.title = quizTitle;
+        
+        const appTitleEl = document.getElementById('appTitle');
+        if (appTitleEl) appTitleEl.textContent = quizTitle;
+
+        // [จุดที่ 6: อัปเดต Start Screen]
+        const startTitleEl = document.getElementById('startScreenTitle');
+        if (startTitleEl) startTitleEl.textContent = quizTitle;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', applyQuizTitle);
+
+// [จุดที่ 4: เพิ่มตัวแปรกัน ReferenceError]
+const misconceptionExplanations = {};
+
+// [จุดที่ 3: ตัวแปรข้อมูลข้อสอบ]
+// หมายเหตุ: แต่ละข้อควรมีฟิลด์ "set" ระบุว่าเป็น "base" (ชุดฐาน นับคะแนน) หรือ "extra" (ชุดเพิ่มเติม ไม่นับคะแนนรวม)
+// หากไม่ระบุ "set" จะถือว่าเป็น "base" โดยอัตโนมัติ
+const rawQuizData = [
+    // === [ให้ GEMINI แทรกข้อมูล JSON ของคำถามทั้งหมดตรงนี้ พร้อมฟิลด์ "set": "base" หรือ "extra"] ===
+];
+        // Application State
+        let quizMode = 'practice'; 
+        let activeQuizData = [];   // ชุดคำถามที่กำลังเล่นอยู่จริง (จะถูกกำหนดค่าใน startQuiz / startExtraQuiz)
+        let isExtraRound = false;  // true เมื่อกำลังเล่นรอบฝึกเพิ่มเติม (ไม่นับรวมกับคะแนนหลัก)
+        let currentQuestionIndex = 0;
+        let currentScore = 0;
+        let selectedAnswers = []; 
+        let soundEnabled = true;
+        let timerInterval = null;
+        let timeLeft = 60;
+
+        // Web Audio API Sound Effects
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'correct') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); 
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); 
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'incorrect') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now); 
+                    osc.frequency.setValueAtTime(174.61, now + 0.1); 
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'complete') {
+                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.frequency.setValueAtTime(freq, now + idx * 0.08);
+                        g.gain.setValueAtTime(0.1, now + idx * 0.08);
+                        g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.3);
+                        o.start(now + idx * 0.08);
+                        o.stop(now + idx * 0.08 + 0.3);
+                    });
+                }
+            } catch (e) {
+                console.log("Audio suppressed");
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundOnIcon').classList.toggle('hidden', !soundEnabled);
+            document.getElementById('soundOffIcon').classList.toggle('hidden', soundEnabled);
+        }
+
+        function selectMode(mode) {
+            playSound('click');
+            quizMode = mode;
+            const pLabel = document.getElementById('modePracticeLabel');
+            const eLabel = document.getElementById('modeExamLabel');
+
+            if (mode === 'practice') {
+                pLabel.className = "relative flex p-4 rounded-2xl border-2 border-brand-500 bg-brand-50/50 cursor-pointer hover:border-brand-600 transition shadow-sm";
+                eLabel.className = "relative flex p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer hover:border-slate-300 transition shadow-sm";
+            } else {
+                pLabel.className = "relative flex p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer hover:border-slate-300 transition shadow-sm";
+                eLabel.className = "relative flex p-4 rounded-2xl border-2 border-brand-500 bg-brand-50/50 cursor-pointer hover:border-brand-600 transition shadow-sm";
+            }
+        }
+
+        function startQuiz() {
+            // ชุดฐาน: ข้อที่ไม่ได้ระบุ set หรือระบุเป็น "base" เท่านั้น (นับคะแนนรวม)
+            activeQuizData = rawQuizData.filter(q => q.set !== 'extra');
+            isExtraRound = false;
+            beginQuizSession();
+        }
+
+        function startExtraQuiz() {
+            // ชุดเพิ่มเติม: เฉพาะข้อที่ระบุ set เป็น "extra" (ไม่นับรวมกับคะแนนหลัก)
+            activeQuizData = rawQuizData.filter(q => q.set === 'extra');
+            isExtraRound = true;
+            beginQuizSession();
+        }
+
+        function beginQuizSession() {
+            playSound('click');
+            currentQuestionIndex = 0;
+            currentScore = 0;
+            selectedAnswers = new Array(activeQuizData.length).fill(null);
+
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('extraResultScreen').classList.add('hidden');
+            document.getElementById('reviewContainer').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+
+            document.getElementById('currentScore').textContent = '0';
+
+            const timerDisplay = document.getElementById('timerDisplay');
+            const hintBtn = document.getElementById('hintBtn');
+
+            if (quizMode === 'exam') {
+                timerDisplay.classList.remove('hidden');
+                timerDisplay.classList.add('flex');
+                hintBtn.classList.add('hidden');
+            } else {
+                timerDisplay.classList.add('hidden');
+                timerDisplay.classList.remove('flex');
+                hintBtn.classList.remove('hidden');
+            }
+
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            clearInterval(timerInterval);
+            const q = activeQuizData[currentQuestionIndex];
+
+            document.getElementById('questionNumBadge').textContent = `ข้อ ${currentQuestionIndex + 1}/${activeQuizData.length}`;
+            document.getElementById('skillBadge').textContent = `ระดับ ${q.tag_skill}`;
+            document.getElementById('questionTopic').textContent = `หมวดการแยกสารเนื้อผสม • ${q.tag_content}`;
+            document.getElementById('questionText').textContent = q.title;
+
+            const progress = ((currentQuestionIndex + 1) / activeQuizData.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+
+            document.getElementById('hintBox').classList.add('hidden');
+            document.getElementById('explanationCard').classList.add('hidden');
+            document.getElementById('nextBtn').disabled = true;
+
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            q.options.forEach((optText, idx) => {
+                const optNum = idx + 1;
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-2xl border-2 border-slate-200 hover:border-brand-300 hover:bg-slate-50 font-prompt text-sm md:text-base text-slate-800 transition flex items-start gap-3 transform active:scale-[0.99]`;
+                
+                btn.innerHTML = `
+                    <span class="w-7 h-7 rounded-full border-2 border-slate-300 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 mt-0.5 option-circle">
+                        ${optNum}
+                    </span>
+                    <span class="flex-grow">${optText.replace(/^\d+\.\s*/, '')}</span>
+                `;
+
+                btn.onclick = () => selectAnswer(optNum);
+                container.appendChild(btn);
+            });
+
+            if (quizMode === 'exam') {
+                timeLeft = 60;
+                document.getElementById('timeLeft').textContent = `${timeLeft}s`;
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    document.getElementById('timeLeft').textContent = `${timeLeft}s`;
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        autoTimeoutAnswer();
+                    }
+                }, 1000);
+            }
+        }
+
+        function toggleHint() {
+            playSound('click');
+            const hintBox = document.getElementById('hintBox');
+            const hintText = document.getElementById('hintText');
+            hintText.textContent = activeQuizData[currentQuestionIndex].hint;
+            hintBox.classList.toggle('hidden');
+        }
+
+        function selectAnswer(optNum) {
+            clearInterval(timerInterval);
+            const q = activeQuizData[currentQuestionIndex];
+            const isCorrect = (optNum === q.answer);
+
+            selectedAnswers[currentQuestionIndex] = {
+                userChoice: optNum,
+                isCorrect: isCorrect
+            };
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            const buttons = optionsContainer.querySelectorAll('button');
+
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                const buttonOptNum = idx + 1;
+                const circle = btn.querySelector('.option-circle');
+
+                if (buttonOptNum === q.answer) {
+                    btn.className = `w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/80 font-prompt text-sm md:text-base text-emerald-900 flex items-start gap-3 shadow-sm`;
+                    circle.className = `w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5`;
+                    circle.innerHTML = '✓';
+                } else if (buttonOptNum === optNum && !isCorrect) {
+                    btn.className = `w-full text-left p-4 rounded-2xl border-2 border-rose-500 bg-rose-50/80 font-prompt text-sm md:text-base text-rose-900 flex items-start gap-3 shadow-sm`;
+                    circle.className = `w-7 h-7 rounded-full bg-rose-500 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5`;
+                    circle.innerHTML = '✕';
+                } else {
+                    btn.className = `w-full text-left p-4 rounded-2xl border-2 border-slate-100 bg-slate-50/50 opacity-60 font-prompt text-sm text-slate-500 flex items-start gap-3`;
+                }
+            });
+
+            if (isCorrect) {
+                playSound('correct');
+                currentScore++;
+                document.getElementById('currentScore').textContent = currentScore;
+            } else {
+                playSound('incorrect');
+            }
+
+            // Show mapped explanation in practice mode based on exact choice
+            if (quizMode === 'practice') {
+                const expCard = document.getElementById('explanationCard');
+                const expTitle = document.getElementById('explanationTitle');
+                const expText = document.getElementById('explanationText');
+                const expIcon = document.getElementById('explanationIcon');
+
+                expCard.classList.remove('hidden');
+
+                const qExpObj = misconceptionExplanations[q.id];
+                const specificExp = (qExpObj && qExpObj.explanation) ? qExpObj.explanation[optNum] : q.hint;
+                
+                if (isCorrect) {
+                    expCard.className = "p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 mt-4";
+                    expIcon.className = "mt-0.5 p-1 rounded-lg bg-emerald-200 text-emerald-700";
+                    expIcon.innerHTML = "✓";
+                    expTitle.textContent = "ถูกต้องแม่นยำ!";
+                    expText.textContent = specificExp;
+                } else {
+                    expCard.className = "p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 mt-4";
+                    expIcon.className = "mt-0.5 p-1 rounded-lg bg-rose-200 text-rose-700";
+                    expIcon.innerHTML = "💡";
+                    expTitle.textContent = `จุดที่มักสับสน (${q.tag_misconception}):`;
+                    expText.textContent = specificExp;
+                }
+            }
+
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function autoTimeoutAnswer() {
+            playSound('incorrect');
+            selectedAnswers[currentQuestionIndex] = {
+                userChoice: null,
+                isCorrect: false
+            };
+
+            const q = activeQuizData[currentQuestionIndex];
+            const optionsContainer = document.getElementById('optionsContainer');
+            const buttons = optionsContainer.querySelectorAll('button');
+
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx + 1 === q.answer) {
+                    btn.className = `w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/80 font-prompt text-sm text-emerald-900 flex items-start gap-3`;
+                } else {
+                    btn.className = `w-full text-left p-4 rounded-2xl border-2 border-slate-100 bg-slate-50/50 opacity-50 font-prompt text-sm text-slate-400 flex items-start gap-3`;
+                }
+            });
+
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            playSound('click');
+            currentQuestionIndex++;
+            if (currentQuestionIndex < activeQuizData.length) {
+                renderQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            playSound('complete');
+            document.getElementById('quizScreen').classList.add('hidden');
+
+            if (isExtraRound) {
+                finishExtraQuiz();
+                return;
+            }
+
+            document.getElementById('resultScreen').classList.remove('hidden');
+
+            document.getElementById('finalScore').textContent = currentScore;
+            const pct = activeQuizData.length > 0 ? Math.round((currentScore / activeQuizData.length) * 100) : 0;
+            document.getElementById('finalPercentage').textContent = pct;
+
+            if (pct >= 70 && typeof confetti === 'function') {
+                confetti({
+                    particleCount: 120,
+                    spread: 80,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            const gradeBadge = document.getElementById('gradeBadge');
+            if (pct >= 80) {
+                gradeBadge.textContent = "ระดับความเข้าใจ: ยอดเยี่ยม (Mastered)";
+                gradeBadge.className = "text-sm font-semibold text-emerald-700 bg-emerald-50 inline-block px-4 py-1.5 rounded-full border border-emerald-200";
+            } else if (pct >= 50) {
+                gradeBadge.textContent = "ระดับความเข้าใจ: ปานกลาง (Proficient)";
+                gradeBadge.className = "text-sm font-semibold text-amber-700 bg-amber-50 inline-block px-4 py-1.5 rounded-full border border-amber-200";
+            } else {
+                gradeBadge.textContent = "ระดับความเข้าใจ: ควรทบทวนเพิ่มเติม (Needs Review)";
+                gradeBadge.className = "text-sm font-semibold text-rose-700 bg-rose-50 inline-block px-4 py-1.5 rounded-full border border-rose-200";
+            }
+
+            // Skill breakdown computation (เฉพาะชุดฐานที่กำลังเล่นอยู่)
+            const skillStats = {
+                L2: { correct: 0, total: 0 },
+                L3: { correct: 0, total: 0 },
+                L4: { correct: 0, total: 0 }
+            };
+
+            activeQuizData.forEach((q, idx) => {
+                const skill = q.tag_skill;
+                if (skillStats[skill]) {
+                    skillStats[skill].total++;
+                    if (selectedAnswers[idx] && selectedAnswers[idx].isCorrect) {
+                        skillStats[skill].correct++;
+                    }
+                }
+            });
+
+            document.getElementById('skillL2Score').textContent = `${skillStats.L2.correct}/${skillStats.L2.total}`;
+            document.getElementById('skillL3Score').textContent = `${skillStats.L3.correct}/${skillStats.L3.total}`;
+            document.getElementById('skillL4Score').textContent = `${skillStats.L4.correct}/${skillStats.L4.total}`;
+
+            // แสดงปุ่ม "ฝึกเพิ่มเติม" เฉพาะเมื่อมีข้อที่ set = "extra" อยู่ในข้อมูลจริง
+            const extraBtn = document.getElementById('extraPracticeBtn');
+            const hasExtra = rawQuizData.some(q => q.set === 'extra');
+            extraBtn.classList.toggle('hidden', !hasExtra);
+
+            buildReviewList();
+        }
+
+        // สรุปผลรอบฝึกเพิ่มเติม: แสดงแค่คะแนนสั้นๆ ไม่นับรวมกับสถิติหลัก ไม่มี skill breakdown
+        function finishExtraQuiz() {
+            document.getElementById('extraResultScreen').classList.remove('hidden');
+            document.getElementById('extraFinalScore').textContent = currentScore;
+            document.getElementById('extraFinalTotal').textContent = activeQuizData.length;
+        }
+
+        function toggleReviewMode() {
+            playSound('click');
+            const reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.classList.toggle('hidden');
+        }
+
+        function buildReviewList() {
+            const reviewList = document.getElementById('reviewList');
+            reviewList.innerHTML = '';
+
+            activeQuizData.forEach((q, idx) => {
+                const userAns = selectedAnswers[idx];
+                const isCorrect = userAns ? userAns.isCorrect : false;
+                const userChoiceNum = userAns ? userAns.userChoice : null;
+
+                const qExpObj = misconceptionExplanations[q.id];
+                const targetChoice = userChoiceNum || q.answer;
+                const reviewExp = (qExpObj && qExpObj.explanation) ? qExpObj.explanation[targetChoice] : q.hint;
+
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-2xl border ${isCorrect ? 'border-emerald-200 bg-emerald-50/40' : 'border-rose-200 bg-rose-50/40'} text-sm space-y-2`;
+
+                let userChoiceText = userChoiceNum ? q.options[userChoiceNum - 1] : 'ไม่ได้ตอบ (หมดเวลา)';
+                let correctChoiceText = q.options[q.answer - 1];
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between font-prompt font-semibold">
+                        <span class="${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">
+                            ข้อ ${idx + 1}. ${isCorrect ? '✓ ถูกต้อง' : '✕ ผิด'}
+                        </span>
+                        <span class="text-xs text-slate-400 bg-white px-2 py-0.5 rounded border">ระดับ ${q.tag_skill}</span>
+                    </div>
+                    <div class="font-medium text-slate-800">${q.title}</div>
+                    <div class="text-xs space-y-1 pt-1">
+                        <div class="${isCorrect ? 'text-emerald-800' : 'text-rose-800'}">
+                            <b>คำตอบของคุณ:</b> ${userChoiceText}
+                        </div>
+                        ${!isCorrect ? `<div class="text-emerald-800"><b>คำตอบที่ถูกต้อง:</b> ${correctChoiceText}</div>` : ''}
+                    </div>
+                    <div class="text-xs text-slate-600 bg-white/80 p-2.5 rounded-xl border border-slate-200/80 mt-2">
+                        💡 <b>คำอธิบาย:</b> ${reviewExp}
+                    </div>
+                `;
+
+                reviewList.appendChild(card);
+            });
+        }
+
+        function restartQuiz() {
+            playSound('click');
+            document.getElementById('reviewContainer').classList.add('hidden');
+            startQuiz();
+        }
+
+        function restartExtraQuiz() {
+            playSound('click');
+            startExtraQuiz();
+        }
+
+        function resetApp() {
+            playSound('click');
+            clearInterval(timerInterval);
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('extraResultScreen').classList.add('hidden');
+            document.getElementById('reviewContainer').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }
+// === [วางฟังก์ชันสร้างข้อสอบด้วย AI ตรงนี้] ===
+      // === [เริ่มโค้ดฟังก์ชัน AI ใหม่ - รองรับ Sandboxed iframe เช่น Gemini Canvas/AI Studio] ===
+     function generateNewQuizWithAI() {
+            playSound('click');
+            
+            // ใช้ชื่อเรื่องจริง หรือใช้คำกลางถ้าแม่แบบไม่ได้ระบุชื่อ
+            const topicName = (typeof quizTitle !== 'undefined' && quizTitle.trim() !== "") 
+                ? quizTitle 
+                : "เนื้อหาตามชุดแบบทดสอบนี้";
+
+            const existingTitles = rawQuizData.map((q, i) => `${i + 1}. ${q.title}`).join("\n");
+            
+            const promptText = `จงสร้างแบบทดสอบเรื่อง "${topicName}" ชุดใหม่เพิ่มเติมจำนวน ${rawQuizData.length} ข้อ โดยมีเงื่อนไขคือ:
+1. ห้ามซ้ำกับคำถามเดิมต่อไปนี้เด็ดขาด:\n${existingTitles}
+2. ให้ปรับปรุงไฟล์ HTML เดิมแล้วส่งแอป Interactive Quiz ตัวเต็มชุดใหม่กลับมาให้เล่นต่อได้ทันที`;
+
+            // พยายามคัดลอกลง Clipboard แบบเงียบๆ ก่อน (ใช้ได้เมื่อเปิดไฟล์ตรงในแท็บ browser ปกติ)
+            // แต่ไม่พึ่งพา alert() หรือผลลัพธ์ของ Clipboard API เพราะถูกบล็อกใน Sandboxed iframe (เช่น Gemini Canvas)
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(promptText).then(() => {
+                    showToast("📋 คัดลอกคำสั่งเรียบร้อยแล้ว! นำไปวาง (Ctrl+V) ในแชท Gemini ได้เลย");
+                }).catch(() => {
+                    showCopyFallbackModal(promptText);
+                });
+            } else {
+                showCopyFallbackModal(promptText);
+            }
+        }
+
+        // กล่องแจ้งเตือนแบบวาดเองในหน้าเว็บ (ไม่ใช่ alert()) ใช้ได้แม้ใน Sandboxed iframe ที่ไม่มี allow-modals
+        function showToast(message) {
+            const existing = document.getElementById('appToast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'appToast';
+            toast.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-sm w-[90%] bg-slate-900 text-white text-sm font-prompt px-5 py-3 rounded-2xl shadow-xl text-center transition-opacity duration-300';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // กล่องสำรองสำหรับคัดลอกคำสั่ง เมื่อ Clipboard API ถูกบล็อก (เช่น Sandboxed iframe/Gemini Canvas)
+        // แสดงข้อความเต็มให้เห็นในหน้าเว็บ พร้อม select ให้อัตโนมัติ ผู้ใช้กด Ctrl+C เองได้ทันที
+        // (การกด Ctrl+C ของผู้ใช้เองเป็น native browser action ไม่ถูกบล็อกด้วย Permissions Policy ของ Clipboard API)
+        function showCopyFallbackModal(text) {
+            const existing = document.getElementById('copyFallbackOverlay');
+            if (existing) existing.remove();
+
+            const overlay = document.createElement('div');
+            overlay.id = 'copyFallbackOverlay';
+            overlay.className = 'fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4';
+
+            overlay.innerHTML = `
+                <div class="glass-card rounded-3xl p-6 shadow-xl border border-white max-w-lg w-full space-y-4">
+                    <h3 class="font-prompt font-bold text-lg text-slate-900">📋 คัดลอกคำสั่งสำหรับ Gemini</h3>
+                    <p class="text-xs md:text-sm text-slate-500">ระบบคัดลอกอัตโนมัติถูกจำกัดสิทธิ์ในหน้าต่างนี้ กรุณากดเลือกข้อความด้านล่างแล้วกด <b>Ctrl+C</b> (หรือแตะค้างแล้วเลือก "คัดลอก" บนมือถือ) เพื่อคัดลอกด้วยตนเอง</p>
+                    <textarea id="copyFallbackTextarea" readonly class="w-full h-40 p-3 text-xs md:text-sm rounded-xl border border-slate-300 font-mono text-slate-700 resize-none"></textarea>
+                    <div class="flex justify-end">
+                        <button id="copyFallbackCloseBtn" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-prompt font-semibold text-sm rounded-xl transition">
+                            ปิดหน้าต่างนี้
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(overlay);
+
+            const textarea = document.getElementById('copyFallbackTextarea');
+            textarea.value = text;
+            textarea.focus();
+            textarea.select();
+
+            // พยายาม execCommand เผื่อบางเบราว์เซอร์ยังรองรับ (ถ้าไม่ได้ก็ไม่เป็นไร ผู้ใช้กด Ctrl+C เองได้อยู่แล้ว)
+            try { document.execCommand('copy'); } catch (e) { /* เงียบไว้ ไม่ต้องแจ้งเตือน */ }
+
+            document.getElementById('copyFallbackCloseBtn').onclick = () => overlay.remove();
+        }
+        // === [จบโค้ดฟังก์ชัน AI ใหม่] ===
+    </script>
+</body>
+</html>
