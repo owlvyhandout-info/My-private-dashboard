@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Validator — ตรวจสอบไฟล์ข้อมูลข้อสอบ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Kanit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Kanit', sans-serif; }
+        .editor-area {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            tab-size: 2;
+            resize: none;
+        }
+        .editor-area:focus { outline: none; }
+        .line-numbers {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            user-select: none;
+        }
+        .error-line-bg { background: rgba(239, 68, 68, 0.08); }
+        .warn-line-bg { background: rgba(245, 158, 11, 0.08); }
+        .fade-in { animation: fadeIn 0.25s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .toast-enter { animation: toastIn 0.3s ease-out forwards; }
+        .toast-exit { animation: toastOut 0.25s ease-in forwards; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(-20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes toastOut { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-20px) scale(0.95); } }
+        ::-webkit-scrollbar { width: 7px; height: 7px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.35); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(100,116,139,0.55); }
+        .stat-card { transition: transform 0.15s, box-shadow 0.15s; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px -5px rgba(0,0,0,0.1); }
+        .issue-row { transition: background 0.15s; }
+        .issue-row:hover { background: rgba(0,0,0,0.02); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-200 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white text-lg shadow-md shadow-emerald-500/20">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold text-gray-800">Data Validator</h1>
+                    <p class="text-[10px] text-gray-400 font-medium">ตรวจสอบความถูกต้องของไฟล์ข้อมูลข้อสอบ (JSON)</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="loadSampleData()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded-lg border border-gray-200 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-flask"></i> <span class="hidden sm:inline">โหลดตัวอย่าง</span>
+                </button>
+                <button onclick="clearAll()" class="text-xs bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-600 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-red-200 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-eraser"></i> <span class="hidden sm:inline">ล้าง</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="flex-grow px-3 sm:px-6 py-5 max-w-7xl mx-auto w-full">
+
+        <!-- Input Section -->
+        <section class="mb-5 space-y-3">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <h2 class="text-sm font-bold text-gray-700"><i class="fa-solid fa-file-code text-emerald-500"></i> วางข้อมูล JSON</h2>
+                    <span class="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">หรือลากไฟล์ .json / .txt มาวาง</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-semibold cursor-pointer shadow-md shadow-emerald-600/20 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-folder-open"></i> เปิดไฟล์
+                        <input type="file" accept=".json,.txt,.js" id="file-input" class="hidden" onchange="handleFileUpload(event)">
+                    </label>
+                    <button onclick="runValidation()" id="validate-btn" class="text-xs bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-2 rounded-xl font-semibold shadow-md shadow-blue-600/20 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i> ตรวจสอบ
+                    </button>
+                </div>
+            </div>
+
+            <!-- Editor with line numbers -->
+            <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                <div id="editor-wrapper" class="relative flex max-h-[400px] overflow-auto" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+                    <div id="line-numbers" class="line-numbers text-right text-gray-300 bg-gray-50 border-r border-gray-200 py-3 px-2 min-w-[48px] sticky left-0 z-10">1</div>
+                    <textarea id="json-input" class="editor-area flex-grow p-3 text-gray-700 bg-white" spellcheck="false" placeholder='วางข้อมูล JSON ที่นี่... เช่น&#10;[&#10;  {&#10;    "id": 1,&#10;    "title": "คำถาม",&#10;    "options": ["A", "B", "C", "D"],&#10;    "answer": 1,&#10;    "hint": "คำใบ้"&#10;  }&#10;]' oninput="updateLineNumbers()" onscroll="syncScroll()"></textarea>
+                    <!-- Drop overlay -->
+                    <div id="drop-overlay" class="hidden absolute inset-0 bg-emerald-50/90 backdrop-blur-sm z-20 flex items-center justify-center border-2 border-dashed border-emerald-400 rounded-xl">
+                        <div class="text-center">
+                            <i class="fa-solid fa-cloud-arrow-up text-4xl text-emerald-500 mb-2"></i>
+                            <p class="text-emerald-700 font-semibold text-sm">ปล่อยไฟล์ที่นี่</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between px-3 py-2 bg-gray-50 border-t border-gray-200 text-[10px] text-gray-400">
+                    <span id="char-count">0 ตัวอักษร</span>
+                    <span id="line-count">1 บรรทัด</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section (hidden by default) -->
+        <section id="results-section" class="hidden space-y-4 fade-in">
+
+            <!-- Stats Cards -->
+            <div id="stats-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+
+            <!-- Syntax Error (shown when JSON.parse fails) -->
+            <div id="syntax-error-card" class="hidden bg-red-50 border border-red-200 rounded-2xl p-5 space-y-3">
+                <h3 class="text-sm font-bold text-red-700 flex items-center gap-2"><i class="fa-solid fa-circle-xmark text-red-500"></i> พบข้อผิดพลาดทาง Syntax (JSON ไม่ถูกต้อง)</h3>
+                <div id="syntax-error-detail" class="text-xs text-red-600 font-mono bg-white rounded-xl p-4 border border-red-100 leading-relaxed whitespace-pre-wrap"></div>
+                <div id="bracket-analysis" class="text-xs text-gray-600 space-y-1"></div>
+            </div>
+
+            <!-- Issues List -->
+            <div id="issues-card" class="hidden bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+                <div class="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
+                    <h3 class="text-sm font-bold text-gray-700 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-blue-500"></i>
+                        <span id="issues-title">รายการปัญหา</span>
+                    </h3>
+                    <div class="flex items-center gap-2 text-[10px]">
+                        <button onclick="filterIssues('all')" id="filter-all" class="px-2.5 py-1 rounded-lg bg-blue-600 text-white font-semibold transition">ทั้งหมด</button>
+                        <button onclick="filterIssues('error')" id="filter-error" class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition">Error</button>
+                        <button onclick="filterIssues('warning')" id="filter-warning" class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition">Warning</button>
+                        <button onclick="filterIssues('info')" id="filter-info" class="px-2.5 py-1 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition">Info</button>
+                    </div>
+                </div>
+                <div id="issues-list" class="max-h-[500px] overflow-y-auto divide-y divide-gray-50"></div>
+            </div>
+
+            <!-- Summary Card -->
+            <div id="summary-card" class="hidden bg-white border border-gray-200 rounded-2xl shadow-sm p-5 space-y-3">
+                <h3 class="text-sm font-bold text-gray-700 flex items-center gap-2"><i class="fa-solid fa-clipboard-check text-emerald-500"></i> สรุปผลการตรวจสอบ</h3>
+                <div id="summary-content" class="text-xs text-gray-600 leading-relaxed space-y-1.5"></div>
+            </div>
+
+            <!-- Data Preview -->
+            <div id="preview-card" class="hidden bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+                <div class="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
+                    <h3 class="text-sm font-bold text-gray-700 flex items-center gap-2"><i class="fa-solid fa-table-list text-purple-500"></i> ตัวอย่างข้อมูลที่ผ่านการตรวจสอบ</h3>
+                    <span id="preview-count" class="text-[10px] bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-semibold"></span>
+                </div>
+                <div id="preview-list" class="max-h-[400px] overflow-y-auto divide-y divide-gray-50"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-200 py-3 px-4 text-center text-[10px] text-gray-400">
+        Data Validator for Quiz JSON &copy; 2026 — ตรวจสอบความถูกต้องของข้อมูลก่อนนำไปใช้งาน
+    </footer>
+
+    <script>
+    // =============================================
+    // STATE
+    // =============================================
+    let allIssues = [];
+    let parsedData = null;
+
+    // =============================================
+    // LINE NUMBERS
+    // =============================================
+    function updateLineNumbers() {
+        const textarea = document.getElementById('json-input');
+        const lineNums = document.getElementById('line-numbers');
+        const lines = textarea.value.split('\n').length;
+        let html = '';
+        for (let i = 1; i <= lines; i++) html += i + '\n';
+        lineNums.textContent = html;
+        document.getElementById('char-count').textContent = textarea.value.length.toLocaleString() + ' ตัวอักษร';
+        document.getElementById('line-count').textContent = lines + ' บรรทัด';
+    }
+
+    function syncScroll() {
+        const textarea = document.getElementById('json-input');
+        const lineNums = document.getElementById('line-numbers');
+        lineNums.scrollTop = textarea.scrollTop;
+    }
+
+    // =============================================
+    // DRAG & DROP
+    // =============================================
+    function handleDragOver(e) {
+        e.preventDefault();
+        document.getElementById('drop-overlay').classList.remove('hidden');
+    }
+    function handleDragLeave(e) {
+        e.preventDefault();
+        document.getElementById('drop-overlay').classList.add('hidden');
+    }
+    function handleDrop(e) {
+        e.preventDefault();
+        document.getElementById('drop-overlay').classList.add('hidden');
+        const file = e.dataTransfer.files[0];
+        if (file) readFile(file);
+    }
+
+    // =============================================
+    // FILE UPLOAD
+    // =============================================
+    function handleFileUpload(e) {
+        const file = e.target.files[0];
+        if (file) readFile(file);
+        e.target.value = '';
+    }
+
+    function readFile(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('json-input').value = e.target.result;
+            updateLineNumbers();
+            showToast('โหลดไฟล์ ' + file.name + ' สำเร็จ', 'success');
+        };
+        reader.onerror = function() {
+            showToast('ไม่สามารถอ่านไฟล์ได้', 'error');
+        };
+        reader.readAsText(file);
+    }
+
+    // =============================================
+    // TOAST
+    // =============================================
+    function showToast(msg, type) {
+        const container = document.getElementById('toast-container');
+        const colors = {
+            success: 'bg-emerald-600 text-white',
+            error: 'bg-red-600 text-white',
+            info: 'bg-blue-600 text-white',
+            warning: 'bg-amber-500 text-white'
+        };
+        const icons = {
+            success: 'fa-circle-check',
+            error: 'fa-circle-xmark',
+            info: 'fa-circle-info',
+            warning: 'fa-triangle-exclamation'
+        };
+        const el = document.createElement('div');
+        el.className = `toast-enter ${colors[type] || colors.info} px-4 py-2.5 rounded-xl text-xs font-medium shadow-lg flex items-center gap-2 min-w-[220px]`;
+        el.innerHTML = `<i class="fa-solid ${icons[type] || icons.info}"></i> ${msg}`;
+        container.appendChild(el);
+        setTimeout(() => {
+            el.classList.remove('toast-enter');
+            el.classList.add('toast-exit');
+            setTimeout(() => el.remove(), 250);
+        }, 2500);
+    }
+
+    // =============================================
+    // CLEAR
+    // =============================================
+    function clearAll() {
+        document.getElementById('json-input').value = '';
+        updateLineNumbers();
+        document.getElementById('results-section').classList.add('hidden');
+        allIssues = [];
+        parsedData = null;
+        clearLineHighlights();
+    }
+
+    // =============================================
+    // SAMPLE DATA (มีข้อผิดพลายตามจงใมเพื่อทดสอบ)
+    // =============================================
+    function loadSampleData() {
+        const sample = `[
+  {
+    "id": 1,
+    "domain": "BIO",
+    "content": "reflex_arc",
+    "tag_content": "reflex_arc",
+    "tag_skill": "L2",
+    "tag_misconception": "reflex_controlled_by_brain",
+    "title": "ข้อที่ 1. ในการเกิดปฏิกิริยารีเฟล็กซ์ ข้อใดถูกต้อง",
+    "image": "images/spinal01.jpg",
+    "options": [
+      "สิ่งเร้าถูกส่งไปประมวลผลที่สมองโดยตรง",
+      "เซลล์ประสาทรับความรู้สึกส่งสัญญาณเข้าสู่ไขสันหลัง",
+      "ไขสันหลังรับสัญญาณแล้วส่งไปให้สมองใหญ่ตัดสินใจ",
+      "กระแสประสาทเคลื่อนที่ผ่านเส้นประสาทสมอง"
+    ],
+    "answer": 2,
+    "hint": "คิดถึงความรวดเร็วในการหลีกเลี่ยงอันตราย"
+  },
+  {
+    "id": 2,
+    "title": "ข้อที่ 2. พิจารณาการเดินทางของกระแสประสาท",
+    "options": [
+      "F → D → E",
+      "E → C → A → B → F",
+      "E → D → F",
+      "E → D → C → A → B → D → F"
+    ],
+    "answer": 3,
+    "hint": "วิเคราะห์ทิศทางกระแสประสาท"
+    // ขาดปิดวงเล็บ
+  },
+  {
+    "id": 3,
+    "title": "ข้อที่ 3. นาย A เผลอเอามือไปแตะโดนกาต้มน้ำร้อน",
+    "options": [
+      "สมองสั่งการให้กระตุกมือออกก่อน",
+      "การกระตุกมือเกิดจากรีเฟล็กซ์ผ่านไขสันหลัง",
+      "เซลล์ประสาทสั่งการทำงานพร้อมกัน",
+      "การตอบสนองทั้งหมดเกิดจากระบบอัตโนมัติ"
+    ],
+    "answer": 5,
+    "hint": "พิจารณาระยะทางและจำนวนไซแนปส์"
+  },
+  {
+    "id": 1,
+    "title": "ข้อที่ 4. ในการทดสอบ Knee-jerk reflex",
+    "options": [
+      "เป็นปฏิกิริยาที่ต้องผ่านการเรียนรู้",
+      "ศูนย์กลางการสั่งการอยู่ที่เซรีเบลลัม",
+      "ไขสันหลังทำหน้าที่เป็นศูนย์สั่งการ",
+      "เป็นการทำงานของระบบประสาทอัตโนมัติ"
+    ],
+    "answer": 3,
+    "hint": ""
+  },
+  {
+    "id": 5,
+    "title": "ข้อที่ 5.",
+    "options": [
+      "ตัวเลือก A",
+      "ตัวเลือก B"
+    ],
+    "answer": 1,
+    "hint": "คำใบ้บางอย่าง"
+  },
+  {
+    "id": 6,
+    "title": "ข้อที่ 6. ข้อนี้ไม่มี options",
+    "answer": 1,
+    "hint": "ไม่มีตัวเลือก"
+  },
+  {
+    "id": 7,
+    "title": "ข้อที่ 7. ตัวเลือกซ้ำกัน",
+    "options": [
+      "ตัวเลือกเดียวกัน",
+      "ตัวเลือกเดียวกัน",
+      "ตัวเลือก C",
+      "ตัวเลือก D"
+    ],
+    "answer": 3,
+    "hint": "สังเกตว่าตัวเลือกมีซ้ำ"
+  }
+]`;
+        document.getElementById('json-input').value = sample;
+        updateLineNumbers();
+        showToast('โหลดข้อมูลตัวอย่างที่มีข้อผิดพลาย (8 จุด)', 'info');
+    }
+
+    // =============================================
+    // MAIN VALIDATION
+    // =============================================
+    function runValidation() {
+        const raw = document.getElementById('json-input').value.trim();
+        allIssues = [];
+        parsedData = null;
+        clearLineHighlights();
+
+        if (!raw) {
+            showToast('กรุณาวางข้อมูลก่อน', 'warning');
+            return;
+        }
+
+        // --- STEP 1: ตรวจ Syntax ---
+        let data;
+        try {
+            data = JSON.parse(raw);
+        } catch (e) {
+            allIssues.push({
+                type: 'error',
+                code: 'SYNTAX_ERROR',
+                message: 'JSON ไม่ถูกต้อง: ' + cleanParseMessage(e.message),
+                line: extractLineFromError(e.message, raw),
+                fix: 'ตรวจสอบวงเล็บ { } [ ] คอมม่า , คำพูด " " ให้ครบถ้วน'
+            });
+            // วิเคราะห์วงเล็บเพิ่มเติม
+            analyzeBrackets(raw);
+            renderResults(false);
+            return;
+        }
+
+        // --- STEP 2: ตรวจโครงสร้างหลัก ---
+        if (!Array.isArray(data)) {
+            allIssues.push({
+                type: 'error',
+                code: 'NOT_ARRAY',
+                message: 'ข้อมูลระดับบนสุดต้องเป็น Array [...] ไม่ใช่ ' + typeof data,
+                line: 1,
+                fix: 'ให้ห่อข้อมูลด้วย [ ที่ต้นไฟล์ และ ] ที่ท้ายไฟล์'
+            });
+            renderResults(false);
+            return;
+        }
+
+        if (data.length === 0) {
+            allIssues.push({
+                type: 'warning',
+                code: 'EMPTY_ARRAY',
+                message: 'Array ว่างเปล่า ไม่มีข้อมูลข้อสอบ',
+                line: 1,
+                fix: 'เพิ่ม object ข้อสอบเข้าไปใน array'
+            });
+            renderResults(true);
+            return;
+        }
+
+        parsedData = data;
+
+        // --- STEP 3: ตรวจแต่ละข้อ ---
+        const idSet = new Set();
+        data.forEach((item, idx) => {
+            const itemLine = findObjectLine(raw, idx);
+            const prefix = `ข้อที่ ${idx + 1}`;
+
+            // 3.1 ตรวจว่าเป็น object
+            if (typeof item !== 'object' || item === null || Array.isArray(item)) {
+                allIssues.push({
+                    type: 'error', code: 'NOT_OBJECT',
+                    message: `${prefix}: ต้องเป็น Object {...} แต่พบ ${item === null ? 'null' : Array.isArray(item) ? 'Array' : typeof item}`,
+                    line: itemLine, fix: 'เปลี่ยนให้เป็น object ที่มี key "id", "title", "options", "answer", "hint"'
+                });
+                return;
+            }
+
+            // 3.2 ตรวจฟิลด์บังคับ
+            const required = [
+                { key: 'id', type: 'number', label: 'เลขข้อ (id)' },
+                { key: 'title', type: 'string', label: 'คำถาม (title)' },
+                { key: 'options', type: 'array', label: 'ตัวเลือก (options)' },
+                { key: 'answer', type: 'number', label: 'เฉลย (answer)' },
+                { key: 'hint', type: 'string', label: 'คำใบ้ (hint)' }
+            ];
+
+            required.forEach(f => {
+                if (!(f.key in item)) {
+                    allIssues.push({
+                        type: 'error', code: 'MISSING_FIELD',
+                        message: `${prefix}: ขาดฟิลด์ "${f.key}" (${f.label})`,
+                        line: itemLine, fix: `เพิ่ม "${f.key}": <${f.type === 'number' ? '0' : f.type === 'array' ? '[]' : '""'}> ใน object`
+                    });
+                } else if (f.type === 'number' && typeof item[f.key] !== 'number') {
+                    allIssues.push({
+                        type: 'error', code: 'WRONG_TYPE',
+                        message: `${prefix}: "${f.key}" ต้องเป็น number แต่พบ ${typeof item[f.key]}`,
+                        line: itemLine, fix: `เปลี่ยนค่า "${f.key}" ให้เป็นตัวเลข ไม่ใช่ string`
+                    });
+                } else if (f.type === 'string' && typeof item[f.key] !== 'string') {
+                    allIssues.push({
+                        type: 'error', code: 'WRONG_TYPE',
+                        message: `${prefix}: "${f.key}" ต้องเป็น string แต่พบ ${typeof item[f.key]}`,
+                        line: itemLine, fix: `เปลี่ยนค่า "${f.key}" ให้เป็นสตริง`
+                    });
+                } else if (f.type === 'array' && !Array.isArray(item[f.key])) {
+                    allIssues.push({
+                        type: 'error', code: 'WRONG_TYPE',
+                        message: `${prefix}: "options" ต้องเป็น Array [...] แต่พบ ${typeof item[f.key]}`,
+                        line: itemLine, fix: 'เปลี่ยน "options" ให้เป็น array ของ string'
+                    });
+                }
+            });
+
+            // 3.3 ตรวจ id ซ้ำ
+            if (typeof item.id === 'number') {
+                if (idSet.has(item.id)) {
+                    allIssues.push({
+                        type: 'error', code: 'DUPLICATE_ID',
+                        message: `${prefix}: id=${item.id} ซ้ำกับข้ออื่นในไฟล์`,
+                        line: itemLine, fix: `เปลี่ยน id ให้เป็นเลขที่ไม่ซ้ำ`
+                    });
+                }
+                idSet.add(item.id);
+            }
+
+            // 3.4 ตรวจ title ว่าง
+            if (typeof item.title === 'string' && item.title.trim() === '') {
+                allIssues.push({
+                    type: 'warning', code: 'EMPTY_TITLE',
+                    message: `${prefix}: title ว่างเปล่า`,
+                    line: itemLine, fix: 'ใส่ข้อความคำถาม'
+                });
+            }
+
+            // 3.5 ตรวจ options
+            if (Array.isArray(item.options)) {
+                if (item.options.length === 0) {
+                    allIssues.push({
+                        type: 'error', code: 'EMPTY_OPTIONS',
+                        message: `${prefix}: options ว่างเปล่า ไม่มีตัวเลือก`,
+                        line: itemLine, fix: 'เพิ่มตัวเลือกอย่างน้อย 2 ตัวเลือก'
+                    });
+                } else if (item.options.length < 4) {
+                    allIssues.push({
+                        type: 'warning', code: 'FEW_OPTIONS',
+                        message: `${prefix}: มีเพียง ${item.options.length} ตัวเลือก (มาตรฐานคือ 4 ตัวเลือก)`,
+                        line: itemLine, fix: 'เพิ่มตัวเลือกให้ครบ 4 ตัวเลือก'
+                    });
+                } else if (item.options.length > 4) {
+                    allIssues.push({
+                        type: 'warning', code: 'MANY_OPTIONS',
+                        message: `${prefix}: มี ${item.options.length} ตัวเลือก (มาตรฐานคือ 4 ตัวเลือก)`,
+                        line: itemLine, fix: 'ตรวจสอบว่ามีตัวเลือกเกินหรือไม่'
+                    });
+                }
+
+                // ตรวจแต่ละตัวเลือก
+                item.options.forEach((opt, oi) => {
+                    if (typeof opt !== 'string') {
+                        allIssues.push({
+                            type: 'error', code: 'OPTION_NOT_STRING',
+                            message: `${prefix}: ตัวเลือกที่ ${oi + 1} ต้องเป็น string แต่พบ ${typeof opt}`,
+                            line: itemLine, fix: `เปลี่ยนตัวเลือกที่ ${oi + 1} ให้เป็นสตริง`
+                        });
+                    } else if (opt.trim() === '') {
+                        allIssues.push({
+                            type: 'error', code: 'EMPTY_OPTION',
+                            message: `${prefix}: ตัวเลือกที่ ${oi + 1} ว่างเปล่า`,
+                            line: itemLine, fix: `ใส่ข้อความตัวเลือกที่ ${oi + 1}`
+                        });
+                    }
+                });
+
+                // ตรวจตัวเลือกซ้ำ
+                if (item.options.length > 1) {
+                    const seen = new Map();
+                    item.options.forEach((opt, oi) => {
+                        if (typeof opt === 'string') {
+                            const normalized = opt.trim();
+                            if (seen.has(normalized)) {
+                                allIssues.push({
+                                    type: 'warning', code: 'DUPLICATE_OPTION',
+                                    message: `${prefix}: ตัวเลือกที่ ${oi + 1} ซ้ำกับตัวเลือกที่ ${seen.get(normalized)} ("${normalized.substring(0, 40)}...")`,
+                                    line: itemLine, fix: 'แก้ตัวเลือกให้แตกต่างกัน'
+                                });
+                            } else {
+                                seen.set(normalized, oi + 1);
+                            }
+                        }
+                    });
+                }
+            }
+
+            // 3.6 ตรวจ answer
+            if (typeof item.answer === 'number') {
+                if (item.answer < 1 || item.answer > 4) {
+                    allIssues.push({
+                        type: 'error', code: 'ANSWER_OUT_OF_RANGE',
+                        message: `${prefix}: answer=${item.answer} ต้องอยู่ระหว่าง 1-4`,
+                        line: itemLine, fix: 'เปลี่ยน answer ให้เป็น 1, 2, 3 หรือ 4'
+                    });
+                }
+                if (Array.isArray(item.options) && (item.answer < 1 || item.answer > item.options.length)) {
+                    allIssues.push({
+                        type: 'error', code: 'ANSWER_EXCEEDS_OPTIONS',
+                        message: `${prefix}: answer=${item.answer} แต่มีเพียง ${item.options.length} ตัวเลือก`,
+                        line: itemLine, fix: `เปลี่ยน answer ให้ไม่เกิน ${item.options.length}`
+                    });
+                }
+            }
+
+            // 3.7 ตรวจ hint ว่าง
+            if (typeof item.hint === 'string' && item.hint.trim() === '') {
+                allIssues.push({
+                    type: 'info', code: 'EMPTY_HINT',
+                    message: `${prefix}: hint ว่างเปล่า — ควรใส่คำใบ้เพื่อประโยชน์ผู้เรียน`,
+                    line: itemLine, fix: 'ใส่คำอธิบาย/คำใบ้สั้นๆ'
+                });
+            }
+
+            // 3.8 ตรวจฟิลด์เสริม (optional)
+            const optionalFields = ['domain', 'content', 'tag_content', 'tag_skill', 'tag_misconception', 'image'];
+            optionalFields.forEach(f => {
+                if (f in item && typeof item[f] !== 'string') {
+                    allIssues.push({
+                        type: 'warning', code: 'OPTIONAL_WRONG_TYPE',
+                        message: `${prefix}: "${f}" ควรเป็น string แต่พบ ${typeof item[f]}`,
+                        line: itemLine, fix: `เปลี่ยน "${f}" ให้เป็นสตริง`
+                    });
+                }
+            });
+
+            // 3.9 ตรวจ tag_skill ถ้ามี
+            if (typeof item.tag_skill === 'string') {
+                if (!/^[Ll]\d$/i.test(item.tag_skill.trim())) {
+                    allIssues.push({
+                        type: 'warning', code: 'INVALID_SKILL_TAG',
+                        message: `${prefix}: tag_skill="${item.tag_skill}" ไม่ตรงรูปแบบ L1-L4`,
+                        line: itemLine, fix: 'เปลี่ยนเป็น L1, L2, L3 หรือ L4'
+                    });
+                }
+            }
+
+            // 3.10 ตรวจฟิลด์แปลกที่ไม่รู้จัก
+            const knownFields = new Set([...required.map(r => r.key), ...optionalFields]);
+            Object.keys(item).forEach(k => {
+                if (!knownFields.has(k)) {
+                    allIssues.push({
+                        type: 'info', code: 'UNKNOWN_FIELD',
+                        message: `${prefix}: พบฟิลด์ไม่รู้จัก "${k}" — อาจเป็นการสะกดผิด`,
+                        line: itemLine, fix: `ตรวจสอบว่า "${k}" สะกดถูกต้องหรือไม่ หรือลบออกถ้าไม่จำเป็น`
+                    });
+                }
+            });
+        });
+
+        // --- STEP 4: ตรวจรวม ---
+        if (data.length > 0) {
+            const ids = data.filter(d => typeof d.id === 'number').map(d => d.id).sort((a, b) => a - b);
+            if (ids.length > 1) {
+                for (let i = 1; i < ids.length; i++) {
+                    if (ids[i] - ids[i - 1] > 1) {
+                        allIssues.push({
+                            type: 'info', code: 'ID_GAP',
+                            message: `เลข id มีช่องว่าง: ขาด id ระหว่าง ${ids[i - 1]} ถึง ${ids[i]}`,
+                            line: 1, fix: 'ไม่จำเป็นต้องแก้ แต่ควรตรวจสอบว่าข้อสอบหายไปหรือไม่'
+                        });
+                        break;
+                    }
+                }
+            }
+        }
+
+        renderResults(true);
+    }
+
+    // =============================================
+    // BRACKET ANALYSIS (เมื่อ JSON parse ล้มเหลว)
+    // =============================================
+    function analyzeBrackets(raw) {
+        const lines = raw.split('\n');
+        let openCurly = 0, closeCurly = 0, openSquare = 0, closeSquare = 0;
+        let openCurlyLines = [], closeCurlyLines = [];
+        let openSquareLines = [], closeSquareLines = [];
+        let unclosedCurly = [], unclosedSquare = [];
+
+        lines.forEach((line, i) => {
+            for (let c = 0; c < line.length; c++) {
+                // ข้ามตัวอักษรใน string
+                if (line[c] === '"') {
+                    c++;
+                    while (c < line.length && line[c] !== '"') {
+                        if (line[c] === '\\') c++;
+                        c++;
+                    }
+                    continue;
+                }
+                if (line[c] === '{') { openCurly++; openCurlyLines.push(i + 1); unclosedCurly.push(i + 1); }
+                if (line[c] === '}') { closeCurly++; closeCurlyLines.push(i + 1); if (unclosedCurly.length) unclosedCurly.pop(); }
+                if (line[c] === '[') { openSquare++; openSquareLines.push(i + 1); unclosedSquare.push(i + 1); }
+                if (line[c] === ']') { closeSquare++; closeSquareLines.push(i + 1); if (unclosedSquare.length) unclosedSquare.pop(); }
+            }
+        });
+
+        let html = '<div class="font-semibold text-gray-700 mb-1">วิเคราะห์วงเล็บ:</div>';
+        html += `<div class="grid grid-cols-2 gap-2">`;
+        html += makeBracketCard('{', '}', openCurly, closeCurly, openCurlyLines, closeCurlyLines, unclosedCurly);
+        html += makeBracketCard('[', ']', openSquare, closeSquare, openSquareLines, closeSquareLines, unclosedSquare);
+        html += `</div>`;
+
+        if (unclosedCurly.length > 0) {
+            html += `<div class="mt-2 text-red-600"><i class="fa-solid fa-xmark"></i> <b>{</b> เปิดที่บรรทัด ${unclosedCurly.join(', ')} แต่ไม่พบ <b>}</b> ปิด</div>`;
+        }
+        if (unclosedSquare.length > 0) {
+            html += `<div class="mt-1 text-red-600"><i class="fa-solid fa-xmark"></i> <b>[</b> เปิดที่บรรทัด ${unclosedSquare.join(', ')} แต่ไม่พบ <b>]</b> ปิด</div>`;
+        }
+        if (unclosedCurly.length === 0 && unclosedSquare.length === 0 && openCurly === closeCurly && openSquare === closeSquare) {
+            html += `<div class="mt-2 text-emerald-600"><i class="fa-solid fa-check"></i> วงเล็บคู่ครบ — ปัญหาอาจเป็นคอมม่าหรือคำพูด</div>`;
+        }
+
+        document.getElementById('bracket-analysis').innerHTML = html;
+    }
+
+    function makeBracketCard(open, close, openCount, closeCount, openLines, closeLines, unclosed) {
+        const balanced = openCount === closeCount;
+        const color = balanced ? 'emerald' : 'red';
+        return `<div class="bg-white rounded-lg p-3 border border-gray-200">
+            <div class="flex items-center gap-2 mb-1">
+                <span class="font-mono font-bold text-lg">${open}${close}</span>
+                <span class="text-${color}-600 text-[10px] font-bold">${balanced ? 'สมดุล' : 'ไม่สมดุล'}</span>
+            </div>
+            <div class="text-xs text-gray-600">เปิด <b>${openCount}</b> : ปิด <b>${closeCount}</b></div>
+            ${!balanced ? `<div class="text-[10px] text-gray-400 mt-1">เปิด: บรรทัด ${openLines.slice(0, 5).join(', ')}${openLines.length > 5 ? '...' : ''}<br>ปิด: บรรทัด ${closeLines.slice(0, 5).join(', ')}${closeLines.length > 5 ? '...' : ''}</div>` : ''}
+        </div>`;
+    }
+
+    // =============================================
+    // HELPER: ดึงเลขบรรทัดจาก error message
+    // =============================================
+    function extractLineFromError(msg, raw) {
+        const match = msg.match(/position\s+(\d+)/i);
+        if (match) {
+            const pos = parseInt(match[1]);
+            return raw.substring(0, pos).split('\n').length;
+        }
+        return null;
+    }
+
+    function cleanParseMessage(msg) {
+        return msg.replace(/at position \d+/i, '').replace(/\s+/g, ' ').trim();
+    }
+
+    // =============================================
+    // HELPER: หาบรรทัดของ object ที่ index ใน array
+    // =============================================
+    function findObjectLine(raw, arrayIndex) {
+        let depth = 0;
+        let currentIdx = -1;
+        const lines = raw.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+            for (let c = 0; c < lines[i].length; c++) {
+                if (lines[i][c] === '"') {
+                    c++;
+                    while (c < lines[i].length && lines[i][c] !== '"') {
+                        if (lines[i][c] === '\\') c++;
+                        c++;
+                    }
+                    continue;
+                }
+                if (lines[i][c] === '[') depth++;
+                if (lines[i][c] === ']') depth--;
+                if (lines[i][c] === '{' && depth === 1) {
+                    currentIdx++;
+                    if (currentIdx === arrayIndex) return i + 1;
+                }
+            }
+        }
+        return null;
+    }
+
+    // =============================================
+    // LINE HIGHLIGHTING
+    // =============================================
+    function clearLineHighlights() {
+        const textarea = document.getElementById('json-input');
+        if (textarea._highlightOverlay) {
+            textarea._highlightOverlay.remove();
+            textarea._highlightOverlay = null;
+        }
+    }
+
+    function highlightLines(lineNums, type) {
+        const textarea = document.getElementById('json-input');
+        if (!textarea._highlightOverlay) {
+            const overlay = document.createElement('div');
+            overlay.className = 'absolute inset-0 pointer-events-none z-[5]';
+            overlay.style.cssText = 'font-family: JetBrains Mono, monospace; font-size: 13px; line-height: 1.7; padding: 12px; padding-left: 0;';
+            textarea._highlightOverlay = overlay;
+            textarea.parentElement.style.position = 'relative';
+            textarea.parentElement.appendChild(overlay);
+        }
+        const overlay = textarea._highlightOverlay;
+        const lines = textarea.value.split('\n');
+        const lh = 13 * 1.7; // font-size * line-height
+        let html = '';
+        lines.forEach((_, i) => {
+            if (lineNums.includes(i + 1)) {
+                const bgColor = type === 'error' ? 'rgba(239,68,68,0.1)' : 'rgba(245,158,11,0.1)';
+                html += `<div style="height:${lh}px;background:${bgColor};border-left:3px solid ${type === 'error' ? '#ef4444' : '#f59e0b'}"></div>`;
+            } else {
+                html += `<div style="height:${lh}px"></div>`;
+            }
+        });
+        overlay.innerHTML = html;
+        overlay.scrollTop = textarea.scrollTop;
+    }
+
+    // =============================================
+    // RENDER RESULTS
+    // =============================================
+    function renderResults(hasData) {
+        const section = document.getElementById('results-section');
+        section.classList.remove('hidden');
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        const errors = allIssues.filter(i => i.type === 'error');
+        const warnings = allIssues.filter(i => i.type === 'warning');
+        const infos = allIssues.filter(i => i.type === 'info');
+
+        // --- Stats ---
+        const statsGrid = document.getElementById('stats-grid');
+        statsGrid.innerHTML = `
+            <div class="stat-card bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+                <div class="text-xs text-gray-400 mb-1">ข้อสอบทั้งหมด</div>
+                <div class="text-2xl font-bold text-gray-800">${hasData ? parsedData.length : '-'}</div>
+            </div>
+            <div class="stat-card bg-red-50 rounded-xl p-4 border border-red-200 shadow-sm">
+                <div class="text-xs text-red-400 mb-1 flex items-center gap-1"><i class="fa-solid fa-circle-xmark"></i> Error</div>
+                <div class="text-2xl font-bold text-red-600">${errors.length}</div>
+            </div>
+            <div class="stat-card bg-amber-50 rounded-xl p-4 border border-amber-200 shadow-sm">
+                <div class="text-xs text-amber-500 mb-1 flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> Warning</div>
+                <div class="text-2xl font-bold text-amber-600">${warnings.length}</div>
+            </div>
+            <div class="stat-card bg-blue-50 rounded-xl p-4 border border-blue-200 shadow-sm">
+                <div class="text-xs text-blue-400 mb-1 flex items-center gap-1"><i class="fa-solid fa-circle-info"></i> Info</div>
+                <div class="text-2xl font-bold text-blue-600">${infos.length}</div>
+            </div>
+        `;
+
+        // --- Syntax Error Card ---
+        const syntaxCard = document.getElementById('syntax-error-card');
+        if (!hasData) {
+            syntaxCard.classList.remove('hidden');
+            document.getElementById('syntax-error-detail').textContent = allIssues[0].message;
+        } else {
+            syntaxCard.classList.add('hidden');
+        }
+
+        // --- Issues List ---
+        const issuesCard = document.getElementById('issues-card');
+        const issuesList = document.getElementById('issues-list');
+        if (allIssues.length > 0) {
+            issuesCard.classList.remove('hidden');
+            document.getElementById('issues-title').textContent = `รายการปัญหา (${allIssues.length} รายการ)`;
+            renderIssueRows('all');
+        } else {
+            issuesCard.classList.add('hidden');
+        }
+
+        // --- Summary ---
+        const summaryCard = document.getElementById('summary-card');
+        summaryCard.classList.remove('hidden');
+        let summaryHtml = '';
+        if (!hasData) {
+            summaryHtml += `<div class="text-red-600"><i class="fa-solid fa-xmark"></i> <b>ไม่ผ่าน:</b> JSON ไม่ถูกต้อง ไม่สามารถตรวจสอบเนื้อหาได้ ให้แก้ Syntax ก่อนแล้วตรวจใหม่</div>`;
+        } else if (errors.length > 0) {
+            summaryHtml += `<div class="text-red-600"><i class="fa-solid fa-xmark"></i> <b>ไม่ผ่าน:</b> พบ ${errors.length} ข้อผิดพลาดที่ต้องแก้ก่อนนำไปใช้งาน</div>`;
+        } else if (warnings.length > 0) {
+            summaryHtml += `<div class="text-amber-600"><i class="fa-solid fa-check"></i> <b>ผ่านเงื่อนไขขั้นต่ำ:</b> ไม่มี Error แต่มี ${warnings.length} คำเตือนที่ควรพิจารณา</div>`;
+        } else {
+            summaryHtml += `<div class="text-emerald-600"><i class="fa-solid fa-circle-check"></i> <b>ผ่านทั้งหมด:</b> ข้อมูล ${parsedData.length} ข้อถูกต้องครบถ้วน พร้อมใช้งาน</div>`;
+        }
+        if (hasData && parsedData.length > 0) {
+            summaryHtml += `<div class="text-gray-500">- ฟิลด์บังคับ: id, title, options, answer, hint</div>`;
+            summaryHtml += `<div class="text-gray-500">- ฟิลด์เสริม: domain, content, tag_content, tag_skill, tag_misconception, image</div>`;
+            summaryHtml += `<div class="text-gray-500">- answer ใช้เลข 1-4 (index จาก options)</div>`;
+        }
+        document.getElementById('summary-content').innerHTML = summaryHtml;
+
+        // --- Preview ---
+        const previewCard = document.getElementById('preview-card');
+        if (hasData && parsedData && parsedData.length > 0) {
+            previewCard.classList.remove('hidden');
+            document.getElementById('preview-count').textContent = parsedData.length + ' ข้อ';
+            let previewHtml = '';
+            parsedData.forEach((item, idx) => {
+                const itemIssues = allIssues.filter(i => i.line === findObjectLine(document.getElementById('json-input').value, idx));
+                const hasError = itemIssues.some(i => i.type === 'error');
+                const hasWarn = itemIssues.some(i => i.type === 'warning');
+                const borderColor = hasError ? 'border-l-red-400' : hasWarn ? 'border-l-amber-400' : 'border-l-emerald-400';
+                const statusIcon = hasError ? '<span class="text-red-500"><i class="fa-solid fa-circle-xmark"></i></span>' : hasWarn ? '<span class="text-amber-500"><i class="fa-solid fa-triangle-exclamation"></i></span>' : '<span class="text-emerald-500"><i class="fa-solid fa-circle-check"></i></span>';
+                const title = typeof item.title === 'string' ? item.title.substring(0, 80) : '(ไม่มี title)';
+                const optCount = Array.isArray(item.options) ? item.options.length : 0;
+                previewHtml += `<div class="issue-row px-5 py-3 border-l-4 ${borderColor} flex items-start gap-3">
+                    <div class="mt-0.5">${statusIcon}</div>
+                    <div class="flex-grow min-w-0">
+                        <div class="text-xs font-semibold text-gray-700 truncate">${title}</div>
+                        <div class="text-[10px] text-gray-400 mt-0.5 flex items-center gap-3 flex-wrap">
+                            <span>id: ${item.id !== undefined ? item.id : '-'}</span>
+                            <span>ตัวเลือก: ${optCount}</span>
+                            <span>เฉลย: ${item.answer !== undefined ? item.answer : '-'}</span>
+                            ${item.tag_skill ? `<span class="bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">${item.tag_skill}</span>` : ''}
+                        </div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('preview-list').innerHTML = previewHtml;
+        } else {
+            previewCard.classList.add('hidden');
+        }
+
+        // Toast
+        if (!hasData) showToast('พบข้อผิดพลาด Syntax — ดูรายละเอียดด้านล่าง', 'error');
+        else if (errors.length > 0) showToast(`พบ ${errors.length} Error ที่ต้องแก้`, 'error');
+        else if (warnings.length > 0) showToast(`ผ่านขั้นต่ำ — มี ${warnings.length} คำเตือน`, 'warning');
+        else showToast('ข้อมูลถูกต้องทั้งหมด พร้อมใช้งาน', 'success');
+    }
+
+    // =============================================
+    // RENDER ISSUE ROWS (with filter)
+    // =============================================
+    function renderIssueRows(filter) {
+        const list = document.getElementById('issues-list');
+        const filtered = filter === 'all' ? allIssues : allIssues.filter(i => i.type === filter);
+
+        // อัปเดตปุ่ม filter
+        ['all', 'error', 'warning', 'info'].forEach(f => {
+            const btn = document.getElementById('filter-' + f);
+            if (f === filter) {
+                btn.className = 'px-2.5 py-1 rounded-lg bg-blue-600 text-white font-semibold transition';
+            } else {
+                btn.className = 'px-2.5 py-1 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition';
+            }
+        });
+
+        if (filtered.length === 0) {
+            list.innerHTML = '<div class="px-5 py-8 text-center text-xs text-gray-400">ไม่มีรายการในหมวดนี้</div>';
+            return;
+        }
+
+        let html = '';
+        filtered.forEach((issue, idx) => {
+            const colors = {
+                error: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700', badge: 'bg-red-100 text-red-700', icon: 'fa-circle-xmark text-red-500' },
+                warning: { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-700', badge: 'bg-amber-100 text-amber-700', icon: 'fa-triangle-exclamation text-amber-500' },
+                info: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', badge: 'bg-blue-100 text-blue-700', icon: 'fa-circle-info text-blue-500' }
+            };
+            const c = colors[issue.type] || colors.info;
+            const lineInfo = issue.line ? `<span class="text-gray-400">บรรทัด ${issue.line}</span>` : '';
+            html += `<div class="issue-row px-5 py-3 flex items-start gap-3 cursor-pointer" onclick="jumpToLine(${issue.line})" title="คลิกเพื่อไปยังบรรทัด">
+                <i class="fa-solid ${c.icon} mt-0.5 text-sm"></i>
+                <div class="flex-grow min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap mb-0.5">
+                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${c.badge}">${issue.code}</span>
+                        ${lineInfo}
+                    </div>
+                    <div class="text-xs ${c.text} leading-relaxed">${issue.message}</div>
+                    ${issue.fix ? `<div class="text-[10px] text-gray-400 mt-1 flex items-center gap-1"><i class="fa-solid fa-wrench"></i> ${issue.fix}</div>` : ''}
+                </div>
+            </div>`;
+        });
+        list.innerHTML = html;
+
+        // highlight lines
+        const errorLines = filtered.filter(i => i.type === 'error' && i.line).map(i => i.line);
+        const warnLines = filtered.filter(i => i.type === 'warning' && i.line).map(i => i.line);
+        if (errorLines.length > 0) highlightLines(errorLines, 'error');
+        else if (warnLines.length > 0) highlightLines(warnLines, 'warning');
+        else clearLineHighlights();
+    }
+
+    function filterIssues(type) {
+        renderIssueRows(type);
+    }
+
+    function jumpToLine(lineNum) {
+        if (!lineNum) return;
+        const textarea = document.getElementById('json-input');
+        const lines = textarea.value.split('\n');
+        const lh = 13 * 1.7;
+        textarea.scrollTop = (lineNum - 1) * lh;
+        syncScroll();
+        // flash effect
+        const lineNums = document.getElementById('line-numbers');
+        const numLines = lineNums.textContent.split('\n');
+        if (numLines[lineNum - 1] !== undefined) {
+            // highlight line number briefly
+            const original = lineNums.style;
+            lineNums.style.transition = 'background 0.15s';
+            lineNums.style.background = 'rgba(59,130,246,0.15)';
+            setTimeout(() => { lineNums.style.background = ''; }, 600);
+        }
+    }
+
+    // =============================================
+    // INIT
+    // =============================================
+    updateLineNumbers();
+    </script>
+</body>
+</html>
