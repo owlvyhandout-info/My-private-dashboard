@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คลังแบบฝึกหัดวิทยาศาสตร์</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c2128;
+    --ink-soft:#5b6270;
+    --paper:#f3f2ee;
+    --card-bg:#ffffff;
+    --line:#e2e0da;
+    --radius:20px;
+    --nav-h:68px;
+
+    --bio:#2f7d4f;      --bio-dark:#1f5233;   --bio-soft:#dcefe0;
+    --chem:#7c4fe0;     --chem-dark:#4b2e99;  --chem-soft:#ece3fb;
+    --phy:#1d6fd1;      --phy-dark:#123e73;   --phy-soft:#dfeaf9;
+    --earth:#c1692b;    --earth-dark:#7a431a; --earth-soft:#f6e5cf;
+    --astro:#e8c468;    --astro-dark:#9a7a2c; --astro-soft:#232c52;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Sarabun',sans-serif;
+    line-height:1.6;
+  }
+  h1,h2,h3,.display{font-family:'Kanit',sans-serif;}
+
+  .topnav{
+    position:sticky;
+    top:0;
+    z-index:50;
+    height:var(--nav-h);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:0 22px;
+    background:rgba(255,255,255,0.85);
+    backdrop-filter:blur(10px) saturate(1.4);
+    border-bottom:1px solid var(--line);
+    overflow-x:auto;
+    scrollbar-width:thin;
+  }
+  .topnav .brand{
+    font-family:'Kanit',sans-serif;
+    font-weight:700;
+    font-size:17px;
+    color:var(--ink);
+    white-space:nowrap;
+    padding-right:16px;
+    margin-right:8px;
+    border-right:1px solid var(--line);
+    flex-shrink:0;
+  }
+  .nav-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
+    border:1.5px solid var(--line);
+    background:#fff;
+    color:var(--ink);
+    font-family:'Kanit',sans-serif;
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:.04em;
+    padding:9px 16px 9px 12px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:transform .18s cubic-bezier(.2,.8,.3,1), background .18s ease, color .18s ease, box-shadow .18s ease;
+  }
+  .nav-btn .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--dot,#999);
+    flex-shrink:0;
+    transition:background .18s ease;
+  }
+  .nav-btn:hover{
+    transform:translateY(-2px);
+    background:var(--dot,#999);
+    color:#fff;
+    box-shadow:0 8px 18px -8px var(--dot,#999);
+  }
+  .nav-btn:hover .dot{background:#fff;}
+
+  .hero{
+    position:relative;
+    padding:64px 24px 44px;
+    text-align:center;
+    max-width:820px;
+    margin:0 auto;
+    overflow:hidden;
+  }
+  .hero .eyebrow{
+    font-family:'Kanit',sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:.22em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+  }
+  .hero h1{
+    font-size:clamp(30px,4.6vw,44px);
+    font-weight:800;
+    margin:12px 0 14px;
+    letter-spacing:-.01em;
+  }
+  .hero p{
+    color:var(--ink-soft);
+    font-size:15.5px;
+    margin:0 auto;
+    max-width:520px;
+  }
+  .spectrum-bar{
+    margin:30px auto 0;
+    max-width:420px;
+    height:6px;
+    border-radius:999px;
+    background:linear-gradient(90deg,
+      var(--bio) 0 20%,
+      var(--chem) 20% 40%,
+      var(--phy) 40% 60%,
+      var(--earth) 60% 80%,
+      var(--astro-dark) 80% 100%);
+    box-shadow:0 10px 24px -12px rgba(0,0,0,.35);
+  }
+  .spectrum-legend{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-top:14px;
+    font-family:'Kanit',sans-serif;
+    font-size:11.5px;
+    font-weight:600;
+    letter-spacing:.06em;
+    color:var(--ink-soft);
+  }
+  .spectrum-legend span{display:inline-flex;align-items:center;gap:6px;}
+  .spectrum-legend i{width:8px;height:8px;border-radius:50%;display:inline-block;}
+
+  .subject{
+    position:relative;
+    padding:58px 20px 68px;
+    scroll-margin-top:calc(var(--nav-h) + 12px);
+    overflow:hidden;
+  }
+  .subject-inner{
+    max-width:1140px;
+    margin:0 auto;
+    position:relative;
+    z-index:2;
+  }
+  .subject-head{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin-bottom:30px;
+  }
+  .subject-icon{
+    width:54px;height:54px;
+    flex-shrink:0;
+    border-radius:16px;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--accent);
+    color:#fff;
+    box-shadow:0 10px 22px -10px var(--accent);
+  }
+  .subject-icon svg{width:27px;height:27px;}
+  .subject-titles .en{
+    font-family:'Kanit',sans-serif;
+    font-weight:700;
+    font-size:12.5px;
+    letter-spacing:.18em;
+    color:var(--accent-dark);
+  }
+  .subject-titles h2{
+    margin:3px 0 0;
+    font-size:26px;
+    font-weight:800;
+    letter-spacing:-.01em;
+  }
+  .subject-titles .count{
+    font-family:'Sarabun',sans-serif;
+    font-size:13px;
+    color:var(--ink-soft);
+    font-weight:400;
+    margin-left:2px;
+  }
+
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(280px,1fr));
+    gap:18px;
+  }
+  .card{
+    position:relative;
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px 20px 18px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    overflow:hidden;
+    box-shadow:0 1px 2px rgba(20,20,30,.04);
+    transition:transform .2s cubic-bezier(.2,.8,.3,1), box-shadow .2s ease, border-color .2s ease;
+  }
+  .card::before{
+    content:"";
+    position:absolute;
+    inset:0 0 auto 0;
+    height:5px;
+    background:linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #fff));
+  }
+  .card::after{
+    content:"";
+    position:absolute;
+    top:-26px; right:-26px;
+    width:96px; height:96px;
+    border-radius:50%;
+    background:var(--accent);
+    opacity:.06;
+  }
+  .card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 18px 30px -18px var(--accent-dark, #000);
+    border-color:color-mix(in srgb, var(--accent) 45%, var(--line));
+  }
+  .card .topic-icon{
+    width:34px;height:34px;
+    border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    background:color-mix(in srgb, var(--accent) 14%, #fff);
+    color:var(--accent-dark);
+    flex-shrink:0;
+  }
+  .card .topic-icon svg{width:18px;height:18px;}
+  .card .topic-label{
+    font-family:'Kanit',sans-serif;
+    font-weight:600;
+    font-size:15.5px;
+    color:var(--ink);
+    line-height:1.35;
+    margin-bottom:4px;
+  }
+
+  .select-wrap{position:relative;}
+  .select-wrap::after{
+    content:"";
+    position:absolute;
+    right:14px; top:50%;
+    width:9px; height:9px;
+    border-right:2px solid var(--accent-dark);
+    border-bottom:2px solid var(--accent-dark);
+    transform:translateY(-65%) rotate(45deg);
+    pointer-events:none;
+  }
+  .card select{
+    width:100%;
+    appearance:none;
+    -webkit-appearance:none;
+    font-family:'Sarabun',sans-serif;
+    font-size:12.5px;
+    padding:9px 30px 9px 12px;
+    border-radius:11px;
+    border:1.5px solid var(--line);
+    background:color-mix(in srgb, var(--accent) 5%, #fbfbfa);
+    color:var(--ink);
+    cursor:pointer;
+    transition:border-color .15s ease;
+  }
+  .card select:hover{border-color:color-mix(in srgb, var(--accent) 50%, var(--line));}
+  .card select:focus-visible,
+  .nav-btn:focus-visible{
+    outline:2.5px solid var(--accent, #2E75C0);
+    outline-offset:2px;
+  }
+  .card .status{
+    font-size:12px;
+    color:#a15b1f;
+    min-height:15px;
+  }
+
+  #biology{
+    background:
+      radial-gradient(560px 360px at 92% -6%, rgba(47,125,79,.14), transparent 62%),
+      radial-gradient(480px 320px at 4% 108%, rgba(139,195,74,.18), transparent 60%),
+      var(--bio-soft);
+  }
+  #biology .card{ background:linear-gradient(180deg,#ffffff, #fbfdfb); }
+
+  #chemistry{
+    background-color:var(--chem-soft);
+    background-image:
+      radial-gradient(rgba(124,79,224,.20) 2px, transparent 2.2px),
+      radial-gradient(rgba(124,79,224,.20) 2px, transparent 2.2px);
+    background-size:46px 46px, 46px 46px;
+    background-position:0 0, 23px 23px;
+  }
+  #chemistry .card{ background:linear-gradient(180deg,#ffffff, #fbfaff); }
+
+  #physics{
+    background-color:var(--phy-soft);
+    background-image:
+      repeating-linear-gradient(0deg, rgba(29,111,209,.10) 0 1px, transparent 1px 42px),
+      repeating-linear-gradient(90deg, rgba(29,111,209,.10) 0 1px, transparent 1px 42px);
+  }
+  #physics .card{ background:linear-gradient(180deg,#ffffff, #fafcff); }
+
+  #earth-science{
+    background-color:var(--earth-soft);
+    background-image:
+      repeating-radial-gradient(circle at 14% 22%, rgba(193,105,43,.16) 0 2px, transparent 2px 26px),
+      repeating-radial-gradient(circle at 88% 78%, rgba(193,105,43,.14) 0 2px, transparent 2px 30px);
+  }
+  #earth-science .card{ background:linear-gradient(180deg,#ffffff, #fdf9f3); }
+
+  #astronomy{
+    color:#eef0fb;
+    background:
+      radial-gradient(1.6px 1.6px at 12% 22%, rgba(255,255,255,.65) 0, transparent 60%),
+      radial-gradient(1.4px 1.4px at 28% 68%, rgba(255,255,255,.5) 0, transparent 60%),
+      radial-gradient(1.8px 1.8px at 46% 14%, rgba(255,255,255,.6) 0, transparent 60%),
+      radial-gradient(1.3px 1.3px at 62% 55%, rgba(255,255,255,.45) 0, transparent 60%),
+      radial-gradient(1.8px 1.8px at 78% 30%, rgba(255,255,255,.6) 0, transparent 60%),
+      radial-gradient(1.4px 1.4px at 88% 72%, rgba(255,255,255,.5) 0, transparent 60%),
+      radial-gradient(1.3px 1.3px at 8% 82%, rgba(255,255,255,.4) 0, transparent 60%),
+      radial-gradient(1.6px 1.6px at 95% 12%, rgba(255,255,255,.55) 0, transparent 60%),
+      radial-gradient(2px 2px at 35% 88%, rgba(255,255,255,.7) 0, transparent 60%),
+      radial-gradient(2px 2px at 68% 8%, rgba(255,255,255,.7) 0, transparent 60%),
+      linear-gradient(180deg,#171d3c,#11142b);
+  }
+  #astronomy .twinkle{
+    position:absolute; border-radius:50%; background:#fff;
+    animation:twinkle 3.2s ease-in-out infinite;
+  }
+  @keyframes twinkle{ 0%,100%{opacity:.25;} 50%{opacity:1;} }
+  #astronomy .subject-titles .en{color:var(--astro);}
+  #astronomy .subject-titles .count{color:#a9aed6;}
+  #astronomy .subject-icon{background:var(--astro); color:#20264a; box-shadow:0 10px 26px -8px rgba(232,196,104,.5);}
+  #astronomy .card{
+    background:linear-gradient(180deg,#232c52,#1e2549);
+    border-color:#333d68;
+  }
+  #astronomy .card::after{background:var(--astro); opacity:.10;}
+  #astronomy .card .topic-label{color:#f4f5fc;}
+  #astronomy .card .topic-icon{background:rgba(232,196,104,.14); color:var(--astro);}
+  #astronomy .card select{
+    background:#1a2145;
+    border-color:#3a4576;
+    color:#eef0fb;
+  }
+  #astronomy .select-wrap::after{border-color:var(--astro);}
+  #astronomy .card .status{color:#f0c987;}
+
+  footer{
+    text-align:center;
+    padding:38px 20px 50px;
+    color:var(--ink-soft);
+    font-size:13px;
+    background:var(--paper);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .nav-btn, .card, #astronomy .twinkle{transition:none; animation:none;}
+  }
+
+  @media (max-width:520px){
+    .subject-head{align-items:flex-start;}
+    .card-grid{grid-template-columns:1fr;}
+    .hero{padding:48px 20px 34px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav" id="topnav">
+  <span class="brand">คลังแบบฝึกหัด</span>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow">Practice Library</div>
+  <h1>คลังแบบฝึกหัดวิทยาศาสตร์</h1>
+  <p>เลือกรูปแบบลิงก์ (WebApp หรือ QBlocks) จากเมนูย่อยในแต่ละเรื่อง ระบบจะเปิดลิงก์ให้อัตโนมัติ</p>
+  <div class="spectrum-bar"></div>
+  <div class="spectrum-legend" id="legend"></div>
+</header>
+
+<main id="subjects"></main>
+
+<footer>
+  จัดทำเพื่อใช้ประกอบการฝึกฝนวิทยาศาสตร์ — เลือกชุดแบบฝึกหัดแล้วระบบจะเปิดลิงก์ให้อัตโนมัติ
+</footer>
+
+<script>
+const iconPaths = {
+  leaf:  '<path d="M5 21c8-1 13-6 14-14C11 8 6 13 5 21Z"/><path d="M5 21c0-4 2-8 6-11"/>',
+  flask: '<path d="M9 3h6"/><path d="M10 3v6l-5.5 9.2A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-3L14 9V3"/><path d="M8.5 14.5h7"/>',
+  atom:  '<circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c3 3.2 3 14.8 0 18"/><path d="M12 3c-3 3.2-3 14.8 0 18"/>',
+  star:  '<path d="M12 3l2.4 5.4L20 9.3l-4.2 3.9L17 19l-5-3-5 3 1.2-5.8L4 9.3l5.6-.9L12 3Z"/>'
+};
+
+function svgIcon(name, cls){
+  return `<svg class="${cls||''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${iconPaths[name]}</svg>`;
+}
+
+/* 
+===================================================================
+  โครงสร้างข้อมูลแบบ 2 Dropdown (webapp และ qblocks)
+===================================================================
+*/
+const categories = [
+  {
+    id:'biology', en:'BIOLOGY', th:'ชีววิทยา', icon:'leaf',
+    accent:'var(--bio)', accentDark:'var(--bio-dark)', dot:'#2f7d4f',
+    topics:[
+      {
+        name: 'สิ่งมีชีวิตรอบตัว',
+        webapp: [
+          { text: 'WebApp - ชุดที่ 1', url: '#' }
+        ],
+        qblocks: [
+          { text: 'QBlocks - ชุดที่ 1', url: 'https://share.gemini.google/Vk3rh41JejhR' },
+          { text: 'QBlocks - ชุดที่ 2', url: 'https://share.gemini.google/JvwSZyqbrzql' }
+        ]
+      },
+      {
+        name: 'ส่วนต่าง ๆ ของพืชดอก',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'กิจกรรมของพืชดอก',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'ลักษณะทางพันธุกรรมของสิ่งมีชีวิต',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'สิ่งมีชีวิตกับสิ่งแวดล้อม',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'สารอาหาร',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'ระบบย่อยอาหาร',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      }
+    ]
+  },
+  {
+    id:'chemistry', en:'CHEMISTRY', th:'เคมี', icon:'flask',
+    accent:'var(--chem)', accentDark:'var(--chem-dark)', dot:'#7c4fe0',
+    topics:[
+      {
+        name: 'สถานะของสสาร',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'การเปลี่ยนแปลงทางกายภาพ',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'การเปลี่ยนแปลงทางเคมี',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'การแยกสารเนื้อผสมอย่างง่าย',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'การแยกสารเนื้อเดียวอย่างง่าย จำพวกสารละลาย',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      }
+    ]
+  },
+  {
+    id:'physics', en:'PHYSICS', th:'ฟิสิกส์', icon:'atom',
+    accent:'var(--phy)', accentDark:'var(--phy-dark)', dot:'#1d6fd1',
+    topics:[
+      {
+        name: 'มวลและน้ำหนัก',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'แสงและตัวกลางของแสง',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'แรงลัพธ์และแรงเสียดทาน',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'เสียง',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'สมบัติทางกายภาพของวัสดุ',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'แรงไฟฟ้า',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'วงจรไฟฟ้าอย่างง่าย',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      }
+    ]
+  },
+  {
+    id:'earth-science', en:'EARTH SCIENCE', th:'โลกศาสตร์', icon:'globe',
+    accent:'var(--earth)', accentDark:'var(--earth-dark)', dot:'#c1692b',
+    topics:[
+      {
+        name: 'วัฏจักรน้ำ',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'หิน วัฏจักรหิน และซากดึกดำบรรพ์',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'ลมบก ลมทะเล และมรสุม',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'ปรากฏการณ์เรือนกระจก',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'ภัยธรรมชาติ',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      }
+    ]
+  },
+  {
+    id:'astronomy', en:'ASTRONOMY', th:'ดาราศาสตร์', icon:'star',
+    accent:'var(--astro)', accentDark:'var(--astro-dark)', dot:'#e8c468',
+    topics:[
+      {
+        name: 'ดวงจันทร์ของเรา',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'ระบบสุริยะของเรา',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'วัฏจักรการปรากฏของกลุ่มดาว',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'เงาและอุปราคา',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      },
+      {
+        name: 'เทคโนโลยีอวกาศ',
+        webapp: [ { text: 'WebApp - ชุดที่ 1', url: '#' } ],
+        qblocks: [ { text: 'QBlocks - ชุดที่ 1', url: '#' } ]
+      }
+    ]
+  }
+];
+
+/* ---------------- Render Process ---------------- */
+
+const nav = document.getElementById('topnav');
+const main = document.getElementById('subjects');
+const legend = document.getElementById('legend');
+
+categories.forEach(cat => {
+  const btn = document.createElement('button');
+  btn.className = 'nav-btn';
+  btn.style.setProperty('--dot', cat.dot);
+  btn.innerHTML = `<span class="dot"></span>${cat.en}`;
+  btn.addEventListener('click', () => {
+    document.getElementById(cat.id).scrollIntoView({behavior:'smooth'});
+  });
+  nav.appendChild(btn);
+
+  const leg = document.createElement('span');
+  leg.innerHTML = `<i style="background:${cat.dot}"></i>${cat.en}`;
+  legend.appendChild(leg);
+
+  const section = document.createElement('section');
+  section.id = cat.id;
+  section.className = 'subject';
+  section.style.setProperty('--accent', cat.accent);
+  section.style.setProperty('--accent-dark', cat.accentDark);
+
+  const cardsHtml = cat.topics.map((topicObj, i) => {
+    const webappOptionsHtml = (topicObj.webapp || []).map(o => `<option value="${o.url}">${o.text}</option>`).join('');
+    const qblocksOptionsHtml = (topicObj.qblocks || []).map(o => `<option value="${o.url}">${o.text}</option>`).join('');
+    
+    return `
+      <div class="card">
+        <div class="topic-icon">${svgIcon(cat.icon)}</div>
+        <div class="topic-label">${topicObj.name}</div>
+        
+        <!-- Dropdown 1: WebApp -->
+        <div class="select-wrap">
+          <select data-card="${cat.id}-${i}">
+            <option value="" selected disabled>🌐 ลิงก์ WebApp...</option>
+            ${webappOptionsHtml}
+          </select>
+        </div>
+
+        <!-- Dropdown 2: QBlocks -->
+        <div class="select-wrap">
+          <select data-card="${cat.id}-${i}">
+            <option value="" selected disabled>🧩 ลิงก์ QBlocks...</option>
+            ${qblocksOptionsHtml}
+          </select>
+        </div>
+
+        <div class="status" id="status-${cat.id}-${i}"></div>
+      </div>`;
+  }).join('');
+
+  const twinkles = cat.id === 'astronomy'
+    ? Array.from({length:5}).map(() => {
+        const size = (Math.random()*2.4+1.4).toFixed(1);
+        const top = (Math.random()*90+4).toFixed(1);
+        const left = (Math.random()*94+3).toFixed(1);
+        const delay = (Math.random()*3).toFixed(2);
+        return `<span class="twinkle" style="width:${size}px;height:${size}px;top:${top}%;left:${left}%;animation-delay:${delay}s;"></span>`;
+      }).join('')
+    : '';
+
+  section.innerHTML = `
+    ${twinkles}
+    <div class="subject-inner">
+      <div class="subject-head">
+        <div class="subject-icon">${svgIcon(cat.icon)}</div>
+        <div class="subject-titles">
+          <div class="en">${cat.en} · ${cat.th}</div>
+          <h2>${cat.th} <span class="count">${cat.topics.length} หัวข้อ</span></h2>
+        </div>
+      </div>
+      <div class="card-grid">${cardsHtml}</div>
+    </div>`;
+
+  main.appendChild(section);
+});
+
+// เมื่อกดเลือก Dropdown ใดก็ตามจะเปิด URL ในแท็บใหม่ทันที
+document.addEventListener('change', (e) => {
+  const select = e.target.closest('select[data-card]');
+  if(!select) return;
+  const key = select.dataset.card;
+  const status = document.getElementById(`status-${key}`);
+  const url = select.value;
+
+  if(!url || url === '#'){
+    status.textContent = 'ยังไม่ได้ใส่ลิงก์สำหรับชุดนี้';
+  } else {
+    status.textContent = '';
+    window.open(url, '_blank', 'noopener');
+  }
+  select.selectedIndex = 0;
+});
+</script>
+</body>
+</html>
