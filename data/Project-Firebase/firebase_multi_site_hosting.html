@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือสรุปขั้นตอนการบริหารจัดการ Firebase Multi-Site Hosting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 p-4 md:p-8">
+    <div class="max-w-4xl mx-auto space-y-8">
+        
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl p-6 shadow-lg">
+            <h1 class="text-2xl md:text-3xl font-bold mb-2">🔥 สรุปคู่มือการตั้งค่า Firebase Multi-Site Hosting</h1>
+            <p class="opacity-90 text-sm md:text-base">คู่มือฉบับสมบูรณ์สำหรับการจัดการหลายเว็บไซต์ใน Project เดียว ผ่าน Firebase CLI</p>
+            <div class="mt-4 bg-white/10 p-3 rounded-lg text-xs md:text-sm">
+                <strong>Project หลัก:</strong> <code class="bg-black/20 px-2 py-0.5 rounded">owlvy-carefulness-contest</code> | 
+                <strong>ตำแหน่ง Local:</strong> <code class="bg-black/20 px-2 py-0.5 rounded">G:\owlvy-carefulness-contest\</code>
+            </div>
+        </header>
+
+        <!-- Diagram & Overview -->
+        <section class="bg-white rounded-2xl p-6 shadow-md border border-slate-200">
+            <h2 class="text-xl font-bold text-slate-900 border-b pb-3 mb-4 flex items-center gap-2">
+                <span>📌</span> ภาพรวมการเชื่อมโยงระบบ (3 โฟลเดอร์ย่อย)
+            </h2>
+            <p class="text-sm text-slate-600 mb-4">
+                ระบบจะเชื่อมโยง **โฟลเดอร์ในคอมพิวเตอร์** เข้ากับ **ชื่อเว็บไซต์บน Cloud** โดยใช้ **Target Alias** เป็นตัวกลาง
+            </p>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-700">
+                            <th class="p-3 border-b">โฟลเดอร์ในเครื่อง (Local)</th>
+                            <th class="p-3 border-b">Target Alias (ชื่อย่อ)</th>
+                            <th class="p-3 border-b">Site ID บน Firebase Cloud</th>
+                            <th class="p-3 border-b">App URL ใช้งานจริง</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                        <tr>
+                            <td class="p-3 font-mono text-blue-600">folder-contest</td>
+                            <td class="p-3 font-mono text-emerald-600">target-contest</td>
+                            <td class="p-3 font-mono text-purple-600">owlvy-carefulness-contest</td>
+                            <td class="p-3"><a href="https://owlvy-carefulness-contest.web.app" target="_blank" class="text-orange-600 underline text-xs">owlvy-carefulness-contest.web.app</a></td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-mono text-blue-600">folder-exam-g6</td>
+                            <td class="p-3 font-mono text-emerald-600">target-g6</td>
+                            <td class="p-3 font-mono text-purple-600">owlvytrio-g6-classroom-ai-exam-live</td>
+                            <td class="p-3"><a href="https://owlvytrio-g6-classroom-ai-exam-live.web.app" target="_blank" class="text-orange-600 underline text-xs">owlvytrio-g6-...web.app</a></td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-mono text-blue-600">folder-admission</td>
+                            <td class="p-3 font-mono text-emerald-600">target-g7</td>
+                            <td class="p-3 font-mono text-purple-600">admission-to-g7-live-test</td>
+                            <td class="p-3"><a href="https://admission-to-g7-live-test.web.app" target="_blank" class="text-orange-600 underline text-xs">admission-to-g7-...web.app</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Steps -->
+        <section class="space-y-6">
+
+            <!-- Step 1 -->
+            <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200">
+                <h3 class="font-bold text-lg text-slate-800 mb-2 flex items-center gap-2">
+                    <span class="bg-orange-500 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-xs">1</span>
+                    สร้าง Site บน Firebase Console (ฝั่ง Cloud)
+                </h3>
+                <ol class="list-decimal list-inside text-sm space-y-1 text-slate-600 ml-2">
+                    <li>เข้าเว็บไซต์ <a href="https://console.firebase.google.com" class="text-blue-600 underline">Firebase Console</a> เลือกโปรเจกต์ <code class="bg-slate-100 px-1">owlvy-carefulness-contest</code></li>
+                    <li>ไปที่เมนู <strong>Build &gt; Hosting</strong></li>
+                    <li>เลื่อนลงไปด้านล่างสุด ตรงหัวข้อ <strong>Advanced</strong> คลิกปุ่ม <strong>Add another site</strong></li>
+                    <li>ตั้งชื่อ Site ID ใหม่ เช่น <code class="bg-slate-100 px-1">owlvytrio-g6-classroom-ai-exam-live</code> และ <code class="bg-slate-100 px-1">admission-to-g7-live-test</code></li>
+                </ol>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200">
+                <h3 class="font-bold text-lg text-slate-800 mb-2 flex items-center gap-2">
+                    <span class="bg-orange-500 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-xs">2</span>
+                    จัดโครงสร้างโฟลเดอร์ในเครื่อง (Local Drive)
+                </h3>
+                <p class="text-sm text-slate-600 mb-3">สร้างโฟลเดอร์ย่อยไว้ภายใต้โฟลเดอร์หลัก <code class="bg-slate-100 px-1">G:\owlvy-carefulness-contest\</code> ดังนี้:</p>
+                <pre class="bg-slate-900 text-emerald-400 p-4 rounded-xl text-xs overflow-x-auto">
+📁 G:\owlvy-carefulness-contest\
+ ├── 📄 .firebaserc           (ระบบสร้างให้อัตโนมัติจากการจับคู่ Target)
+ ├── 📄 firebase.json         (ไฟล์ตั้งค่าหลัก ห้ามเขียนทับ!)
+ │
+ ├── 📁 folder-contest        (เก็บไฟล์เว็บเดิม)
+ │    ├── 📄 index.html
+ │    └── 📁 images
+ │
+ ├── 📁 folder-exam-g6       (เก็บไฟล์ข้อสอบ G6)
+ │    ├── 📄 index.html
+ │    └── 📁 images
+ │
+ └── 📁 folder-admission     (เก็บไฟล์สอบเข้า ม.1)
+      ├── 📄 index.html
+      └── 📁 images</pre>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200">
+                <h3 class="font-bold text-lg text-slate-800 mb-2 flex items-center gap-2">
+                    <span class="bg-orange-500 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-xs">3</span>
+                    สั่งผูก Target Alias ใน Terminal/Command Prompt
+                </h3>
+                <p class="text-sm text-slate-600 mb-2">เปิด Terminal ที่ตำแหน่ง <code class="bg-slate-100 px-1">G:\owlvy-carefulness-contest&gt;</code> แล้วพิมพ์คำสั่งผูก Alias:</p>
+                <pre class="bg-slate-900 text-slate-100 p-4 rounded-xl text-xs overflow-x-auto space-y-1">
+<span class="text-slate-400"># 1. ผูกไซต์แข่งขันเดิม</span>
+firebase target:apply hosting target-contest owlvy-carefulness-contest
+
+<span class="text-slate-400"># 2. ผูกไซต์ข้อสอบ G6</span>
+firebase target:apply hosting target-g6 owlvytrio-g6-classroom-ai-exam-live
+
+<span class="text-slate-400"># 3. ผูกไซต์สอบเข้า ม.1</span>
+firebase target:apply hosting target-g7 admission-to-g7-live-test</pre>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200">
+                <h3 class="font-bold text-lg text-slate-800 mb-2 flex items-center gap-2">
+                    <span class="bg-orange-500 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-xs">4</span>
+                    เขียนไฟล์ตั้งค่า firebase.json (แบบ Array รองรับ Multi-Site)
+                </h3>
+                <p class="text-sm text-slate-600 mb-3">เปิดไฟล์ <code class="bg-slate-100 px-1">firebase.json</code> แล้วแก้ไขให้อยู่ในโครงสร้าง Array <code class="bg-slate-100 px-1">[ ... ]</code> เพื่อรวมการตั้งค่าทั้งหมดไว้ด้วยกัน:</p>
+                
+                <pre class="bg-slate-900 text-amber-300 p-4 rounded-xl text-xs overflow-x-auto">
+{
+  "hosting": [
+    {
+      "target": "target-contest",
+      "public": "folder-contest",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "target-g6",
+      "public": "folder-exam-g6",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "target-g7",
+      "public": "folder-admission",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    }
+  ]
+}</pre>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200">
+                <h3 class="font-bold text-lg text-slate-800 mb-2 flex items-center gap-2">
+                    <span class="bg-orange-500 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-xs">5</span>
+                    การสั่ง Deploy ขึ้นเซิร์ฟเวอร์ (แยกอัปโหลดรายไซต์)
+                </h3>
+                <p class="text-sm text-slate-600 mb-2">เมื่อต้องการอัปเดตไฟล์ขึ้นเว็บ **ให้ใช้คำสั่งเจาะจงเฉพาะ Target นั้นๆ** เพื่อป้องกันไม่ให้กระทบเว็บอื่น:</p>
+                <pre class="bg-slate-900 text-emerald-400 p-4 rounded-xl text-xs overflow-x-auto space-y-1">
+<span class="text-slate-400"># เมื่อต้องการอัปเดตเว็บข้อสอบ G6 อย่างเดียว:</span>
+firebase deploy --only hosting:target-g6
+
+<span class="text-slate-400"># เมื่อต้องการอัปเดตเว็บสอบเข้า ม.1 อย่างเดียว:</span>
+firebase deploy --only hosting:target-g7
+
+<span class="text-slate-400"># เมื่อต้องการอัปเดตเว็บแข่งเดิมอย่างเดียว:</span>
+firebase deploy --only hosting:target-contest</pre>
+            </div>
+
+        </section>
+
+        <!-- Warnings & Precautions -->
+        <section class="bg-red-50 border-2 border-red-200 rounded-2xl p-6 shadow-md">
+            <h2 class="text-lg font-bold text-red-800 mb-3 flex items-center gap-2">
+                <span>⚠️</span> ข้อควรระวังระดับสำคัญมาก! (Crucial Precautions)
+            </h2>
+            <ul class="list-disc list-inside text-sm text-red-700 space-y-2">
+                <li><strong>ห้ามเขียนทับแบบ Object เด็ดขาด:</strong> การแก้ไฟล์ <code class="bg-red-100 px-1 font-mono">firebase.json</code> ต้องรักษาโครงสร้าง Array <code class="bg-red-100 px-1 font-mono">[ { ... }, { ... } ]</code> ไว้เสมอ หากเผลอนำโค้ดไซต์เดียวไปวางทับ ไซต์อื่นๆ ในโปรเจกต์จะหลุดและทำงานไม่ได้</li>
+                <li><strong>ระวังคำสั่ง <code class="bg-red-100 px-1 font-mono">firebase deploy</code> ลอยๆ:</strong> หากไม่ใส่ <code class="bg-red-100 px-1 font-mono">--only hosting:target-xxxx</code> ระบบจะทำการอัปโหลดไฟล์ทุกไซต์พร้อมกันทั้งหมด ซึ่งอาจนำไฟล์ทดสอบไปทับหน้าเว็บที่ใช้งานจริงได้</li>
+                <li><strong>การอ้างอิงรูปภาพใน HTML:</strong> ให้ใช้ Relative Path เสมอ เช่น <code class="bg-red-100 px-1 font-mono">&lt;img src="images/question1.png"&gt;</code> ห้ามใช้ Full Path จากเครื่องคอมพิวเตอร์ (<code class="bg-red-100 px-1 font-mono">C:/...</code>)</li>
+                <li><strong>ทุกโฟลเดอร์ต้องมีไฟล์ <code class="bg-red-100 px-1 font-mono">index.html</code>:</strong> โฟลเดอร์ย่อยที่ระบุในช่อง <code class="bg-red-100 px-1 font-mono">"public"</code> ต้องมีไฟล์ <code class="bg-red-100 px-1 font-mono">index.html</code> เป็นหน้าแรกเสมอ</li>
+            </ul>
+        </section>
+
+        <!-- Sharing Section -->
+        <section class="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 shadow-md text-center">
+            <h2 class="text-lg font-bold text-emerald-900 mb-2">🎉 การคัดลอก App URL ไปแชร์ใช้งาน</h2>
+            <p class="text-sm text-emerald-700 mb-4">เมื่อระบบขึ้นข้อความ <code class="bg-emerald-200 px-2 py-0.5 rounded font-mono">✔ Deploy complete!</code> สามารถคัดลอก URL ด้านล่างให้ผู้ใช้งานเข้าสอบได้ทันที:</p>
+            
+            <div class="inline-flex flex-col sm:flex-row gap-2 justify-center font-mono text-xs md:text-sm">
+                <span class="bg-white border border-emerald-300 px-3 py-2 rounded-lg shadow-sm text-emerald-800">https://owlvytrio-g6-classroom-ai-exam-live.web.app</span>
+                <span class="bg-white border border-emerald-300 px-3 py-2 rounded-lg shadow-sm text-emerald-800">https://admission-to-g7-live-test.web.app</span>
+            </div>
+        </section>
+
+        <footer class="text-center text-xs text-slate-400 pt-4">
+            Firebase Hosting Multi-Site Workflow Summary Sheet • Owlvy Academy
+        </footer>
+
+    </div>
+</body>
+</html>
