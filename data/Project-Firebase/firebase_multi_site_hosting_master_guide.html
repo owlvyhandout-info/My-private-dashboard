@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือการตั้งค่า Firebase Multi-Site Hosting (ฉบับ Master Guide สมบูรณ์ที่สุด)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        @media print {
+            .no-print { display: none !important; }
+            body { padding: 0; background: white; }
+            .shadow-xl, .shadow-lg, .shadow-md { box-shadow: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 p-3 sm:p-6 md:p-10 min-h-screen">
+
+    <div class="max-w-5xl mx-auto space-y-8">
+        
+        <!-- Action Bar (Download & Print) -->
+        <div class="no-print flex flex-wrap justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200 gap-3">
+            <div class="flex items-center gap-2 text-slate-700 font-bold text-sm">
+                <i class="fa-solid fa-fire text-amber-500 text-lg"></i>
+                <span>Firebase Multi-Site Architecture & Deployment Master Manual</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="downloadHTML()" class="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-md transition transform active:scale-95 cursor-pointer">
+                    <i class="fa-solid fa-download"></i>
+                    <span>ดาวน์โหลดไฟล์ HTML</span>
+                </button>
+                <button onclick="window.print()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-md transition transform active:scale-95 cursor-pointer">
+                    <i class="fa-solid fa-print"></i>
+                    <span>พิมพ์ / PDF</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Header Banner -->
+        <header class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white rounded-3xl p-6 md:p-10 shadow-2xl border-b-4 border-indigo-500">
+            <div class="absolute -right-10 -bottom-10 opacity-15 text-white pointer-events-none">
+                <i class="fa-solid fa-diagram-project text-[280px]"></i>
+            </div>
+            <div class="relative z-10 space-y-3">
+                <div class="inline-flex items-center gap-2 bg-indigo-500/20 border border-indigo-400/30 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-md text-amber-300">
+                    <i class="fa-solid fa-crown text-yellow-300"></i> ฉบับสมบูรณ์ที่สุด (Ultimate Master Blueprint)
+                </div>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight text-white">
+                    🔥 คู่มือตั้งค่า Firebase Multi-Site & System Architecture
+                </h1>
+                <p class="text-indigo-200 text-sm md:text-base max-w-3xl leading-relaxed">
+                    ครอบคลุมการจัดโครงสร้าง Multi-Site, สะพานเชื่อมระบบ Target Binding, การฝากไฟล์ข้อสอบ direct URL สำหรับ Google Classroom และการเชื่อมต่อ Google Authentication
+                </p>
+                <div class="pt-2 flex flex-wrap gap-2 text-xs md:text-sm font-mono">
+                    <span class="bg-black/40 border border-white/15 px-3 py-1.5 rounded-lg flex items-center gap-2 text-cyan-300">
+                        <i class="fa-solid fa-folder-tree"></i> Root Directory: <strong>G:\owlvy-carefulness-contest-main\</strong>
+                    </span>
+                    <span class="bg-black/40 border border-white/15 px-3 py-1.5 rounded-lg flex items-center gap-2 text-emerald-300">
+                        <i class="fa-solid fa-cloud"></i> Firebase Project: <strong>owlvy-carefulness-contest</strong>
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <!-- SECTION 0: DECISION TREE & ARCHITECTURE MATRIX -->
+        <section class="bg-white rounded-3xl p-6 md:p-8 shadow-md border border-slate-200 space-y-5">
+            <div class="flex items-center gap-3 border-b border-slate-200 pb-4">
+                <span class="w-10 h-10 bg-indigo-600 text-white rounded-2xl flex items-center justify-center text-xl shadow">🌳</span>
+                <div>
+                    <h2 class="text-xl font-extrabold text-slate-900">
+                        เกณฑ์การตัดสินใจก่อนเริ่มโครงการ (Architecture Decision Tree)
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500">
+                        วิธีกำหนดว่าเมื่อไหร่ควร "สร้าง Site ใหม่" หรือเมื่อไหร่ควร "รวมไว้ในโฟลเดอร์เดิม"
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Criteria 1 -->
+                <div class="bg-indigo-50/60 border border-indigo-200 p-5 rounded-2xl space-y-3 relative overflow-hidden">
+                    <div class="w-2 h-full bg-indigo-600 absolute left-0 top-0"></div>
+                    <div class="flex items-center gap-2 font-bold text-indigo-950 text-base">
+                        <span class="bg-indigo-600 text-white rounded-lg px-2 py-0.5 text-xs">เกณฑ์ที่ 1</span>
+                        ต่างวัตถุประสงค์ / คนละกลุ่มเป้าหมาย
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        เช่น เว็บแข่งขันเดิม, คลังข้อสอบ ป.6, คลังข้อสอบสอบเข้า ม.1
+                    </p>
+                    <div class="bg-white p-3 rounded-xl border border-indigo-100 text-xs text-slate-800 space-y-1 font-mono">
+                        <p class="text-indigo-600 font-bold">✅ แนวทางแก้ไข:</p>
+                        <p>• กด <strong>Add Site ใหม่</strong> ใน Firebase Console</p>
+                        <p>• สร้าง <strong>โฟลเดอร์ย่อยใหม่</strong> ที่ Root ในคอม</p>
+                        <p>• สั่ง <code>target:apply</code> ผูก Target Alias ใหม่</p>
+                    </div>
+                </div>
+
+                <!-- Criteria 2 -->
+                <div class="bg-emerald-50/60 border border-emerald-200 p-5 rounded-2xl space-y-3 relative overflow-hidden">
+                    <div class="w-2 h-full bg-emerald-600 absolute left-0 top-0"></div>
+                    <div class="flex items-center gap-2 font-bold text-emerald-950 text-base">
+                        <span class="bg-emerald-600 text-white rounded-lg px-2 py-0.5 text-xs">เกณฑ์ที่ 2</span>
+                        งานเดียวกัน / ต่างชุด ต่างปี (ใช้รูปภาพร่วมกัน)
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        เช่น ข้อสอบ ม.1 ชุดปี SMT2026, SMT2027, <code>ADM-APP0001-GEMIN.html</code>
+                    </p>
+                    <div class="bg-white p-3 rounded-xl border border-emerald-100 text-xs text-slate-800 space-y-1 font-mono">
+                        <p class="text-emerald-600 font-bold">✅ แนวทางแก้ไข:</p>
+                        <p>• <strong>ใช้ Site ID เดิม</strong> ไม่ต้องกดสร้าง Site เพิ่ม</p>
+                        <p>• <strong>วางไฟล์ในโฟลเดอร์เดิม</strong> รวมก้อนเดียว</p>
+                        <p>• ใช้โฟลเดอร์ <code>/images/</code> รวมรูปภาพร่วมกันได้ทันที</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 1: CORE CONCEPT - 2-STAGE BINDING -->
+        <section class="bg-amber-50 border-2 border-amber-300 rounded-3xl p-6 md:p-8 shadow-md space-y-5">
+            <div class="flex items-center gap-3 border-b border-amber-200 pb-3">
+                <span class="w-10 h-10 bg-amber-500 text-white rounded-2xl flex items-center justify-center text-xl shadow">💡</span>
+                <div>
+                    <h2 class="text-xl font-extrabold text-amber-950">
+                        หัวใจสำคัญ: ระบบสะพานเชื่อม 2 ต่อ (2-Stage Binding Architecture)
+                    </h2>
+                    <p class="text-xs sm:text-sm text-amber-800">
+                        คำสั่ง <code class="bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded font-mono font-bold">firebase target:apply</code> คือตัวเชื่อมระหว่าง Site ID บน Cloud กับ Local Folder
+                    </p>
+                </div>
+            </div>
+
+            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                ในระบบ Firebase Multi-Site คุณ **ไม่สามารถ** สั่งผูก Local Folder เข้ากับ Site ID บน Cloud ได้โดยตรง แต่มันจะทำงานผ่าน **สะพานเชื่อม 2 ต่อ** ดังนี้:
+            </p>
+
+            <!-- Diagram Box -->
+            <div class="bg-slate-900 rounded-2xl p-4 md:p-6 text-white space-y-4 font-mono text-xs sm:text-sm border border-slate-800 shadow-inner">
+                <div class="text-center font-bold text-amber-400 font-sans border-b border-slate-800 pb-2">
+                    🔄 แผนผังแสดงสะพานเชื่อมระบบ (2-Stage Binding Architecture)
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-center text-center">
+                    <!-- Box 1 -->
+                    <div class="bg-slate-800 p-4 rounded-xl border border-blue-500/40 space-y-1">
+                        <span class="text-blue-400 font-bold block">1. Local Public Folder</span>
+                        <p class="text-slate-300 text-xs font-sans">โฟลเดอร์งานในเครื่อง เช่น</p>
+                        <code class="text-emerald-300 block bg-black/40 p-1.5 rounded">folder-admission</code>
+                    </div>
+
+                    <!-- Bridge 1 Arrow -->
+                    <div class="text-amber-400 flex flex-col items-center justify-center py-1">
+                        <span class="text-[10px] font-sans text-slate-400">กำหนดด้วย <code class="text-pink-400">firebase.json</code></span>
+                        <span class="text-lg">➔ <code class="text-amber-300 font-bold">"target": "target-g7"</code> ➔</span>
+                        <span class="text-[10px] font-sans text-slate-400">ช่อง <code class="text-emerald-300">"public"</code></span>
+                    </div>
+
+                    <!-- Box 2 -->
+                    <div class="bg-slate-800 p-4 rounded-xl border border-purple-500/40 space-y-1">
+                        <span class="text-purple-400 font-bold block">2. Target Alias (ตัวกลาง)</span>
+                        <p class="text-slate-300 text-xs font-sans">ชื่อรหัสสะพานเชื่อม เช่น</p>
+                        <code class="text-yellow-300 block bg-black/40 p-1.5 rounded">owlvyhouse-entrance-g7-admission</code>
+                    </div>
+                </div>
+
+                <div class="flex justify-center items-center py-1">
+                    <div class="bg-amber-500/10 border border-amber-500/30 px-4 py-2 rounded-xl text-center space-y-1 max-w-lg">
+                        <span class="text-amber-300 font-bold text-xs font-sans block">
+                            ⚡ เชื่อมต่อไปยัง Cloud ด้วย Terminal (บันทึกลงไฟล์ซ่อน <code class="text-white">.firebaserc</code>)
+                        </span>
+                        <code class="text-pink-300 text-[11px] block overflow-x-auto">
+                            firebase target:apply hosting [Target-Alias] [Cloud-Site-ID]
+                        </code>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 justify-items-center">
+                    <div class="bg-slate-800 p-4 rounded-xl border border-pink-500/40 text-center space-y-1 w-full md:w-2/3">
+                        <span class="text-pink-400 font-bold block">3. Firebase Site ID (บน Cloud)</span>
+                        <p class="text-slate-300 text-xs font-sans">ชื่อ Web App ที่กดสร้างไว้ใน Firebase Console</p>
+                        <code class="text-cyan-300 block bg-black/40 p-1.5 rounded">owlvyhouse-entrance-g7-admission</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: FOLDER STRUCTURE & SHARED ASSETS -->
+        <section class="bg-white rounded-3xl p-6 md:p-8 shadow-md border border-slate-200 space-y-4">
+            <h2 class="text-xl font-extrabold text-slate-900 border-b pb-4 flex items-center gap-3">
+                <span class="w-9 h-9 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-lg">📁</span>
+                โครงสร้างไฟล์ในเครื่อง (Single-Folder Shared Asset & Direct Links)
+            </h2>
+
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                ภายในโฟลเดอร์ของแต่ละ Site สามารถวางไฟล์ข้อสอบ HTML ได้หลายไฟล์ และใช้โฟลเดอร์รูปภาพ <code class="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-pink-600">images/</code> ร่วมกันได้อย่างสมบูรณ์:
+            </p>
+
+            <div class="relative">
+                <pre class="bg-slate-900 text-emerald-400 p-5 rounded-2xl text-xs overflow-x-auto border border-slate-800 leading-relaxed">
+📁 G:\owlvy-carefulness-contest-main\         (Root หลัก: มีเฉพาะไฟล์ตั้งค่าระบบเท่านั้น)
+ ├── 📄 .firebaserc                           (ไฟล์ซ่อน: เก็บข้อมูลการผูก Target Alias ↔ Cloud Site ID)
+ ├── 📄 firebase.json                         (ไฟล์ตั้งค่า: ชี้ Target Alias ➔ Local Public Folder)
+ │
+ ├── 📁 folder-contest                        (Site 1: เว็บแข่งเดิม)
+ │    ├── 📄 index.html
+ │    └── 📁 images/
+ │
+ ├── 📁 owlvytrio-g6-classroom-ai-exam-live   (Site 2: ข้อสอบ G6)
+ │    ├── 📄 index.html
+ │    └── 📁 images/
+ │
+ └── 📁 owlvyhouse-entrance-g7-admission      (Site 3: คลังข้อสอบเข้า ม.1)
+      ├── 📁 images/                          <-- โฟลเดอร์รูปภาพรวม (เรียกร่วมกันด้วย /images/smt2026_01.jpg)
+      │    ├── 🖼️ smt2026_01.jpg
+      │    └── 🖼️ smt2027_01.jpg
+      ├── 📄 index.html                       <-- หน้าสารบัญรวมลิงก์ (ถ้าต้องการเปิดหน้าแรก)
+      ├── 📄 ADM-APP0001-GEMIN.html           <-- ไฟล์ข้อสอบชุดที่ 1 (เรียกตรงจาก Google Classroom ได้)
+      └── 📄 ADM-APP0002-GLM.html             <-- ไฟล์ข้อสอบชุดที่ 2 (เรียกตรงจาก Google Classroom ได้)</pre>
+            </div>
+        </section>
+
+        <!-- SECTION 3: STEP-BY-STEP WORKFLOW & CRITICAL RULES -->
+        <div class="space-y-6">
+
+            <!-- CRITICAL RULE BOX -->
+            <div class="bg-rose-50 border-2 border-rose-300 rounded-3xl p-6 md:p-8 shadow-md space-y-3">
+                <h3 class="font-extrabold text-lg text-rose-950 flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-600"></i>
+                    กฎเหล็กป้องกันปัญหาที่มักพลาดประจำ!
+                </h3>
+                <ul class="list-disc list-inside space-y-2 text-xs sm:text-sm text-rose-900 leading-relaxed">
+                    <li>
+                        <strong>ตำแหน่งในการรัน Terminal:</strong> ต้องรันคำสั่งอยู่ที่ <strong>Root Folder นอกสุดเสมอ (`G:\owlvy-carefulness-contest-main>`)</strong> ห้าม <code class="bg-rose-100 px-1 font-mono">cd</code> เข้าไปรันในโฟลเดอร์ย่อยเด็ดขาด!
+                    </li>
+                    <li>
+                        <strong>เรื่องไฟล์ `index.html` ที่ Root:</strong> **ที่ Root นอกสุด ไม่ต้องมีไฟล์ `index.html`** และ Firebase จะไม่ข้ามมาดึงไฟล์ที่ Root หรือข้ามไปดึง Site อื่นอัตโนมัติ 100%
+                    </li>
+                    <li>
+                        <strong>ลำดับขั้นตอน:</strong> ต้องกดสร้าง Site บน Console ➔ สั่ง `target:apply` ➔ เขียน `firebase.json` ➔ สั่ง `deploy`
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-md border border-slate-200 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-2 h-full bg-orange-500"></div>
+                <h3 class="font-extrabold text-lg md:text-xl text-slate-800 mb-3 flex items-center gap-3">
+                    <span class="bg-orange-500 text-white rounded-2xl w-8 h-8 flex items-center justify-center text-sm shadow">1</span>
+                    กดสร้าง Site ID บน Firebase Console (จองที่ดินบน Cloud)
+                </h3>
+                <ol class="list-decimal list-inside text-xs sm:text-sm space-y-2 text-slate-600 ml-2 leading-relaxed">
+                    <li>เข้าเว็บไซต์ <a href="https://console.firebase.google.com" target="_blank" class="text-blue-600 font-semibold underline">Firebase Console</a> เลือกโปรเจกต์ <code class="bg-slate-100 px-1.5 py-0.5 rounded text-indigo-600 font-mono">owlvy-carefulness-contest</code></li>
+                    <li>ไปที่เมนู **Build ➔ Hosting**</li>
+                    <li>เลื่อนลงด้านล่างสุด หัวข้อ **Advanced (ขั้นสูง)** คลิกปุ่ม **Add another site**</li>
+                    <li>กดสร้าง Site ID เช่น <code class="bg-slate-100 px-1.5 py-0.5 rounded text-purple-700 font-mono">owlvyhouse-entrance-g7-admission</code></li>
+                </ol>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-md border border-slate-200 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-2 h-full bg-emerald-500"></div>
+                <h3 class="font-extrabold text-lg md:text-xl text-slate-800 mb-3 flex items-center gap-3">
+                    <span class="bg-emerald-500 text-white rounded-2xl w-8 h-8 flex items-center justify-center text-sm shadow">2</span>
+                    สั่งผูก Target ใน Terminal (เปิด Terminal ที่ Root นอกสุดเท่านั้น)
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-600 mb-3 leading-relaxed">
+                    เปิด Terminal ที่พาธ <code class="bg-slate-900 text-amber-300 px-2 py-0.5 rounded font-mono text-xs">G:\owlvy-carefulness-contest-main&gt;</code> แล้วรันคำสั่งผูก Alias:
+                </p>
+                <div class="relative">
+                    <pre class="bg-slate-900 text-emerald-300 p-4 rounded-2xl text-xs overflow-x-auto leading-relaxed border border-slate-800">
+firebase target:apply hosting target-contest owlvy-carefulness-contest
+firebase target:apply hosting owlvytrio-g6-classroom-ai-exam-live owlvytrio-g6-classroom-ai-exam-live
+firebase target:apply hosting owlvyhouse-entrance-g7-admission owlvyhouse-entrance-g7-admission</pre>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-md border border-slate-200 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-2 h-full bg-purple-500"></div>
+                <h3 class="font-extrabold text-lg md:text-xl text-slate-800 mb-3 flex items-center gap-3">
+                    <span class="bg-purple-500 text-white rounded-2xl w-8 h-8 flex items-center justify-center text-sm shadow">3</span>
+                    อัปเดตไฟล์ firebase.json (ชี้ Target Alias ➔ Local Public Folder)
+                </h3>
+                <div class="relative group">
+                    <button onclick="copyToClipboard('jsonCode')" class="absolute top-3 right-3 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg text-xs font-mono transition flex items-center gap-1.5 cursor-pointer">
+                        <i class="fa-regular fa-copy"></i> คัดลอก JSON
+                    </button>
+                    <pre id="jsonCode" class="bg-slate-900 text-amber-300 p-5 rounded-2xl text-xs overflow-x-auto border border-slate-800 leading-relaxed">
+{
+  "hosting": [
+    {
+      "target": "target-contest",
+      "public": "folder-contest",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "owlvytrio-g6-classroom-ai-exam-live",
+      "public": "owlvytrio-g6-classroom-ai-exam-live",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "owlvyhouse-entrance-g7-admission",
+      "public": "owlvyhouse-entrance-g7-admission",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SECTION 4: GOOGLE CLASSROOM DIRECT URL REFERENCING -->
+        <section class="bg-white rounded-3xl p-6 md:p-8 shadow-md border border-slate-200 space-y-4">
+            <h2 class="text-xl font-extrabold text-slate-900 border-b pb-4 flex items-center gap-3">
+                <span class="w-9 h-9 bg-teal-100 text-teal-700 rounded-xl flex items-center justify-center text-lg">🔗</span>
+                การนำ URL ไปอ้างอิงส่งใน Google Classroom (ฝากไฟล์ตรง)
+            </h2>
+
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                กรณีไม่ต้องการทำหน้าเมนูสารบัญ สามารถก๊อบปี้ URL เฉพาะไฟล์ข้อสอบไปสร้างเป็น Assignment ให้เด็กๆ ทำใน Google Classroom ได้ทันที:
+            </p>
+
+            <div class="bg-slate-900 text-slate-100 p-5 rounded-2xl text-xs overflow-x-auto font-mono space-y-3 border border-slate-800">
+                <div>
+                    <span class="text-amber-400 font-bold block mb-1">📌 ข้อสอบชุดที่ 1 (ADM-APP0001-GEMIN.html):</span>
+                    <p class="text-emerald-300">https://owlvyhouse-entrance-g7-admission.web.app/ADM-APP0001-GEMIN.html</p>
+                </div>
+                <div class="border-t border-slate-800 pt-3">
+                    <span class="text-amber-400 font-bold block mb-1">📌 ข้อสอบชุดที่ 2 (ADM-APP0002-GLM.html):</span>
+                    <p class="text-emerald-300">https://owlvyhouse-entrance-g7-admission.web.app/ADM-APP0002-GLM.html</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: GOOGLE AUTHENTICATION INTEGRATION -->
+        <section class="bg-white rounded-3xl p-6 md:p-8 shadow-md border border-slate-200 space-y-5">
+            <div class="flex items-center gap-3 border-b border-slate-200 pb-4">
+                <span class="w-10 h-10 bg-rose-500 text-white rounded-2xl flex items-center justify-center text-xl shadow">
+                    <i class="fa-brands fa-google"></i>
+                </span>
+                <div>
+                    <h2 class="text-xl font-extrabold text-slate-900">
+                        การเปิดใช้งาน Google Authentication (Google Sign-In)
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500">
+                        ขั้นตอนการเปิด Sign-in Method บน Console และโครงสร้างโค้ดใช้งานจริง
+                    </p>
+                </div>
+            </div>
+
+            <!-- Console Steps -->
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2 text-xs sm:text-sm text-slate-700">
+                <p class="font-bold text-slate-900">🛠️ ขั้นตอนเปิดใช้งานบน Firebase Console (ทำครั้งเดียว):</p>
+                <ol class="list-decimal list-inside space-y-1 ml-2 text-slate-600">
+                    <li>ไปที่ <strong>Firebase Console ➔ Build ➔ Authentication</strong> กด <strong>Get Started</strong></li>
+                    <li>เลือกแท็บ <strong>Sign-in method</strong> ➔ คลิก <strong>Google</strong></li>
+                    <li>สวิตช์เปิด <strong>Enable</strong> ➔ เลือก <strong>Project support email</strong> ➔ กด <strong>Save</strong></li>
+                </ol>
+            </div>
+
+            <!-- Auth Code Example -->
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-slate-700 font-mono">HTML + Firebase Auth SDK v10 Implementation:</span>
+                    <button onclick="copyToClipboard('authCode')" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1 rounded-lg text-xs font-mono transition flex items-center gap-1 cursor-pointer">
+                        <i class="fa-regular fa-copy"></i> คัดลอกโค้ด Auth
+                    </button>
+                </div>
+                <pre id="authCode" class="bg-slate-900 text-emerald-300 p-5 rounded-2xl text-xs overflow-x-auto border border-slate-800 leading-relaxed font-mono">
+&lt;!-- Firebase Authentication Standard Implementation --&gt;
+&lt;script type="module"&gt;
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { 
+      getAuth, 
+      signInWithPopup, 
+      GoogleAuthProvider, 
+      onAuthStateChanged, 
+      signOut 
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "owlvy-carefulness-contest.firebaseapp.com",
+      projectId: "owlvy-carefulness-contest",
+      storageBucket: "owlvy-carefulness-contest.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  // Auto check login status
+  onAuthStateChanged(auth, (user) => {
+      if (user) {
+          console.log("เข้าสู่ระบบเรียบร้อย:", user.displayName, user.email);
+          // ดึงโปรไฟล์ user.displayName, user.email, user.photoURL มาแสดง
+      } else {
+          console.log("ยังไม่ได้เข้าสู่ระบบ");
+      }
+  });
+
+  // Login Function Trigger
+  function loginWithGoogle() {
+      signInWithPopup(auth, provider).catch(err => alert("Login Error: " + err.message));
+  }
+&lt;/script&gt;</pre>
+            </div>
+        </section>
+
+        <!-- SECTION 6: TROUBLESHOOTING & PITFALLS MATRIX -->
+        <section class="bg-white rounded-3xl p-6 md:p-8 shadow-md border border-slate-200 space-y-4">
+            <h2 class="text-xl font-extrabold text-slate-900 border-b pb-4 flex items-center gap-3">
+                <span class="w-9 h-9 bg-rose-100 text-rose-700 rounded-xl flex items-center justify-center text-lg">⚠️</span>
+                ตารางรับมือข้อผิดพลาดและการแก้ไข (Troubleshooting Matrix)
+            </h2>
+
+            <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                <table class="w-full text-left text-xs md:text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-slate-800 text-white font-semibold">
+                            <th class="p-3.5 border-b border-slate-700">ข้อผิดพลาดที่พบ (Error Message)</th>
+                            <th class="p-3.5 border-b border-slate-700">สาเหตุหลัก</th>
+                            <th class="p-3.5 border-b border-slate-700">วิธีแก้ไขที่ถูกต้อง</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3.5 font-bold text-rose-600 font-mono">Not in a Firebase project directory</td>
+                            <td class="p-3.5 text-slate-700">เปิด Terminal ผิดตำแหน่ง (ไปรันในโฟลเดอร์ย่อย)</td>
+                            <td class="p-3.5 text-emerald-700 font-bold">พิมพ์ <code>cd ..</code> ถอยกลับมารันคำสั่งที่ Root นอกสุดเท่านั้น</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3.5 font-bold text-rose-600 font-mono">could not find site "xxx" for project "yyy"</td>
+                            <td class="p-3.5 text-slate-700">พิมพ์ชื่อ Site สเปลก์ผิด หรือยังไม่ได้กด Add Site บน Console</td>
+                            <td class="p-3.5 text-emerald-700 font-bold">เช็กชื่อบน Console ➔ กด Add site ➔ รัน <code>target:apply</code> ใหม่ให้ตรงกัน</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3.5 font-bold text-rose-600 font-mono">Hosting site or target not detected in firebase.json</td>
+                            <td class="p-3.5 text-slate-700">ยังไม่ได้กด Save ไฟล์ JSON หรือพิมพ์ชื่อ Target ใน JSON ไม่ตรงกับ Terminal</td>
+                            <td class="p-3.5 text-emerald-700 font-bold">กด Save (Ctrl+S) และตรวจเช็กการสะกดชื่อ Target ให้ตรงกัน 100%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="text-center text-xs text-slate-400 py-6 border-t border-slate-200 space-y-1">
+            <p class="font-semibold text-slate-500">Firebase Multi-Site Hosting & Architecture Master Guide</p>
+            <p>Owlvy Academy Complete Technical Reference</p>
+        </footer>
+
+    </div>
+
+    <script>
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+            
+            showToast("คัดลอกโค้ดเรียบร้อยแล้ว!");
+        }
+
+        function downloadHTML() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "Firebase_MultiSite_Hosting_Master_Guide.html";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast("กำลังดาวน์โหลดไฟล์ HTML...");
+        }
+
+        function showToast(message) {
+            const toast = document.createElement("div");
+            toast.className = "fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl text-xs sm:text-sm font-bold z-50 flex items-center gap-2 border border-slate-700 animate-bounce";
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
