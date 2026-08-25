@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ผลทดสอบผ่าน OwlvyHouse Adaptive TRIO : AI Generator (G6) V3.4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@600;700;800;900&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-main: #F4F0FF;
+    --paper: #FFFFFF;
+    --paper-soft: #F9F8FE;
+    --line: #E2DAF7;
+    
+    --primary: #4F46E5;
+    --primary-dark: #3730A3;
+    --ink: #1E1B4B;
+    --ink-soft: #64748B;
+    
+    --gold: #F59E0B;
+    --gold-bright: #FBBF24;
+    --gold-bg: #FFFBEB;
+    
+    --live: #10B981;
+    --cached: #F97316;
+    
+    --danger: #EF4444;
+    --danger-bg: #FEF2F2;
+    --warn: #F59E0B;
+    --warn-bg: #FFFBEB;
+    --ok: #10B981;
+    --ok-bg: #ECFDF5;
+    
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+    --shadow-soft: 0 10px 25px -5px rgba(79, 70, 229, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    --shadow-card: 0 4px 12px rgba(0,0,0,0.03);
+  }
+  
+  * { box-sizing: border-box; }
+  
+  body {
+    margin: 0;
+    background: var(--bg-main);
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
+    background-attachment: fixed;
+    color: var(--ink);
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  h1, h2, h3 { font-family: 'Kanit', sans-serif; margin: 0; }
+  
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 36px 20px 80px; }
+
+  header.top { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    gap: 16px; 
+    margin-bottom: 24px; 
+    background: var(--paper);
+    padding: 16px 24px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    border: 1.5px solid #FFFFFF;
+  }
+  
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  header.top svg {
+    filter: drop-shadow(0 4px 6px rgba(245, 158, 11, 0.3));
+  }
+  
+  header.top h1 { 
+    font-size: clamp(18px, 2.6vw, 26px); 
+    font-weight: 800; 
+    background: linear-gradient(135deg, #3730A3 0%, #4F46E5 50%, #D97706 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+  }
+
+  .version-tag {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #FFFFFF;
+    font-family: 'Kanit', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+    flex: none;
+  }
+
+  .source-bar { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    flex-wrap: wrap; 
+    gap: 10px; 
+    background: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--line); 
+    border-radius: var(--radius-md); 
+    padding: 10px 18px; 
+    margin-bottom: 24px; 
+    font-size: 13px; 
+    color: var(--ink-soft); 
+    box-shadow: var(--shadow-card);
+  }
+  
+  .source-bar .badge { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; }
+  .source-bar .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--cached); flex: none; }
+  .source-bar.live .dot { background: var(--live); animation: pulse 1.8s infinite; }
+  .source-bar.live .badge { color: var(--live); }
+  .source-bar.cached .badge { color: var(--cached); }
+  
+  @keyframes pulse { 0%,100% { transform: scale(1); opacity:1; } 50% { transform: scale(1.2); opacity:.6; } }
+  
+  .refresh-btn { 
+    border: none; 
+    background: linear-gradient(135deg, #4F46E5, #3730A3); 
+    border-radius: var(--radius-sm); 
+    padding: 7px 16px; 
+    font-family: 'Kanit', sans-serif; 
+    font-size: 13px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    color: #fff; 
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+    transition: all 0.2s ease;
+  }
+  .refresh-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(79, 70, 229, 0.35); }
+  .refresh-btn:disabled { opacity: .5; transform: none; cursor: default; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  @media (max-width: 760px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } }
+  
+  .kpi { 
+    background: var(--paper); 
+    border: 1px solid var(--line); 
+    border-radius: var(--radius-lg); 
+    padding: 18px 20px; 
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--primary);
+  }
+  .kpi .label { font-size: 13px; color: var(--ink-soft); font-weight: 600; }
+  .kpi .value { font-family:'Kanit'; font-size: 32px; font-weight: 800; margin-top: 6px; color: var(--ink); }
+  .kpi .value small { font-size: 14px; font-weight: 600; color: var(--ink-soft); }
+  
+  .kpi.danger::before { background: var(--danger); }
+  .kpi.danger { background: #FFF5F5; border-color: #FED7D7; } 
+  .kpi.danger .value { color: var(--danger); }
+  
+  .kpi.ok::before { background: var(--ok); }
+  .kpi.ok { background: #F0FDF4; border-color: #BBF7D0; } 
+  .kpi.ok .value { color: var(--ok); }
+
+  .filter-bar { 
+    display: flex; 
+    align-items: center; 
+    gap: 14px; 
+    flex-wrap: wrap; 
+    margin-bottom: 24px; 
+    background: var(--paper);
+    padding: 14px 20px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--line);
+  }
+  .filter-bar label { font-size: 13.5px; color: var(--ink); display: flex; align-items: center; gap: 8px; font-weight: 700; }
+  
+  select { 
+    border: 2px solid var(--line); 
+    border-radius: var(--radius-sm); 
+    padding: 8px 12px; 
+    font-family: 'IBM Plex Sans Thai'; 
+    font-size: 14px; 
+    font-weight: 600;
+    color: var(--ink); 
+    background: var(--paper-soft); 
+    min-width: 160px; 
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  select:focus { border-color: var(--primary); }
+  select:disabled { background: #EEF2FF; color: var(--primary-dark); font-weight: 700; cursor: not-allowed; opacity: 1; }
+
+  .panel { 
+    background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%); 
+    border: 2px solid #FDE68A;
+    border-radius: var(--radius-lg); 
+    padding: 22px 24px; 
+    margin-bottom: 28px; 
+    box-shadow: var(--shadow-soft);
+  }
+  .panel-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .panel-avatar { 
+    width: 46px; 
+    height: 46px; 
+    border-radius: 50%; 
+    background: var(--primary); 
+    color: #fff; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-weight: 800; 
+    font-family: 'Kanit'; 
+    font-size: 18px; 
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+  }
+  .panel-name { font-family: 'Kanit'; font-weight: 800; font-size: 20px; color: var(--ink); }
+  .panel-sub { font-size: 13px; color: #92400E; font-weight: 600; margin-top: 2px; }
+  
+  .set-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 14px; }
+  .set-card { 
+    background: #fff; 
+    border-radius: var(--radius-md); 
+    padding: 14px 16px; 
+    box-shadow: var(--shadow-card);
+    border: 1px solid #FCD34D;
+  }
+  .set-card .set-title { font-weight: 800; font-size: 14px; color: var(--primary-dark); margin-bottom: 8px; }
+  .set-card .attempt-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; color: var(--ink-soft); }
+  .set-card .attempt-row + .attempt-row { border-top: 1px dashed var(--line); }
+  .set-card .attempt-row b { color: var(--ink); font-weight: 700; }
+  .set-card .set-summary { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: #B45309; margin-top: 10px; padding-top: 8px; border-top: 1.5px solid #FDE68A; }
+  .set-card.empty { background: rgba(255,255,255,0.6); border-color: var(--line); color: var(--ink-soft); font-size: 13px; }
+
+  h2.section-title { font-size: 19px; font-weight: 800; color: var(--ink); margin: 32px 0 14px; display: flex; align-items: center; gap: 8px; }
+  h2.section-title::before { content: ''; display: inline-block; width: 6px; height: 20px; background: var(--gold); border-radius: 4px; }
+
+  .matrix-wrap { 
+    overflow-x: auto; 
+    border: 1.5px solid var(--line); 
+    border-radius: var(--radius-lg); 
+    background: var(--paper); 
+    box-shadow: var(--shadow-soft);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead th { 
+    text-align: center; 
+    padding: 14px 10px; 
+    font-weight: 800; 
+    font-family: 'Kanit';
+    color: var(--primary-dark); 
+    background: #EEF2FF; 
+    border-bottom: 2px solid var(--line); 
+    white-space: nowrap; 
+  }
+  thead th:first-child { 
+    text-align: left; 
+    padding-left: 18px; 
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    background: #EEF2FF;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+  }
+  thead th .sub { display: block; font-weight: 500; font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+  tbody td { text-align: center; padding: 12px 10px; border-top: 1px solid var(--line); }
+  tbody td:first-child { 
+    text-align: left; 
+    font-weight: 700; 
+    padding-left: 18px; 
+    color: var(--ink); 
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: var(--paper);
+    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+  }
+  
+  .badge { display: inline-block; border-radius: 8px; padding: 4px 10px; font-weight: 700; font-size: 12.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  .badge.ok { background: var(--ok-bg); color: var(--ok); border: 1px solid #A7F3D0; }
+  .badge.warn { background: var(--warn-bg); color: #D97706; border: 1px solid #FDE68A; }
+  .badge.danger { background: var(--danger-bg); color: var(--danger); border: 1px solid #FECACA; }
+  .badge.empty { background: #F1F5F9; color: #94A3B8; border: 1px dashed #CBD5E1; font-weight: 500; }
+
+  .followup-list { display: flex; flex-direction: column; gap: 10px; }
+  .followup-row { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    background: var(--paper); 
+    border: 1px solid #FECACA; 
+    border-left: 5px solid var(--danger);
+    border-radius: var(--radius-md); 
+    padding: 12px 18px; 
+    font-size: 14px; 
+    box-shadow: var(--shadow-card);
+  }
+  .followup-row .name { font-weight: 800; color: var(--ink); }
+  .followup-row .note { color: var(--danger); font-weight: 600; }
+  
+  .footer-note { font-size: 12px; color: var(--ink-soft); margin-top: 28px; line-height: 1.6; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="header-brand">
+      <svg width="38" height="38" viewBox="0 0 30 30" aria-hidden="true">
+        <ellipse cx="15" cy="17" rx="11" ry="10" fill="#4F46E5"/>
+        <path d="M6 10 L10 4 L12 9 Z" fill="#3730A3"/>
+        <path d="M24 10 L20 4 L18 9 Z" fill="#3730A3"/>
+        <circle cx="10.5" cy="16" r="4.6" fill="#fff"/>
+        <circle cx="19.5" cy="16" r="4.6" fill="#fff"/>
+        <circle cx="10.5" cy="16" r="2.1" fill="#1E1B4B"/>
+        <circle cx="19.5" cy="16" r="2.1" fill="#1E1B4B"/>
+        <path d="M15 18 L12.5 22 L17.5 22 Z" fill="#F59E0B"/>
+      </svg>
+      <h1>ผลทดสอบผ่าน OwlvyHouse Adaptive TRIO : AI Generator (G6)</h1>
+    </div>
+    <div class="version-tag">V3.4</div>
+  </header>
+
+  <div id="sourceBar" class="source-bar">
+    <span class="badge"><span class="dot"></span><span id="sourceLabel">กำลังโหลดข้อมูลสด…</span></span>
+    <button class="refresh-btn" id="refreshBtn">🔄 รีเฟรชข้อมูล</button>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="label">นักเรียนทั้งหมด (ชั้น G6)</div><div class="value" id="kpiTotal">—</div></div>
+    <div class="kpi danger"><div class="label">ยังไม่เข้าสอบเลยสักชุด</div><div class="value" id="kpiNone">—</div></div>
+    <div class="kpi ok"><div class="label">ทำครบทุกชุดแล้ว</div><div class="value" id="kpiDone">—</div></div>
+    <div class="kpi"><div class="label">คะแนนเฉลี่ยล่าสุด (ทุกชุด)</div><div class="value" id="kpiAvg">—</div></div>
+  </div>
+
+  <div class="filter-bar">
+    <label>🎓 ชั้นเรียน
+      <select id="levelSelect" disabled>
+        <option value="G6">ประถมศึกษาปีที่ 6 (G6)</option>
+      </select>
+    </label>
+    <label>👤 นักเรียน
+      <select id="studentSelect"><option value="all">ทั้งหมด</option></select>
+    </label>
+    <label>📚 หมวดวิชา
+      <select id="subjectSelect">
+        <option value="all">ทุกวิชา</option>
+      </select>
+    </label>
+    <label>📌 สถานะ
+      <select id="statusSelect">
+        <option value="all">ทั้งหมด</option>
+        <option value="none">ยังไม่สอบเลย</option>
+        <option value="done">ทำครบแล้ว</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="detailPanel" class="panel" style="display:none;">
+    <div class="panel-head">
+      <div class="panel-avatar" id="detailAvatar"></div>
+      <div>
+        <div class="panel-name" id="detailName"></div>
+        <div class="panel-sub" id="detailSub"></div>
+      </div>
+    </div>
+    <div class="set-grid" id="detailSets"></div>
+  </div>
+
+  <h2 class="section-title">ตารางความครบถ้วนรายบุคคล (คะแนนล่าสุดของแต่ละชุด - G6)</h2>
+  <div class="matrix-wrap">
+    <table id="matrixTable">
+      <thead><tr id="matrixHead"><th>นักเรียน</th></tr></thead>
+      <tbody id="matrixBody"><tr><td style="padding:18px; color:var(--ink-soft);">กำลังโหลดข้อมูล...</td></tr></tbody>
+    </table>
+  </div>
+
+  <h2 class="section-title">รายชื่อที่ต้องติดตาม — ยังไม่เข้าสอบเลยสักชุด</h2>
+  <div class="followup-list" id="followupList"></div>
+
+  <p class="footer-note" id="footerNote"></p>
+</div>
+
+<script>
+const TARGET_LEVEL = "G6";
+const ROSTER_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSeiM7_a9Rk6zb2X3dAGQZh0yDPw6m5OvscB3lwRHg9A5Iy7v35lPREBYhEsO1AM4EglZ5v8FFN7BLH/pub?gid=1897880647&single=true&output=csv";
+const CHEM_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRLFDE4NHOuz0p_5YqzLSiBk8PfDvxRns5MxzpSS0fAxQUA8g-g4VZHKEwGX6Hp1iKZdRmgqLDzejwD/pub?gid=1879802753&single=true&output=csv";
+const EARTH_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGBz2_tBRAkXiPSZSZi_4gPYIHv9qervCuRUrYckdsTzqf-Thsw4m5HYaEb8WOUEcllRAGUr2jdMqs/pub?gid=1988508528&single=true&output=csv";
+
+// ---------- CSV parsing ----------
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = '', inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i+1] === '"') { field += '"'; i++; } else { inQuotes = false; }
+      } else field += c;
+    } else {
+      if (c === '"') inQuotes = true;
+      else if (c === ',') { row.push(field); field = ''; }
+      else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+      else if (c === '\r') { /* skip */ }
+      else field += c;
+    }
+  }
+  if (field.length || row.length) { row.push(field); rows.push(row); }
+  return rows.filter(r => r.some(c => c.trim() !== ''));
+}
+
+function rowsToObjects(rows) {
+  if (!rows || rows.length === 0) return [];
+  const header = rows[0].map(h => h.replace(/^\uFEFF/, '').trim());
+  return rows.slice(1).map(r => {
+    const o = {};
+    header.forEach((h, i) => o[h] = (r[i] || '').trim());
+    return o;
+  });
+}
+
+function parseDateTimeKey(str) {
+  if (!str) return { raw: '', key: 0, dateLabel: '-' };
+  const m = str.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2}):(\d{2})/);
+  if (!m) return { raw: str, key: 0, dateLabel: str.slice(0,10) };
+  const [, d, mo, y, H, Mi, S] = m.map(Number);
+  return { raw: str, key: y*100000000 + mo*1000000 + d*10000 + H*100 + Mi, dateLabel: `${d}/${mo}` };
+}
+
+function parseTimeUsed(str) {
+  const parts = (str || '0:00:00').split(':').map(Number);
+  if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
+  if (parts.length === 2) return parts[0]*60 + parts[1];
+  return 0;
+}
+
+function fmtTime(sec) {
+  sec = Math.round(sec);
+  const h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
+  return (h>0 ? h+':' : '') + String(m).padStart(h>0?2:1,'0') + ':' + String(s).padStart(2,'0');
+}
+
+function parseSetName(subject, full) {
+  let rest = full.startsWith(subject + '-') ? full.slice(subject.length + 1) : full;
+  const codeMatch = rest.match(/^([A-Za-z]+\d+)/);
+  const code = codeMatch ? codeMatch[1] : rest.slice(0, 8);
+  let topic = rest.replace(/^[A-Za-z]+\d+-?/, '').replace(/-?\d{4}-\d{2}-\d{2}$/, '');
+  return { code, topic: topic || full, full };
+}
+
+function getProp(obj, keys) {
+  const objKeys = Object.keys(obj);
+  for (let k of keys) {
+    const foundKey = objKeys.find(ok => ok.trim().toLowerCase() === k.trim().toLowerCase());
+    if (foundKey && obj[foundKey] !== undefined) return obj[foundKey];
+  }
+  return '';
+}
+
+// ---------- Data build ----------
+let ROSTER = [];
+let LOG = [];
+
+function buildFromCSV(rosterText, chemText, earthText) {
+  const rosterRows = rowsToObjects(parseCSV(rosterText));
+  
+  ROSTER = rosterRows
+    .filter(r => {
+      const role = getProp(r, ['Role', 'role']).toLowerCase();
+      const level = getProp(r, ['Level', 'level', 'ชั้นเรียน']).toUpperCase();
+      const isStudent = (role === 'student' || role === '' || role === 'นักเรียน');
+      const isG6 = (level === TARGET_LEVEL || level.includes('G6') || level.includes('ป.6'));
+      return isStudent && isG6;
+    })
+    .map(r => ({
+      email: getProp(r, ['Email', 'email']),
+      name: getProp(r, ['ชื่อ', 'name', 'ชื่อ-นามสกุล', 'ชื่อ - นามสกุล']),
+      mainLevel: getProp(r, ['MainLevel', 'mainLevel']),
+      level: TARGET_LEVEL
+    }))
+    .filter(r => r.name !== '');
+
+  const log = [];
+  [{ text: chemText, subj: 'CHEM' }, { text: earthText, subj: 'EARTH' }].forEach(src => {
+    const rows = rowsToObjects(parseCSV(src.text));
+    rows.forEach(r => {
+      const dt = getProp(r, ['วัน-เวลา', 'Timestamp', 'วันเวลา', 'datetime']);
+      const name = getProp(r, ['ชื่อ-นามสกุล', 'ชื่อ - นามสกุล', 'ชื่อ', 'name']);
+      const level = getProp(r, ['ชั้นเรียน', 'Level', 'level']).toUpperCase();
+      const subject = (getProp(r, ['หมวดวิชา']) || src.subj).trim();
+      const full = getProp(r, ['ชื่อชุดข้อสอบ', 'ชุดข้อสอบ', 'ชื่อชุด']);
+      
+      const isG6 = (level === TARGET_LEVEL || level.includes('G6') || level.includes('ป.6'));
+      if (!dt || !name || !full || !isG6) return;
+
+      const scoreStr = getProp(r, ['คะแนนที่ได้', 'คะแนน']) || '0';
+      const totalStr = getProp(r, ['จำนวนข้อ']) || '0';
+      const pctStr = getProp(r, ['เปอร์เซ็นต์', '%']) || '0';
+      const timeStr = getProp(r, ['เวลาที่ใช้', 'เวลา']) || '0:00:00';
+
+      const { code, topic } = parseSetName(subject, full);
+      const dtInfo = parseDateTimeKey(dt);
+      log.push({
+        name, level: TARGET_LEVEL, subject, code, topic, full,
+        score: parseFloat(scoreStr) || 0,
+        total: parseFloat(totalStr) || 0,
+        pct: parseInt((pctStr || '0').toString().replace('%','')) || 0,
+        time: parseTimeUsed(timeStr),
+        dtKey: dtInfo.key, dateLabel: dtInfo.dateLabel
+      });
+    });
+  });
+  
+  LOG = log;
+  console.log("กรองข้อมูลระดับชั้น G6 สำเร็จ -> นักเรียน:", ROSTER.length, "คน, ผลสอบ:", LOG.length, "รายการ");
+  
+  // อัปเดตรายการใน Dropdowns ครั้งเดียวตอนโหลดข้อมูลเสร็จ
+  populateDropdowns();
+}
+
+function populateDropdowns() {
+  const subjSel = document.getElementById('subjectSelect');
+  const availableSubjs = Array.from(new Set(LOG.map(l => l.subject))).sort();
+  subjSel.innerHTML = '<option value="all">ทุกวิชา</option>' + 
+    availableSubjs.map(s => `<option value="${s}">${s}</option>`).join('');
+
+  const studentSel = document.getElementById('studentSelect');
+  studentSel.innerHTML = '<option value="all">ทั้งหมด (' + ROSTER.length + ' คน)</option>' +
+    ROSTER.map(s => `<option value="${s.email || s.name}">${s.name}</option>`).join('');
+}
+
+function setsForLevel() {
+  const map = new Map();
+  LOG.forEach(l => {
+    const key = l.subject + '|' + l.code;
+    if (!map.has(key) || l.dtKey < map.get(key).dtKey) {
+      map.set(key, { subject: l.subject, code: l.code, topic: l.topic, dtKey: l.dtKey });
+    }
+  });
+  return Array.from(map.values()).sort((a,b) => a.subject.localeCompare(b.subject) || a.code.localeCompare(b.code));
+}
+
+function studentAttemptsForSet(name, subject, code) {
+  return LOG.filter(l => l.name === name && l.subject === subject && l.code === code)
+    .sort((a,b) => a.dtKey - b.dtKey);
+}
+
+function latestPct(attempts) {
+  if (!attempts.length) return null;
+  return attempts[attempts.length - 1].pct;
+}
+
+function badgeClass(pct) {
+  if (pct === null) return 'empty';
+  if (pct < 50) return 'danger';
+  if (pct < 70) return 'warn';
+  return 'ok';
+}
+
+// ---------- Rendering ----------
+function render() {
+  const studentFilter = document.getElementById('studentSelect').value;
+  const subjectFilter = document.getElementById('subjectSelect').value;
+  const statusFilter = document.getElementById('statusSelect').value;
+
+  const students = ROSTER;
+  
+  // กรองตารางตามหมวดวิชาที่เลือก
+  let sets = setsForLevel();
+  if (subjectFilter !== 'all') {
+    sets = sets.filter(s => s.subject === subjectFilter);
+  }
+
+  // matrix header
+  const head = document.getElementById('matrixHead');
+  head.innerHTML = '<th>นักเรียน</th>' + sets.map(s =>
+    `<th>${s.subject}<span class="sub">${s.code}</span></th>`).join('') + '<th>ความคืบหน้า</th>';
+
+  // per-student computed rows
+  const rows = students.map(stu => {
+    const cells = sets.map(s => {
+      const attempts = studentAttemptsForSet(stu.name, s.subject, s.code);
+      return { pct: latestPct(attempts), attempts };
+    });
+    const done = cells.filter(c => c.pct !== null).length;
+    return { stu, cells, done };
+  });
+
+  // KPI
+  const totalDone = rows.filter(r => sets.length > 0 && r.done === sets.length).length;
+  const noneDone = rows.filter(r => r.done === 0).length;
+  const allLatest = rows.flatMap(r => r.cells.filter(c => c.pct !== null).map(c => c.pct));
+  const avgPct = allLatest.length ? Math.round(allLatest.reduce((a,b)=>a+b,0)/allLatest.length) : null;
+
+  document.getElementById('kpiTotal').innerHTML = students.length + ' <small>คน</small>';
+  document.getElementById('kpiNone').innerHTML = noneDone + ' <small>คน (' + (students.length? Math.round(noneDone/students.length*100):0) + '%)</small>';
+  document.getElementById('kpiDone').innerHTML = totalDone + ' <small>คน (' + (students.length? Math.round(totalDone/students.length*100):0) + '%)</small>';
+  document.getElementById('kpiAvg').innerHTML = (avgPct===null?'—':avgPct+'%');
+
+  // matrix body
+  const body = document.getElementById('matrixBody');
+  const followup = document.getElementById('followupList');
+  body.innerHTML = ''; followup.innerHTML = '';
+  let anyRow = false, anyFollow = false;
+
+  rows.forEach(r => {
+    // เช็คสิทธิ์การกรองจาก Email หรือ ชื่อนักเรียน ให้ยืดหยุ่น
+    if (studentFilter !== 'all' && r.stu.email !== studentFilter && r.stu.name !== studentFilter) return;
+    if (statusFilter === 'none' && r.done > 0) return;
+    if (statusFilter === 'done' && !(sets.length && r.done === sets.length)) return;
+    anyRow = true;
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + r.stu.name + '</td>' +
+      r.cells.map(c => `<td><span class="badge ${badgeClass(c.pct)}">${c.pct===null?'ยังไม่สอบ':c.pct+'%'}</span></td>`).join('') +
+      `<td style="font-weight:700; ${r.done===0?'color:var(--danger);':''}">${r.done}/${sets.length}</td>`;
+    body.appendChild(tr);
+
+    if (r.done === 0) {
+      anyFollow = true;
+      const row = document.createElement('div');
+      row.className = 'followup-row';
+      row.innerHTML = `<span class="name">${r.stu.name}</span><span class="note">— ยังไม่เข้าสอบสักชุด (${sets.length} ชุดที่ต้องทำในระดับ G6)</span>`;
+      followup.appendChild(row);
+    }
+  });
+  if (!anyRow) body.innerHTML = '<tr><td colspan="99" style="padding:18px; color:var(--ink-soft);">ไม่มีรายชื่อในเงื่อนไขนี้</td></tr>';
+  if (!anyFollow) followup.innerHTML = '<p style="font-size:13px; color:var(--ink-soft); margin:0;">ไม่มีรายชื่อในเงื่อนไขนี้</p>';
+
+  // detail panel
+  const panel = document.getElementById('detailPanel');
+  if (studentFilter === 'all') {
+    panel.style.display = 'none';
+  } else {
+    const stu = students.find(s => s.email === studentFilter || s.name === studentFilter);
+    panel.style.display = 'block';
+    document.getElementById('detailAvatar').textContent = stu ? stu.name.slice(0,1) : '';
+    document.getElementById('detailName').textContent = stu ? stu.name : '';
+    const doneCount = rows.find(r => r.stu.email === studentFilter || r.stu.name === studentFilter)?.done || 0;
+    document.getElementById('detailSub').textContent = `ทำแล้ว ${doneCount}/${sets.length} ชุด`;
+
+    const container = document.getElementById('detailSets');
+    container.innerHTML = '';
+    sets.forEach(s => {
+      const attempts = studentAttemptsForSet(stu ? stu.name : '', s.subject, s.code);
+      const card = document.createElement('div');
+      card.className = 'set-card' + (attempts.length ? '' : ' empty');
+      if (!attempts.length) {
+        card.innerHTML = `<div class="set-title">${s.subject} ${s.code}</div><div>ยังไม่ได้ทำ</div>`;
+      } else {
+        const rowsHtml = attempts.map((a,i) =>
+          `<div class="attempt-row"><span>ครั้งที่ ${i+1} (${a.dateLabel})</span><span>คะแนน <b>${a.pct}%</b> · เวลา ${fmtTime(a.time)}</span></div>`
+        ).join('');
+        const avgPctSet = Math.round(attempts.reduce((sum,a)=>sum+a.pct,0)/attempts.length);
+        const avgTimeSet = attempts.reduce((sum,a)=>sum+a.time,0)/attempts.length;
+        card.innerHTML = `<div class="set-title">${s.subject} ${s.code}</div>${rowsHtml}` +
+          `<div class="set-summary"><span>ทำทั้งหมด ${attempts.length} ครั้ง</span><span>เฉลี่ย ${avgPctSet}% · ${fmtTime(avgTimeSet)}</span></div>`;
+      }
+      container.appendChild(card);
+    });
+  }
+}
+
+document.getElementById('studentSelect').addEventListener('change', render);
+document.getElementById('subjectSelect').addEventListener('change', render);
+document.getElementById('statusSelect').addEventListener('change', render);
+
+// ---------- Live fetch ----------
+function setSourceBadge(state, when) {
+  const bar = document.getElementById('sourceBar');
+  const label = document.getElementById('sourceLabel');
+  const footer = document.getElementById('footerNote');
+  bar.classList.remove('live','cached');
+  if (state === 'loading') {
+    label.textContent = 'กำลังโหลดข้อมูลสด…';
+  } else if (state === 'live') {
+    bar.classList.add('live');
+    label.textContent = `ข้อมูลสดจาก Google Sheets · ดึงล่าสุด ${when}`;
+    footer.textContent = 'ข้อมูลนี้ดึงสดเฉพาะระดับชั้น G6 จาก Google Sheets ทั้ง 3 ชีท ทุกครั้งที่เปิดหน้านี้ หรือกดรีเฟรช (V3.4)';
+  } else {
+    bar.classList.add('cached');
+    label.textContent = 'โหลดข้อมูลสดไม่สำเร็จ';
+    footer.textContent = 'โหลดข้อมูลสดไม่สำเร็จ กดปุ่ม "รีเฟรชข้อมูล" เพื่อลองใหม่';
+  }
+}
+
+async function loadLive() {
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  setSourceBadge('loading');
+  try {
+    const [rosterRes, chemRes, earthRes] = await Promise.all([
+      fetch(ROSTER_CSV, { cache: 'no-store' }),
+      fetch(CHEM_CSV, { cache: 'no-store' }),
+      fetch(EARTH_CSV, { cache: 'no-store' })
+    ]);
+    if (!rosterRes.ok || !chemRes.ok || !earthRes.ok) throw new Error('HTTP error fetching one or more sheets');
+    const [rosterText, chemText, earthText] = await Promise.all([rosterRes.text(), chemRes.text(), earthRes.text()]);
+    buildFromCSV(rosterText, chemText, earthText);
+    const now = new Date();
+    setSourceBadge('live', now.toLocaleString('th-TH', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' }));
+  } catch (err) {
+    setSourceBadge('cached');
+    console.warn('Live fetch failed:', err);
+  }
+  render();
+  btn.disabled = false;
+}
+
+document.getElementById('refreshBtn').addEventListener('click', loadLive);
+loadLive();
+</script>
+</body>
+</html>
