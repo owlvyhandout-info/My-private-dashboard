@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="th" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบทดสอบวิทยาศาสตร์ ม.1 (เข้มข้น 30 ข้อ)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Sarabun', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+        .font-prompt {
+            font-family: 'Prompt', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col justify-between text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
+
+    <header class="w-full bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 id="appTitle" class="font-prompt font-bold text-lg md:text-xl text-slate-900 leading-tight">OwlvyHouse Adaptive TRIO</h1>
+                    <p class="text-xs text-slate-500">สรุปเข้ม วิทย์ เตรียมสอบเข้า ม.1 • O-NET / TEDET / สอบแข่งขัน (30 ข้อ)</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button id="soundToggleBtn" onclick="toggleSound()" class="p-2.5 rounded-xl hover:bg-slate-100 text-slate-600 transition" title="เปิด/ปิด เสียง">
+                    <svg id="soundOnIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
+                    <svg id="soundOffIcon" class="w-5 h-5 hidden text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                    </svg>
+                </button>
+                
+                <button onclick="resetApp()" class="p-2.5 rounded-xl hover:bg-slate-100 text-slate-600 transition" title="เริ่มใหม่">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-4xl w-full mx-auto px-4 py-6 flex-grow flex flex-col justify-center">
+
+        <div id="startScreen" class="glass-card rounded-3xl p-6 md:p-10 shadow-xl border border-white text-center my-auto transition-all duration-300">
+            <div class="inline-flex items-center justify-center p-4 bg-brand-50 rounded-2xl mb-6 text-brand-600">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+            </div>
+            <h2 id="startScreenTitle" class="font-prompt font-bold text-2xl md:text-3xl text-slate-900 mb-3">สรุปเข้ม วิทย์ เตรียมสอบเข้า ม.1</h2>
+            <p class="text-slate-600 max-w-lg mx-auto mb-8 text-sm md:text-base leading-relaxed">
+                คลังข้อสอบวิทยศาสตร์ประยุกต์เข้มข้น 30 ข้อ (ระดับ O-NET / TEDET / สอบแข่งขันเข้า ม.1 โรงเรียนดัง) ครอบคลุมชีววิทยา กายภาพ โลก และอวกาศ
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-xl mx-auto mb-8 text-left">
+                <label id="modePracticeLabel" onclick="selectMode('practice')" class="relative flex p-4 rounded-2xl border-2 border-brand-500 bg-brand-50/50 cursor-pointer hover:border-brand-600 transition shadow-sm">
+                    <input type="radio" name="quizMode" value="practice" checked class="hidden">
+                    <div class="flex items-start gap-3">
+                        <div class="p-2 rounded-xl bg-brand-500 text-white mt-0.5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="font-prompt font-semibold text-slate-900 text-base">โหมดฝึกฝน (Practice)</div>
+                            <div class="text-xs text-slate-500 mt-1">ตรวจคำตอบทันที มีคำใบ้ และคำอธิบายเจาะลึกความเข้าใจคลาดเคลื่อน</div>
+                        </div>
+                    </div>
+                </label>
+
+                <label id="modeExamLabel" onclick="selectMode('exam')" class="relative flex p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer hover:border-slate-300 transition shadow-sm">
+                    <input type="radio" name="quizMode" value="exam" class="hidden">
+                    <div class="flex items-start gap-3">
+                        <div class="p-2 rounded-xl bg-slate-100 text-slate-600 mt-0.5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="font-prompt font-semibold text-slate-900 text-base">โหมดสอบจับเวลา (Exam)</div>
+                            <div class="text-xs text-slate-500 mt-1">จับเวลาข้อละ 60 วินาที ไม่มีคำใบ้ แสดงผลคะแนนรวมและเฉลยรายละเอียดตอนท้าย</div>
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <button onclick="startQuiz()" class="w-full sm:w-auto min-w-[200px] px-8 py-4 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-prompt font-semibold text-lg rounded-2xl shadow-lg shadow-brand-500/30 transform active:scale-95 transition">
+                เริ่มทำแบบทดสอบ (30 ข้อ)
+            </button>
+        </div>
+
+        <div id="quizScreen" class="hidden space-y-4">
+            <div class="glass-card rounded-2xl p-4 shadow-sm border border-white flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <span id="questionNumBadge" class="font-prompt font-bold px-3 py-1 bg-brand-100 text-brand-700 rounded-xl text-sm">
+                        ข้อ 1/30
+                    </span>
+                    <span id="skillBadge" class="text-xs font-semibold px-2.5 py-1 bg-amber-100 text-amber-800 rounded-lg">
+                        ระดับ L3
+                    </span>
+                </div>
+
+                <div class="flex items-center gap-4 text-sm font-medium text-slate-600">
+                    <div id="timerDisplay" class="hidden items-center gap-1.5 font-mono text-amber-600 font-semibold bg-amber-50 px-3 py-1 rounded-lg">
+                        <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span id="timeLeft">60s</span>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 text-emerald-600 font-semibold bg-emerald-50 px-3 py-1 rounded-lg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span id="currentScore">0</span> คะแนน
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                <div id="progressBar" class="bg-gradient-to-r from-brand-500 to-indigo-600 h-full w-0 transition-all duration-300"></div>
+            </div>
+
+            <div class="glass-card rounded-3xl p-6 md:p-8 shadow-xl border border-white space-y-6">
+                <div>
+                    <div class="text-xs font-semibold text-brand-600 tracking-wider uppercase mb-1" id="questionTopic">
+                        หมวดการวิเคราะห์
+                    </div>
+                    <h2 id="questionText" class="font-prompt font-semibold text-lg md:text-xl text-slate-900 leading-relaxed whitespace-pre-line">
+                        คำถามจะปรากฏที่นี่...
+                    </h2>
+                </div>
+
+                <div id="optionsContainer" class="space-y-3"></div>
+
+                <div id="explanationCard" class="hidden p-4 rounded-2xl border transition-all duration-300">
+                    <div class="flex items-start gap-3">
+                        <div id="explanationIcon" class="mt-0.5 p-1 rounded-lg shrink-0"></div>
+                        <div>
+                            <h4 id="explanationTitle" class="font-prompt font-semibold text-sm"></h4>
+                            <p id="explanationText" class="text-xs md:text-sm mt-1 leading-relaxed"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="hintBox" class="hidden p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-sm flex items-start gap-3">
+                    <span class="text-xl shrink-0">💡</span>
+                    <div>
+                        <span class="font-prompt font-semibold block text-amber-900">คำใบ้สะกิดความคิด:</span>
+                        <span id="hintText" class="text-xs md:text-sm text-amber-800"></span>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2">
+                    <button id="hintBtn" onclick="toggleHint()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-800 font-prompt text-xs md:text-sm font-semibold rounded-xl transition">
+                        <span>💡 ขอคำใบ้</span>
+                    </button>
+
+                    <button id="nextBtn" onclick="nextQuestion()" disabled class="inline-flex items-center gap-2 px-6 py-3 bg-brand-600 hover:bg-brand-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-prompt font-semibold text-sm md:text-base rounded-xl shadow-md transition disabled:shadow-none">
+                        <span>ข้อถัดไป</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="resultScreen" class="hidden glass-card rounded-3xl p-6 md:p-8 shadow-xl border border-white my-auto max-w-2xl mx-auto w-full space-y-6">
+            <div class="text-left space-y-1">
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Owlvy House Interactive Assessment</p>
+                <h2 class="font-prompt font-bold text-2xl md:text-3xl text-slate-900">สำเร็จแล้ว! จบการทำแบบทดสอบ</h2>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="bg-slate-50/80 rounded-2xl p-4 border border-slate-200/80 flex flex-col justify-between">
+                    <span class="text-xs font-semibold text-slate-500">คะแนน</span>
+                    <div class="mt-2 text-3xl font-prompt font-bold text-slate-900">
+                        <span id="statScoreText" class="text-brand-600">0</span><span class="text-slate-400 text-lg font-normal">/<span id="statTotalText">30</span></span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50/80 rounded-2xl p-4 border border-slate-200/80 flex flex-col justify-between">
+                    <span class="text-xs font-semibold text-slate-500">ความแม่นยำ</span>
+                    <div class="mt-2 text-3xl font-prompt font-bold text-slate-900">
+                        <span id="statAccuracyText">0</span>%
+                    </div>
+                </div>
+
+                <div class="bg-slate-50/80 rounded-2xl p-4 border border-slate-200/80 flex flex-col justify-center space-y-1 text-sm font-medium">
+                    <div class="flex justify-between items-center text-slate-700">
+                        <span>ถูก</span>
+                        <span id="statCorrectCount" class="font-bold text-emerald-600">0</span>
+                    </div>
+                    <div class="flex justify-between items-center text-slate-700">
+                        <span>ผิด</span>
+                        <span id="statIncorrectCount" class="font-bold text-rose-600">0</span>
+                    </div>
+                    <div class="flex justify-between items-center text-slate-700">
+                        <span>ข้าม</span>
+                        <span id="statSkippedCount" class="font-bold text-slate-400">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-50/90 rounded-2xl p-4 border border-slate-200/80 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-900 text-indigo-400 flex items-center justify-center shrink-0 shadow-md">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="font-prompt font-semibold text-slate-900 text-sm md:text-base">จุดแข็งและพื้นที่การเติบโต</h4>
+                        <p class="text-xs text-slate-500 mt-0.5 leading-relaxed">รับข้อมูลสรุปเกี่ยวกับจุดแข็งที่สำคัญและค้นพบด้านที่คุณต้องมุ่งเน้นในการศึกษา</p>
+                    </div>
+                </div>
+                <button onclick="openPerformanceAnalysisModal()" class="px-3.5 py-2.5 bg-sky-100 hover:bg-sky-200 text-sky-800 font-prompt text-xs md:text-sm font-semibold rounded-xl transition shrink-0">
+                    วิเคราะห์ประสิทธิภาพ
+                </button>
+            </div>
+
+            <div class="space-y-3">
+                <h3 class="font-prompt font-bold text-lg text-slate-900">เรียนรู้อยู่อย่างต่อเนื่อง</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div onclick="openFlashcardModal()" class="bg-slate-50/80 hover:bg-white hover:shadow-md transition cursor-pointer rounded-2xl p-4 border border-slate-200/80 flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-900 text-indigo-300 flex items-center justify-center shrink-0 mt-0.5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-prompt font-semibold text-slate-900 text-sm">แฟลชการ์ด</h4>
+                            <p class="text-xs text-slate-500 mt-1 leading-relaxed">สร้างแฟลชการ์ดทบทวนมโนทัศน์สำคัญ เหมาะสำหรับการทบทวนความจำอย่างรวดเร็ว</p>
+                        </div>
+                    </div>
+
+                    <div onclick="openStudyGuideModal()" class="bg-slate-50/80 hover:bg-white hover:shadow-md transition cursor-pointer rounded-2xl p-4 border border-slate-200/80 flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-900 text-emerald-300 flex items-center justify-center shrink-0 mt-0.5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-prompt font-semibold text-slate-900 text-sm">คู่มือเตรียมสอบ</h4>
+                            <p class="text-xs text-slate-500 mt-1 leading-relaxed">สร้างคู่มือสรุปเนื้อหาเชิงลึก ครอบคลุมตามจุดประสงค์ของแบบทดสอบ</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-4 flex flex-row justify-end items-center gap-3">
+                <button onclick="toggleReviewMode()" class="px-5 py-3 hover:bg-slate-100 text-slate-700 font-prompt font-semibold text-sm rounded-xl transition">
+                    ทบทวนแบบทดสอบ
+                </button>
+                <button onclick="generateNewQuizWithAI()" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-prompt font-semibold text-sm rounded-2xl shadow-lg shadow-brand-500/20 active:scale-95 transition flex items-center gap-2">
+                    <svg class="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    <span>คำถามเพิ่มเติม (AI)</span>
+                </button>
+            </div>
+
+            <div id="reviewContainer" class="hidden mt-6 pt-6 border-t border-slate-200 space-y-4 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
+                <h3 class="font-prompt font-bold text-lg text-slate-900 sticky top-0 bg-white/95 backdrop-blur p-2 rounded-lg z-10 border-b">
+                    ทบทวนเฉลยรายข้อ
+                </h3>
+                <div id="reviewList" class="space-y-4 text-left"></div>
+            </div>
+        </div>
+
+        <div id="extraResultScreen" class="hidden glass-card rounded-3xl p-6 md:p-10 shadow-xl border border-white my-auto">
+            <div class="text-center space-y-4 max-w-lg mx-auto">
+                <div class="inline-flex p-4 rounded-3xl bg-teal-50 text-teal-600 mb-2">
+                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </div>
+
+                <h2 class="font-prompt font-bold text-2xl md:text-3xl text-slate-900">สรุปผลรอบฝึกเพิ่มเติม</h2>
+                <p class="text-xs text-slate-500">คะแนนรอบนี้เป็นการฝึกฝนเพิ่มเติม ไม่นับรวมกับผลคะแนนชุดข้อสอบหลัก</p>
+
+                <div class="py-4">
+                    <div class="text-5xl md:text-6xl font-prompt font-bold text-slate-900">
+                        <span id="extraFinalScore" class="text-teal-600">0</span>
+                        <span class="text-slate-300 text-3xl font-normal">/ <span id="extraFinalTotal">10</span></span>
+                    </div>
+                </div>
+
+                <div class="pt-4 flex flex-col sm:flex-row gap-3 justify-center items-center">
+                    <button onclick="restartExtraQuiz()" class="w-full sm:w-auto px-5 py-3 bg-teal-600 hover:bg-teal-700 text-white font-prompt font-semibold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                        <span>🔄 ฝึกรอบนี้อีกครั้ง</span>
+                    </button>
+                    <button onclick="resetApp()" class="w-full sm:w-auto px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-prompt font-semibold text-sm rounded-xl transition flex items-center justify-center gap-2">
+                        <span>🏠 กลับหน้าหลัก</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="w-full text-center py-4 text-xs text-slate-400 border-t border-slate-200 bg-white/50">
+        © 2026 Owlvy House Program • สรุปเข้ม วิทย์ เตรียมสอบเข้า ม.1
+    </footer>
+
+    <script>
+        let quizTitle = "สรุปเข้ม วิทย์ เตรียมสอบเข้า ม.1";
+
+        function applyQuizTitle() {
+            if (typeof quizTitle !== 'undefined' && quizTitle.trim() !== "") {
+                document.title = quizTitle;
+                const appTitleEl = document.getElementById('appTitle');
+                if (appTitleEl) appTitleEl.textContent = "OwlvyHouse Adaptive TRIO";
+                const startTitleEl = document.getElementById('startScreenTitle');
+                if (startTitleEl) startTitleEl.textContent = quizTitle;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', applyQuizTitle);
+
+        const rawQuizData = [
+            {
+                id: 1,
+                title: "ในการทำนาเกลือสมุทร น้ำทะเลจะถูกผันเข้าสู่นาตาก นาเชื้อ และนาวางตามลำดับ เมื่อน้ำระเหยออก ความเค็มและความหนาแน่นจะเพิ่มขึ้น เหตุใดเกลือแคลเซียมซัลเฟต (CaSO4 หรือยิปซัม) จึงตกผลึกแยกออกมาจากน้ำทะเลก่อนเกลือแกง (NaCl)?",
+                options: [
+                    "1. CaSO4 มีสภาพละลายได้ (Solubility) ในน้ำต่ำกว่า NaCl มาก จึงถึงจุดอิ่มตัวก่อน",
+                    "2. CaSO4 มีจุดเดือดสูงกว่า NaCl จึงกลายเป็นของแข็งก่อน",
+                    "3. NaCl ระเหยกลายเป็นไอไปพร้อมกับน้ำได้ง่ายกว่า CaSO4",
+                    "4. CaSO4 มีความหนาแน่นสูงกว่าน้ำทะเล จึงจมลงสู่ก้นบ่อก่อน"
+                ],
+                answer: 1,
+                hint: "พิจารณาปัจจัยของสารละลายอิ่มตัว สารใดมีขีดจำกัดการละลายต่ำกว่า เมื่อน้ำลดลง สารนั้นจะถึงจุดอิ่มตัวและแยกตัวออกมาก่อน",
+                tag_skill: "L3",
+                tag_content: "การแยกสาร • การตกผลึก",
+                tag_misconception: "สับสนระหว่างสภาพละลายได้กับจุดเดือด",
+                set: "base"
+            },
+            {
+                id: 2,
+                title: "นำเซลล์ว่านกาบหอยไปแช่ในสารละลายน้ำตาลซูโครสความเข้มข้น 20% เป็นเวลา 15 นาที เมื่อนำมาส่องใต้กล้องจุลทรรศน์จะพบปรากฏการณ์พลาสโมไลซิส (Plasmolysis) ข้อใดอธิบายการเปลี่ยนแปลงของเซลล์นี้ได้อย่างถูกต้องตามหลักชีววิทยา?",
+                options: [
+                    "1. น้ำภายนอกเซลล์แพร่เข้าสู่เซลล์เพราะสารละลายภายนอกเป็น ไฮโปโทนิก (Hypotonic)",
+                    "2. เซลล์พองโตจนเต่งและแตกออก เนื่องจากไม่มีผนังเซลล์ที่แข็งแรงพอ",
+                    "3. น้ำภายใน vacuole แพร่ให้ออกจากเซลล์โดยการออสโมซิส ทำให้เยื่อหุ้มเซลล์ถอดร่นออกจากผนังเซลล์",
+                    "4. น้ำตาลซูโครสแพร่เข้าสู่เซลล์เพื่อปรับความเข้มข้นให้เท่ากันทั้งภายในและภายนอกเซลล์"
+                ],
+                answer: 3,
+                hint: "สารละลาย 20% ถือเป็น ไฮเพอร์โทนิก (Hypertonic) เมื่อเทียบกับน้ำเลี้ยงภายในเซลล์ น้ำจะออสโมซิสออกจากเซลล์",
+                tag_skill: "L3",
+                tag_content: "การลำเลียงสารเข้าออกจากเซลล์",
+                tag_misconception: "เข้าใจผิดว่าเยื่อเลือกผ่านยอมให้ซูโครสแพร่เข้าเซลล์ได้ทันที",
+                set: "base"
+            },
+            {
+                id: 3,
+                title: "ทดลองแช่กิ่งดาวเรืองลงในสารละลายสีแดงเป็นเวลา 3 ชั่วโมง เมื่อนำลำต้นมาตัดตามยาวและตัดตามขวาง จะสังเกตเห็นท่อขนส่งสีแดงเข้มเฉพาะบริเวณใด และท่อนั้นทำหน้าที่อะไร?",
+                options: [
+                    "1. โฟลเอ็ม (Phloem) อยู่ด้านนอกสุด ทำหน้าที่ลำเลียงน้ำและธาตุอาหาร",
+                    "2. ไซเล็ม (Xylem) อยู่ส่วนในของมัดท่อน้ำท่ออาหาร ทำหน้าที่ลำเลียงน้ำและธาตุอาหารขึ้นสู่ใบ",
+                    "3. โฟลเอ็ม (Phloem) เรียงตัวเป็นวงรอบลำต้น ทำหน้าที่ลำเลียงน้ำตาลที่สังเคราะห์ได้ลงสู่ราก",
+                    "4. คอร์เทกซ์ (Cortex) ทำหน้าที่ดูดซับสีแดงไว้เพื่อสังเคราะห์ด้วยแสง"
+                ],
+                answer: 2,
+                hint: "สีแดงแสดงถึงการเดินทางของน้ำและสีผสมอาหาร ลำต้นพืชใบเลี้ยงคู่มีท่อน้ำ (Xylem) อยู่ด้านในของวงมัดท่อน้ำท่ออาหาร",
+                tag_skill: "L3",
+                tag_content: "ระบบลำเลียงของพืช",
+                tag_misconception: "สับสนตำแหน่งและหน้าที่ของ Xylem และ Phloem",
+                set: "base"
+            },
+            {
+                id: 4,
+                title: "นำใบพืชเขียวที่ดึงออกจากต้นหลังจากได้รับแสงแดด 4 ชั่วโมง ไปต้มในแอลกอฮอล์ จากนั้นล้างน้ำสะอาดแล้วหยดสารละลายไอโอดีน ผลปรากฏว่าบริเวณสีเขียวเปลี่ยนเป็นสีน้ำเงินเข้ม แต่บริเวณที่เป็นด่าง (สีขาว) ไม่เปลี่ยนสี การทดลองนี้สรุปได้อย่างไร?",
+                options: [
+                    "1. คลอโรฟิลล์เป็นสิ่งจำเป็นในการสร้างแป้งจากการสังเคราะห์ด้วยแสง",
+                    "2. แสงแดดช่วยเปลี่ยนสีของใบไม้ให้กลายเป็นแป้งโดยตรง",
+                    "3. สารละลายไอโอดีนทำหน้าที่ย่อยสลายแอลกอฮอล์ในใบไม้",
+                    "4. พืชใช้แก๊สคาร์บอนไดออกไซด์เฉพาะในบริเวณที่เป็นด่างสีขาวเท่านั้น"
+                ],
+                answer: 1,
+                hint: "บริเวณสีเขียวมีคลอโรฟิลล์ ซึ่งสามารถสังเคราะห์ด้วยแสงได้แป้ง เมื่อทดสอบด้วยไอโอดีนจึงเปลี่ยนเป็นสีน้ำเงินเข้ม",
+                tag_skill: "L3",
+                tag_content: "การสังเคราะห์ด้วยแสงของพืช",
+                tag_misconception: "สับสนหน้าที่ของสารสกัดแอลกอฮอล์และสารละลายไอโอดีน",
+                set: "base"
+            },
+            {
+                id: 5,
+                title: "นาย A วัดอัตราการเต้นของหัวใจขณะพักได้ 72 ครั้ง/นาที ต่อมาวิ่งด้วยความเร็วสูงเป็นเวลา 15 นาที อัตราการเต้นของหัวใจเพิ่มขึ้นเป็น 140 ครั้ง/นาที เหตุใดร่างกายจึงต้องปรับการทำงานของระบบหมุนเวียนเลือดเช่นนี้?",
+                options: [
+                    "1. เพื่อเร่งกำจัดน้ำส่วนเกินออกทางเหงื่อให้เร็วที่สุด",
+                    "2. เพื่อลำเลียงแก๊สออกซิเจนและสารอาหารไปยังเซลล์กล้ามเนื้อมากขึ้นเพื่อสร้างพลังงาน ATP",
+                    "3. เพื่อเพิ่มความดันเลือดให้ปอดหยุดการหายใจชั่วคราว",
+                    "4. เพื่อลดอุณหภูมิในหลอดเลือดดำไม่ให้สูงเกินไป"
+                ],
+                answer: 2,
+                hint: "การออกกำลังกายทำให้เซลล์กล้ามเนื้อต้องการพลังงานสูงขึ้น ผ่านกระบวนการหายใจระดับเซลล์ที่ต้องใช้แก๊สออกซิเจน",
+                tag_skill: "L3",
+                tag_content: "ระบบหมุนเวียนเลือดและหายใจ",
+                tag_misconception: "เข้าใจผิดว่าหัวใจเต้นเร็วเพื่อขับเหงื่อเป็นหลัก",
+                set: "base"
+            },
+            {
+                id: 6,
+                title: "สายใยอาหารในหญ้าประกอบด้วย: หญ้า -> ตั๊กแตน -> กบ -> งู และ ตั๊กแตน -> นกกระจอก -> งู หากมีการใช้สารเคมีกำจัดแมลงที่สะสมในสิ่งมีชีวิต (Biomagnification) สิ่งมีชีวิตชนิดใดจะมีปริมาณสารพิษสะสมต่อมวลชีวภาพสูงที่สุด?",
+                options: [
+                    "1. หญ้า เพราะเป็นผู้ผลิตและรับสารเคมีโดยตรงจากดินและอากาศ",
+                    "2. ตั๊กแตน เพราะเป็นผู้บริโภคอันดับ 1 ที่กินหญ้าปริมาณมาก",
+                    "3. กบ เพราะกินตั๊กแตนที่มีสารพิษสะสมอยู่แล้ว",
+                    "4. งู เพราะเป็นผู้บริโภคอันดับสูงสุด (Top predator) ในสายใยอาหาร"
+                ],
+                answer: 4,
+                hint: "การขยายขนาดทางชีวภาพ (Biomagnification) ทำให้สารพิษที่ย่อยสลายยากถ่ายทอดและสะสมเพิ่มขึ้นตามลำดับขั้นการกิน (Trophic level)",
+                tag_skill: "L4",
+                tag_content: "ระบบนิเวศและความสัมพันธ์",
+                tag_misconception: "คิดว่าผู้ผลิตรับสารเคมีโดยตรงจึงสะสมสารพิษเข้มข้นที่สุด",
+                set: "base"
+            },
+            {
+                id: 7,
+                title: "ตารางแสดงการละลายของสาร X ในน้ำ 100 กรัม ที่อุณหภูมิต่างๆ:\n- ที่ 20°C ละลายได้ 20 g\n- ที่ 60°C ละลายได้ 50 g\nหากเตรียมสารละลายอิ่มตัวของสาร X ในน้ำ 200 กรัม ที่อุณหภูมิ 60°C แล้วลดอุณหภูมิลงเหลือ 20°C จะมีผลึกสาร X ตกตะกอนออกมาสี่กรัม?",
+                options: [
+                    "1. 30 กรัม",
+                    "2. 50 กรัม",
+                    "3. 60 กรัม",
+                    "4. 100 กรัม"
+                ],
+                answer: 3,
+                hint: "คำนวณจากน้ำ 200 g: ที่ 60°C ละลายได้ 50x2 = 100 g, ที่ 20°C ละลายได้ 20x2 = 40 g ผลต่างคือมวลผลึกที่ตกออกมา",
+                tag_skill: "L4",
+                tag_content: "สารละลายและสภาพละลายได้",
+                tag_misconception: "ลืมเทียบบาตรไตรยางศ์กับมวลน้ำ 200 กรัม (คิดเฉพาะมวลน้ำ 100 กรัม)",
+                set: "base"
+            },
+            {
+                id: 8,
+                title: "ต้องการแยกส่วนผสมของสาร 3 ชนิด คือ สาร A (จุดเดือด 78°C), สาร B (จุดเดือด 100°C) และสาร C (ของแข็งไม่ละลายใน A และ B) ข้อใดคือลำดับขั้นตอนการแยกสารที่ถูกต้องและเหมาะสมที่สุด?",
+                options: [
+                    "1. ตกผลึก แล้วตามด้วยการระเหยแห้ง",
+                    "2. กรองสาร C ออกก่อน แล้วนำของเหลวไปกลั่นลำดับส่วนแยก A และ B",
+                    "3. สกัดด้วยตัวทำละลาย แล้วนำไปโครมาโทกราฟี",
+                    "4. กลั่นอย่างง่ายสาร C ออกมา แล้วใช้นาเกลือแยก A ออกจาก B"
+                ],
+                answer: 2,
+                hint: "สาร C เป็นของแข็งไม่ละลาย แยกด้วยการกรองได้ง่ายที่สุด ส่วน A และ B เป็นของเหลวที่ละลายเป็นเนื้อเดียวและจุดเดือดใกล้เคียงกัน ต้องใช้การกลั่นลำดับส่วน",
+                tag_skill: "L3",
+                tag_content: "การแยกสารเนื้อผสมและเนื้อเดียว",
+                tag_misconception: "ใช้วิธีการกลั่นอย่างง่ายกับของเหลวสองชนิดที่มีจุดเดือดใกล้เคียงกัน",
+                set: "base"
+            },
+            {
+                id: 9,
+                title: "การทดสอบสารอาหาร 4 ชนิด (W, X, Y, Z) ได้ผลดังนี้:\n- W: ไม่เปลี่ยนสีเบเนดิกต์ แต่เมื่อต้มกับกรดแล้วทดสอบเบเนดิกต์ได้ตะกอนสีแดงอิฐ\n- X: หยดไอโอดีนได้สีน้ำเงินเข้ม\n- Y: หยดไบยูเรตได้สีม่วง\n- Z: ถูบนกระดาษแล้วกระดาษโปร่งแสง\nข้อใดระบุประเภทสารอาหาร W, X, Y, Z ได้ถูกต้องตามลำดับ?",
+                options: [
+                    "1. น้ำตาลโมเลกุลคู่ (ซูโครส), แป้ง, โปรตีน, ไขมัน",
+                    "2. กลูโคส, วิตามินซี, โปรตีน, แป้ง",
+                    "3. แป้ง, ซูโครส, ไขมัน, โปรตีน",
+                    "4. กลูโคส, แป้ง, โปรตีน, แร่ธาตุ"
+                ],
+                answer: 1,
+                hint: "ซูโครสไม่ลดน้ำตาลเบเนดิกต์โดยตรงจนกว่าจะถูกไฮโดรไลซิสด้วยกรด ส่วนไอโอดีนทดสอบแป้ง, ไบยูเรตทดสอบโปรตีน, และความโปร่งแสงทดสอบไขมัน",
+                tag_skill: "L3",
+                tag_content: "สารอาหารและการทดสอบทางเคมี",
+                tag_misconception: "เข้าใจผิดว่าซูโครสให้ผลบวกกับสารละลายเบเนดิกต์ได้ทันทีโดยไม่ต้องต้มกับกรด",
+                set: "base"
+            },
+            {
+                id: 10,
+                title: "แก๊ส CO2 มีสมบัติเป็นกรดอ่อนเมื่อละลายในน้ำ หากหยดอินดิเคเตอร์บรอมไทมอลบลู (Bromothymol Blue) ลงในน้ำกลั่น จะได้สีฟ้า ต่อมาเมื่อเป่าลมหายใจออกลงไปในน้ำกลั่นนั้น สารละลายจะเปลี่ยนเป็นสีใด และเกิดจากสารเคมีชนิดใด?",
+                options: [
+                    "1. เปลี่ยนเป็นสีชมพู เกิดจากด่างอินทรีย์",
+                    "2. เปลี่ยนเป็นสีเหลือง เกิดจากกรดคาร์บอนิก (H2CO3)",
+                    "3. เปลี่ยนเป็นสีเขียวเข้ม เกิดจากแก๊สไนโตรเจนดิสโอไซด์",
+                    "4. ไม่เปลี่ยนสี (ยังคงสีฟ้า) เพราะแก๊สจากลมหายใจเป็นกลาง"
+                ],
+                answer: 2,
+                hint: "บรอมไทมอลบลู เปลี่ยนจากสีฟ้าเป็นสีเหลืองในสภาวะที่เป็นกรด ลมหายใจมี CO2 ซึ่งทำปฏิกิริยากับน้ำได้กรดคาร์บอนิก",
+                tag_skill: "L3",
+                tag_content: "สารกรด-เบส และอินดิเคเตอร์",
+                tag_misconception: "คิดว่าลมหายใจออกมีเพียงแก๊สออกซิเจนหรือเป็นกลาง",
+                set: "base"
+            },
+            {
+                id: 11,
+                title: "วัตถุมวล 2 กิโลกรัม วางบนพื้นโต๊ะราบที่มีแรงเสียดทาน มีแรง F1 = 10 N ดึงไปทางขวา และแรง F2 = 4 N ดึงไปทางซ้าย หากวัตถุยังคงนิ่งอยู่กับที่ แรงเสียดทานที่เกิดขึ้นระหว่างวัตถุกับพื้นโต๊ะจะมีขนาดและทิศทางใด?",
+                options: [
+                    "1. ขนาด 6 N ทิศทางไปทางซ้าย",
+                    "2. ขนาด 6 N ทิศทางไปทางขวา",
+                    "3. ขนาด 14 N ทิศทางไปทางซ้าย",
+                    "4. ขนาด 0 N เพราะวัตถุไม่เคลื่อนที่"
+                ],
+                answer: 1,
+                hint: "วัตถุนิ่ง ΣF = 0 แรงดึงไปทางขวาเน็ต (10 - 4 = 6 N) แรงเสียดทานสถิตจึงต้องมีขนาด 6 N ทิศต้านการเคลื่อนที่ (ไปทางซ้าย)",
+                tag_skill: "L4",
+                tag_content: "แรงและกฎการเคลื่อนที่",
+                tag_misconception: "คิดว่าวัตถุนิ่งแรงเสียดทานจะเป็นศูนย์ หรือคิดแรงเสียดทานจากมวลโดยตรงโดยไม่ดูดุลแรง",
+                set: "base"
+            },
+            {
+                id: 12,
+                title: "หย่อนลูกเหล็กทรงกลมขนาดเท่ากัน 2 ลูก ลงในทรงกระบอกวัดปริมาตรที่มีน้ำและน้ำมันพืชอยู่ตามลำดับ ปรากฏว่าลูกเหล็กจมลงสู่ก้นภาชนะทั้งสองด้วยความเร็วไม่เท่ากัน ข้อใดอธิบายปรากฏการณ์นี้ได้อย่างถูกต้องตามหลักฟิสิกส์?",
+                options: [
+                    "1. แรงพยุง (Buoyant Force) ของของเหลวทั้งสองเท่ากัน แต่แรงเสียดทานอากาศต่างกัน",
+                    "2. น้ำมันพืชมีความหนาแน่นสูงกว่าลูกเหล็ก จึงดันให้ลูกเหล็กจมช้าลง",
+                    "3. แรงพยุงขึ้นอยู่กับความหนาแน่นของของเหลว ของเหลวที่มีความหนาแน่นมากกว่าจะให้แรงพยุงสูงกว่า",
+                    "4. น้ำมันพืชมีความหนืดและความหนาแน่นต่างจากน้ำ ทำให้แรงพยุงและแรงต้านทานการเคลื่อนที่ต่างกัน"
+                ],
+                answer: 4,
+                hint: "แรงพยุง F_b = ρ_liquid * V_displaced * g นอกจากนี้ความหนืดของของเหลวยังสร้างแรงต้านการเคลื่อนที่ในของเหลวด้วย",
+                tag_skill: "L3",
+                tag_content: "แรงพยุงและความหนาแน่น",
+                tag_misconception: "สับสนว่าแรงพยุงขึ้นอยู่กับมวลของวัตถุเพียงอย่างเดียว ไม่เกี่ยวกับของเหลว",
+                set: "base"
+            },
+            {
+                id: 13,
+                title: "กดคานงัดอันหนึ่งเพื่อยกวัตถุน้ำหนัก 500 นิวตัน โดยวางจุดหมุน (Fulcrum) ไว้ห่างจากวัตถุ 0.5 เมตร และจุดที่ออกแรงกดอยู่ห่างจากจุดหมุน 2.0 เมตร (ไม่คิดน้ำหนักของคาน) จะต้องออกแรงกดอย่างน้อยที่สุดเท่าใดจึงจะยกวัตถุขึ้นได้?",
+                options: [
+                    "1. 100 นิวตัน",
+                    "2. 125 นิวตัน",
+                    "3. 250 นิวตัน",
+                    "4. 500 นิวตัน"
+                ],
+                answer: 2,
+                hint: "ใช้โมเมนต์ของแรง: โมเมนต์ทวน = โมเมนต์ตาม -> F x 2.0 m = 500 N x 0.5 m -> F = 250 / 2.0 = 125 N",
+                tag_skill: "L4",
+                tag_content: "งาน เครื่องกลอย่างง่าย และโมเมนต์",
+                tag_misconception: "คูณความยาวแขนคานผิดฝั่ง หรือใช้ระยะรวมคานแทนระยะจากจุดหมุน",
+                set: "base"
+            },
+            {
+                id: 14,
+                title: "ใส่แท่งทองแดงอุณหภูมิ 90°C ลงในภาชนะฉนวนที่มีน้ำอุณหภูมิ 20°C บรรจุอยู่ เกิดการถ่ายโอนความร้อนจนเข้าสู่สมดุลความร้อนที่อุณหภูมิ 35°C ข้อใดสรุปเกี่ยวกับการถ่ายโอนความร้อนได้ถูกต้อง?",
+                options: [
+                    "1. ความร้อนที่แท่งทองแดงสูญเสีย เท่ากับ ความร้อนที่น้ำได้รับ (ตามกฎการอนุรักษ์พลังงาน)",
+                    "2. อุณหภูมิของแท่งทองแดงลดลง 55°C เพราะน้ำมีความร้อนจำเพาะต่ำกว่าทองแดง",
+                    "3. พลังงานความร้อนไหลจากน้ำไปยังแท่งทองแดงจนอุณหภูมิเท่ากัน",
+                    "4. เมื่อเข้าสู่สมดุลความร้อน แท่งทองแดงจะมีปริมาณความร้อนในตัวมากกว่าน้ำ"
+                ],
+                answer: 1,
+                hint: "สมดุลความร้อน: Q_loss = Q_gain ความร้อนจะถ่ายโอนจากวัตถุอุณหภูมิสูงไปยังวัตถุอุณหภูมิต่ำจนกระทั่งอุณหภูมิเท่ากัน",
+                tag_skill: "L3",
+                tag_content: "พลังงานความร้อนและสมดุลความร้อน",
+                tag_misconception: "เข้าใจผิดว่าความร้อนไหลจากวัตถุที่มีมวลมากกว่าไปหามวลน้อยกว่า",
+                set: "base"
+            },
+            {
+                id: 15,
+                title: "ฉายรังสีของแสงผ่านปริซึมแก้วสามเหลี่ยม เห็นแสงขาวแยกออกเป็นแถบสีต่างๆ (สเปกตรัม) ปรากฏการณ์นี้เรียกว่าอะไร และแสงสีใดมีการหักเห (เบี่ยงเบนจากแนวเดิม) มากที่สุด?",
+                options: [
+                    "1. การสะท้อนกลับหมด, แสงสีแดงเบี่ยงเบนมากที่สุด",
+                    "2. การกระจัดกระจายของแสง (Dispersion), แสงสีม่วงเบี่ยงเบนมากที่สุด",
+                    "3. การแทรกสอดของแสง, แสงสีเขียวเบี่ยงเบนมากที่สุด",
+                    "4. การเลี้ยวเบนของแสง, แสงสีเหลืองเบี่ยงเบนมากที่สุด"
+                ],
+                answer: 2,
+                hint: "แสงม่วงมีความยาวคลื่นสั้น ความถี่สูง และดรรชนีหักเหในแก้วสูงที่สุด จึงหักเหเบี่ยงเบนออกจากแนวเดิมมากที่สุด",
+                tag_skill: "L3",
+                tag_content: "แสงและการมองเห็น",
+                tag_misconception: "สับสนว่าแสงสีแดงมีความถี่สูงจึงหักเหมากที่สุด (ความจริงแสงแดงหักเหน้อยสุด)",
+                set: "base"
+            },
+            {
+                id: 16,
+                title: "วงจรไฟฟ้าในบ้านวงจรหนึ่ง มีหลอดไฟฟ้าขนาด 50 วัตต์ ต่อขนานกัน 4 หลอด และต่อกับแหล่งจ่ายไฟ 220 โวลต์ หากหลอดไฟหลอดหนึ่งไส้ขาดจนใช้งานไม่ได้ หลอดไฟที่เหลืออีก 3 หลอดจะเป็นอย่างไร?",
+                options: [
+                    "1. ดับทั้งหมด เพราะวงจรขาด",
+                    "2. สว่างเท่าเดิม และยังคงทำงานได้ตามปกติ",
+                    "3. สว่างลดลง เพราะกระแสไฟฟ้าแบ่งไปไม่เพียงพอ",
+                    "4. สว่างมากขึ้นจนไส้ขาดตามกันไป"
+                ],
+                answer: 2,
+                hint: "การต่อแบบขนาน (Parallel Circuit) เครื่องใช้ไฟฟ้าแต่ละเครื่องจะได้รับความดันไฟฟ้า (V) เท่ากับแหล่งกำเนิด และทำงานเป็นอิสระต่อกัน",
+                tag_skill: "L3",
+                tag_content: "วงจรไฟฟ้าอย่างง่าย",
+                tag_misconception: "สับสนคุณสมบัติของวงจรขนานกับการต่อแบบอนุกรม",
+                set: "base"
+            },
+            {
+                id: 17,
+                title: "ตารางบันทึกอุณหภูมิกระเปาะแห้งและกระเปาะเปียกจากไซโครมิเตอร์ (Psychrometer):\n- อุณหภูมิกระเปาะแห้ง = 30°C\n- อุณหภูมิกระเปาะเปียก = 24°C\nหากผลต่างอุณหภูมิต่างกันมากขึ้น (เช่น กระเปาะเปียกลดลงเหลือ 20°C) แสดงว่าสภาวะอากาศขณะนั้นมีความชื้นสัมพัทธ์และอัตราการระเหยของน้ำอย่างไร?",
+                options: [
+                    "1. ความชื้นสัมพัทธ์สูงขึ้น, อัตราการระเหยช้าลง",
+                    "2. ความชื้นสัมพัทธ์ต่ำลง, อัตราการระเหยเร็วขึ้น",
+                    "3. ความชื้นสัมพัทธ์สูงขึ้น, อัตราการระเหยเร็วขึ้น",
+                    "4. ความชื้นสัมพัทธ์ไม่เปลี่ยนแปลง, เกิดฝนตกหนัก"
+                ],
+                answer: 2,
+                hint: "ผลต่างกระเปาะแห้ง-เปียก ยิ่งมาก แสดงว่าน้ำระเหยจากกระเปาะเปียกได้ดี (ดึงความร้อนไปมาก) แปลว่าอากาศแห้ง ความชื้นสัมพัทธ์ต่ำ",
+                tag_skill: "L4",
+                tag_content: "บรรยากาศและความชื้น",
+                tag_misconception: "เข้าใจผิดว่าผลต่างอุณหภูมิมากแปลว่าอากาศมีความชื้นสัมพัทธ์สูง",
+                set: "base"
+            },
+            {
+                id: 18,
+                title: "บริเวณชายหาดแห่งหนึ่ง ในช่วงเวลากลางวัน พื้นดินบนชายหาด มีอุณหภูมิสูงกว่าพื้นน้ำทะเล ปรากฏการณ์นี้ทำให้เกิดลมชนิดใด และมีทิศทางการเคลื่อนที่อย่างไร?",
+                options: [
+                    "1. ลมบก, อากาศเคลื่อนที่จากแม่น้ำลงสู่ทะเล",
+                    "2. ลมทะเล, อากาศเย็นความกดอากาศสูงจากทะเลพัดเข้าสู่ชายหาด",
+                    "3. ลมพายุงวงช้าง, อากาศหมุนวนดึงน้ำทะเลขึ้นสู่ท้องฟ้า",
+                    "4. ลมมรสุมตะวันออกเฉียงเหนือ, พัดจากชายฝั่งออกสู่มหาสมุทร"
+                ],
+                answer: 2,
+                hint: "กลางวัน: ดินร้อนเร็ว -> อากาศเหนือดินลอยตัวสูงขึ้น -> อากาศเย็นกว่าเหนือทะเล (ความกดอากาศสูงกว่า) จึงพัดเข้ามาแทนที่ เกิดเป็น 'ลมทะเล'",
+                tag_skill: "L3",
+                tag_content: "กระบวนการเปลี่ยนแปลงลมฟ้าอากาศ",
+                tag_misconception: "สับสนช่วงเวลาเกิดลมบกและลมทะเล",
+                set: "base"
+            },
+            {
+                id: 19,
+                title: "พิจารณาสมบัติของหิน 3 ชนิด:\n- หิน A: เกิดจากการเย็นตัวอย่างรวดเร็วของลาวาบนพื้นผิวโลก มีรูพรุน ลอยน้ำได้\n- หิน B: เกิดจากการสะสมตัวของตะกอนกรวดทรายทับถมกันจนแข็งตัว\n- หิน C: เกิดจากหินปูนที่ได้รับความร้อนและความดันสูงจนผลึกแร่ประสานกันแน่น\nข้อใดระบุชื่อหิน A, B, C ได้ถูกต้อง?",
+                options: [
+                    "1. หินออบซิเดียน, หินชนวน, หินแกรนิต",
+                    "2. หินพัมมิซ, หินทราย, หินอ่อน",
+                    "3. หินบะซอลต์, หินดินดาน, หินไนส์",
+                    "4. หินพัมมิซ, หินปูน, หินควอร์ตไซต์"
+                ],
+                answer: 2,
+                hint: "หินอัคนีมีรูพรุนลอยน้ำได้คือ พัมมิซ, หินตะกอนจากทรายคือ หินทราย, หินแปรจากหินปูนคือ หินอ่อน",
+                tag_skill: "L3",
+                tag_content: "ทรัพยากร地และหินในธรรมชาติ",
+                tag_misconception: "จำจำสับสนระหว่างหินพัมมิซกับหินบะซอลต์ หรือหินอ่อนกับหินปูน",
+                set: "base"
+            },
+            {
+                id: 20,
+                title: "ปรากฏการณ์สุริยุปราคาเต็มดวง เกิดขึ้นเมื่อดวงจันทร์อยู่ในตำแหน่งใดเมื่อเทียบกับโลกและดวงอาทิตย์ และตรงกับวันทางจันทรคติใดโดยประมาณ?",
+                options: [
+                    "1. ดวงจันทร์อยู่ระหว่างโลกกับดวงอาทิตย์ (วันแรม 15 ค่ำ หรือ วันขึ้น 1 ค่ำ)",
+                    "2. โลกอยู่ระหว่างดวงจันทร์กับดวงอาทิตย์ (วันเพ็ญ ขึ้น 15 ค่ำ)",
+                    "3. ดวงจันทร์ตั้งฉากกับแนวโลกและดวงอาทิตย์ (วันขึ้น 8 ค่ำ)",
+                    "4. ดวงอาทิตย์อยู่ระหว่างโลกกับดวงจันทร์ (วันแรม 8 ค่ำ)"
+                ],
+                answer: 1,
+                hint: "สุริยุปราคา = ดวงอาทิตย์ - ดวงจันทร์ - โลก (ดวงจันทร์บังดวงอาทิตย์) เกิดในวันจันทร์ดับ (New Moon) คือ แรม 15 ค่ำ",
+                tag_skill: "L3",
+                tag_content: "ดาราศาสตร์และระบบสุริยะ",
+                tag_misconception: "สับสนตำแหน่งของโลกและดวงจันทร์ระหว่างสุริยุปราคากับจันทรุปราคา",
+                set: "base"
+            },
+            {
+                id: 21,
+                title: "เกษตรกรต้องการขยายพันธุ์ต้นมะม่วงพันธุ์ดีให้ได้ต้นใหม่ที่มีลักษณะทางพันธุกรรมเหมือนต้นแม่ทุกประการ ออกดอกติดผลเร็ว และมีระบบรากแก้วที่แข็งแรง ยึดลำต้นได้ดี ควรเลือกใช้การขยายพันธุ์ด้วยวิธีใด?",
+                options: [
+                    "1. การเพาะเมล็ด",
+                    "2. การตอนกิ่ง",
+                    "3. การเสียบยอดบนต้นตอที่โตจากเมล็ด",
+                    "4. การปักชำใบ"
+                ],
+                answer: 3,
+                hint: "การเสียบยอด (Grafting) ได้พันธุกรรมดีเหมือนต้นแม่ ออกผลเร็ว และเมื่อเสียบลงบนต้นตอที่โตจากเมล็ดจะทำให้ได้ระบบรากแก้วที่แข็งแรง",
+                tag_skill: "L4",
+                tag_content: "การขยายพันธุ์พืชประยุกต์",
+                tag_misconception: "คิดว่าการตอนกิ่งจะได้รากแก้ว (ความจริงการตอนกิ่งได้เฉพาะรากฝอย)",
+                set: "base"
+            },
+            {
+                id: 22,
+                title: "ข้อใดกล่าวถึงโครงสร้างและหน้าที่ของออร์แกเนลล์ในเซลล์พืชและเซลล์สัตว์ได้ถูกต้องแม่นยำที่สุดตามหลักชีววิทยา?",
+                options: [
+                    "1. ไมโทคอนเดรียพบเฉพาะในเซลล์สัตว์ ทำหน้าที่สร้างพลังงาน ATP",
+                    "2. ผนังเซลล์ของพืชทำหน้าที่ควบคุมการผ่านเข้าออกของสารเคมีเช่นเดียวกับเยื่อหุ้มเซลล์",
+                    "3. คลอโรพลาสต์พบในเซลล์พืช ทำหน้าที่สังเคราะห์แสง แต่ไมโทคอนเดรียในพืชก็ยังคงทำหน้าที่หายใจระดับเซลล์",
+                    "4. แวคิวโอลในเซลล์สัตว์มีขนาดใหญ่กว่าในเซลล์พืชเพื่อสะสมน้ำ"
+                ],
+                answer: 3,
+                hint: "พืชมีทั้งคลอโรพลาสต์ (สร้างน้ำตาล) และไมโทคอนเดรีย (สลายน้ำตาลเป็นพลังงาน ATP) ซี่งไมโทคอนเดรียพบได้ทั้งในพืชและสัตว์",
+                tag_skill: "L3",
+                tag_content: "โครงสร้างและหน้าที่ของเซลล์",
+                tag_misconception: "เข้าใจผิดว่าพืชไม่มีไมโทคอนเดรียเพราะมีคลอโรพลาสต์แล้ว",
+                set: "base"
+            },
+            {
+                id: 23,
+                title: "ในการทดสอบค่า pH ของสารละลายในชีวิตประจำวัน 4 ชนิด ได้แก่ น้ำมะนาว, น้ำบริสุทธิ์, สารละลายสบู่, และน้ำโซดา ข้อใดเรียงลำดับสารที่มีความเข้มข้นของไฮโดรเจนไอออน [H+] จากมากไปน้อยได้ถูกต้อง?",
+                options: [
+                    "1. สารละลายสบู่ > น้ำบริสุทธิ์ > น้ำโซดา > น้ำมะนาว",
+                    "2. น้ำมะนาว > น้ำโซดา > น้ำบริสุทธิ์ > สารละลายสบู่",
+                    "3. น้ำมะนาว > สารละลายสบู่ > น้ำโซดา > น้ำบริสุทธิ์",
+                    "4. น้ำบริสุทธิ์ > น้ำมะนาว > น้ำโซดา > สารละลายสบู่"
+                ],
+                answer: 2,
+                hint: "ความเข้มข้นของ [H+] สูง = เป็นกรดมาก (pH ต่ำสุด) น้ำมะนาว (pH~2) > น้ำโซดา (pH~4) > น้ำบริสุทธิ์ (pH 7) > สบู่ (pH~9-10)",
+                tag_skill: "L4",
+                tag_content: "สารเคมีและค่า pH",
+                tag_misconception: "สับสนว่า pH สูงแปลว่ามีความเข้มข้นของไฮโดรเจนไอออนมาก",
+                set: "base"
+            },
+            {
+                id: 24,
+                title: "เมื่อนำสารสารบริสุทธิ์ A และสารผสม B มาต้มเพื่อวัดจุดเดือดที่ความดันบรรยากาศระดับน้ำทะเล กราฟการเปลี่ยนแปลงอุณหภูมิตามเวลาของสารทั้งสองจะมีลักษณะอย่างไร?",
+                options: [
+                    "1. สาร A จุดเดือดคงที่ แต่องศาของ B จะเพิ่มขึ้นเรื่อยๆ ขณะเดือด",
+                    "2. สาร A และ B มีจุดเดือดคงที่เท่ากันตลอดการเปลี่ยนสถานะ",
+                    "3. สาร A จุดเดือดเปลี่ยนไปเรื่อยๆ ส่วนสาร B จุดเดือดคงที่",
+                    "4. สาร A จะกลายเป็นไอก่อนถึงจุดเดือด ส่วนสาร B ไม่ระเหยเลย"
+                ],
+                answer: 1,
+                hint: "สารบริสุทธิ์มีจุดเดือดและจุดแช่แข็งคงที่ ส่วนสารผสมมีจุดเดือดไม่คงที่และช่วงอุณหภูมิการหลอมเหลวกว้าง",
+                tag_skill: "L3",
+                tag_content: "สมบัติของสารบริสุทธิ์และสารผสม",
+                tag_misconception: "คิดว่าสารผสมเมื่อเดือดแล้วจะมีอุณหภูมิคงที่เหมือนสารบริสุทธิ์",
+                set: "base"
+            },
+            {
+                id: 25,
+                title: "การจัดหมวดหมู่อาณาจักรสิ่งมีชีวิต กลุ่มสัตว์ไม่มีกระดูกสันหลัง ข้อใดระบุคู่ของสัตว์และไฟลัม/คุณสมบัติประจำกลุ่มได้ถูกต้องตามหลักอนุกรมวิธาน?",
+                options: [
+                    "1. แมงมุม - เป็นแมลงชนิดหนึ่ง มี 6 ขา และลำต้นแบ่งเป็น 3 ส่วน",
+                    "2. หมึกสาย - จัดเป็นสัตว์กลุ่มหอยและหมึก (Mollusks) ลำตัวนุ่ม ไม่มีกระดูกสันหลัง",
+                    "3. ดาวทะเล - จัดเป็นปลาชนิดหนึ่ง หายใจด้วยเหงือกและมีครีบ",
+                    "4. พยาธิตัวตูด - จัดอยู่ในกลุ่มลำตัวเป็นปล้องเรียงต่อกันเหมือนไส้เดือนดิน"
+                ],
+                answer: 2,
+                hint: "หมึกสาย (Octopus) อยู่ใน Phylum Mollusca แมงมุมเป็นแมงมี 8 ขา ดาวทะเลเป็นเอคิโนเดิร์ม ไม่ใช่ปลา",
+                tag_skill: "L3",
+                tag_content: "การจำแนกสัตว์ไม่มีกระดูกสันหลัง",
+                tag_misconception: "สับสนว่าแมงมุมเป็นแมลง หรือดาวทะเลเป็นปลา",
+                set: "base"
+            },
+            {
+                id: 26,
+                title: "ต่อวงจรไฟฟ้าโดยใช้เซลล์ไฟฟ้า 1.5 โวลต์ จำนวน 2 ก้อน ต่อแบบอนุกรม เข้ากับตัวต้านทานขนาด 6 โอห์ม กระแสไฟฟ้าที่ไหลผ่านวงจรนี้จะมีค่ากี่แอมแปร์?",
+                options: [
+                    "1. 0.25 แอมแปร์",
+                    "2. 0.50 แอมแปร์",
+                    "3. 2.00 แอมแปร์",
+                    "4. 4.00 แอมแปร์"
+                ],
+                answer: 2,
+                hint: "ถ่าน 2 ก้อนต่ออนุกรม V_total = 1.5 + 1.5 = 3.0 V จากกฎของโอห์ม I = V / R = 3.0 / 6 = 0.5 A",
+                tag_skill: "L4",
+                tag_content: "คำนวณไฟฟ้าอย่างง่าย กฎของโอห์ม",
+                tag_misconception: "ลืมรวมความดันไฟฟ้าของแบตเตอรี่ที่ต่ออนุกรมกัน (คิด V = 1.5 V)",
+                set: "base"
+            },
+            {
+                id: 27,
+                title: "เมื่อเกิดพายุฝนฟ้าคะนอง เกิดปรากฏการณ์ฟ้าแลบและฟ้าร้องพร้อมกันที่ตำแหน่งหนึ่ง แต่ผู้สังเกตที่อยู่ห่างออกไปกลับเห็นแสงฟ้าแลบก่อนได้ยินเสียงฟ้าร้องประมาณ 3 วินาที ปรากฏการณ์นี้เกิดขึ้นเนื่องจากสาเหตุใด?",
+                options: [
+                    "1. แสงเดินทางในอากาศด้วยความเร็วสูงกว่าเสียงมาก (3x10^8 m/s vs ~340 m/s)",
+                    "2. เสียงถูกก้อนเมฆดูดซับไว้ทำให้เดินทางช้าลง",
+                    "3. แสงเกิดขึ้นก่อนการผ่าลงสู่พื้นดินจริง 3 วินาที",
+                    "4. แก้วหูของมนุษย์ตอบสนองต่อคลื่นแสงได้ไวกว่าคลื่นเสียง"
+                ],
+                answer: 1,
+                hint: "อัตราเร็วของแสงในอากาศประมาณ 300,000,000 m/s ส่วนอัตราเร็วเสียงประมาณ 340 m/s แสงจึงเดินทางมาถึงตาเกือบจะทันที",
+                tag_skill: "L3",
+                tag_content: "คลื่น แสง และเสียง",
+                tag_misconception: "คิดว่าการเกิดฟ้าแลบและฟ้าร้องไม่ได้เกิดขึ้นพร้อมกันตั้งแต่ต้นกำเนิด",
+                set: "base"
+            },
+            {
+                id: 28,
+                title: "นักเรียนคนหนึ่งชั่งน้ำหนักวัตถุชิ้นหนึ่งในอากาศได้ 5.0 นิวตัน แต่เมื่อนำวัตถุชิ้นนั้นไปหย่อนให้จมมิดในน้ำ พบว่าชั่งน้ำหนักได้เพียง 3.2 นิวตัน แรงพยุงของน้ำที่กระทำต่อวัตถุนี้มีค่าเท่าใด และปริมาตรวัตถุเป็นเท่าใด?",
+                options: [
+                    "1. แรงพยุง 1.8 N, ปริมาตรวัตถุเท่ากับปริมาตรน้ำที่ถูกแทนที่",
+                    "2. แรงพยุง 3.2 N, ปริมาตรวัตถุเท่ากับน้ำหนักที่ชั่งได้",
+                    "3. แรงพยุง 8.2 N, ปริมาตรวัตถุเท่ากับศูนย์",
+                    "4. แรงพยุง 5.0 N, วัตถุลอยน้ำชั่วคราว"
+                ],
+                answer: 1,
+                hint: "แรงพยุง (Buoyant force) = น้ำหนักในอากาศ - น้ำหนักในของเหลว = 5.0 - 3.2 = 1.8 N และตามหลักอาร์คิมีดิส ปริมาตรวัตถุส่วนที่จมเท่ากับปริมาตรน้ำที่ถูกแทนที่",
+                tag_skill: "L4",
+                tag_content: "หลักอาร์คิมีดิสและแรงพยุง",
+                tag_misconception: "เอาน้ำหนักมาบวกกัน หรือเข้าใจผิดว่าน้ำหนักที่อ่านได้ในน้ำคือแรงพยุง",
+                set: "base"
+            },
+            {
+                id: 29,
+                title: "กระบวนการหมุนเวียนของน้ำในธรรมชาติ (Water Cycle) พลังงานหลักที่ขับเคลื่อนให้เกิดการระเหยของน้ำจากมหาสมุทรขึ้นสู่บรรยากาศกลายเป็นไอคือพลังงานชนิดใด?",
+                options: [
+                    "1. พลังงานความร้อนใต้พิภพ",
+                    "2. พลังงานรังสีจากดวงอาทิตย์",
+                    "3. พลังงานลมและการหมุนรอบตัวเองของโลก",
+                    "4. พลังงานแรงดึงดูดระหว่างโลกและดวงจันทร์"
+                ],
+                answer: 2,
+                hint: "ดวงอาทิตย์เป็นแหล่งพลังงานหลักที่ทำให้น้ำเปลี่ยนสถานะเป็นไอระเหยขึ้นสู่อากาศ เกิดเป็นก้อนเมฆและฝน",
+                tag_skill: "L3",
+                tag_content: "วัฏจักรน้ำและปรากฏการณ์ธรรมชาติ",
+                tag_misconception: "เข้าใจผิดว่าแรงลมเป็นปัจจัยหลักในการเปลี่ยนสถานะน้ำเป็นไอ",
+                set: "base"
+            },
+            {
+                id: 30,
+                title: "ดาวเคราะห์ในระบบสุริยะแบ่งออกเป็นดาวเคราะห์หิน (Terrestrial planets) และดาวเคราะห์แก๊สยักษ์ (Jovian planets) ข้อใดระบุกลุ่มของดาวเคราะห์หินได้ถูกต้องครบถ้วนทั้งหมด?",
+                options: [
+                    "1. ดาวพุธ, ดาวศุกร์, โลก, ดาวอังคาร",
+                    "2. ดาวพฤหัสบดี, ดาวเสาร์, ดาวยูเรนัส, ดาวเนปจูน",
+                    "3. โลก, ดาวอังคาร, ดาวพฤหัสบดี, ดาวเสาร์",
+                    "4. ดาวพุธ, ดาวศุกร์, ดาวเสาร์, ดาวพลูโต"
+                ],
+                answer: 1,
+                hint: "ดาวเคราะห์หินชั้นใน 4 ดวงแรก ได้แก่ ดาวพุธ ดาวศุกร์ โลก และดาวอังคาร มีพื้นผิวเป็นของแข็งและมีความหนาแน่นสูง",
+                tag_skill: "L3",
+                tag_content: "ระบบสุริยะและดาวเคราะห์",
+                tag_misconception: "สับสนนำดาวพฤหัสบดีหรือดาวเสาร์มารวมในกลุ่มดาวเคราะห์หิน",
+                set: "base"
+            }
+        ];
+
+        const misconceptionExplanations = {};
+        rawQuizData.forEach(q => {
+            misconceptionExplanations[q.id] = {
+                explanation: {
+                    1: q.answer === 1 ? "ถูกต้อง! CaSO4 มีสภาพละลายได้ต่ำกว่า NaCl มาก เมื่อน้ำระเหยออก ความเข้มข้นจะถึงจุดอิ่มตัวของ CaSO4 ก่อน จึงแยกตัวออกมาเป็นผลึกก่อน" : (q.tag_misconception || "คำตอบนี้ยังไม่ถูกต้อง"),
+                    2: q.answer === 2 ? "ถูกต้อง!" : (q.tag_misconception || "คำตอบนี้ยังไม่ถูกต้อง"),
+                    3: q.answer === 3 ? "ถูกต้อง!" : (q.tag_misconception || "คำตอบนี้ยังไม่ถูกต้อง"),
+                    4: q.answer === 4 ? "ถูกต้อง!" : (q.tag_misconception || "คำตอบนี้ยังไม่ถูกต้อง")
+                }
+            };
+        });
+
+        let quizMode = 'practice'; 
+        let activeQuizData = [];   
+        let isExtraRound = false;  
+        let currentQuestionIndex = 0;
+        let currentScore = 0;
+        let selectedAnswers = []; 
+        let soundEnabled = true;
+        let timerInterval = null;
+        let timeLeft = 60;
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'correct') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now); 
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); 
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'incorrect') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now); 
+                    osc.frequency.setValueAtTime(174.61, now + 0.1); 
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'complete') {
+                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.frequency.setValueAtTime(freq, now + idx * 0.08);
+                        g.gain.setValueAtTime(0.1, now + idx * 0.08);
+                        g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.3);
+                        o.start(now + idx * 0.08);
+                        o.stop(now + idx * 0.08 + 0.3);
+                    });
+                }
+            } catch (e) {
+                console.log("Audio suppressed");
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundOnIcon').classList.toggle('hidden', !soundEnabled);
+            document.getElementById('soundOffIcon').classList.toggle('hidden', soundEnabled);
+        }
+
+        function selectMode(mode) {
+            playSound('click');
+            quizMode = mode;
+            const pLabel = document.getElementById('modePracticeLabel');
+            const eLabel = document.getElementById('modeExamLabel');
+
+            if (mode === 'practice') {
+                pLabel.className = "relative flex p-4 rounded-2xl border-2 border-brand-500 bg-brand-50/50 cursor-pointer hover:border-brand-600 transition shadow-sm";
+                eLabel.className = "relative flex p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer hover:border-slate-300 transition shadow-sm";
+            } else {
+                pLabel.className = "relative flex p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer hover:border-slate-300 transition shadow-sm";
+                eLabel.className = "relative flex p-4 rounded-2xl border-2 border-brand-500 bg-brand-50/50 cursor-pointer hover:border-brand-600 transition shadow-sm";
+            }
+        }
+
+        function startQuiz() {
+            activeQuizData = rawQuizData.filter(q => q.set !== 'extra');
+            isExtraRound = false;
+            beginQuizSession();
+        }
+
+        function startExtraQuiz() {
+            activeQuizData = rawQuizData.filter(q => q.set === 'extra');
+            isExtraRound = true;
+            beginQuizSession();
+        }
+
+        function beginQuizSession() {
+            playSound('click');
+            currentQuestionIndex = 0;
+            currentScore = 0;
+            selectedAnswers = new Array(activeQuizData.length).fill(null);
+
+            const startScreen = document.getElementById('startScreen');
+            const resultScreen = document.getElementById('resultScreen');
+            const extraResultScreen = document.getElementById('extraResultScreen');
+            const reviewContainer = document.getElementById('reviewContainer');
+            const quizScreen = document.getElementById('quizScreen');
+
+            if (startScreen) startScreen.classList.add('hidden');
+            if (resultScreen) resultScreen.classList.add('hidden');
+            if (extraResultScreen) extraResultScreen.classList.add('hidden');
+            if (reviewContainer) reviewContainer.classList.add('hidden');
+            if (quizScreen) quizScreen.classList.remove('hidden');
+
+            const scoreEl = document.getElementById('currentScore');
+            if (scoreEl) scoreEl.textContent = '0';
+
+            const timerDisplay = document.getElementById('timerDisplay');
+            const hintBtn = document.getElementById('hintBtn');
+
+            if (quizMode === 'exam') {
+                if (timerDisplay) {
+                    timerDisplay.classList.remove('hidden');
+                    timerDisplay.classList.add('flex');
+                }
+                if (hintBtn) hintBtn.classList.add('hidden');
+            } else {
+                if (timerDisplay) {
+                    timerDisplay.classList.add('hidden');
+                    timerDisplay.classList.remove('flex');
+                }
+                if (hintBtn) hintBtn.classList.remove('hidden');
+            }
+
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            clearInterval(timerInterval);
+            const q = activeQuizData[currentQuestionIndex];
+
+            document.getElementById('questionNumBadge').textContent = `ข้อ ${currentQuestionIndex + 1}/${activeQuizData.length}`;
+            document.getElementById('skillBadge').textContent = `ระดับ ${q.tag_skill}`;
+            document.getElementById('questionTopic').textContent = `${q.tag_content}`;
+            document.getElementById('questionText').textContent = q.title;
+
+            const progress = ((currentQuestionIndex + 1) / activeQuizData.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+
+            document.getElementById('hintBox').classList.add('hidden');
+            document.getElementById('explanationCard').classList.add('hidden');
+            document.getElementById('nextBtn').disabled = true;
+
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            q.options.forEach((optText, idx) => {
+                const optNum = idx + 1;
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-2xl border-2 border-slate-200 hover:border-brand-300 hover:bg-slate-50 font-prompt text-sm md:text-base text-slate-800 transition flex items-start gap-3 transform active:scale-[0.99]`;
+                
+                btn.innerHTML = `
+                    <span class="w-7 h-7 rounded-full border-2 border-slate-300 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 mt-0.5 option-circle">
+                        ${optNum}
+                    </span>
+                    <span class="flex-grow">${optText.replace(/^\d+\.\s*/, '')}</span>
+                `;
+
+                btn.onclick = () => selectAnswer(optNum);
+                container.appendChild(btn);
+            });
+
+            if (quizMode === 'exam') {
+                timeLeft = 60;
+                document.getElementById('timeLeft').textContent = `${timeLeft}s`;
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    document.getElementById('timeLeft').textContent = `${timeLeft}s`;
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        autoTimeoutAnswer();
+                    }
+                }, 1000);
+            }
+        }
+
+        function toggleHint() {
+            playSound('click');
+            const hintBox = document.getElementById('hintBox');
+            const hintText = document.getElementById('hintText');
+            hintText.textContent = activeQuizData[currentQuestionIndex].hint;
+            hintBox.classList.toggle('hidden');
+        }
+
+        function selectAnswer(optNum) {
+            clearInterval(timerInterval);
+            const q = activeQuizData[currentQuestionIndex];
+            const isCorrect = (optNum === q.answer);
+
+            selectedAnswers[currentQuestionIndex] = {
+                userChoice: optNum,
+                isCorrect: isCorrect
+            };
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            const buttons = optionsContainer.querySelectorAll('button');
+
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                const buttonOptNum = idx + 1;
+                const circle = btn.querySelector('.option-circle');
+
+                if (buttonOptNum === q.answer) {
+                    btn.className = `w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/80 font-prompt text-sm md:text-base text-emerald-900 flex items-start gap-3 shadow-sm`;
+                    circle.className = `w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5`;
+                    circle.innerHTML = '✓';
+                } else if (buttonOptNum === optNum && !isCorrect) {
+                    btn.className = `w-full text-left p-4 rounded-2xl border-2 border-rose-500 bg-rose-50/80 font-prompt text-sm md:text-base text-rose-900 flex items-start gap-3 shadow-sm`;
+                    circle.className = `w-7 h-7 rounded-full bg-rose-500 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5`;
+                    circle.innerHTML = '✕';
+                } else {
+                    btn.className = `w-full text-left p-4 rounded-2xl border-2 border-slate-100 bg-slate-50/50 opacity-60 font-prompt text-sm text-slate-500 flex items-start gap-3`;
+                }
+            });
+
+            if (isCorrect) {
+                playSound('correct');
+                currentScore++;
+                document.getElementById('currentScore').textContent = currentScore;
+            } else {
+                playSound('incorrect');
+            }
+
+            if (quizMode === 'practice') {
+                const expCard = document.getElementById('explanationCard');
+                const expTitle = document.getElementById('explanationTitle');
+                const expText = document.getElementById('explanationText');
+                const expIcon = document.getElementById('explanationIcon');
+
+                expCard.classList.remove('hidden');
+
+                const specificExp = q.hint;
+                
+                if (isCorrect) {
+                    expCard.className = "p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 mt-4";
+                    expIcon.className = "mt-0.5 p-1 rounded-lg bg-emerald-200 text-emerald-700";
+                    expIcon.innerHTML = "✓";
+                    expTitle.textContent = "ถูกต้องแม่นยำ!";
+                    expText.textContent = specificExp;
+                } else {
+                    expCard.className = "p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 mt-4";
+                    expIcon.className = "mt-0.5 p-1 rounded-lg bg-rose-200 text-rose-700";
+                    expIcon.innerHTML = "💡";
+                    expTitle.textContent = `จุดที่มักสับสน (${q.tag_misconception}):`;
+                    expText.textContent = specificExp;
+                }
+            }
+
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function autoTimeoutAnswer() {
+            playSound('incorrect');
+            selectedAnswers[currentQuestionIndex] = {
+                userChoice: null,
+                isCorrect: false
+            };
+
+            const q = activeQuizData[currentQuestionIndex];
+            const optionsContainer = document.getElementById('optionsContainer');
+            const buttons = optionsContainer.querySelectorAll('button');
+
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx + 1 === q.answer) {
+                    btn.className = `w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50/80 font-prompt text-sm text-emerald-900 flex items-start gap-3`;
+                } else {
+                    btn.className = `w-full text-left p-4 rounded-2xl border-2 border-slate-100 bg-slate-50/50 opacity-50 font-prompt text-sm text-slate-400 flex items-start gap-3`;
+                }
+            });
+
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            playSound('click');
+            currentQuestionIndex++;
+            if (currentQuestionIndex < activeQuizData.length) {
+                renderQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            playSound('complete');
+            document.getElementById('quizScreen').classList.add('hidden');
+
+            if (isExtraRound) {
+                finishExtraQuiz();
+                return;
+            }
+
+            document.getElementById('resultScreen').classList.remove('hidden');
+
+            const total = activeQuizData.length;
+            document.getElementById('statScoreText').textContent = currentScore;
+            document.getElementById('statTotalText').textContent = total;
+
+            const pct = total > 0 ? Math.round((currentScore / total) * 100) : 0;
+            document.getElementById('statAccuracyText').textContent = pct;
+
+            let correctCount = 0;
+            let incorrectCount = 0;
+            let skippedCount = 0;
+
+            selectedAnswers.forEach(ans => {
+                if (!ans || ans.userChoice === null) {
+                    skippedCount++;
+                } else if (ans.isCorrect) {
+                    correctCount++;
+                } else {
+                    incorrectCount++;
+                }
+            });
+
+            document.getElementById('statCorrectCount').textContent = correctCount;
+            document.getElementById('statIncorrectCount').textContent = incorrectCount;
+            document.getElementById('statSkippedCount').textContent = skippedCount;
+
+            if (pct >= 70 && typeof confetti === 'function') {
+                confetti({
+                    particleCount: 120,
+                    spread: 80,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            buildReviewList();
+        }
+
+        function finishExtraQuiz() {
+            document.getElementById('extraResultScreen').classList.remove('hidden');
+            document.getElementById('extraFinalScore').textContent = currentScore;
+            document.getElementById('extraFinalTotal').textContent = activeQuizData.length;
+        }
+
+        function toggleReviewMode() {
+            playSound('click');
+            const reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.classList.toggle('hidden');
+        }
+
+        function buildReviewList() {
+            const reviewList = document.getElementById('reviewList');
+            reviewList.innerHTML = '';
+
+            activeQuizData.forEach((q, idx) => {
+                const userAns = selectedAnswers[idx];
+                const isCorrect = userAns ? userAns.isCorrect : false;
+                const userChoiceNum = userAns ? userAns.userChoice : null;
+
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-2xl border ${isCorrect ? 'border-emerald-200 bg-emerald-50/40' : 'border-rose-200 bg-rose-50/40'} text-sm space-y-2`;
+
+                let userChoiceText = userChoiceNum ? q.options[userChoiceNum - 1] : 'ไม่ได้ตอบ (หมดเวลา)';
+                let correctChoiceText = q.options[q.answer - 1];
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between font-prompt font-semibold">
+                        <span class="${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">
+                            ข้อ ${idx + 1}. ${isCorrect ? '✓ ถูกต้อง' : '✕ ผิด'}
+                        </span>
+                        <span class="text-xs text-slate-400 bg-white px-2 py-0.5 rounded border">ระดับ ${q.tag_skill}</span>
+                    </div>
+                    <div class="font-medium text-slate-800">${q.title}</div>
+                    <div class="text-xs space-y-1 pt-1">
+                        <div class="${isCorrect ? 'text-emerald-800' : 'text-rose-800'}">
+                            <b>คำตอบของคุณ:</b> ${userChoiceText}
+                        </div>
+                        ${!isCorrect ? `<div class="text-emerald-800"><b>คำตอบที่ถูกต้อง:</b> ${correctChoiceText}</div>` : ''}
+                    </div>
+                    <div class="text-xs text-slate-600 bg-white/80 p-2.5 rounded-xl border border-slate-200/80 mt-2">
+                        💡 <b>คำอธิบาย:</b> ${q.hint}
+                    </div>
+                `;
+
+                reviewList.appendChild(card);
+            });
+        }
+
+        async function generateNewQuizWithAI() {
+            playSound('click');
+            showLoadingOverlay("🤖 Gemini AI กำลังวิเคราะห์และสร้างแบบทดสอบชุดใหม่ให้คุณ...");
+
+            const topicName = "วิทยาศาสตร์ประยุกต์เตรียมสอบเข้า ม.1 (O-NET/TEDET/สอบแข่งขัน)";
+
+            const promptText = `คุณคือผู้เชี่ยวชาญข้อสอบวิทยาศาสตร์ระดับแข่งขัน (O-NET / TEDET / สอบเข้า ม.1)
+จงสร้างแบบทดสอบตัวเลือก 4 ตัวเลือก เรื่อง "${topicName}" จำนวน 10 ข้อ
+โดยมีเงื่อนไขดังนี้:
+1. โจทย์ต้องเน้นการประยุกต์ใช้และการวิเคราะห์เชิงวิทยาศาสตร์
+2. มีระดับความยาก L3 - L4 (การวิเคราะห์และแก้ปัญหา)
+3. ส่งคืนผลลัพธ์เป็น JSON Array เท่านั้น ตามรูปแบบโครงสร้างนี้:
+[
+  {
+    "id": 101,
+    "title": "คำถามข้อที่ 1...",
+    "options": ["1. ตัวเลือก 1", "2. ตัวเลือก 2", "3. ตัวเลือก 3", "4. ตัวเลือก 4"],
+    "answer": 1,
+    "hint": "คำใบ้สะกิดความคิดและคำอธิบาย...",
+    "tag_skill": "L3",
+    "tag_content": "วิทยาศาสตร์ประยุกต์",
+    "tag_misconception": "คำอธิบายข้อสับสน"
+  }
+]`;
+
+            try {
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: promptText }] }],
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "ARRAY",
+                            items: {
+                                type: "OBJECT",
+                                properties: {
+                                    id: { type: "INTEGER" },
+                                    title: { type: "STRING" },
+                                    options: { 
+                                        type: "ARRAY", 
+                                        items: { type: "STRING" } 
+                                    },
+                                    answer: { type: "INTEGER" },
+                                    hint: { type: "STRING" },
+                                    tag_skill: { type: "STRING" },
+                                    tag_content: { type: "STRING" },
+                                    tag_misconception: { type: "STRING" }
+                                },
+                                required: ["id", "title", "options", "answer", "hint", "tag_skill", "tag_content", "tag_misconception"]
+                            }
+                        }
+                    }
+                };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error("API call failed");
+
+                const result = await response.json();
+                const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (!jsonText) throw new Error("Empty AI response");
+
+                const newQuestions = JSON.parse(jsonText);
+
+                if (Array.isArray(newQuestions) && newQuestions.length > 0) {
+                    activeQuizData = newQuestions;
+                    isExtraRound = true;
+
+                    hideLoadingOverlay();
+                    beginQuizSession();
+                    showToast("✨ AI สร้างข้อสอบชุดใหม่เรียบร้อยแล้ว! เริ่มทำได้ทันที");
+                } else {
+                    throw new Error("Invalid structure");
+                }
+
+            } catch (err) {
+                console.error("AI Generation failed:", err);
+                hideLoadingOverlay();
+                showToast("⚠️ ระบบ AI ขัดข้องชั่วคราว กำลังเปิดโหมดทบทวนให้แทน");
+            }
+        }
+
+        function showLoadingOverlay(message) {
+            let overlay = document.getElementById('aiLoadingOverlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'aiLoadingOverlay';
+                overlay.className = 'fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex flex-col items-center justify-center p-6 text-white text-center';
+                document.body.appendChild(overlay);
+            }
+            overlay.innerHTML = `
+                <div class="w-16 h-16 border-4 border-brand-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <h3 class="font-prompt font-bold text-xl">${message}</h3>
+                <p class="text-xs text-slate-300 mt-2">กำลังเรียบเรียงโจทย์ประยุกต์และเฉลยความเข้าใจคลาดเคลื่อน...</p>
+            `;
+            overlay.classList.remove('hidden');
+        }
+
+        function hideLoadingOverlay() {
+            const overlay = document.getElementById('aiLoadingOverlay');
+            if (overlay) overlay.classList.add('hidden');
+        }
+
+        function openPerformanceAnalysisModal() {
+            playSound('click');
+            showModal("📊 วิเคราะห์ประสิทธิภาพเชิงลึก", `
+                <div class="space-y-3 text-sm text-slate-700">
+                    <p><b>จุดแข็งที่เด่นชัด:</b> มีทักษะการวิเคราะห์กระบวนการทางชีววิทยา และระบบหมุนเวียนสารในสิ่งมีชีวิตได้ดี</p>
+                    <p><b>จุดที่ควรปรับปรุง:</b> ทบทวนคำนวณการละลาย, แรงและโมเมนต์, และหลักการคำนวณวงจรไฟฟ้าอย่างง่าย</p>
+                    <p class="p-3 bg-brand-50 text-brand-900 rounded-xl text-xs">💡 <b>คำแนะนำ:</b> ทำโหมดทบทวนแบบเจาะลึกและฝึกโหมดจับเวลาเพื่อเพิ่มความแม่นยำ</p>
+                </div>
+            `);
+        }
+
+        function openFlashcardModal() {
+            playSound('click');
+            showModal("🎴 แฟลชการ์ดทบทวนความรู้", `
+                <div class="space-y-3">
+                    <div class="p-4 bg-amber-50 border border-amber-200 rounded-2xl">
+                        <span class="text-xs font-bold text-amber-700 block uppercase">การ์ดที่ 1: พลาสโมไลซิส</span>
+                        <p class="text-sm font-semibold text-slate-800 mt-1">เกิดเมื่อแช่เซลล์ในสารละลายอะไร?</p>
+                        <p class="text-xs text-slate-600 mt-2">สารละลาย Hypertonic (ความเข้มข้นสูงกว่าภายในเซลล์) ทำให้น้ำออสโมซิสออกจากเซลล์ เยื่อหุ้มเซลล์เหี่ยวร่น</p>
+                    </div>
+                    <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-2xl">
+                        <span class="text-xs font-bold text-indigo-700 block uppercase">การ์ดที่ 2: โมเมนต์ของแรง</span>
+                        <p class="text-sm font-semibold text-slate-800 mt-1">สูตรการคำนวณสมดุลคาน?</p>
+                        <p class="text-xs text-slate-600 mt-2">โมเมนต์ทวน = โมเมนต์ตาม (M = F × L โดย L คือระยะทางแนวตั้งฉากจากจุดหมุนถึงแนวแรง)</p>
+                    </div>
+                </div>
+            `);
+        }
+
+        function openStudyGuideModal() {
+            playSound('click');
+            showModal("📖 คู่มือเตรียมสอบสรุปเข้ม", `
+                <div class="space-y-3 text-xs md:text-sm text-slate-700 max-h-[60vh] overflow-y-auto pr-1">
+                    <div class="p-3 bg-slate-100 rounded-xl">
+                        <h5 class="font-bold text-slate-900">1. การลำเลียงสารและเซลล์</h5>
+                        <p class="mt-1">Xylem ลำเลียงน้ำ/แร่ธาตุขึ้นบน | Phloem ลำเลียงน้ำตาลทุกทิศทาง | Hypertonic เซลล์เหี่ยว | Hypotonic เซลล์เต่ง/แตก</p>
+                    </div>
+                    <div class="p-3 bg-slate-100 rounded-xl">
+                        <h5 class="font-bold text-slate-900">2. แรงและการเคลื่อนที่</h5>
+                        <p class="mt-1">แรงพยุง F_b = น้ำหนักวัตถุที่หายไปในของเหลว | กฎของโอห์ม V = IR (ขนาน V เท่า, อนุกรม I เท่า)</p>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showModal(title, htmlContent) {
+            const existing = document.getElementById('customModal');
+            if (existing) existing.remove();
+
+            const modal = document.createElement('div');
+            modal.id = 'customModal';
+            modal.className = 'fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in';
+            modal.innerHTML = `
+                <div class="glass-card rounded-3xl p-6 shadow-xl border border-white max-w-md w-full space-y-4">
+                    <div class="flex justify-between items-center border-b pb-3">
+                        <h3 class="font-prompt font-bold text-base md:text-lg text-slate-900">${title}</h3>
+                        <button onclick="document.getElementById('customModal').remove()" class="text-slate-400 hover:text-slate-600 text-xl font-bold p-1">&times;</button>
+                    </div>
+                    <div>${htmlContent}</div>
+                    <div class="flex justify-end pt-2">
+                        <button onclick="document.getElementById('customModal').remove()" class="px-5 py-2.5 bg-brand-600 text-white font-prompt font-semibold text-xs rounded-xl hover:bg-brand-700 transition">
+                            ปิดหน้าต่าง
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function showToast(message) {
+            const existing = document.getElementById('appToast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'appToast';
+            toast.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-sm w-[90%] bg-slate-900 text-white text-xs md:text-sm font-prompt px-5 py-3 rounded-2xl shadow-xl text-center transition-opacity duration-300';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function restartExtraQuiz() {
+            playSound('click');
+            startExtraQuiz();
+        }
+
+        function resetApp() {
+            playSound('click');
+            clearInterval(timerInterval);
+            const quizScreen = document.getElementById('quizScreen');
+            const resultScreen = document.getElementById('resultScreen');
+            const extraResultScreen = document.getElementById('extraResultScreen');
+            const reviewContainer = document.getElementById('reviewContainer');
+            const startScreen = document.getElementById('startScreen');
+
+            if (quizScreen) quizScreen.classList.add('hidden');
+            if (resultScreen) resultScreen.classList.add('hidden');
+            if (extraResultScreen) extraResultScreen.classList.add('hidden');
+            if (reviewContainer) reviewContainer.classList.add('hidden');
+            if (startScreen) startScreen.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
