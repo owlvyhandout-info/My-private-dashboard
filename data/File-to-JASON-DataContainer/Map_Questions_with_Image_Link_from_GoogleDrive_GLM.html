@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ใส่ลิงก์รูปโจทย์ ทีละข้อ (v7)</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#1f2937;--muted:#6b7280;--line:#e5e7eb;--brand:#2563eb;--brand2:#1e40af;--ok:#059669;--warn:#b45309;--bad:#dc2626}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-size:15px;font-family:"Segoe UI","Noto Sans Thai","Sarabun",system-ui,sans-serif}
+header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:14px 20px}
+header h1{margin:0;font-size:1.15rem}
+header p{margin:4px 0 0;font-size:.83rem;opacity:.92}
+main{max-width:920px;margin:16px auto;padding:0 12px;display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card h2{margin:0 0 10px;font-size:1.02rem}
+.card.dim{opacity:.55}
+.hint{color:var(--muted);font-size:.85rem;margin:6px 0}
+textarea{width:100%;min-height:110px;font-family:ui-monospace,Consolas,monospace;font-size:.83rem;border:1px solid var(--line);border-radius:8px;padding:10px;resize:vertical}
+input[type=text]{border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:.95rem}
+input[type=number]{border:1px solid var(--line);border-radius:8px;padding:6px;width:76px}
+button{border:0;border-radius:8px;padding:9px 14px;font-size:.88rem;cursor:pointer;background:var(--brand);color:#fff}
+button:hover{filter:brightness(1.08)}
+button:disabled{opacity:.4;cursor:not-allowed;filter:none}
+button.ghost{background:#eef2ff;color:var(--brand)}
+button.danger{background:#fee2e2;color:var(--bad)}
+button.big{padding:12px 22px;font-size:1.02rem;font-weight:700}
+button.strat{background:#fff;border:2px solid var(--brand);color:var(--brand2);font-weight:700}
+button.strat:hover{background:#eef2ff}
+button.strat.sel{background:var(--brand);color:#fff}
+.rowbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.status{margin-top:12px;padding:11px 13px;border-radius:8px;font-size:.9rem;white-space:pre-wrap;line-height:1.55;background:#eef2ff;color:#3730a3}
+.status.ok{background:#d1fae5;color:#065f46}
+.status.err{background:#fee2e2;color:#991b1b}
+.status.warn{background:#fef3c7;color:#92400e}
+.hidden{display:none}
+#report{background:#0f172a;color:#e2e8f0;font-family:ui-monospace,Consolas,monospace;font-size:.78rem;padding:12px;border-radius:8px;white-space:pre-wrap;line-height:1.5;margin-top:10px}
+.stats{display:flex;gap:18px;flex-wrap:wrap;font-size:.9rem}
+.stats b{font-size:1.15rem}
+.lockmsg{padding:20px;text-align:center;color:var(--muted);background:#f8fafc;border:1px dashed var(--line);border-radius:8px}
+.stepper{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.bigcount{font-size:1.3rem;font-weight:800;color:var(--brand2)}
+.spacer{flex:1}
+.bar{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-top:10px}
+.bar>div{height:100%;background:linear-gradient(90deg,#34d399,#059669);width:0%;transition:.3s}
+.qhead{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.chip{background:#e0e7ff;color:#3730a3;border-radius:99px;padding:3px 10px;font-size:.74rem}
+.qtitle{font-size:1.15rem;font-weight:700;line-height:1.7;white-space:pre-wrap;margin:6px 0 14px}
+.d-opts{margin:0 0 14px;padding-left:26px}
+.d-opts li{margin:8px 0;line-height:1.6}
+.d-opts li.correct{color:var(--ok);font-weight:700}
+.d-opts li.correct .mark{background:#d1fae5;border-radius:99px;padding:2px 9px;font-size:.72rem;margin-left:8px}
+.d-hint{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 12px;margin-bottom:14px;line-height:1.6;font-size:.9rem}
+.imgbox{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:14px}
+.imgbox>label{font-weight:700;display:block;margin-bottom:8px}
+#imgInput{width:100%;padding:12px;font-size:1rem}
+#finalLink{font-size:.73rem;color:var(--muted);word-break:break-all;margin-top:6px}
+#previewImg{width:100%;max-width:420px;max-height:260px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fff;display:none;cursor:pointer;margin-top:12px}
+#prevStatus{font-size:.87rem;margin-top:6px}
+#prevStatus.ok{color:var(--ok)}
+#prevStatus.bad{color:var(--bad)}
+#prevStatus.none{color:var(--muted)}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;padding:10px 18px;border-radius:99px;font-size:.85rem;opacity:0;transition:.25s;pointer-events:none;z-index:9}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<header>
+  <h1>📷 ใส่ลิงก์รูปโจทย์ ทีละข้อ <span style="font-size:.75rem;background:#ffffff33;padding:2px 8px;border-radius:99px">v7 — เลือกวิธีอ่านเองได้ เห็นตัวเลขก่อนใช้</span></h1>
+  <p>โหลดไฟล์ → โปรแกรมสแกนทุกก้อนข้อมูลและบอกจำนวนจริงบนปุ่ม → กดปุ่มที่จำนวนถูกต้อง → ใส่ลิงก์รูปทีละข้อ → ดาวน์โหลด</p>
+</header>
+<main>
+
+<section class="card">
+  <h2>ขั้นที่ 1️⃣ ใส่ข้อมูลโจทย์</h2>
+  <div class="grid2">
+    <div>
+      <input type="file" id="fileInput" accept=".json,.txt">
+      <p class="hint">หรือวางข้อความ JSON ในช่องขวา แล้วกดปุ่มใหญ่ด้านล่าง</p>
+      <label class="hint" style="display:block">
+        <input type="checkbox" id="appendChk"> ➕ เพิ่มเข้าชุดเดิม (ไม่ติ๊ก = แทนที่ทั้งหมด)
+      </label>
+      <button id="btnSample" class="ghost">🧪 ลองตัวอย่างทดลอง</button>
+    </div>
+    <div>
+      <textarea id="jsonText" placeholder='วาง JSON โจทย์ทั้งหมดที่นี่&#10;โครงสร้างแบบไหนก็ได้ โปรแกรมจะสแกนหาโจทย์ให้เอง'></textarea>
+    </div>
+  </div>
+  <div class="rowbtns">
+    <button id="btnLoad" class="big">📥 โหลดข้อมูล</button>
+    <button id="btnReport" class="ghost">📋 คัดลอกรายงานส่งให้ผู้ช่วย (ถ้าจำนวนไม่ตรง)</button>
+  </div>
+  <div id="stratBox" class="rowbtns hidden"></div>
+  <div id="report" class="hidden"></div>
+  <div id="status" class="status">👈 เริ่มจากเลือกไฟล์ หรือวางข้อความ แล้วกด "📥 โหลดข้อมูล"</div>
+</section>
+
+<section class="card dim" id="step2">
+  <h2>ขั้นที่ 2️⃣ ใส่ลิงก์รูป — ทีละข้อ</h2>
+  <div id="lockMsg" class="lockmsg">🔒 ยังไม่มีข้อมูล — โหลดข้อมูลในขั้นที่ 1 ก่อน</div>
+  <div id="quizArea" class="hidden">
+    <div class="stepper">
+      <button id="btnPrev" class="ghost">◀ ก่อนหน้า</button>
+      <div class="bigcount">ข้อที่ <span id="counter">–</span></div>
+      <button id="btnNext" class="ghost">ถัดไป ▶</button>
+      <span class="spacer"></span>
+      <label style="font-size:.85rem;color:var(--muted)">ไปข้อที่ <input type="number" id="jump" min="1"></label>
+      <button id="btnGotoMissing" class="ghost">⏭ ข้อที่ยังไม่มีรูป</button>
+    </div>
+    <div class="bar"><div id="barFill"></div></div>
+    <p class="hint" id="barText"></p>
+    <div id="qcard"></div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>ขั้นที่ 3️⃣ ดาวน์โหลดไฟล์ JSON ใหม่</h2>
+  <div class="stats">
+    <div>โจทย์ <b id="statTotal">0</b> ข้อ</div>
+    <div style="color:var(--ok)">มีรูป <b id="statImg">0</b> ข้อ</div>
+    <div style="color:var(--bad)">ยังไม่มีรูป <b id="statMiss">0</b> ข้อ</div>
+  </div>
+  <div class="rowbtns">
+    <button id="btnDownload" class="big">⬇ ดาวน์โหลด questions_with_images.json</button>
+    <button id="btnCopy" class="ghost">📋 คัดลอก JSON</button>
+    <button id="btnPreview" class="ghost">ดูตัวอย่าง JSON</button>
+    <label style="font-size:.85rem;color:var(--muted)">รูปแบบลิงก์:
+      <select id="styleSel">
+        <option value="lh3">lh3.googleusercontent.com/d/… (แนะนำ)</option>
+        <option value="thumb">drive.google.com/thumbnail?… (สำรอง)</option>
+      </select>
+    </label>
+    <label style="font-size:.85rem;color:var(--muted)">
+      <input type="checkbox" id="omitEmpty"> ตัดฟิลด์ image ของข้อที่ไม่มีรูป
+    </label>
+  </div>
+  <textarea id="preview" class="hidden" style="margin-top:10px;min-height:200px"></textarea>
+  <details class="hint">
+    <summary>รูปไม่ขึ้นในเว็บแอป?</summary>
+    ไฟล์ใน Drive ต้องแชร์เป็น <b>"ทุกคนที่มีลิงก์"</b> หรือเปลี่ยนรูปแบบลิงก์เป็น thumbnail แล้วดาวน์โหลดใหม่
+  </details>
+</section>
+
+</main>
+<div id="toast"></div>
+
+<script>
+"use strict";
+var $=function(id){return document.getElementById(id);};
+var KEY="qimg_tool_v7";
+var TITLE_KEYS=["title","question","question_text","โจทย์","คำถาม","stem","titel"];
+var OPT_KEYS=["options","choices","ตัวเลือก","choice","alternatives"];
+var ANS_KEYS=["answer","เฉลย","correct","correct_answer","ans","คำตอบ"];
+var HINT_KEYS=["hint","คำใบ้","explanation","คำอธิบาย","เฉลยละเอียด"];
+var questions=[],cur=0,strats=null;
+
+var store=(function(){try{var t="__t__";localStorage.setItem(t,"1");localStorage.removeItem(t);return localStorage;}
+catch(e){var mem={};return{getItem:function(k){return k in mem?mem[k]:null;},setItem:function(k,v){mem[k]=String(v);},removeItem:function(k){delete mem[k];}};}})();
+var style=store.getItem(KEY+"_style")||"lh3";
+ $("styleSel").value=style;
+
+var flashTimer;
+function flash(m){var t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(flashTimer);flashTimer=setTimeout(function(){t.classList.remove("show");},2600);}
+function showStatus(m,type){var el=$("status");el.className="status "+(type||"");el.textContent=m;}
+
+/* ---------- ลิงก์ Google Drive ---------- */
+function driveToDirect(url){
+  if(!url)return"";
+  url=String(url).trim();
+  if(url.indexOf("drive.google.com")>=0||url.indexOf("docs.google.com")>=0){
+    var m=url.match(/(?:\/file\/d\/|\/d\/|id=)([A-Za-z0-9_-]{20,})/);
+    if(m)return style==="thumb"
+      ?"https://drive.google.com/thumbnail?id="+m[1]+"&sz=w1200"
+      :"https://lh3.googleusercontent.com/d/"+m[1];
+  }
+  return url;
+}
+function hasImg(q){return!!driveToDirect(q.image);}
+
+/* ---------- ตัวช่วยอ่านฟิลด์หลายชื่อ ---------- */
+function pick(o,keys){
+  for(var i=0;i<keys.length;i++){var k=keys[i];
+    if(o&&o[k]!==undefined&&o[k]!==null&&String(o[k]).trim()!=="")return o[k];}
+  return undefined;
+}
+function stripNum(s){return String(s).replace(/^\s*\d+[\.\)]\s*/,"").trim();}
+function optsOf(o){
+  var v=pick(o,OPT_KEYS);
+  if(Array.isArray(v))return v.map(String);
+  if(v&&typeof v==="object"){
+    return Object.keys(v).sort(function(a,b){return(parseInt(a,10)||0)-(parseInt(b,10)||0);}).map(function(k){return String(v[k]);});
+  }
+  return[];
+}
+function ansIndexOf(o){
+  var a=pick(o,ANS_KEYS),opts=optsOf(o);
+  if(typeof a==="number")return a-1;
+  if(typeof a==="string"){
+    var s=a.trim();
+    if(/^\d+$/.test(s))return parseInt(s,10)-1;
+    for(var i=0;i<opts.length;i++)if(stripNum(opts[i])===stripNum(s))return i;
+  }
+  return-1;
+}
+
+/* ---------- สแกนทุกอ็อบเจ็กต์ในไฟล์ (ลึกทุกชั้น) ---------- */
+function collectAllObjects(root){
+  var seen=new Set(),out=[];
+  (function walk(node,depth){
+    if(!node||typeof node!=="object"||depth>12)return;
+    if(Array.isArray(node)){node.forEach(function(n){walk(n,depth+1);});return;}
+    if(seen.has(node))return;
+    seen.add(node);out.push(node);
+    Object.keys(node).forEach(function(k){walk(node[k],depth+1);});
+  })(root,0);
+  return out;
+}
+
+/* ---------- สแกนบล็อก { } แบบดิบ (เมื่อ JSON.parse ไม่ผ่านเลย) ---------- */
+function rawScanObjects(text){
+  var out=[],depth=0,start=-1,inStr=false,esc=false,i,ch;
+  for(i=0;i<text.length;i++){
+    ch=text[i];
+    if(inStr){if(esc){esc=false;}else if(ch==="\\"){esc=true;}else if(ch==='"'){inStr=false;}continue;}
+    if(ch==='"'){inStr=true;continue;}
+    if(ch==="{"){if(depth===0)start=i;depth++;}
+    else if(ch==="}"){if(depth>0){depth--;if(depth===0&&start>=0){out.push(text.slice(start,i+1));start=-1;}}}
+  }
+  return out.map(function(s){
+    try{return JSON.parse(s.replace(/,\s*([}\]])/g,"$1"));}
+    catch(e){return null;}
+  }).filter(function(x){return x!==null;});
+}
+
+/* ---------- อ่าน JSON แบบยืดหยุ่น ---------- */
+function parseSmart(raw){
+  var text=String(raw==null?"":raw).replace(/^\uFEFF/,"").trim();
+  if(!text)throw new Error("ยังไม่มีข้อความ — วาง JSON แล้วกดปุ่ม 📥 โหลดข้อมูล");
+  if(/<(!doctype|html|body|script)/i.test(text))
+    throw new Error("ข้อความที่วางเป็นโค้ด HTML ไม่ใช่ไฟล์ JSON ของโจทย์ (ไฟล์ HTML ต้องดับเบิลคลิกเปิดในเบราว์เซอร์)");
+  text=text.replace(/^```[a-zA-Z]*\s*/,"").replace(/```\s*$/,"").trim();
+  var err="";
+  try{return{root:JSON.parse(text),how:"JSON.parse ตรง ๆ"};}catch(e){err=e.message;}
+  var f=text.search(/[\[{]/),l=Math.max(text.lastIndexOf("]"),text.lastIndexOf("}"));
+  if(f>=0&&l>f){try{return{root:JSON.parse(text.slice(f,l+1)),how:"ตัดข้อความส่วนเกินรอบนอก"};}catch(e){}}
+  var t=text.replace(/,\s*([}\]])/g,"$1");
+  var tries=[["เติม { }","{"+t+"}"],["เติม }",t+"}"],["เติม ]",t+"]"],["รวมหลายอ็อบเจ็กต์เป็นชุด","["+t.replace(/\}\s*\{/g,"},{")+"]"]];
+  for(var i=0;i<tries.length;i++){
+    try{return{root:JSON.parse(tries[i][1]),how:"ซ่อมรูปแบบอัตโนมัติ ("+tries[i][0]+")"};}catch(e){}
+  }
+  var blocks=rawScanObjects(text);
+  if(blocks.length)return{root:blocks,how:"สแกนบล็อก { } แบบดิบ ("+blocks.length+" บล็อก)"};
+  throw new Error("อ่าน JSON ไม่สำเร็จ: "+err);
+}
+
+/* ---------- สร้างโจทย์จากอ็อบเจ็กต์ ---------- */
+function buildQ(o){
+  var q=Object.assign({},o);
+  if((q.image===undefined||q.image===null||q.image==="")&&q.image_link)q.image=String(q.image_link);
+  var t=pick(o,TITLE_KEYS);
+  q._t=t!==undefined?String(t):"(ไม่พบข้อความโจทย์)";
+  q._opts=optsOf(o);
+  q._ans=ansIndexOf(o);
+  q._hint=pick(o,HINT_KEYS);
+  return q;
+}
+function buildQuestions(list){
+  var maxNum=0;
+  list.forEach(function(o){var n=parseInt(o.id,10);if(!isNaN(n)&&n>maxNum)maxNum=n;});
+  var next=maxNum+1,used=new Set(),missing=0,dup=0;
+  var out=list.map(function(o){
+    var q=buildQ(o);
+    var raw=(q.id===undefined||q.id===null)?"":String(q.id).trim();
+    if(raw===""){q.id=next++;missing++;}
+    else if(used.has(raw)){q.id=next++;dup++;}
+    used.add(String(q.id));
+    return q;
+  });
+  return{list:out,missing:missing,dup:dup};
+}
+
+/* ---------- เลือกวิธีอ่าน ---------- */
+function computeStrategies(root){
+  var objs=collectAllObjects(root);
+  var s1=objs.filter(function(o){return pick(o,TITLE_KEYS)!==undefined;});
+  var s2=objs.filter(function(o){return pick(o,TITLE_KEYS)===undefined&&pick(o,OPT_KEYS)!==undefined&&pick(o,ANS_KEYS)!==undefined;});
+  return{s1:s1,s2:s2,all:objs};
+}
+function renderStrategyBtns(sel){
+  var box=$("stratBox");box.innerHTML="";box.classList.remove("hidden");
+  var defs=[[1,"วิธี 1: มีฟิลด์โจทย์ (title/question/โจทย์)",strats.s1.length],
+            [2,"วิธี 2: มีตัวเลือก+เฉลย",strats.s2.length],
+            [3,"วิธี 3: เอาทุกก้อนในไฟล์",strats.all.length]];
+  defs.forEach(function(d){
+    var b=document.createElement("button");
+    b.className="strat"+(d[0]===sel?" sel":"");
+    b.textContent=d[1]+" → "+d[2]+" ข้อ";
+    b.onclick=function(){applyStrategy(d[0]);};
+    box.appendChild(b);
+  });
+}
+function applyStrategy(k){
+  var list=k===1?strats.s1:(k===2?strats.s2:strats.all);
+  if(!list.length){showStatus("วิธีที่ "+k+" ไม่พบโจทย์ — ลองกดปุ่มวิธีอื่นด้านบน","err");return;}
+  var built=buildQuestions(list);
+  if($("appendChk").checked&&questions.length){
+    questions=questions.concat(built.list);
+    var used=new Set(),next=1;
+    questions.forEach(function(q){var n=parseInt(q.id,10);if(!isNaN(n)&&n>=next)next=n+1;});
+    questions.forEach(function(q){var s=String(q.id);if(used.has(s))q.id=next++;used.add(String(q.id));});
+  }else{
+    questions=built.list;
+  }
+  cur=firstMissing();
+  save();unlock();renderAll();
+  renderStrategyBtns(k);
+  var done=questions.filter(hasImg).length;
+  var msg="✅ ใช้วิธีที่ "+k+" → ได้ "+questions.length+" โจทย์ (มีรูปแล้ว "+done+")";
+  if(built.missing)msg+="\n• ตั้ง id ให้ "+built.missing+" ข้อที่ไม่มี id";
+  if(built.dup)msg+="\n• แก้ id ซ้ำ "+built.dup+" ข้อ";
+  msg+="\n• ตัวอย่าง: "+questions.slice(0,3).map(function(q){return"id "+q.id+" — "+(q._t.length>50?q._t.slice(0,50)+"…":q._t);}).join("\n  ");
+  showStatus(msg,"ok");
+}
+
+function loadData(text,isDemo){
+  try{
+    var p=parseSmart(text);
+    strats=computeStrategies(p.root);
+    var n1=strats.s1.length,n2=strats.s2.length,n3=strats.all.length;
+    var rep="วิธีอ่านไฟล์: "+p.how+"\nอ็อบเจ็กต์ทั้งหมดที่พบในไฟล์: "+n3+" ก้อน\n  • มีฟิลด์โจทย์ (title/question/โจทย์): "+n1+" ก้อน\n  • มีตัวเลือก+เฉลย (ไม่มี title): "+n2+" ก้อน";
+    if(n1===0&&n2===0&&n3===0){
+      $("report").classList.remove("hidden");$("report").textContent=rep;
+      showStatus("❌ ไฟล์ว่างเปล่าหรือไม่มีข้อมูลอ็อบเจ็กต์เลย","err");return;
+    }
+    var pickK=n1>0?1:(n2>0?2:3);
+    applyStrategy(pickK);
+    rep+="\n\nเลือกอัตโนมัติ: วิธีที่ "+pickK+" → "+questions.length+" โจทย์\n(ถ้าจำนวนไม่ตรง กดปุ่มวิธีอื่นด้านบนได้ทันที)";
+    $("report").classList.remove("hidden");
+    $("report").textContent=rep;
+  }catch(e){
+    showStatus("❌ "+e.message,"err");
+  }
+}
+
+/* ---------- อีเวนต์ขั้นที่ 1 ---------- */
+ $("btnLoad").onclick=function(){loadData($("jsonText").value,false);};
+var autoT=null;
+ $("jsonText").addEventListener("paste",function(){clearTimeout(autoT);autoT=setTimeout(function(){loadData($("jsonText").value,false);},150);});
+ $("fileInput").addEventListener("change",function(e){
+  var f=e.target.files[0];if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(){loadData(rd.result,false);};
+  rd.onerror=function(){showStatus("อ่านไฟล์ไม่สำเร็จ","err");};
+  rd.readAsText(f,"utf-8");
+  e.target.value="";
+});
+ $("btnSample").onclick=function(){
+  $("jsonText").value=JSON.stringify([{id:50,domain:"SCI",content:"ความจุความร้อน",
+    tag_content:"water_sand_heat_capacity_comparison",tag_skill:"L2",
+    tag_misconception:"water_heat_capacity_lower_than_sand",
+    title:"พื้นน้ำ (20℃) และพื้นทราย (25℃) ได้รับความร้อนเท่าๆ กันจากดวงอาทิตย์ ข้อใดถูกต้องที่สุด (ipst_p6_2549_91)",
+    options:["1. ความจุความร้อนของพื้นน้ำเท่ากับพื้นทราย","2. ความจุความร้อนของพื้นน้ำมากกว่าพื้นทราย",
+      "3. ความจุความร้อนของพื้นน้ำน้อยกว่าพื้นทราย","4. ไม่มีข้อใดถูกต้อง"],
+    answer:2,
+    hint:"น้ำมีค่าความจุความร้อนสูงกว่าทราย ทำให้อุณหภูมิเพิ่มขึ้นช้ากว่าเมื่อได้รับความร้อนปริมาณเท่ากัน"}],null,2);
+  loadData($("jsonText").value,false);
+};
+ $("btnReport").onclick=function(){
+  var rep=$("report").classList.contains("hidden")?"(ยังไม่มีรายงาน — กดโหลดข้อมูลก่อน)":$("report").textContent;
+  var txt=rep+"\n\n--- 200 ตัวอักษรแรกของข้อความที่วาง ---\n"+String($("jsonText").value).slice(0,200);
+  try{navigator.clipboard.writeText(txt);}catch(e){
+    var ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);
+    ta.select();document.execCommand("copy");ta.remove();
+  }
+  flash("คัดลอกรายงานแล้ว วางส่งในแชตได้เลย");
+};
+
+function save(){store.setItem(KEY,JSON.stringify(questions));}
+function firstMissing(){var i=questions.findIndex(function(q){return!hasImg(q);});return i<0?0:i;}
+function unlock(){
+  $("lockMsg").classList.add("hidden");
+  $("quizArea").classList.remove("hidden");
+  $("step2").classList.remove("dim");
+}
+function restore(){
+  try{var s=store.getItem(KEY);if(s)questions=JSON.parse(s)||[];}catch(e){questions=[];}
+  if(questions.length){
+    cur=firstMissing();unlock();renderAll();
+    var done=questions.filter(hasImg).length;
+    showStatus("มีข้อมูลค้างจากครั้งก่อน: "+questions.length+" โจทย์ (มีรูป "+done+") — โหลดใหม่จะแทนที่ทั้งหมด","warn");
+  }
+}
+
+/* ---------- แสดงผลขั้นที่ 2 ---------- */
+function renderStepper(){
+  if(!questions.length)return;
+  var done=questions.filter(hasImg).length;
+  $("counter").textContent=(cur+1)+" จาก "+questions.length;
+  $("btnPrev").disabled=cur<=0;
+  $("btnNext").disabled=cur>=questions.length-1;
+  $("jump").max=questions.length;
+  var pct=Math.round(done/questions.length*100);
+  $("barFill").style.width=pct+"%";
+  $("barText").textContent="ความคืบหน้า: ใส่รูปแล้ว "+done+" / "+questions.length+" ข้อ ("+pct+"%)"
+    +(done===questions.length?" — 🎉 ครบแล้ว ไปขั้นที่ 3 ได้เลย":"");
+}
+function renderCard(){
+  var c=$("qcard");c.innerHTML="";
+  if(!questions.length)return;
+  var q=questions[cur];
+  try{
+    var head=document.createElement("div");head.className="qhead";
+    [["id",q.id],["โดเมน",q.domain],["เนื้อหา",q.content],["tag_content",q.tag_content],["tag_skill",q.tag_skill]]
+    .forEach(function(p){
+      if(p[1]===undefined||p[1]==="")return;
+      var ch=document.createElement("span");ch.className="chip";
+      ch.textContent=p[0]+": "+p[1];head.appendChild(ch);
+    });
+    var st=document.createElement("span");
+    st.className="chip "+(hasImg(q)?"":"");
+    st.style.background=hasImg(q)?"#d1fae5":"#fef3c7";
+    st.style.color=hasImg(q)?"#065f46":"#92400e";
+    st.textContent=hasImg(q)?"✓ มีรูปแล้ว":"ยังไม่มีรูป";
+    head.appendChild(st);c.appendChild(head);
+
+    var title=document.createElement("div");title.className="qtitle";
+    title.textContent=q._t;c.appendChild(title);
+
+    if(q._opts.length){
+      var ol=document.createElement("ol");ol.className="d-opts";
+      q._opts.forEach(function(opt,i){
+        var li=document.createElement("li");
+        li.textContent=stripNum(opt)||String(opt);
+        if(i===q._ans){
+          li.className="correct";
+          var mk=document.createElement("span");mk.className="mark";
+          mk.textContent="✓ คำตอบที่ถูก";li.appendChild(mk);
+        }
+        ol.appendChild(li);
+      });
+      c.appendChild(ol);
+    }
+    if(q._hint){
+      var h=document.createElement("div");h.className="d-hint";
+      h.textContent="💡 "+q._hint;c.appendChild(h);
+    }
+
+    var box=document.createElement("div");box.className="imgbox";
+    var lb=document.createElement("label");
+    lb.textContent="วางลิงก์รูปของโจทย์ข้อนี้ — กด Enter = บันทึกและไปข้อถัดไป";
+    box.appendChild(lb);
+
+    var inp=document.createElement("input");
+    inp.type="text";inp.id="imgInput";inp.autocomplete="off";
+    inp.placeholder="https://drive.google.com/file/d/XXXXXXXX/view?usp=sharing";
+    inp.value=q.image||"";
+    box.appendChild(inp);
+
+    var fl=document.createElement("div");fl.id="finalLink";box.appendChild(fl);
+
+    var img=document.createElement("img");img.id="previewImg";img.alt="";
+    img.title="คลิกเพื่อเปิดลิงก์จริงในแท็บใหม่";
+    img.onclick=function(){var s=driveToDirect(q.image);if(s)window.open(s,"_blank","noopener");};
+    var ps=document.createElement("div");ps.id="prevStatus";
+    box.appendChild(img);box.appendChild(ps);
+
+    var btns=document.createElement("div");btns.className="rowbtns";
+    var bNext=document.createElement("button");bNext.className="big";
+    bNext.textContent=(cur===questions.length-1)?"✓ ข้อสุดท้ายแล้ว":"บันทึกและไปข้อถัดไป →";
+    bNext.onclick=function(){goNext(true);};
+    var bSkip=document.createElement("button");bSkip.className="ghost";
+    bSkip.textContent="ข้าม (ข้อนี้ไม่มีรูป)";bSkip.onclick=function(){goNext(true);};
+    var bClr=document.createElement("button");bClr.className="danger";
+    bClr.textContent="ล้างรูปข้อนี้";
+    bClr.onclick=function(){q.image="";save();renderCard();renderStepper();updateStats();};
+    btns.appendChild(bNext);btns.appendChild(bSkip);btns.appendChild(bClr);
+    box.appendChild(btns);
+    c.appendChild(box);
+
+    function updatePreview(){
+      var raw=q.image||"",src=driveToDirect(raw);
+      fl.textContent=raw?("ลิงก์ที่จะบันทึก: "+src):"";
+      if(!src){
+        img.style.display="none";ps.className="none";
+        ps.textContent="ยังไม่มีรูปสำหรับข้อนี้ — วางลิงก์ด้านบนเพื่อเพิ่ม";
+      }else{
+        img.style.display="block";img.src=src;
+        ps.className="none";ps.textContent="กำลังโหลดรูป…";
+        img.onload=function(){ps.className="ok";ps.textContent="✓ โหลดรูปได้ — ตรวจว่ารูปตรงกับโจทย์ข้อนี้ก่อนไปข้อถัดไป";};
+        img.onerror=function(){ps.className="bad";img.style.display="none";
+          ps.textContent='✕ โหลดรูปไม่ได้ — ไฟล์ใน Drive ต้องแชร์เป็น "ทุกคนที่มีลิงก์"';};
+      }
+      renderStepper();updateStats();
+    }
+    inp.addEventListener("input",function(){q.image=inp.value.trim();save();updatePreview();});
+    inp.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();goNext(true);}});
+    updatePreview();
+  }catch(e){showStatus("แสดงผลผิดพลาด: "+e.message,"err");}
+}
+function updateStats(){
+  $("statTotal").textContent=questions.length;
+  $("statImg").textContent=questions.filter(hasImg).length;
+  $("statMiss").textContent=questions.filter(function(q){return!hasImg(q);}).length;
+}
+function renderAll(){renderStepper();renderCard();updateStats();}
+function focusInput(){var inp=$("imgInput");if(inp){inp.focus();if(inp.value)inp.select();}}
+
+function goNext(focus){
+  if(!questions.length)return;
+  if(cur<questions.length-1){cur++;renderAll();if(focus)focusInput();}
+  else{
+    var done=questions.filter(hasImg).length;
+    flash(done===questions.length?"🎉 ครบทุกข้อแล้ว! กดดาวน์โหลดได้เลย"
+      :"ถึงข้อสุดท้ายแล้ว (ยังมี "+(questions.length-done)+" ข้อไม่มีรูป)");
+  }
+}
+ $("btnPrev").onclick=function(){if(cur>0){cur--;renderAll();}};
+ $("btnNext").onclick=function(){goNext(false);};
+ $("jump").addEventListener("change",function(e){
+  var n=parseInt(e.target.value,10);
+  if(questions.length&&n>=1&&n<=questions.length){cur=n-1;renderAll();}
+  e.target.value="";
+});
+ $("btnGotoMissing").onclick=function(){
+  if(!questions.length)return;
+  for(var i=1;i<=questions.length;i++){
+    var j=(cur+i)%questions.length;
+    if(!hasImg(questions[j])){cur=j;renderAll();focusInput();flash("ย้ายไปลำดับที่ "+(j+1)+" (ยังไม่มีรูป)");return;}
+  }
+  flash("ครบทุกข้อแล้ว 🎉");
+};
+
+/* ---------- ส่งออก ---------- */
+function buildExport(){
+  var omit=$("omitEmpty").checked;
+  return questions.map(function(q){
+    var img=driveToDirect(q.image);
+    var src={};
+    Object.keys(q).forEach(function(k){
+      if(k.charAt(0)==="_"||k==="image_link"||k==="image")return;
+      src[k]=q[k];
+    });
+    if(omit&&!img)return src;
+    var out={},inserted=false;
+    Object.keys(src).forEach(function(k){
+      out[k]=src[k];
+      if(!inserted&&TITLE_KEYS.indexOf(k)>=0){out.image=img;inserted=true;}
+    });
+    if(!inserted)out.image=img;
+    return out;
+  });
+}
+ $("btnDownload").onclick=function(){
+  try{
+    var blob=new Blob([JSON.stringify(buildExport(),null,2)],{type:"application/json"});
+    var a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);a.download="questions_with_images.json";
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(a.href);},500);
+    flash("ดาวน์โหลดแล้ว");
+  }catch(e){showStatus("ดาวน์โหลดไม่สำเร็จ: "+e.message,"err");}
+};
+ $("btnCopy").onclick=function(){
+  var txt=JSON.stringify(buildExport(),null,2);
+  try{navigator.clipboard.writeText(txt);}catch(e){
+    var ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);
+    ta.select();document.execCommand("copy");ta.remove();
+  }
+  flash("คัดลอก JSON แล้ว");
+};
+ $("btnPreview").onclick=function(){
+  var p=$("preview");p.classList.toggle("hidden");
+  if(!p.classList.contains("hidden"))p.value=JSON.stringify(buildExport(),null,2);
+};
+ $("styleSel").addEventListener("change",function(e){style=e.target.value;store.setItem(KEY+"_style",style);renderCard();});
+
+window.addEventListener("error",function(ev){showStatus("เกิดข้อผิดพลาดในหน้าเว็บ: "+ev.message,"err");});
+try{restore();}catch(e){showStatus("โหลดข้อมูลเดิมไม่สำเร็จ: "+e.message,"err");}
+</script>
+</body>
+</html>
