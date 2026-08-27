@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คลังสคริปต์ Quiz App — ตรวจเนื้อหาซ้ำ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0e121b;
+    --panel:#161c29;
+    --panel2:#1c2333;
+    --line:#2c3547;
+    --line-soft:#232b3c;
+    --gold:#d7a93a;
+    --gold-dim:#8a7133;
+    --cyan:#57d1c9;
+    --stamp:#e4572e;
+    --text:#e9edf5;
+    --text-dim:#93a0ba;
+    --text-faint:#5d6a85;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 500px at 10% -10%, #1a2236 0%, transparent 60%),
+      radial-gradient(900px 400px at 100% 0%, #1c2a2a 0%, transparent 55%),
+      var(--ink);
+    color:var(--text);
+    font-family:'Noto Sans Thai','IBM Plex Mono',sans-serif;
+    min-height:100vh;
+    padding:28px 20px 60px;
+  }
+  .disp{font-family:'Chakra Petch','Noto Sans Thai',sans-serif;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  .wrap{max-width:1040px;margin:0 auto;}
+
+  /* header */
+  header.app-head{
+    display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
+    margin-bottom:22px;flex-wrap:wrap;
+  }
+  .brand{display:flex;gap:14px;align-items:center;}
+  .brand-mark{
+    width:44px;height:44px;border-radius:9px;
+    background:linear-gradient(160deg,var(--gold) 0%, #a97a1f 100%);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 18px -6px rgba(215,169,58,.55);
+    flex-shrink:0;
+  }
+  .brand-mark svg{width:24px;height:24px;stroke:#171208;}
+  h1{font-size:1.35rem;margin:0;font-weight:700;letter-spacing:.2px;}
+  .sub{font-size:.78rem;color:var(--text-dim);margin-top:3px;}
+  .head-actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+  button{font-family:inherit;cursor:pointer;}
+  .btn{
+    border:1px solid var(--line);background:var(--panel2);color:var(--text);
+    padding:9px 14px;border-radius:8px;font-size:.82rem;font-weight:600;
+    transition:.15s border-color, .15s background, .15s transform;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .btn:hover{border-color:var(--gold-dim);transform:translateY(-1px);}
+  .btn.primary{background:linear-gradient(160deg,var(--gold),#b8862a);color:#1a1406;border:none;}
+  .btn.primary:hover{filter:brightness(1.06);}
+  .btn.ghost{background:transparent;border-color:transparent;color:var(--text-faint);padding:9px 10px;}
+  .btn.ghost:hover{color:var(--text-dim);border-color:var(--line);}
+  .btn.danger{background:transparent;border-color:var(--line);color:#e08a75;}
+  .btn.danger:hover{border-color:var(--stamp);color:var(--stamp);}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+
+  /* save status */
+  .save-status{font-size:.72rem;color:var(--text-faint);display:flex;align-items:center;gap:6px;margin-top:8px;justify-content:flex-end;}
+  .save-dot{width:6px;height:6px;border-radius:50%;background:var(--text-faint);}
+  .save-status.saving .save-dot{background:var(--cyan);animation:pulse 1s infinite;}
+  .save-status.saved .save-dot{background:#6fc98a;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+  /* tab strip */
+  .tabstrip-row{display:flex;align-items:center;gap:6px;margin-top:10px;}
+  .tabstrip{
+    display:flex;gap:4px;overflow-x:auto;scroll-behavior:smooth;
+    padding:4px 2px 0;flex:1;min-width:0;
+    scrollbar-width:none;
+  }
+  .tabstrip::-webkit-scrollbar{display:none;}
+  .tab{
+    position:relative;flex-shrink:0;
+    background:var(--panel);border:1px solid var(--line);border-bottom:none;
+    color:var(--text-dim);
+    padding:10px 20px 12px 16px;
+    font-size:.82rem;font-weight:600;white-space:nowrap;
+    clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 100%, 0 100%);
+    max-width:220px;overflow:hidden;text-overflow:ellipsis;
+    display:flex;align-items:center;gap:6px;
+  }
+  .tab .n{color:var(--text-faint);font-family:'IBM Plex Mono',monospace;font-size:.7rem;}
+  .tab.active{
+    background:var(--panel2);color:var(--text);border-color:var(--gold-dim);
+    box-shadow:0 -2px 0 var(--gold) inset;
+  }
+  .tab:hover{color:var(--text);}
+  .tab .dupe-stamp{
+    font-family:'IBM Plex Mono',monospace;font-size:.62rem;font-weight:700;
+    color:var(--stamp);border:1px solid var(--stamp);border-radius:4px;
+    padding:1px 4px;transform:rotate(-6deg);letter-spacing:.5px;flex-shrink:0;
+  }
+  .scroll-arrow{
+    flex-shrink:0;width:30px;height:34px;border-radius:8px;
+    border:1px solid var(--line);background:var(--panel2);color:var(--text-dim);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .scroll-arrow[hidden]{display:none;}
+  .scroll-arrow:hover{color:var(--text);border-color:var(--gold-dim);}
+  .add-tab-btn{
+    flex-shrink:0;width:34px;height:34px;border-radius:8px;
+    border:1px dashed var(--line);background:transparent;color:var(--text-faint);
+    display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+  }
+  .add-tab-btn:hover{color:var(--gold);border-color:var(--gold-dim);}
+
+  /* dossier panel */
+  .dossier{
+    background:var(--panel2);border:1px solid var(--line);border-radius:0 12px 12px 12px;
+    padding:22px 22px 26px;position:relative;margin-top:-1px;
+  }
+  .punch{position:absolute;top:12px;left:12px;display:flex;gap:6px;}
+  .punch span{width:6px;height:6px;border-radius:50%;background:var(--ink);border:1px solid var(--line);}
+
+  .field-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;margin:26px 0 4px;}
+  @media(max-width:680px){.field-grid{grid-template-columns:1fr;}}
+  label{display:block;font-size:.72rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;}
+  input[type=text], textarea{
+    width:100%;background:var(--ink);border:1px solid var(--line);border-radius:8px;
+    color:var(--text);padding:10px 12px;font-size:.86rem;font-family:'Noto Sans Thai',sans-serif;
+    resize:vertical;
+  }
+  input[type=text]:focus, textarea:focus{outline:none;border-color:var(--gold-dim);}
+  .link-row{display:flex;gap:8px;}
+  .link-row input{flex:1;}
+
+  .hint-box{
+    font-size:.74rem;color:var(--text-dim);background:var(--ink);border:1px solid var(--line-soft);
+    border-radius:8px;padding:10px 12px;margin-top:8px;line-height:1.6;
+  }
+  .hint-box b{color:var(--cyan);}
+
+  .field{margin-top:18px;}
+  textarea.code-input{min-height:120px;font-family:'IBM Plex Mono',monospace;font-size:.78rem;line-height:1.55;}
+  textarea.note-input{min-height:70px;}
+
+  /* stats + duplicate panel */
+  .stats-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  .stat-chip{
+    background:var(--ink);border:1px solid var(--line-soft);border-radius:20px;
+    padding:6px 12px;font-size:.74rem;color:var(--text-dim);display:flex;align-items:center;gap:6px;
+  }
+  .stat-chip b{color:var(--text);}
+  .stat-chip.ok{border-color:#2f4a38;color:#8fd6a4;}
+  .stat-chip.warn{border-color:#523522;color:#e8b477;}
+
+  .dupe-panel{
+    margin-top:14px;border:1px solid var(--stamp);background:#2a1710;border-radius:10px;padding:14px 16px;
+  }
+  .dupe-panel h4{margin:0 0 8px;font-size:.82rem;color:#f1a184;display:flex;align-items:center;gap:8px;}
+  .dupe-item{font-size:.78rem;color:#e9c9bb;padding:6px 0;border-top:1px dashed #4a2a1c;}
+  .dupe-item:first-child{border-top:none;}
+  .dupe-item .tabname{color:var(--stamp);font-weight:700;}
+
+  .code-display-wrap{margin-top:18px;}
+  .code-display-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .code-display-head label{margin-bottom:0;}
+  pre.code-display{
+    background:var(--ink);border:1px solid var(--line-soft);border-radius:10px;
+    padding:14px 16px;max-height:360px;overflow:auto;margin:0;
+    font-family:'IBM Plex Mono',monospace;font-size:.74rem;line-height:1.65;color:#c9d3e6;
+    white-space:pre;
+  }
+  pre.code-display .ln{color:var(--text-faint);display:inline-block;width:34px;user-select:none;}
+  pre.code-display .marker-hit{background:rgba(215,169,58,.16);}
+
+  .panel-footer{display:flex;justify-content:space-between;align-items:center;margin-top:20px;flex-wrap:wrap;gap:10px;}
+  .empty{
+    text-align:center;color:var(--text-faint);padding:60px 20px;font-size:.86rem;
+  }
+
+  #loadOverlay{
+    position:fixed;inset:0;background:var(--ink);display:flex;align-items:center;justify-content:center;
+    flex-direction:column;gap:10px;color:var(--text-dim);font-size:.85rem;z-index:50;
+  }
+  .spin{width:26px;height:26px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--gold);animation:sp 0.8s linear infinite;}
+  @keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div id="loadOverlay"><div class="spin"></div><span>กำลังโหลดข้อมูลแท็บที่บันทึกไว้...</span></div>
+
+<div class="wrap" id="app" style="display:none;">
+
+  <header class="app-head">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 4h16v4H4zM4 10h16v10H4z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <h1 class="disp">คลังสคริปต์ Quiz App</h1>
+        <div class="sub">วางโค้ดหลายเวอร์ชันไว้คนละแท็บ เพื่อเทียบว่าคำถามซ้ำกันหรือไม่</div>
+      </div>
+    </div>
+    <div class="head-actions">
+      <button class="btn ghost" onclick="exportTabs()">⬇ ส่งออก .json</button>
+      <button class="btn ghost" onclick="document.getElementById('importFile').click()">⬆ นำเข้าไฟล์</button>
+      <button class="btn ghost" onclick="importTabsFromUrlPrompt()">🔗 นำเข้าจากลิงก์</button>
+      <button class="btn ghost" id="resetBtn" onclick="handleResetAll()">ล้างข้อมูลทั้งหมด</button>
+      <button class="btn primary" onclick="addTab()">＋ เพิ่มแท็บ</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importTabsFromFile(this.files[0])">
+    </div>
+  </header>
+
+  <div class="tabstrip-row">
+    <button class="scroll-arrow" id="arrowLeft" onclick="scrollTabs(-1)" hidden>‹</button>
+    <div class="tabstrip" id="tabstrip"></div>
+    <button class="scroll-arrow" id="arrowRight" onclick="scrollTabs(1)" hidden>›</button>
+    <button class="add-tab-btn" onclick="addTab()" title="เพิ่มแท็บใหม่">＋</button>
+  </div>
+
+  <div id="dossierHost"></div>
+
+  <div class="save-status" id="saveStatus"><span class="save-dot"></span><span id="saveStatusText">บันทึกในเบราว์เซอร์นี้อัตโนมัติ</span></div>
+</div>
+
+<script>
+const STORAGE_KEY = 'quiz-script-archive:tabs:v1';
+const MARKER = 'let quizTitle';
+
+let tabs = [];
+let activeId = null;
+let saveTimer = null;
+
+function uid(){ return 't' + Math.random().toString(36).slice(2,9); }
+
+function demoTabs(){
+  const codeA = `let quizTitle = "แบบทดสอบวิทย์ ชุด A";
+const rawQuizData = [
+  { id:1, title: "แรงพยุงของของเหลวขึ้นอยู่กับปัจจัยใดเป็นหลัก", options:["ความหนาแน่นของของเหลว","สีของของเหลว"], answer:1 },
+  { id:2, title: "เซลล์พืชที่แช่ในสารละลายไฮเพอร์โทนิกจะเกิดปรากฏการณ์ใด", options:["พลาสโมไลซิส","เซลล์แตก"], answer:1 },
+  { id:3, title: "ไซเล็มทำหน้าที่ลำเลียงสารใดในพืช", options:["น้ำและแร่ธาตุ","น้ำตาล"], answer:1 },
+  { id:4, title: "แสงสีใดหักเหมากที่สุดเมื่อผ่านปริซึม", options:["สีม่วง","สีแดง"], answer:1 }
+];`;
+  const codeB = `let quizTitle = "แบบทดสอบวิทย์ ชุด B (ทบทวน)";
+const rawQuizData = [
+  { id:1, title: "เซลล์พืชที่แช่ในสารละลายไฮเพอร์โทนิกจะเกิดปรากฏการณ์ใด", options:["พลาสโมไลซิส","เซลล์แตก"], answer:1 },
+  { id:2, title: "แสงสีใดหักเหมากที่สุดเมื่อผ่านปริซึม", options:["สีม่วง","สีแดง"], answer:1 },
+  { id:3, title: "ไฟฟ้าในวงจรขนานเมื่อหลอดหนึ่งขาด หลอดที่เหลือจะเป็นอย่างไร", options:["สว่างเท่าเดิม","ดับทั้งหมด"], answer:1 },
+  { id:4, title: "หินอัคนีชนิดใดมีรูพรุนจนลอยน้ำได้", options:["หินพัมมิซ","หินอ่อน"], answer:1 }
+];`;
+  return [
+    { id:uid(), name:'ชุด A · วิทย์ ม.1 (สอบเข้า)', link:'', note:'ตัวอย่างสาธิตการใช้งาน — ลบแท็บนี้แล้ววางโค้ดจริงของคุณแทนได้เลย', code: SAMPLE_HEADER + codeA },
+    { id:uid(), name:'ชุด B · วิทย์ ม.1 (ทบทวน)', link:'', note:'ตัวอย่างนี้มีคำถามซ้ำกับชุด A อยู่ 2 ข้อ ลองดูป้าย "ซ้ำ" บนแท็บด้านบน', code: SAMPLE_HEADER + codeB }
+  ];
+}
+// a short fake boilerplate block, to demonstrate the "start display at marker" behavior
+const SAMPLE_HEADER = `<!DOCTYPE html>
+<html lang="th"><head>
+<meta charset="UTF-8">
+<title>ตัวอย่างไฟล์ quiz</title>
+<script src="https://cdn.tailwindcss.com"><\/script>
+</head><body>
+<script>
+`;
+
+// Storage abstraction: uses Claude's window.storage when running inside claude.ai,
+// falls back to plain browser localStorage when this file is opened standalone
+// (double-clicked, hosted on GitHub Pages, etc). Same file works in both places.
+const HAS_CLAUDE_STORAGE = typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function';
+
+async function storageGet(key){
+  if(HAS_CLAUDE_STORAGE){
+    return await window.storage.get(key, false); // {key,value,shared} or throws/null
+  }
+  const raw = localStorage.getItem(key);
+  if(raw === null) throw new Error('not found');
+  return { key, value: raw, shared:false };
+}
+async function storageSet(key, value){
+  if(HAS_CLAUDE_STORAGE){
+    return await window.storage.set(key, value, false);
+  }
+  localStorage.setItem(key, value);
+  return { key, value, shared:false };
+}
+async function storageDelete(key){
+  if(HAS_CLAUDE_STORAGE){
+    try{ return await window.storage.delete(key, false); }catch(e){ return null; }
+  }
+  localStorage.removeItem(key);
+  return { key, deleted:true };
+}
+
+async function loadTabs(){
+  try{
+    const res = await storageGet(STORAGE_KEY);
+    if(res && res.value){
+      const parsed = JSON.parse(res.value);
+      if(Array.isArray(parsed) && parsed.length){
+        tabs = parsed;
+        activeId = tabs[0].id;
+        return;
+      }
+    }
+    tabs = demoTabs();
+    activeId = tabs[0].id;
+  }catch(err){
+    tabs = demoTabs();
+    activeId = tabs[0].id;
+  }
+}
+
+async function persist(){
+  const statusEl = document.getElementById('saveStatus');
+  const statusText = document.getElementById('saveStatusText');
+  statusEl.className = 'save-status saving';
+  statusText.textContent = 'กำลังบันทึก...';
+  try{
+    const result = await storageSet(STORAGE_KEY, JSON.stringify(tabs));
+    if(result){
+      statusEl.className = 'save-status saved';
+      statusText.textContent = HAS_CLAUDE_STORAGE
+        ? 'บันทึกเรียบร้อย (เก็บไว้ในบัญชีนี้ ใช้ได้ครั้งหน้าที่เปิดแอปนี้ซ้ำ)'
+        : 'บันทึกในเบราว์เซอร์นี้แล้ว — อย่าลืม “ส่งออก .json” เก็บสำรองไว้ด้วย ถ้าจะใช้ข้ามเครื่อง/เบราว์เซอร์';
+    }else{
+      throw new Error('no result');
+    }
+  }catch(err){
+    statusEl.className = 'save-status';
+    statusText.textContent = 'บันทึกอัตโนมัติไม่สำเร็จ — ข้อมูลยังอยู่ในหน้านี้จนกว่าจะปิด';
+  }
+}
+
+function exportTabs(){
+  const blob = new Blob([JSON.stringify(tabs, null, 2)], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'quiz-archive-backup.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function mergeInTabs(newTabs){
+  if(!Array.isArray(newTabs) || !newTabs.length) throw new Error('รูปแบบไฟล์ไม่ถูกต้อง');
+  const cleaned = newTabs.map(t => ({
+    id: t.id || uid(),
+    name: t.name || 'ไม่มีชื่อ',
+    link: t.link || '',
+    note: t.note || '',
+    code: t.code || ''
+  }));
+  tabs = cleaned;
+  activeId = tabs[0].id;
+  scheduleSave();
+  renderAll();
+}
+
+function importTabsFromFile(file){
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      mergeInTabs(JSON.parse(reader.result));
+    }catch(e){
+      alert('อ่านไฟล์ไม่สำเร็จ ตรวจสอบว่าเป็นไฟล์ .json ที่ส่งออกจากแอปนี้');
+    }
+  };
+  reader.readAsText(file);
+}
+
+async function importTabsFromUrlPrompt(){
+  const url = prompt('วางลิงก์ไฟล์ .json ที่ส่งออกไว้ (เช่น raw.githubusercontent.com/.../quiz-archive-backup.json)');
+  if(!url) return;
+  try{
+    const res = await fetch(url, { mode:'cors' });
+    if(!res.ok) throw new Error('http ' + res.status);
+    const data = await res.json();
+    mergeInTabs(data);
+  }catch(e){
+    alert('ดึงไฟล์ไม่สำเร็จ: ' + e.message + '\nลองใช้ลิงก์แบบ raw (raw.githubusercontent.com) และเช็คว่าไฟล์เป็นสาธารณะ');
+  }
+}
+
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(persist, 500);
+}
+
+function getMarkerIndex(code){
+  return code.indexOf(MARKER);
+}
+
+function getDisplayCode(code){
+  const idx = getMarkerIndex(code);
+  if(idx === -1) return { text: code, found:false };
+  return { text: code.slice(idx), found:true };
+}
+
+function extractTitles(code){
+  const out = [];
+  const re = /title\s*:\s*(["'])((?:\\.|(?!\1).)*)\1/g;
+  let m;
+  while((m = re.exec(code)) !== null){
+    const t = m[2].trim();
+    if(t) out.push(t);
+  }
+  return out;
+}
+
+function computeDupesForTab(tab){
+  const mine = new Set(extractTitles(tab.code));
+  if(mine.size === 0) return [];
+  const results = [];
+  tabs.forEach(other => {
+    if(other.id === tab.id) return;
+    const otherTitles = extractTitles(other.code);
+    const shared = otherTitles.filter(t => mine.has(t));
+    const uniqueShared = [...new Set(shared)];
+    if(uniqueShared.length){
+      results.push({ tabName: other.name || 'ไม่มีชื่อ', titles: uniqueShared });
+    }
+  });
+  return results;
+}
+
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderTabStrip(){
+  const strip = document.getElementById('tabstrip');
+  strip.innerHTML = '';
+  tabs.forEach((t, i) => {
+    const dupes = computeDupesForTab(t);
+    const btn = document.createElement('button');
+    btn.className = 'tab' + (t.id === activeId ? ' active' : '');
+    btn.onclick = () => { activeId = t.id; renderAll(); };
+    const num = String(i+1).padStart(2,'0');
+    btn.innerHTML = `<span class="n">${num}</span><span>${escapeHtml(t.name || 'ไม่มีชื่อ')}</span>` +
+      (dupes.length ? `<span class="dupe-stamp">ซ้ำ×${dupes.reduce((a,d)=>a+d.titles.length,0)}</span>` : '');
+    strip.appendChild(btn);
+  });
+  requestAnimationFrame(updateArrows);
+}
+
+function updateArrows(){
+  const strip = document.getElementById('tabstrip');
+  const left = document.getElementById('arrowLeft');
+  const right = document.getElementById('arrowRight');
+  const overflow = strip.scrollWidth > strip.clientWidth + 2;
+  left.hidden = !overflow || strip.scrollLeft <= 2;
+  right.hidden = !overflow || strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 2;
+}
+
+function scrollTabs(dir){
+  const strip = document.getElementById('tabstrip');
+  strip.scrollBy({ left: dir * 220, behavior: 'smooth' });
+  setTimeout(updateArrows, 300);
+}
+
+function addTab(){
+  const t = { id: uid(), name: 'แท็บใหม่ ' + (tabs.length+1), link:'', note:'', code:'' };
+  tabs.push(t);
+  activeId = t.id;
+  scheduleSave();
+  renderAll();
+  setTimeout(() => document.getElementById('tabstrip').scrollTo({left:9999, behavior:'smooth'}), 50);
+}
+
+let pendingDelete = null;
+function requestDeleteTab(id){
+  if(pendingDelete === id){
+    tabs = tabs.filter(t => t.id !== id);
+    pendingDelete = null;
+    if(tabs.length === 0){
+      activeId = null;
+    }else if(activeId === id){
+      activeId = tabs[0].id;
+    }
+    scheduleSave();
+    renderAll();
+  }else{
+    pendingDelete = id;
+    renderDossier();
+    setTimeout(() => { if(pendingDelete === id){ pendingDelete = null; renderDossier(); } }, 3000);
+  }
+}
+
+function updateField(id, field, value){
+  const t = tabs.find(x => x.id === id);
+  if(!t) return;
+  t[field] = value;
+  scheduleSave();
+  if(field === 'name' || field === 'code') renderTabStrip();
+}
+
+async function fetchCodeFromLink(id){
+  const t = tabs.find(x => x.id === id);
+  if(!t || !t.link) return;
+  const btn = document.getElementById('fetchLinkBtn');
+  const original = btn ? btn.textContent : '';
+  if(btn){ btn.textContent = 'กำลังดึง...'; btn.disabled = true; }
+  try{
+    let url = t.link.trim();
+    if(!/^https?:\/\//i.test(url)) url = 'https://' + url;
+    const res = await fetch(url, { mode:'cors' });
+    if(!res.ok) throw new Error('http ' + res.status);
+    const text = await res.text();
+    t.code = text;
+    scheduleSave();
+    renderAll();
+  }catch(e){
+    alert('ดึงโค้ดจากลิงก์นี้ไม่สำเร็จ: ' + e.message +
+      '\n\nลิงก์ที่ใช้ได้แน่นอนคือลิงก์แบบ "raw" เช่น\nhttps://raw.githubusercontent.com/ชื่อผู้ใช้/ชื่อ repo/main/path/file.html\n(ลิงก์หน้าเว็บ github.com ธรรมดาจะดึงไม่ได้ เพราะเป็น HTML ของหน้าเว็บ ไม่ใช่ไฟล์จริง)');
+  }finally{
+    if(btn){ btn.textContent = original || 'ดึงโค้ดจากลิงก์'; btn.disabled = false; }
+  }
+}
+
+function openLink(link){
+  if(!link) return;
+  let url = link.trim();
+  if(!/^https?:\/\//i.test(url)) url = 'https://' + url;
+  window.open(url, '_blank', 'noopener');
+}
+
+function copyDisplayCode(id){
+  const t = tabs.find(x => x.id === id);
+  if(!t) return;
+  const { text } = getDisplayCode(t.code || '');
+  navigator.clipboard?.writeText(text).then(()=>{
+    const btn = document.getElementById('copyBtn');
+    if(btn){ const old = btn.textContent; btn.textContent = 'คัดลอกแล้ว ✓'; setTimeout(()=>btn.textContent = old, 1400); }
+  });
+}
+
+function renderDossier(){
+  const host = document.getElementById('dossierHost');
+  const t = tabs.find(x => x.id === activeId);
+  if(!t){
+    host.innerHTML = `<div class="dossier"><div class="empty">ยังไม่มีแท็บ — กด “＋ เพิ่มแท็บ” เพื่อเริ่มวางโค้ดชุดแรกของคุณ</div></div>`;
+    return;
+  }
+  const code = t.code || '';
+  const disp = getDisplayCode(code);
+  const titles = extractTitles(code);
+  const dupes = computeDupesForTab(t);
+  const dupeCount = dupes.reduce((a,d)=>a+d.titles.length,0);
+
+  const lines = disp.text.split('\n');
+  const codeHtml = lines.map((ln, i) => {
+    const isMarkerLine = i === 0 && disp.found;
+    return `<span class="${isMarkerLine ? 'marker-hit' : ''}"><span class="ln">${i+1}</span>${escapeHtml(ln)}</span>`;
+  }).join('\n');
+
+  host.innerHTML = `
+    <div class="dossier">
+      <div class="punch"><span></span><span></span></div>
+
+      <div class="field-grid">
+        <div>
+          <label>ชื่อแท็บ</label>
+          <input type="text" value="${escapeHtml(t.name)}" placeholder="เช่น ชุด A - สอบเข้า ม.1"
+            oninput="updateField('${t.id}','name',this.value)">
+        </div>
+        <div>
+          <label>ลิงก์เปิดไฟล์</label>
+          <div class="link-row">
+            <input type="text" value="${escapeHtml(t.link || '')}" placeholder="เช่น raw.githubusercontent.com/user/repo/main/quiz-a.html"
+              oninput="updateField('${t.id}','link',this.value)">
+            <button class="btn" onclick="openLink('${escapeHtml(t.link||'').replace(/'/g,"\\'")}')" ${t.link ? '' : 'disabled'}>เปิด ↗</button>
+            <button class="btn" id="fetchLinkBtn" onclick="fetchCodeFromLink('${t.id}')" ${t.link ? '' : 'disabled'}>ดึงโค้ดจากลิงก์</button>
+          </div>
+          <div class="hint-box">
+            ใส่ลิงก์แบบ <b>raw</b> ของไฟล์ (เช่นจาก GitHub: เปิดไฟล์ → กด "Raw" → คัดลอก URL) แล้วกด <b>ดึงโค้ดจากลิงก์</b> เพื่อโหลดโค้ดมาใส่ให้อัตโนมัติ
+            ไม่ต้องคัดลอกวางเอง — ใช้ได้กับลิงก์สาธารณะที่เซิร์ฟเวอร์อนุญาต CORS เช่น raw.githubusercontent.com, GitHub Gist raw, หรือ GitHub Pages
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>หมายเหตุ</label>
+        <textarea class="note-input" placeholder="จดบันทึกเกี่ยวกับไฟล์นี้ เช่น ที่มา วันที่ปรับล่าสุด ข้อสังเกต"
+          oninput="updateField('${t.id}','note',this.value)">${escapeHtml(t.note || '')}</textarea>
+      </div>
+
+      <div class="field">
+        <label>วางโค้ดที่นี่</label>
+        <textarea class="code-input" placeholder="วางโค้ดทั้งไฟล์ (HTML/JS) ของ Quiz App ตรงนี้"
+          oninput="updateField('${t.id}','code',this.value)">${escapeHtml(code)}</textarea>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-chip"><b>${titles.length}</b> คำถามที่ตรวจพบ</div>
+        <div class="stat-chip ${disp.found ? 'ok':'warn'}">${disp.found ? 'พบบรรทัด marker (let quizTitle)' : 'ไม่พบ marker — แสดงทั้งไฟล์แทน'}</div>
+        <div class="stat-chip ${dupeCount ? 'warn':'ok'}">${dupeCount ? `พบคำถามซ้ำ ${dupeCount} ข้อ` : 'ไม่พบคำถามซ้ำกับแท็บอื่น'}</div>
+      </div>
+
+      ${dupes.length ? `
+      <div class="dupe-panel">
+        <h4>⚠ ตรวจพบคำถามซ้ำกับแท็บอื่น</h4>
+        ${dupes.map(d => `
+          <div class="dupe-item">
+            ซ้ำกับ <span class="tabname">${escapeHtml(d.tabName)}</span> จำนวน ${d.titles.length} ข้อ:
+            <div style="margin-top:4px;color:#f2d9cd;">${d.titles.map(x=>'• '+escapeHtml(x.length>90?x.slice(0,90)+'…':x)).join('<br>')}</div>
+          </div>
+        `).join('')}
+      </div>` : ''}
+
+      <div class="code-display-wrap">
+        <div class="code-display-head">
+          <label>โค้ดที่แสดงผล (เริ่มจากบรรทัดที่มี "let quizTitle")</label>
+          <button class="btn ghost" id="copyBtn" onclick="copyDisplayCode('${t.id}')">คัดลอก</button>
+        </div>
+        <pre class="code-display">${code ? codeHtml : '<span style="color:var(--text-faint)">— ยังไม่มีโค้ด วางโค้ดด้านบนเพื่อดูตัวอย่างที่นี่ —</span>'}</pre>
+      </div>
+
+      <div class="panel-footer">
+        <span style="font-size:.72rem;color:var(--text-faint)">แท็บนี้จะถูกเทียบคำถามกับทุกแท็บโดยอัตโนมัติทุกครั้งที่แก้ไข</span>
+        <button class="btn danger" onclick="requestDeleteTab('${t.id}')">${pendingDelete === t.id ? 'ยืนยันลบแท็บนี้?' : 'ลบแท็บนี้'}</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderAll(){
+  renderTabStrip();
+  renderDossier();
+}
+
+async function handleResetAll(){
+  if(!confirm('ล้างข้อมูลแท็บทั้งหมดที่บันทึกไว้ในเบราว์เซอร์นี้ใช่หรือไม่? (กู้คืนไม่ได้)')) return;
+  try{ await storageDelete(STORAGE_KEY); }catch(e){}
+  tabs = demoTabs();
+  activeId = tabs[0].id;
+  scheduleSave();
+  renderAll();
+}
+
+document.getElementById('tabstrip')?.addEventListener?.('scroll', updateArrows);
+window.addEventListener('resize', updateArrows);
+
+(async function init(){
+  await loadTabs();
+  document.getElementById('loadOverlay').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('tabstrip').addEventListener('scroll', updateArrows);
+  renderAll();
+})();
+</script>
+</body>
+</html>
