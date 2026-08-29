@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ห้องสอบ 4 : Owlvy-Trio-G6-Admission-AI-Exam-Live (ADM-APXXXX)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@600;700;800;900&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-main: #F4F0FF;
+    --paper: #FFFFFF;
+    --paper-soft: #F9F8FE;
+    --line: #E2DAF7;
+
+    --primary: #4F46E5;
+    --primary-dark: #3730A3;
+    --ink: #1E1B4B;
+    --ink-soft: #64748B;
+
+    --gold: #F59E0B;
+    --gold-bright: #FBBF24;
+    --gold-bg: #FFFBEB;
+
+    --live: #10B981;
+    --cached: #F97316;
+
+    --danger: #EF4444;
+    --danger-bg: #FEF2F2;
+    --warn: #F59E0B;
+    --warn-bg: #FFFBEB;
+    --ok: #10B981;
+    --ok-bg: #ECFDF5;
+
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+    --shadow-soft: 0 10px 25px -5px rgba(79, 70, 229, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    --shadow-card: 0 4px 12px rgba(0,0,0,0.03);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg-main);
+    background-image:
+      radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
+    background-attachment: fixed;
+    color: var(--ink);
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 { font-family: 'Kanit', sans-serif; margin: 0; }
+
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 36px 20px 80px; }
+
+  header.top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    background: var(--paper);
+    padding: 16px 24px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    border: 1.5px solid #FFFFFF;
+    flex-wrap: wrap;
+  }
+  header.top svg { filter: drop-shadow(0 4px 6px rgba(245, 158, 11, 0.3)); flex-shrink: 0; }
+  header.top .htext { flex: 1; min-width: 240px; }
+  header.top h1 {
+    font-size: clamp(18px, 2.6vw, 25px);
+    font-weight: 800;
+    background: linear-gradient(135deg, #3730A3 0%, #4F46E5 50%, #D97706 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.3px;
+  }
+  header.top .hsub { font-size: 12.5px; color: var(--ink-soft); font-weight: 600; margin-top: 4px; }
+  header.top .hsub b { color: var(--primary-dark); }
+
+  .source-bar {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px);
+    border: 1px solid var(--line); border-radius: var(--radius-md); padding: 10px 18px;
+    margin-bottom: 24px; font-size: 13px; color: var(--ink-soft); box-shadow: var(--shadow-card);
+  }
+  .source-bar .badge { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; }
+  .source-bar .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--cached); flex: none; }
+  .source-bar.live .dot { background: var(--live); animation: pulse 1.8s infinite; }
+  .source-bar.live .badge { color: var(--live); }
+  .source-bar.cached .badge { color: var(--cached); }
+  .source-bar .right { display: flex; align-items: center; gap: 12px; }
+  .countdown { font-size: 12px; color: var(--ink-soft); }
+
+  @keyframes pulse { 0%,100% { transform: scale(1); opacity:1; } 50% { transform: scale(1.2); opacity:.6; } }
+
+  .refresh-btn {
+    border: none; background: linear-gradient(135deg, #4F46E5, #3730A3); border-radius: var(--radius-sm);
+    padding: 7px 16px; font-family: 'Kanit', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer;
+    color: #fff; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25); transition: all 0.2s ease;
+  }
+  .refresh-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(79, 70, 229, 0.35); }
+  .refresh-btn:disabled { opacity: .5; transform: none; cursor: default; }
+
+  .errbar { display:none; margin-bottom:20px; padding:10px 16px; background:var(--danger-bg); border:1px solid #FECACA; border-radius:var(--radius-md); color:var(--danger); font-size:13px; font-weight:600; }
+  .errbar.show { display:block; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  @media (max-width: 760px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } }
+
+  .kpi { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 18px 20px; box-shadow: var(--shadow-soft); position: relative; overflow: hidden; }
+  .kpi::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--primary); }
+  .kpi .label { font-size: 13px; color: var(--ink-soft); font-weight: 600; }
+  .kpi .value { font-family:'Kanit'; font-size: 30px; font-weight: 800; margin-top: 6px; color: var(--ink); }
+  .kpi .value small { font-size: 14px; font-weight: 600; color: var(--ink-soft); }
+  .kpi.danger::before { background: var(--danger); }
+  .kpi.danger { background: #FFF5F5; border-color: #FED7D7; }
+  .kpi.danger .value { color: var(--danger); }
+  .kpi.ok::before { background: var(--ok); }
+  .kpi.ok { background: #F0FDF4; border-color: #BBF7D0; }
+  .kpi.ok .value { color: var(--ok); }
+
+  .filter-bar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 24px; background: var(--paper); padding: 14px 20px; border-radius: var(--radius-md); box-shadow: var(--shadow-card); border: 1px solid var(--line); }
+  .filter-bar label { font-size: 13.5px; color: var(--ink); display: flex; align-items: center; gap: 8px; font-weight: 700; }
+
+  select { border: 2px solid var(--line); border-radius: var(--radius-sm); padding: 8px 12px; font-family: 'IBM Plex Sans Thai'; font-size: 14px; font-weight: 600; color: var(--ink); background: var(--paper-soft); min-width: 160px; outline: none; transition: border-color 0.2s; }
+  select:focus { border-color: var(--primary); }
+  select:disabled { background: #EEF2FF; color: var(--primary-dark); font-weight: 700; cursor: not-allowed; opacity: 1; }
+
+  h2.section-title { font-size: 19px; font-weight: 800; color: var(--ink); margin: 32px 0 14px; display: flex; align-items: center; gap: 8px; }
+  h2.section-title::before { content: ''; display: inline-block; width: 6px; height: 20px; background: var(--gold); border-radius: 4px; }
+  h3.sub-title { font-size: 15.5px; font-weight: 800; color: var(--primary-dark); margin: 22px 0 12px; display:flex; align-items:center; gap:8px; }
+  h3.sub-title::before { content:''; display:inline-block; width:5px; height:16px; background:var(--primary); border-radius:3px; }
+
+  .matrix-wrap { overflow-x: auto; border: 1.5px solid var(--line); border-radius: var(--radius-lg); background: var(--paper); box-shadow: var(--shadow-soft); }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead th { text-align: center; padding: 14px 10px; font-weight: 800; font-family: 'Kanit'; color: var(--primary-dark); background: #EEF2FF; border-bottom: 2px solid var(--line); white-space: nowrap; }
+  thead th:first-child { text-align: left; padding-left: 18px; position: sticky; left: 0; z-index: 3; background: #EEF2FF; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+  thead th .sub { display: block; font-weight: 500; font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+  tbody td { text-align: center; padding: 11px 10px; border-top: 1px solid var(--line); }
+  tbody td:first-child { text-align: left; font-weight: 700; padding-left: 18px; color: var(--ink); position: sticky; left: 0; z-index: 2; background: var(--paper); box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+  tbody tr.avg-row td { background: var(--gold-bg); font-weight: 800; color: #92400E; border-top: 2px solid var(--gold-bright); }
+  tbody tr.avg-row td:first-child { background: var(--gold-bg); }
+  tbody tr:hover td { background: #FAFAFF; }
+  tbody tr:hover td:first-child { background: #FAFAFF; }
+  tbody tr.avg-row:hover td, tbody tr.avg-row:hover td:first-child { background: var(--gold-bg); }
+
+  .rank-cell { font-family:'Kanit'; font-weight: 800; }
+  .rank-cell.r1 { color: var(--gold); } .rank-cell.r2 { color:#94A3B8; } .rank-cell.r3 { color:#C08A56; }
+
+  .cellcombo { display:flex; flex-direction:column; align-items:center; gap:2px; line-height:1.2; }
+  .cellcombo .cscore { font-weight:800; color:var(--ink); }
+  .cellcombo .ctime { font-size:10.5px; color:var(--ink-soft); }
+  .cellcombo.empty { color:#B7BEDB; font-weight:500; }
+
+  .badge { display: inline-block; border-radius: 8px; padding: 4px 10px; font-weight: 700; font-size: 12.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  .badge.ok { background: var(--ok-bg); color: var(--ok); border: 1px solid #A7F3D0; }
+  .badge.warn { background: var(--warn-bg); color: #D97706; border: 1px solid #FDE68A; }
+  .badge.danger { background: var(--danger-bg); color: var(--danger); border: 1px solid #FECACA; }
+  .badge.empty { background: #F1F5F9; color: #94A3B8; border: 1px dashed #CBD5E1; font-weight: 500; }
+
+  .followup-list { display: flex; flex-direction: column; gap: 10px; }
+  .followup-row { display: flex; align-items: center; gap: 12px; background: var(--paper); border: 1px solid #FECACA; border-left: 5px solid var(--danger); border-radius: var(--radius-md); padding: 12px 18px; font-size: 14px; box-shadow: var(--shadow-card); }
+  .followup-row .name { font-weight: 800; color: var(--ink); }
+  .followup-row .note { color: var(--danger); font-weight: 600; }
+
+  /* Student detail panel */
+  .panel { background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%); border: 2px solid #FDE68A; border-radius: var(--radius-lg); padding: 22px 24px; margin-bottom: 28px; box-shadow: var(--shadow-soft); }
+  .panel-head { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; }
+  .panel-avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-family: 'Kanit'; font-size: 18px; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
+  .panel-name { font-family: 'Kanit'; font-weight: 800; font-size: 20px; color: var(--ink); }
+  .panel-sub { font-size: 13px; color: #92400E; font-weight: 600; margin-top: 2px; }
+
+  /* Bar chart */
+  .barchart { display:flex; flex-direction:column; gap:9px; background:var(--paper); border:1px solid var(--line); border-radius:var(--radius-md); padding:16px 18px; box-shadow:var(--shadow-card); }
+  .bar-row { display:grid; grid-template-columns: 150px 1fr 56px; align-items:center; gap:10px; }
+  .bar-row .blabel { font-size:12px; font-weight:700; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .bar-row .btrack { height:14px; background:#EEF2FF; border-radius:7px; overflow:hidden; }
+  .bar-row .bfill { height:100%; border-radius:7px; background:linear-gradient(90deg, var(--primary), var(--gold)); }
+  .bar-row .bval { font-family:'Kanit'; font-weight:800; font-size:13px; color:var(--primary-dark); text-align:right; }
+  .bar-row.lo .bfill { background: linear-gradient(90deg, #EF4444, #F59E0B); }
+  .bar-row.lo .bval { color: var(--danger); }
+  .bar-row.hi .bfill { background: linear-gradient(90deg, #10B981, #4F46E5); }
+  .bar-row.hi .bval { color: var(--ok); }
+
+  .empty-note { padding:18px; color:var(--ink-soft); font-size:13px; text-align:center; }
+
+  .footer-note { font-size: 12px; color: var(--ink-soft); margin-top: 28px; line-height: 1.6; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <svg width="42" height="42" viewBox="0 0 30 30" aria-hidden="true">
+      <ellipse cx="15" cy="17" rx="11" ry="10" fill="#4F46E5"/>
+      <path d="M6 10 L10 4 L12 9 Z" fill="#3730A3"/>
+      <path d="M24 10 L20 4 L18 9 Z" fill="#3730A3"/>
+      <circle cx="10.5" cy="16" r="4.6" fill="#fff"/>
+      <circle cx="19.5" cy="16" r="4.6" fill="#fff"/>
+      <circle cx="10.5" cy="16" r="2.1" fill="#1E1B4B"/>
+      <circle cx="19.5" cy="16" r="2.1" fill="#1E1B4B"/>
+      <path d="M15 18 L12.5 22 L17.5 22 Z" fill="#F59E0B"/>
+    </svg>
+    <div class="htext">
+      <h1>ห้องสอบ 4 : Owlvy-Trio-G6-Admission-AI-Exam-Live</h1>
+      <div class="hsub">รหัสห้องสอบ <b>ADM-APXXXX</b> · ระดับชั้น G6 · BIO · CHEM · PHY · ASTRO · EARTH</div>
+    </div>
+  </header>
+
+  <div id="sourceBar" class="source-bar">
+    <span class="badge"><span class="dot"></span><span id="sourceLabel">กำลังโหลดข้อมูลสด…</span></span>
+    <div class="right">
+      <span class="countdown" id="countdown"></span>
+      <button class="refresh-btn" id="refreshBtn">🔄 รีเฟรชข้อมูล</button>
+    </div>
+  </div>
+
+  <div class="errbar" id="errBar"></div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="label">นักเรียนทั้งหมด (ชั้น G6)</div><div class="value" id="kpiTotal">—</div></div>
+    <div class="kpi danger"><div class="label">ยังไม่เข้าสอบเลยสักชุด</div><div class="value" id="kpiNone">—</div></div>
+    <div class="kpi ok"><div class="label">เข้าสอบแล้วอย่างน้อย 1 ชุด</div><div class="value" id="kpiDone">—</div></div>
+    <div class="kpi"><div class="label">คะแนนเฉลี่ย (ตามตัวกรอง)</div><div class="value" id="kpiAvg">—</div></div>
+  </div>
+
+  <div class="filter-bar">
+    <label>🎓 ชั้นเรียน
+      <select id="levelSelect" disabled>
+        <option value="G6">ประถมศึกษาปีที่ 6 (G6)</option>
+      </select>
+    </label>
+    <label>👤 นักเรียน
+      <select id="studentSelect"><option value="all">ทั้งหมด</option></select>
+    </label>
+    <label>📄 ชื่อชุด
+      <select id="setSelect"><option value="all">ทั้งหมด</option></select>
+    </label>
+    <label>🗓️ ระยะเวลาย้อนหลัง
+      <select id="rangeSelect">
+        <option value="all">ทั้งหมดตั้งแต่ต้น</option>
+        <option value="6m">6 เดือนย้อนหลัง</option>
+        <option value="3m">3 เดือนย้อนหลัง</option>
+        <option value="thisMonth">เดือนปัจจุบัน</option>
+      </select>
+    </label>
+    <label>📌 สถานะการทำ
+      <select id="statusSelect">
+        <option value="all">ทั้งหมด</option>
+        <option value="none">ยังไม่ทำ</option>
+        <option value="done">ทำแล้ว</option>
+      </select>
+    </label>
+  </div>
+
+  <!-- CASE: ALL STUDENTS -->
+  <div id="allView">
+    <h2 class="section-title">อันดับคะแนนรวมทุกชุด (เรียงจากมากไปน้อย)</h2>
+    <div class="matrix-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left; position:static; box-shadow:none;">#</th>
+            <th style="text-align:left; position:static; box-shadow:none;">นักเรียน</th>
+            <th>จำนวนชุดที่ทำ</th>
+            <th>คะแนนรวมทุกชุด<span class="sub">(ผลรวมคะแนนเฉลี่ยต่อชุด)</span></th>
+            <th>คะแนนเฉลี่ย %</th>
+            <th>สถานะ</th>
+          </tr>
+        </thead>
+        <tbody id="leaderBody"><tr><td colspan="6" class="empty-note">กำลังโหลดข้อมูล...</td></tr></tbody>
+      </table>
+    </div>
+
+    <h2 class="section-title">รายชื่อที่ต้องติดตาม — ยังไม่เข้าสอบเลยสักชุด</h2>
+    <div class="followup-list" id="followupList"></div>
+  </div>
+
+  <!-- CASE: SINGLE STUDENT -->
+  <div id="studentView" style="display:none;">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-avatar" id="detailAvatar"></div>
+        <div>
+          <div class="panel-name" id="detailName"></div>
+          <div class="panel-sub" id="detailSub"></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-title">กรอบ 1 · คะแนนรายชุดข้อสอบ (เรียงตามคะแนน)</h3>
+    <div class="barchart" id="scoreChart"></div>
+
+    <div class="matrix-wrap" style="margin-top:14px;">
+      <table>
+        <thead><tr id="box1Head"><th style="text-align:left; position:static; box-shadow:none;">ครั้งที่</th></tr></thead>
+        <tbody id="box1Body"><tr><td class="empty-note">กำลังโหลดข้อมูล...</td></tr></tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-title">กรอบ 2 · คะแนนแยกตามหมวดวิชา</h3>
+    <div class="matrix-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left; position:static; box-shadow:none;">ชื่อชุด</th>
+            <th>Biology</th><th>Chemistry</th><th>Physics</th><th>Earth Science</th><th>Astronomy</th><th>คะแนนรวม</th>
+          </tr>
+        </thead>
+        <tbody id="box2Body"><tr><td colspan="7" class="empty-note">กำลังโหลดข้อมูล...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <p class="footer-note" id="footerNote">ข้อมูลนี้ดึงสดเฉพาะระดับชั้น G6 จาก Google Sheets ทุก 20 วินาที หรือกดปุ่มรีเฟรช</p>
+</div>
+
+<script>
+const TARGET_LEVEL = "G6";
+const STUDENT_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSeiM7_a9Rk6zb2X3dAGQZh0yDPw6m5OvscB3lwRHg9A5Iy7v35lPREBYhEsO1AM4EglZ5v8FFN7BLH/pub?gid=0&single=true&output=csv";
+const RESULT_URL  = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRhjtKV7rikeRaG0VbkUxvOD96o2BLXCZKBA1EZXHMNCcwYyrQfxzRV4skY5Y1XnJtN-3tFRhRJmjlA/pub?gid=0&single=true&output=csv";
+const REFRESH_MS = 20000;
+const DOMAINS = [
+  { key:"BIO", label:"Biology" },
+  { key:"CHEM", label:"Chemistry" },
+  { key:"PHY", label:"Physics" },
+  { key:"EARTH", label:"Earth Science" },
+  { key:"ASTRO", label:"Astronomy" }
+];
+
+function parseCSV(text) {
+  const rows = []; let row = [], field = '', inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"') { if (text[i+1] === '"') { field += '"'; i++; } else { inQuotes = false; } }
+      else field += c;
+    } else {
+      if (c === '"') inQuotes = true;
+      else if (c === ',') { row.push(field); field = ''; }
+      else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+      else if (c === '\r') { }
+      else field += c;
+    }
+  }
+  if (field.length || row.length) { row.push(field); rows.push(row); }
+  return rows.filter(r => r.some(c => c.trim() !== ''));
+}
+function rowsToObjects(rows) {
+  if (!rows || rows.length === 0) return [];
+  const header = rows[0].map(h => h.replace(/^\uFEFF/, '').trim());
+  return rows.slice(1).map(r => {
+    const o = {};
+    header.forEach((h, i) => o[h] = (r[i] !== undefined ? r[i].trim() : ''));
+    return o;
+  });
+}
+function getProp(obj, keys) {
+  const objKeys = Object.keys(obj);
+  for (const k of keys) {
+    const found = objKeys.find(ok => ok.trim().toLowerCase() === k.trim().toLowerCase());
+    if (found && obj[found] !== undefined) return obj[found];
+  }
+  return '';
+}
+function normName(s){ return (s||"").replace(/\s+/g," ").trim(); }
+function toPct(s){ const n = parseFloat(String(s).replace('%','')); return isNaN(n) ? 0 : n; }
+function toNum(s){ const n = parseFloat(s); return isNaN(n) ? 0 : n; }
+
+function parseThaiDateTime(str) {
+  const m = (str||'').match(/(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2}):(\d{2})/);
+  if (!m) return null;
+  const d = +m[1], mo = +m[2], yBE = +m[3], H = +m[4], Mi = +m[5], S = +m[6];
+  const dt = new Date(yBE - 543, mo - 1, d, H, Mi, S);
+  return isNaN(dt.getTime()) ? null : dt;
+}
+function parseTimeUsed(str) {
+  const parts = (str || '0:00:00').split(':').map(Number);
+  if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
+  if (parts.length === 2) return parts[0]*60 + parts[1];
+  return 0;
+}
+function fmtTime(sec) {
+  sec = Math.round(sec || 0);
+  const h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
+  return (h>0 ? h+':' : '') + String(m).padStart(h>0?2:1,'0') + ':' + String(s).padStart(2,'0');
+}
+function splitSetCode(full) {
+  const idx = full.lastIndexOf('-');
+  if (idx === -1) return { base: full, tag: '' };
+  return { base: full.slice(0, idx), tag: full.slice(idx+1) };
+}
+function badgeClass(pct) {
+  if (pct === null || pct === undefined) return 'empty';
+  if (pct < 50) return 'danger';
+  if (pct < 70) return 'warn';
+  return 'ok';
+}
+function initials(name){
+  const clean = (name||'').replace(/\(.*?\)/g,'').trim();
+  return clean ? clean.slice(0,1) : (name||'').slice(0,1);
+}
+
+let ROSTER = [];
+let LOG = [];
+let SET_BASES = [];
+
+function buildFromCSV(studentText, resultText) {
+  const studentRows = rowsToObjects(parseCSV(studentText));
+  ROSTER = studentRows
+    .filter(r => {
+      const role = getProp(r, ['Role']).toLowerCase();
+      const level = getProp(r, ['Level']).toUpperCase();
+      return role === 'student' && level === TARGET_LEVEL;
+    })
+    .map(r => {
+      const name = normName(getProp(r, ['ชื่อ']));
+      return { key: name, name };
+    })
+    .filter(r => r.name !== '');
+
+  const resultRows = rowsToObjects(parseCSV(resultText));
+  const log = [];
+  resultRows.forEach(r => {
+    const level = getProp(r, ['ชั้นเรียน']).toUpperCase();
+    if (level !== TARGET_LEVEL) return;
+    const name = normName(getProp(r, ['ชื่อ-นามสกุล']));
+    const full = getProp(r, ['ชื่อชุดข้อสอบ']);
+    const dtStr = getProp(r, ['วัน-เวลา']);
+    if (!name || !full) return;
+    const { base, tag } = splitSetCode(full);
+    const dt = parseThaiDateTime(dtStr);
+    const domains = {};
+    DOMAINS.forEach(d => {
+      domains[d.key] = {
+        correct: toNum(getProp(r, [d.key + ' ถูก'])),
+        total: toNum(getProp(r, [d.key + ' เต็ม'])),
+        pct: toPct(getProp(r, [d.key + ' %']))
+      };
+    });
+    log.push({
+      name, key: name, full, base, tag,
+      raw: toNum(getProp(r, ['คะแนนที่ได้'])),
+      total: toNum(getProp(r, ['จำนวนข้อ'])),
+      pct: toPct(getProp(r, ['เปอร์เซ็นต์'])),
+      timeSec: parseTimeUsed(getProp(r, ['เวลาที่ใช้'])),
+      dt, dtStr,
+      domains
+    });
+  });
+  LOG = log;
+  SET_BASES = Array.from(new Set(LOG.map(l => l.base))).sort();
+}
+
+function inRange(dt, range) {
+  if (range === 'all') return true;
+  if (!dt) return false;
+  const now = new Date();
+  if (range === '6m') { const c = new Date(now); c.setMonth(c.getMonth()-6); return dt >= c; }
+  if (range === '3m') { const c = new Date(now); c.setMonth(c.getMonth()-3); return dt >= c; }
+  if (range === 'thisMonth') { const c = new Date(now.getFullYear(), now.getMonth(), 1); return dt >= c; }
+  return true;
+}
+
+function filteredLog(range, setBase) {
+  return LOG.filter(l => inRange(l.dt, range) && (setBase === 'all' || l.base === setBase));
+}
+
+function studentAttempts(name, range, setBase) {
+  return filteredLog(range, setBase).filter(l => l.key === name).sort((a,b) => {
+    const ta = a.dt ? a.dt.getTime() : 0, tb = b.dt ? b.dt.getTime() : 0;
+    return ta - tb;
+  });
+}
+
+function populateFilterOptions() {
+  const setSel = document.getElementById('setSelect');
+  const prevSet = setSel.value;
+  setSel.innerHTML = '<option value="all">ทั้งหมด</option>' + SET_BASES.map(b => `<option value="${b}">${b}</option>`).join('');
+  setSel.value = SET_BASES.includes(prevSet) ? prevSet : 'all';
+
+  const stuSel = document.getElementById('studentSelect');
+  const prevStu = stuSel.value;
+  stuSel.innerHTML = '<option value="all">ทั้งหมด (' + ROSTER.length + ' คน)</option>' +
+    ROSTER.map(s => `<option value="${s.key}">${s.name}</option>`).join('');
+  stuSel.value = ROSTER.some(s => s.key === prevStu) ? prevStu : 'all';
+}
+
+function render() {
+  const studentKey = document.getElementById('studentSelect').value;
+  const setBase = document.getElementById('setSelect').value;
+  const range = document.getElementById('rangeSelect').value;
+  const status = document.getElementById('statusSelect').value;
+
+  const perStudent = ROSTER.map(stu => {
+    const attempts = studentAttempts(stu.key, range, setBase);
+    const bySet = {};
+    attempts.forEach(a => { (bySet[a.base] = bySet[a.base] || []).push(a); });
+    const setsAttempted = Object.keys(bySet);
+    let totalScoreSum = 0, pctSum = 0;
+    setsAttempted.forEach(b => {
+      const arr = bySet[b];
+      const avgRaw = arr.reduce((s,a)=>s+a.raw,0) / arr.length;
+      const avgPct = arr.reduce((s,a)=>s+a.pct,0) / arr.length;
+      totalScoreSum += avgRaw; pctSum += avgPct;
+    });
+    const avgPctOverall = setsAttempted.length ? pctSum / setsAttempted.length : null;
+    return { stu, attempts, setsAttempted: setsAttempted.length, totalScoreSum, avgPctOverall };
+  });
+
+  const totalStudents = ROSTER.length;
+  const noneCount = perStudent.filter(p => p.attempts.length === 0).length;
+  const doneCount = totalStudents - noneCount;
+  const allPct = perStudent.filter(p => p.avgPctOverall !== null).map(p => p.avgPctOverall);
+  const classAvg = allPct.length ? allPct.reduce((a,b)=>a+b,0)/allPct.length : null;
+
+  document.getElementById('kpiTotal').innerHTML = totalStudents + ' <small>คน</small>';
+  document.getElementById('kpiNone').innerHTML = noneCount + ' <small>คน (' + (totalStudents ? Math.round(noneCount/totalStudents*100) : 0) + '%)</small>';
+  document.getElementById('kpiDone').innerHTML = doneCount + ' <small>คน (' + (totalStudents ? Math.round(doneCount/totalStudents*100) : 0) + '%)</small>';
+  document.getElementById('kpiAvg').innerHTML = classAvg === null ? '—' : classAvg.toFixed(1) + '<small>%</small>';
+
+  const allView = document.getElementById('allView');
+  const studentView = document.getElementById('studentView');
+
+  if (studentKey === 'all') {
+    allView.style.display = 'block';
+    studentView.style.display = 'none';
+    renderLeaderboard(perStudent, status);
+  } else {
+    allView.style.display = 'none';
+    studentView.style.display = 'block';
+    renderStudentView(studentKey, range, setBase);
+  }
+}
+
+function renderLeaderboard(perStudent, status) {
+  let rows = perStudent.slice();
+  if (status === 'none') rows = rows.filter(r => r.attempts.length === 0);
+  if (status === 'done') rows = rows.filter(r => r.attempts.length > 0);
+  rows.sort((a,b) => b.totalScoreSum - a.totalScoreSum);
+
+  const body = document.getElementById('leaderBody');
+  if (!rows.length) {
+    body.innerHTML = '<tr><td colspan="6" class="empty-note">ไม่มีรายชื่อในเงื่อนไขนี้</td></tr>';
+  } else {
+    body.innerHTML = rows.map((r,i) => {
+      const rankCls = i===0?'r1':i===1?'r2':i===2?'r3':'';
+      const done = r.attempts.length > 0;
+      const badge = done
+        ? `<span class="badge ${badgeClass(r.avgPctOverall)}">${r.avgPctOverall.toFixed(0)}% เฉลี่ย</span>`
+        : `<span class="badge empty">ยังไม่ทำ</span>`;
+      return `<tr>
+        <td class="rank-cell ${rankCls}" style="text-align:left;">${i+1}</td>
+        <td style="text-align:left; font-weight:700;">${r.stu.name}</td>
+        <td>${r.setsAttempted}</td>
+        <td style="font-weight:800; color:var(--primary-dark);">${done ? r.totalScoreSum.toFixed(1) : '—'}</td>
+        <td>${done ? r.avgPctOverall.toFixed(1)+'%' : '—'}</td>
+        <td>${badge}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  const followup = document.getElementById('followupList');
+  const notDone = perStudent.filter(r => r.attempts.length === 0);
+  if (!notDone.length) {
+    followup.innerHTML = '<p style="font-size:13px; color:var(--ink-soft); margin:0;">ไม่มีรายชื่อในเงื่อนไขนี้ — ทุกคนเริ่มสอบแล้ว</p>';
+  } else {
+    followup.innerHTML = notDone.map(r =>
+      `<div class="followup-row"><span class="name">${r.stu.name}</span><span class="note">— ยังไม่เข้าสอบสักชุด (ตามตัวกรองปัจจุบัน)</span></div>`
+    ).join('');
+  }
+}
+
+function renderStudentView(studentKey, range, setBase) {
+  const stu = ROSTER.find(s => s.key === studentKey);
+  const attempts = studentAttempts(studentKey, range, setBase);
+
+  document.getElementById('detailAvatar').textContent = stu ? initials(stu.name) : '';
+  document.getElementById('detailName').textContent = stu ? stu.name : '';
+  const setsCount = new Set(attempts.map(a=>a.base)).size;
+  document.getElementById('detailSub').textContent = `สอบไปแล้ว ${attempts.length} ครั้ง จาก ${setsCount} ชุดข้อสอบ (ตามตัวกรองปัจจุบัน)`;
+
+  // ---- Bar chart: sorted by score desc ----
+  const chartEl = document.getElementById('scoreChart');
+  if (!attempts.length) {
+    chartEl.innerHTML = '<div class="empty-note">ยังไม่มีข้อมูลการสอบตามตัวกรองนี้</div>';
+  } else {
+    const sorted = attempts.slice().sort((a,b) => b.pct - a.pct);
+    chartEl.innerHTML = sorted.map(a => {
+      const cls = a.pct < 50 ? 'lo' : a.pct >= 70 ? 'hi' : '';
+      return `<div class="bar-row ${cls}">
+        <div class="blabel" title="${a.full}">${a.base}<span style="color:var(--ink-soft); font-weight:500;"> · ${a.tag}</span></div>
+        <div class="btrack"><div class="bfill" style="width:${Math.min(100,a.pct)}%;"></div></div>
+        <div class="bval">${a.pct.toFixed(0)}%</div>
+      </div>`;
+    }).join('');
+  }
+
+  // ---- Box 1: per-set attempt table ----
+  const bases = SET_BASES.length ? SET_BASES : Array.from(new Set(attempts.map(a=>a.base))).sort();
+  const visibleBases = setBase === 'all' ? bases : bases.filter(b => b === setBase);
+  const bySet = {};
+  visibleBases.forEach(b => { bySet[b] = attempts.filter(a => a.base === b).sort((x,y)=>(x.dt?x.dt.getTime():0)-(y.dt?y.dt.getTime():0)); });
+  const maxAttempts = Math.max(1, ...visibleBases.map(b => bySet[b].length));
+
+  const head = document.getElementById('box1Head');
+  head.innerHTML = '<th style="text-align:left; position:static; box-shadow:none;">ครั้งที่</th>' +
+    visibleBases.map(b => `<th>${b}</th>`).join('');
+
+  const body1 = document.getElementById('box1Body');
+  if (!visibleBases.length) {
+    body1.innerHTML = '<tr><td class="empty-note">ไม่มีข้อมูล</td></tr>';
+  } else {
+    let rowsHtml = '';
+    for (let i = 0; i < maxAttempts; i++) {
+      rowsHtml += `<tr><td style="text-align:left;">ครั้งที่ ${i+1}</td>` + visibleBases.map(b => {
+        const a = bySet[b][i];
+        if (!a) return '<td><span class="cellcombo empty">–</span></td>';
+        return `<td><div class="cellcombo"><span class="cscore">${a.pct.toFixed(0)}%</span><span class="ctime">${a.raw}/${a.total} · ${fmtTime(a.timeSec)}</span></div></td>`;
+      }).join('') + '</tr>';
+    }
+    rowsHtml += `<tr class="avg-row"><td style="text-align:left;">ค่าเฉลี่ย</td>` + visibleBases.map(b => {
+      const arr = bySet[b];
+      if (!arr.length) return '<td><span class="cellcombo empty">–</span></td>';
+      const avgPct = arr.reduce((s,a)=>s+a.pct,0)/arr.length;
+      const avgTime = arr.reduce((s,a)=>s+a.timeSec,0)/arr.length;
+      return `<td><div class="cellcombo"><span class="cscore">${avgPct.toFixed(0)}%</span><span class="ctime">${fmtTime(avgTime)}</span></div></td>`;
+    }).join('') + '</tr>';
+    body1.innerHTML = rowsHtml;
+  }
+
+  // ---- Box 2: per-subject breakdown ----
+  const body2 = document.getElementById('box2Body');
+  if (!attempts.length) {
+    body2.innerHTML = '<tr><td colspan="7" class="empty-note">ไม่มีข้อมูล</td></tr>';
+  } else {
+    const sortedByDate = attempts.slice().sort((a,b) => (a.dt?a.dt.getTime():0)-(b.dt?b.dt.getTime():0));
+    let rowsHtml = sortedByDate.map(a => {
+      const domainCells = DOMAINS.map(d => {
+        const dm = a.domains[d.key];
+        return `<td><div class="cellcombo"><span class="cscore">${dm.correct}/${dm.total}</span><span class="ctime">${dm.pct.toFixed(0)}%</span></div></td>`;
+      }).join('');
+      return `<tr><td style="text-align:left; font-weight:700;">${a.full}</td>${domainCells}<td><div class="cellcombo"><span class="cscore">${a.raw}/${a.total}</span><span class="ctime">${a.pct.toFixed(0)}%</span></div></td></tr>`;
+    }).join('');
+
+    const domainTotals = {};
+    DOMAINS.forEach(d => { domainTotals[d.key] = { correct:0, total:0 }; });
+    let sumRaw = 0, sumTotal = 0;
+    attempts.forEach(a => {
+      DOMAINS.forEach(d => { domainTotals[d.key].correct += a.domains[d.key].correct; domainTotals[d.key].total += a.domains[d.key].total; });
+      sumRaw += a.raw; sumTotal += a.total;
+    });
+    const totalCells = DOMAINS.map(d => {
+      const t = domainTotals[d.key];
+      const pct = t.total ? (t.correct/t.total*100) : 0;
+      return `<td><div class="cellcombo"><span class="cscore">${t.correct}/${t.total}</span><span class="ctime">${pct.toFixed(0)}%</span></div></td>`;
+    }).join('');
+    const overallPct = sumTotal ? (sumRaw/sumTotal*100) : 0;
+    rowsHtml += `<tr class="avg-row"><td style="text-align:left;">คะแนนรวมในหมวด</td>${totalCells}<td><div class="cellcombo"><span class="cscore">${sumRaw}/${sumTotal}</span><span class="ctime">${overallPct.toFixed(0)}%</span></div></td></tr>`;
+    body2.innerHTML = rowsHtml;
+  }
+}
+
+document.getElementById('studentSelect').addEventListener('change', render);
+document.getElementById('setSelect').addEventListener('change', render);
+document.getElementById('rangeSelect').addEventListener('change', render);
+document.getElementById('statusSelect').addEventListener('change', render);
+
+// ---------- Live fetch ----------
+let secondsLeft = REFRESH_MS/1000;
+function setSourceBadge(state, when) {
+  const bar = document.getElementById('sourceBar');
+  const label = document.getElementById('sourceLabel');
+  bar.classList.remove('live','cached');
+  if (state === 'loading') {
+    label.textContent = 'กำลังโหลดข้อมูลสด…';
+  } else if (state === 'live') {
+    bar.classList.add('live');
+    label.textContent = `ข้อมูลสดจาก Google Sheets · ดึงล่าสุด ${when}`;
+  } else {
+    bar.classList.add('cached');
+    label.textContent = 'โหลดข้อมูลสดไม่สำเร็จ — กดรีเฟรชเพื่อลองใหม่';
+  }
+}
+function setError(msg){
+  const el = document.getElementById('errBar');
+  if (msg) { el.textContent = msg; el.classList.add('show'); }
+  else { el.classList.remove('show'); el.textContent=''; }
+}
+
+async function fetchText(url){
+  const bust = url + (url.includes('?') ? '&' : '?') + 'cb=' + Date.now();
+  const res = await fetch(bust, { cache: 'no-store' });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.text();
+}
+
+async function loadLive() {
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  setSourceBadge('loading');
+  try {
+    const [studentText, resultText] = await Promise.all([fetchText(STUDENT_URL), fetchText(RESULT_URL)]);
+    buildFromCSV(studentText, resultText);
+    populateFilterOptions();
+    setError(null);
+    const now = new Date();
+    setSourceBadge('live', now.toLocaleString('th-TH', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false }));
+  } catch (err) {
+    setSourceBadge('cached');
+    setError('ซิงค์ข้อมูลไม่สำเร็จ: ' + err.message);
+  }
+  render();
+  btn.disabled = false;
+  secondsLeft = REFRESH_MS/1000;
+}
+
+function tickCountdown(){
+  secondsLeft -= 1;
+  if (secondsLeft <= 0) { loadLive(); }
+  else { document.getElementById('countdown').textContent = 'อัพเดทในอีก ' + secondsLeft + ' วิ'; }
+}
+
+document.getElementById('refreshBtn').addEventListener('click', loadLive);
+loadLive();
+setInterval(tickCountdown, 1000);
+</script>
+</body>
+</html>
