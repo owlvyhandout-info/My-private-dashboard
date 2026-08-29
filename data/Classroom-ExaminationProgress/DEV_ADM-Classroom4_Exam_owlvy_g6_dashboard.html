@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owlvy-Trio-G6-Admission-AI-Exam-Live</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A101E;
+    --bg-2:#0D1524;
+    --panel:#121B2E;
+    --panel-2:#17223A;
+    --panel-3:#1C2942;
+    --hair:rgba(232,184,84,0.14);
+    --hair-2:rgba(255,255,255,0.06);
+    --gold:#E8B854;
+    --gold-dim:#a9863c;
+    --teal:#57D6C4;
+    --coral:#E2665A;
+    --text:#EDEFF7;
+    --muted:#96A2BE;
+    --muted-2:#5C6A87;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(232,184,84,0.07), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 0%, rgba(87,214,196,0.06), transparent 60%),
+      var(--bg);
+    min-height:100vh;
+    padding:28px 32px 60px;
+  }
+  .wrap{max-width:1280px;margin:0 auto;}
+
+  /* HEADER */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:20px;
+    padding-bottom:18px; border-bottom:1px solid var(--hair);
+    flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:center; gap:16px;}
+  .owlmark{width:46px;height:46px;flex-shrink:0;}
+  .titles h1{
+    font-family:'Fraunces',serif; font-weight:600; font-size:22px; letter-spacing:0.2px;
+    margin:0 0 3px; color:var(--text);
+  }
+  .titles .sub{font-size:12.5px; color:var(--muted); letter-spacing:0.3px;}
+  .titles .sub b{color:var(--gold); font-weight:600;}
+  .status-cluster{display:flex; align-items:center; gap:18px;}
+  .live-chip{
+    display:flex; align-items:center; gap:7px; font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px; letter-spacing:0.6px; color:var(--teal);
+    background:rgba(87,214,196,0.09); border:1px solid rgba(87,214,196,0.25);
+    padding:6px 12px 6px 10px; border-radius:20px;
+  }
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--teal); box-shadow:0 0 0 0 rgba(87,214,196,0.6); animation:pulse 1.8s infinite;}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(87,214,196,0.55);}
+    70%{box-shadow:0 0 0 8px rgba(87,214,196,0);}
+    100%{box-shadow:0 0 0 0 rgba(87,214,196,0);}
+  }
+  .sync-info{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted-2); text-align:right; line-height:1.5;}
+  .sync-info span{color:var(--muted);}
+  .refresh-btn{
+    background:var(--panel-2); border:1px solid var(--hair); color:var(--gold);
+    font-family:'Inter',sans-serif; font-size:12.5px; font-weight:600; letter-spacing:0.2px;
+    padding:8px 14px; border-radius:8px; cursor:pointer; display:flex; align-items:center; gap:6px;
+    transition:background .15s ease, transform .1s ease;
+  }
+  .refresh-btn:hover{background:var(--panel-3);}
+  .refresh-btn:active{transform:scale(0.97);}
+  .refresh-btn svg{width:14px;height:14px;}
+  .refresh-btn.spinning svg{animation:spin 0.7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .errbar{
+    display:none; margin-top:14px; padding:10px 14px; background:rgba(226,102,90,0.1);
+    border:1px solid rgba(226,102,90,0.3); border-radius:8px; color:#f0a49c; font-size:12.5px;
+  }
+  .errbar.show{display:block;}
+
+  /* KPI ROW */
+  .kpi-row{
+    display:grid; grid-template-columns:1.3fr 1fr 1fr 1fr 1.5fr; gap:14px;
+    margin-top:22px;
+  }
+  @media(max-width:1000px){.kpi-row{grid-template-columns:repeat(2,1fr);}}
+  .kpi{
+    background:var(--panel); border:1px solid var(--hair-2); border-radius:12px;
+    padding:16px 18px; position:relative; overflow:hidden;
+  }
+  .kpi .lbl{font-size:11px; text-transform:uppercase; letter-spacing:0.9px; color:var(--muted-2); margin-bottom:8px;}
+  .kpi .val{font-family:'Fraunces',serif; font-size:28px; font-weight:600; color:var(--text); line-height:1;}
+  .kpi .val small{font-family:'Inter',sans-serif; font-size:13px; color:var(--muted); font-weight:500; margin-left:4px;}
+  .kpi .foot{font-size:11.5px; color:var(--muted); margin-top:7px;}
+  .kpi .foot b{color:var(--teal); font-weight:600;}
+  .kpi.top .val{color:var(--gold);}
+
+  /* Owl eye gauge kpi */
+  .kpi.eye{display:flex; align-items:center; gap:14px;}
+  .eyewrap{position:relative; width:64px; height:64px; flex-shrink:0;}
+  .eyewrap svg{width:100%; height:100%;}
+  .eye-lid{transform-origin:center; animation:blink 7s infinite;}
+  @keyframes blink{
+    0%,92%,100%{transform:scaleY(0);}
+    94%{transform:scaleY(1);}
+    96%{transform:scaleY(0);}
+  }
+  .eye-info .lbl{font-size:11px; text-transform:uppercase; letter-spacing:0.9px; color:var(--muted-2); margin-bottom:5px;}
+  .eye-info .val{font-family:'Fraunces',serif; font-size:24px; font-weight:600;}
+  .eye-info .foot{font-size:11.5px; color:var(--muted); margin-top:4px;}
+
+  /* PANELS */
+  .grid-main{display:grid; grid-template-columns:1.55fr 1fr; gap:18px; margin-top:20px; align-items:start;}
+  @media(max-width:980px){.grid-main{grid-template-columns:1fr;}}
+  .panel{
+    background:var(--panel); border:1px solid var(--hair-2); border-radius:12px; padding:18px 20px;
+  }
+  .panel + .panel{margin-top:18px;}
+  .panel h2{
+    font-family:'Fraunces',serif; font-size:15.5px; font-weight:600; margin:0 0 4px; color:var(--text);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .panel h2 .tag{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--muted-2); font-weight:500; letter-spacing:0.3px;}
+  .panel .desc{font-size:11.5px; color:var(--muted-2); margin-bottom:14px;}
+
+  /* Roster grid */
+  .roster-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px;}
+  .rchip{
+    background:var(--panel-2); border:1px solid var(--hair-2); border-radius:10px; padding:10px 12px;
+    border-left:3px solid var(--muted-2);
+  }
+  .rchip.st-none{border-left-color:var(--muted-2);}
+  .rchip.st-low{border-left-color:var(--coral);}
+  .rchip.st-mid{border-left-color:var(--gold);}
+  .rchip.st-high{border-left-color:var(--teal);}
+  .rchip .nm{font-size:12.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .rchip .meta{display:flex; align-items:baseline; justify-content:space-between; margin-top:6px;}
+  .rchip .pct{font-family:'IBM Plex Mono',monospace; font-size:15px; font-weight:600;}
+  .rchip.st-none .pct{color:var(--muted-2); font-size:11px;}
+  .rchip.st-low .pct{color:var(--coral);}
+  .rchip.st-mid .pct{color:var(--gold);}
+  .rchip.st-high .pct{color:var(--teal);}
+  .rchip .att{font-size:10.5px; color:var(--muted-2); font-family:'IBM Plex Mono',monospace;}
+
+  /* Leaderboard */
+  table{width:100%; border-collapse:collapse;}
+  .lb-table td, .lb-table th{padding:8px 6px; font-size:12.5px;}
+  .lb-table th{
+    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:0.6px;
+    color:var(--muted-2); border-bottom:1px solid var(--hair-2); font-weight:600;
+  }
+  .lb-table td{border-bottom:1px solid var(--hair-2); color:var(--text);}
+  .lb-table tr:last-child td{border-bottom:none;}
+  .rank{font-family:'IBM Plex Mono',monospace; color:var(--muted); width:24px;}
+  .rank.r1{color:var(--gold); font-weight:700;}
+  .rank.r2{color:#C9CEDB;}
+  .rank.r3{color:#C08A56;}
+  .lb-name{font-weight:600;}
+  .lb-pct{font-family:'IBM Plex Mono',monospace; font-weight:600; text-align:right;}
+  .lb-att{color:var(--muted); text-align:right; font-family:'IBM Plex Mono',monospace; font-size:11.5px;}
+  .bar-mini{height:4px; border-radius:2px; background:var(--panel-3); margin-top:4px; overflow:hidden;}
+  .bar-mini i{display:block; height:100%; background:var(--teal); border-radius:2px;}
+
+  /* Subject bars */
+  .subj-row{margin-bottom:13px;}
+  .subj-row:last-child{margin-bottom:0;}
+  .subj-top{display:flex; justify-content:space-between; font-size:12px; margin-bottom:5px;}
+  .subj-top .name{color:var(--text); font-weight:500;}
+  .subj-top .pct{font-family:'IBM Plex Mono',monospace; color:var(--muted); font-weight:600;}
+  .subj-track{height:8px; background:var(--panel-3); border-radius:4px; overflow:hidden;}
+  .subj-fill{height:100%; border-radius:4px; background:var(--teal);}
+
+  /* AI model comparison */
+  .aiset-row{display:flex; align-items:center; gap:10px; margin-bottom:11px;}
+  .aiset-row:last-child{margin-bottom:0;}
+  .aiset-tag{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; width:64px; flex-shrink:0;
+    color:var(--gold); background:rgba(232,184,84,0.09); border:1px solid rgba(232,184,84,0.22);
+    padding:3px 0; border-radius:6px; text-align:center;
+  }
+  .aiset-bar-wrap{flex:1; height:8px; background:var(--panel-3); border-radius:4px; overflow:hidden;}
+  .aiset-bar{height:100%; background:var(--gold); border-radius:4px;}
+  .aiset-val{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--muted); width:70px; text-align:right; flex-shrink:0;}
+
+  /* Feed */
+  .feed{max-height:420px; overflow-y:auto; padding-right:4px;}
+  .feed::-webkit-scrollbar{width:6px;}
+  .feed::-webkit-scrollbar-thumb{background:var(--panel-3); border-radius:3px;}
+  .frow{
+    display:grid; grid-template-columns:56px 1fr auto; gap:10px; align-items:center;
+    padding:9px 4px; border-bottom:1px solid var(--hair-2);
+  }
+  .frow:last-child{border-bottom:none;}
+  .frow.flash{animation:flashin 1.8s ease;}
+  @keyframes flashin{
+    0%{background:rgba(232,184,84,0.16);}
+    100%{background:transparent;}
+  }
+  .ftime{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted-2);}
+  .fmid .fname{font-size:12.5px; font-weight:600; color:var(--text);}
+  .fmid .fsub{font-size:10.5px; color:var(--muted-2); font-family:'IBM Plex Mono',monospace; margin-top:1px;}
+  .fscore{font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:700; text-align:right;}
+  .fscore.hi{color:var(--teal);} .fscore.mid{color:var(--gold);} .fscore.lo{color:var(--coral);}
+
+  .empty{color:var(--muted-2); font-size:12.5px; padding:20px 0; text-align:center;}
+  .loading{color:var(--muted-2); font-size:12.5px; padding:30px 0; text-align:center; font-family:'IBM Plex Mono',monospace;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">
+      <svg class="owlmark" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="23" stroke="#E8B854" stroke-width="1.4" opacity="0.4"/>
+        <ellipse cx="16" cy="21" rx="7" ry="8" fill="#17223A" stroke="#E8B854" stroke-width="1.3"/>
+        <ellipse cx="32" cy="21" rx="7" ry="8" fill="#17223A" stroke="#E8B854" stroke-width="1.3"/>
+        <circle cx="16" cy="21" r="3.2" fill="#E8B854"/>
+        <circle cx="32" cy="21" r="3.2" fill="#E8B854"/>
+        <path d="M22 24 L24 28 L26 24 Z" fill="#E8B854"/>
+        <path d="M8 15 L16 12 L15 18 Z" fill="#E8B854" opacity="0.85"/>
+        <path d="M40 15 L32 12 L33 18 Z" fill="#E8B854" opacity="0.85"/>
+        <path d="M14 35 Q24 42 34 35 L32 38 Q24 43 16 38 Z" fill="#57D6C4" opacity="0.85"/>
+      </svg>
+      <div class="titles">
+        <h1>Owlvy&#8209;Trio&#8209;G6&#8209;Admission&#8209;AI&#8209;Exam&#8209;Live</h1>
+        <div class="sub">&#3627;&#3657;&#3629;&#3591;&#3626;&#3629;&#3610; 4 &middot; <b>ADM&#8209;APXXXX</b> &middot; &#3623;&#3636;&#3594;&#3634;&#3623;&#3636;&#3607;&#3618;&#3634;&#3624;&#3634;&#3626;&#3605;&#3619;&#3660; BIO &middot; CHEM &middot; PHY &middot; ASTRO &middot; EARTH</div>
+      </div>
+    </div>
+    <div class="status-cluster">
+      <div class="live-chip"><span class="live-dot"></span>LIVE</div>
+      <div class="sync-info">&#3626;&#3639;&#3656;&#3629;&#3648;&#3617;&#3639;&#3656;&#3629;&#3612;&#3621;&#3621;&#3656;&#3634;&#3626;&#3640;&#3604;: <span id="lastSync">&mdash;</span><br>&#3629;&#3633;&#3614;&#3648;&#3604;&#3607;&#3651;&#3609;&#3629;&#3637;&#3585;: <span id="countdown">&mdash;</span></div>
+      <button class="refresh-btn" id="refreshBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 11a8 8 0 10-1.87 5.15M20 4v7h-7"/></svg>
+        &#3619;&#3637;&#3648;&#3615;&#3619;&#3594;
+      </button>
+    </div>
+  </div>
+
+  <div class="errbar" id="errBar"></div>
+
+  <div class="kpi-row" id="kpiRow">
+    <div class="loading">&#3585;&#3635;&#3621;&#3633;&#3591;&#3650;&#3627;&#3621;&#3604;&#3586;&#3657;&#3629;&#3617;&#3641;&#3621;&hellip;</div>
+  </div>
+
+  <div class="grid-main">
+    <div class="col-left">
+      <div class="panel">
+        <h2>&#3626;&#3606;&#3634;&#3609;&#3632;&#3627;&#3657;&#3629;&#3591;&#3626;&#3629;&#3610; &middot; G6 <span class="tag" id="rosterTag"></span></h2>
+        <div class="desc">&#3626;&#3607;&#3634;&#3609;&#3632;&#3585;&#3634;&#3619;&#3626;&#3629;&#3610;&#3619;&#3634;&#3618;&#3609;&#3633;&#3585;&#3648;&#3619;&#3637;&#3618;&#3609; &middot; &#3626;&#3637;&#3610;&#3629;&#3585;&#3626;&#3637;&#3605;&#3634;&#3617;&#3588;&#3632;&#3649;&#3609;&#3609;&#3607;&#3637;&#3656;&#3607;&#3635;&#3652;&#3604;&#3657;&#3604;&#3637;&#3607;&#3637;&#3656;&#3626;&#3640;&#3604;</div>
+        <div class="roster-grid" id="rosterGrid"><div class="loading">&hellip;</div></div>
+      </div>
+      <div class="panel">
+        <h2>&#3585;&#3619;&#3632;&#3604;&#3634;&#3609;&#3611;&#3619;&#3632;&#3585;&#3634;&#3624; (&#3648;&#3619;&#3637;&#3618;&#3591;&#3605;&#3634;&#3617;&#3588;&#3632;&#3649;&#3609;&#3609;&#3617;&#3629;&#3591;&#3626;&#3640;&#3604;)</h2>
+        <div class="desc">&#3652;&#3617;&#3656;&#3609;&#3633;&#3610;&#3609;&#3633;&#3585;&#3648;&#3619;&#3637;&#3618;&#3609;&#3607;&#3637;&#3656;&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637;&#3624;&#3641;&#3609;&#3618;&#3660;&#3585;&#3634;&#3619;&#3626;&#3629;&#3610;</div>
+        <table class="lb-table"><thead><tr><th>#</th><th>&#3609;&#3633;&#3585;&#3648;&#3619;&#3637;&#3618;&#3609;</th><th style="text-align:right">&#3588;&#3632;&#3649;&#3609;&#3609;&#3626;&#3641;&#3591;&#3626;&#3640;&#3604;</th><th style="text-align:right">&#3588;&#3619;&#3633;&#3657;&#3591;</th></tr></thead><tbody id="lbBody"><tr><td colspan="4" class="loading">&hellip;</td></tr></tbody></table>
+      </div>
+    </div>
+
+    <div class="col-right">
+      <div class="panel">
+        <h2>&#3588;&#3623;&#3634;&#3617;&#3606;&#3609;&#3633;&#3604;&#3619;&#3634;&#3618;&#3623;&#3636;&#3594;&#3634; &middot; &#3607;&#3633;&#3657;&#3591;&#3627;&#3657;&#3629;&#3591;&#3626;&#3629;&#3610;</h2>
+        <div class="desc">&#3588;&#3656;&#3634;&#3648;&#3593;&#3621;&#3637;&#3656;&#3618;&#3585;&#3634;&#3619;&#3607;&#3635;&#3606;&#3641;&#3585;&#3605;&#3656;&#3629;&#3627;&#3617;&#3623;&#3604;&#3623;&#3636;&#3594;&#3634; &#3592;&#3634;&#3585;&#3607;&#3640;&#3585;&#3588;&#3619;&#3633;&#3657;&#3591;&#3607;&#3637;&#3656;&#3626;&#3656;&#3591;</div>
+        <div id="subjBars"><div class="loading">&hellip;</div></div>
+      </div>
+      <div class="panel">
+        <h2>&#3648;&#3611;&#3619;&#3637;&#3618;&#3610;&#3648;&#3607;&#3637;&#3618;&#3610;&#3594;&#3640;&#3604;&#3586;&#3657;&#3629;&#3626;&#3629;&#3610; AI</h2>
+        <div class="desc">&#3588;&#3632;&#3649;&#3609;&#3609;&#3648;&#3593;&#3621;&#3637;&#3656;&#3618;&#3649;&#3618;&#3585;&#3605;&#3634;&#3617;&#3594;&#3640;&#3604;&#3586;&#3657;&#3629;&#3626;&#3629;&#3610;&#3607;&#3637;&#3656;&#3626;&#3619;&#3657;&#3634;&#3591;&#3650;&#3604;&#3618; AI &#3649;&#3605;&#3656;&#3621;&#3632;&#3605;&#3633;&#3623;</div>
+        <div id="aisetBars"><div class="loading">&hellip;</div></div>
+      </div>
+      <div class="panel">
+        <h2>&#3585;&#3636;&#3592;&#3585;&#3619;&#3619;&#3617;&#3626;&#3604; <span class="tag" id="feedTag"></span></h2>
+        <div class="desc">&#3629;&#3633;&#3611;&#3648;&#3604;&#3607;&#3626;&#3604;&#3607;&#3634;&#3591;&#3610;&#3609; &#3648;&#3619;&#3637;&#3618;&#3591;&#3605;&#3634;&#3617;&#3648;&#3623;&#3621;&#3634;&#3625;&#3656;&#3591;&#3626;&#3656;&#3591;&#3621;&#3656;&#3634;&#3626;&#3640;&#3604;</div>
+        <div class="feed" id="feed"><div class="loading">&hellip;</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const STUDENT_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSeiM7_a9Rk6zb2X3dAGQZh0yDPw6m5OvscB3lwRHg9A5Iy7v35lPREBYhEsO1AM4EglZ5v8FFN7BLH/pub?gid=0&single=true&output=csv";
+const RESULT_URL  = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRhjtKV7rikeRaG0VbkUxvOD96o2BLXCZKBA1EZXHMNCcwYyrQfxzRV4skY5Y1XnJtN-3tFRhRJmjlA/pub?gid=0&single=true&output=csv";
+const REFRESH_MS = 20000;
+const SUBJECTS = [
+  {key:"BIO", label:"BIO \u00b7 \u0e0a\u0e35\u0e27\u0e27\u0e34\u0e17\u0e22\u0e32"},
+  {key:"CHEM", label:"CHEM \u00b7 \u0e40\u0e04\u0e21\u0e35"},
+  {key:"PHY", label:"PHY \u00b7 \u0e1f\u0e34\u0e2a\u0e34\u0e01\u0e2a\u0e4c"},
+  {key:"ASTRO", label:"ASTRO \u00b7 \u0e14\u0e32\u0e23\u0e32\u0e28\u0e32\u0e2a\u0e15\u0e23\u0e4c"},
+  {key:"EARTH", label:"EARTH \u00b7 \u0e42\u0e25\u0e01\u0e28\u0e32\u0e2a\u0e15\u0e23\u0e4c"}
+];
+const AISET_NAMES = {GEM:"Gemini", GLM:"GLM", DSK:"DeepSeek", GPT:"GPT", CLD:"Claude"};
+
+let lastSeenKeys = new Set();
+let firstLoad = true;
+let countdownTimer = null;
+let secondsLeft = REFRESH_MS/1000;
+
+function normName(s){ return (s||"").replace(/\s+/g," ").trim(); }
+
+function parseCSV(text){
+  const rows=[]; let row=[], field="", inQ=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(inQ){
+      if(c==='"'){ if(text[i+1]==='"'){field+='"';i++;} else inQ=false; }
+      else field+=c;
+    } else {
+      if(c==='"') inQ=true;
+      else if(c===','){ row.push(field); field=""; }
+      else if(c==='\r'){ }
+      else if(c==='\n'){ row.push(field); rows.push(row); row=[]; field=""; }
+      else field+=c;
+    }
+  }
+  if(field.length || row.length){ row.push(field); rows.push(row); }
+  return rows.filter(r => r.some(v => v !== ""));
+}
+
+function toObjects(rows){
+  if(!rows.length) return [];
+  const headers = rows[0].map(h => h.trim());
+  return rows.slice(1).map(r => {
+    const o = {};
+    headers.forEach((h,i) => o[h] = (r[i] !== undefined ? r[i].trim() : ""));
+    return o;
+  });
+}
+
+function pct(s){
+  const n = parseFloat(String(s).replace("%",""));
+  return isNaN(n) ? 0 : n;
+}
+
+function parseThaiDate(s){
+  const parts = (s||"").trim().split(" ");
+  if(parts.length < 1) return null;
+  const dparts = parts[0].split("/");
+  if(dparts.length !== 3) return null;
+  const d = parseInt(dparts[0],10), m = parseInt(dparts[1],10), yBE = parseInt(dparts[2],10);
+  const y = yBE - 543;
+  let hh=0,mm=0,ss=0;
+  if(parts[1]){
+    const tparts = parts[1].split(":");
+    hh = parseInt(tparts[0]||"0",10); mm = parseInt(tparts[1]||"0",10); ss = parseInt(tparts[2]||"0",10);
+  }
+  const dt = new Date(y, m-1, d, hh, mm, ss);
+  return isNaN(dt.getTime()) ? null : dt;
+}
+
+function fmtTime(dt){
+  if(!dt) return "--:--:--";
+  return dt.toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+}
+
+function scoreClass(p){
+  if(p >= 70) return "hi";
+  if(p >= 50) return "mid";
+  return "lo";
+}
+function chipClass(p){
+  if(p >= 70) return "st-high";
+  if(p >= 50) return "st-mid";
+  return "st-low";
+}
+
+async function fetchCSV(url){
+  const bust = url + (url.includes("?") ? "&" : "?") + "cb=" + Date.now();
+  const res = await fetch(bust, {cache:"no-store"});
+  if(!res.ok) throw new Error("HTTP " + res.status);
+  const text = await res.text();
+  return toObjects(parseCSV(text));
+}
+
+function setError(msg){
+  const el = document.getElementById("errBar");
+  if(msg){ el.textContent = msg; el.classList.add("show"); }
+  else { el.classList.remove("show"); el.textContent = ""; }
+}
+
+function renderKPIs(roster, attempts){
+  const attempted = new Set(attempts.map(a => a._key));
+  const classAvg = attempts.length ? (attempts.reduce((s,a)=>s+a.pct,0)/attempts.length) : 0;
+  let top = null;
+  attempts.forEach(a => { if(!top || a.pct > top.pct) top = a; });
+
+  const eyeFillPct = Math.min(100, Math.max(0, classAvg));
+  const R = 24, C = 2*Math.PI*R;
+  const dash = C * (eyeFillPct/100);
+
+  const html = `
+    <div class="kpi">
+      <div class="lbl">\u0e19\u0e31\u0e01\u0e40\u0e23\u0e35\u0e22\u0e19 G6 \u0e43\u0e19\u0e23\u0e2d\u0e1a</div>
+      <div class="val">${roster.length}<small>\u0e04\u0e19</small></div>
+      <div class="foot">\u0e40\u0e23\u0e34\u0e48\u0e21\u0e2a\u0e2d\u0e1a\u0e41\u0e25\u0e49\u0e27 <b>${attempted.size}</b> \u0e04\u0e19</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">\u0e08\u0e33\u0e19\u0e27\u0e19\u0e04\u0e23\u0e31\u0e49\u0e07\u0e17\u0e35\u0e48\u0e2a\u0e48\u0e07</div>
+      <div class="val">${attempts.length}<small>\u0e04\u0e23\u0e31\u0e49\u0e07</small></div>
+      <div class="foot">\u0e08\u0e32\u0e01\u0e0a\u0e38\u0e14\u0e02\u0e49\u0e2d\u0e2a\u0e2d\u0e1a\u0e17\u0e35\u0e48\u0e2a\u0e48\u0e07\u0e21\u0e32\u0e17\u0e31\u0e49\u0e07\u0e2b\u0e21\u0e14</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">\u0e04\u0e30\u0e41\u0e19\u0e19\u0e40\u0e09\u0e25\u0e35\u0e48\u0e22\u0e2b\u0e49\u0e2d\u0e07</div>
+      <div class="val">${classAvg.toFixed(1)}<small>%</small></div>
+      <div class="foot">\u0e08\u0e32\u0e01 ${attempts.length} \u0e04\u0e23\u0e31\u0e49\u0e07\u0e01\u0e32\u0e23\u0e2a\u0e2d\u0e1a</div>
+    </div>
+    <div class="kpi top">
+      <div class="lbl">\u0e04\u0e30\u0e41\u0e19\u0e19\u0e2a\u0e39\u0e07\u0e2a\u0e38\u0e14</div>
+      <div class="val">${top ? top.pct.toFixed(0) : 0}<small>%</small></div>
+      <div class="foot">${top ? top.name : "\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25"}</div>
+    </div>
+    <div class="kpi eye">
+      <div class="eyewrap">
+        <svg viewBox="0 0 60 60">
+          <circle cx="30" cy="30" r="${R}" fill="none" stroke="#1C2942" stroke-width="6"/>
+          <circle cx="30" cy="30" r="${R}" fill="none" stroke="#E8B854" stroke-width="6"
+            stroke-dasharray="${dash} ${C}" stroke-linecap="round"
+            transform="rotate(-90 30 30)"/>
+          <circle cx="30" cy="30" r="10" fill="#17223A" stroke="#E8B854" stroke-width="1"/>
+          <circle cx="30" cy="30" r="4.5" fill="#E8B854"/>
+          <rect class="eye-lid" x="10" y="17" width="40" height="26" fill="#121B2E"/>
+        </svg>
+      </div>
+      <div class="eye-info">
+        <div class="lbl">Owl Pulse</div>
+        <div class="val">${eyeFillPct.toFixed(0)}%</div>
+        <div class="foot">\u0e0a\u0e35\u0e1e\u0e08\u0e23\u0e04\u0e27\u0e32\u0e21\u0e40\u0e04\u0e25\u0e37\u0e48\u0e2d\u0e19\u0e44\u0e2b\u0e27\u0e2a\u0e19\u0e32\u0e21\u0e2a\u0e2d\u0e1a</div>
+      </div>
+    </div>
+  `;
+  document.getElementById("kpiRow").innerHTML = html;
+}
+
+function renderRoster(roster, byStudent){
+  document.getElementById("rosterTag").textContent = roster.length + " \u0e04\u0e19";
+  if(!roster.length){
+    document.getElementById("rosterGrid").innerHTML = '<div class="empty">\u0e44\u0e21\u0e48\u0e1e\u0e1a\u0e19\u0e31\u0e01\u0e40\u0e23\u0e35\u0e22\u0e19 G6 \u0e43\u0e19\u0e23\u0e32\u0e22\u0e0a\u0e37\u0e48\u0e2d</div>';
+    return;
+  }
+  const html = roster.map(st => {
+    const rec = byStudent[st._key];
+    const attempts = rec ? rec.length : 0;
+    const best = rec ? Math.max(...rec.map(a=>a.pct)) : null;
+    const cls = best === null ? "st-none" : chipClass(best);
+    return `<div class="rchip ${cls}">
+      <div class="nm" title="${st.name}">${st.name}</div>
+      <div class="meta">
+        <span class="pct">${best === null ? "\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e2a\u0e2d\u0e1a" : best.toFixed(0)+"%"}</span>
+        <span class="att">${attempts ? attempts+"x" : ""}</span>
+      </div>
+    </div>`;
+  }).join("");
+  document.getElementById("rosterGrid").innerHTML = html;
+}
+
+function renderLeaderboard(roster, byStudent){
+  const ranked = roster
+    .map(st => {
+      const rec = byStudent[st._key];
+      if(!rec || !rec.length) return null;
+      const best = Math.max(...rec.map(a=>a.pct));
+      return {name: st.name, best, attempts: rec.length};
+    })
+    .filter(Boolean)
+    .sort((a,b) => b.best - a.best);
+
+  if(!ranked.length){
+    document.getElementById("lbBody").innerHTML = '<tr><td colspan="4" class="empty">\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e19\u0e31\u0e01\u0e40\u0e23\u0e35\u0e22\u0e19\u0e40\u0e23\u0e34\u0e48\u0e21\u0e2a\u0e2d\u0e1a</td></tr>';
+    return;
+  }
+  const html = ranked.map((r,i) => {
+    const rankCls = i===0 ? "r1" : i===1 ? "r2" : i===2 ? "r3" : "";
+    return `<tr>
+      <td class="rank ${rankCls}">${i+1}</td>
+      <td class="lb-name">${r.name}
+        <div class="bar-mini"><i style="width:${r.best}%"></i></div>
+      </td>
+      <td class="lb-pct">${r.best.toFixed(0)}%</td>
+      <td class="lb-att">${r.attempts}x</td>
+    </tr>`;
+  }).join("");
+  document.getElementById("lbBody").innerHTML = html;
+}
+
+function renderSubjects(attempts){
+  if(!attempts.length){
+    document.getElementById("subjBars").innerHTML = '<div class="empty">\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25</div>';
+    return;
+  }
+  const html = SUBJECTS.map(s => {
+    const vals = attempts.map(a => a.subj[s.key]).filter(v => v !== undefined && !isNaN(v));
+    const avg = vals.length ? vals.reduce((x,y)=>x+y,0)/vals.length : 0;
+    return `<div class="subj-row">
+      <div class="subj-top"><span class="name">${s.label}</span><span class="pct">${avg.toFixed(0)}%</span></div>
+      <div class="subj-track"><div class="subj-fill" style="width:${avg}%"></div></div>
+    </div>`;
+  }).join("");
+  document.getElementById("subjBars").innerHTML = html;
+}
+
+function renderAISets(attempts){
+  if(!attempts.length){
+    document.getElementById("aisetBars").innerHTML = '<div class="empty">\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25</div>';
+    return;
+  }
+  const groups = {};
+  attempts.forEach(a => {
+    if(!groups[a.tag]) groups[a.tag] = [];
+    groups[a.tag].push(a.pct);
+  });
+  const rows = Object.keys(groups).map(tag => {
+    const vals = groups[tag];
+    const avg = vals.reduce((x,y)=>x+y,0)/vals.length;
+    return {tag, avg, n: vals.length};
+  }).sort((a,b) => b.avg - a.avg);
+
+  const html = rows.map(r => `
+    <div class="aiset-row">
+      <div class="aiset-tag">${r.tag}</div>
+      <div class="aiset-bar-wrap"><div class="aiset-bar" style="width:${r.avg}%"></div></div>
+      <div class="aiset-val">${r.avg.toFixed(0)}% \u00b7 ${r.n}x</div>
+    </div>
+  `).join("");
+  document.getElementById("aisetBars").innerHTML = html;
+}
+
+function renderFeed(attempts){
+  document.getElementById("feedTag").textContent = attempts.length + " \u0e23\u0e32\u0e22\u0e01\u0e32\u0e23";
+  if(!attempts.length){
+    document.getElementById("feed").innerHTML = '<div class="empty">\u0e22\u0e31\u0e07\u0e44\u0e21\u0e48\u0e21\u0e35\u0e01\u0e32\u0e23\u0e2a\u0e48\u0e07\u0e02\u0e49\u0e2d\u0e2a\u0e2d\u0e1a</div>';
+    return;
+  }
+  const sorted = attempts.slice().sort((a,b) => (b.dt ? b.dt.getTime() : 0) - (a.dt ? a.dt.getTime() : 0)).slice(0,25);
+  const newKeys = new Set();
+  const html = sorted.map(a => {
+    const isNew = !firstLoad && !lastSeenKeys.has(a._rowKey);
+    if(isNew) newKeys.add(a._rowKey);
+    return `<div class="frow ${isNew ? "flash" : ""}">
+      <div class="ftime">${fmtTime(a.dt)}</div>
+      <div class="fmid"><div class="fname">${a.name}</div><div class="fsub">${a.setCode} \u00b7 ${a.raw}/${a.total}</div></div>
+      <div class="fscore ${scoreClass(a.pct)}">${a.pct.toFixed(0)}%</div>
+    </div>`;
+  }).join("");
+  document.getElementById("feed").innerHTML = html;
+  sorted.forEach(a => lastSeenKeys.add(a._rowKey));
+}
+
+async function loadData(manual){
+  const btn = document.getElementById("refreshBtn");
+  btn.classList.add("spinning");
+  try{
+    const [studentRows, resultRows] = await Promise.all([fetchCSV(STUDENT_URL), fetchCSV(RESULT_URL)]);
+
+    const roster = studentRows
+      .filter(r => r.Role === "student" && r.Level === "G6")
+      .map(r => ({ name: normName(r["\u0e0a\u0e37\u0e48\u0e2d"]), _key: normName(r["\u0e0a\u0e37\u0e48\u0e2d"]) }));
+
+    const attempts = resultRows
+      .filter(r => (r["\u0e0a\u0e31\u0e49\u0e19\u0e40\u0e23\u0e35\u0e22\u0e19"] || "").trim() === "G6")
+      .map(r => {
+        const name = normName(r["\u0e0a\u0e37\u0e48\u0e2d-\u0e19\u0e32\u0e21\u0e2a\u0e01\u0e38\u0e25"]);
+        const setCode = (r["\u0e0a\u0e37\u0e48\u0e2d\u0e0a\u0e38\u0e14\u0e02\u0e49\u0e2d\u0e2a\u0e2d\u0e1a"] || "").trim();
+        const tagMatch = setCode.split("-");
+        const tag = tagMatch.length ? tagMatch[tagMatch.length-1] : "?";
+        const dt = parseThaiDate(r["\u0e27\u0e31\u0e19-\u0e40\u0e27\u0e25\u0e32"]);
+        return {
+          name, _key: name,
+          setCode, tag,
+          raw: r["\u0e04\u0e30\u0e41\u0e19\u0e19\u0e17\u0e35\u0e48\u0e44\u0e14\u0e49"] || "0",
+          total: r["\u0e08\u0e33\u0e19\u0e27\u0e19\u0e02\u0e49\u0e2d"] || "0",
+          pct: pct(r["\u0e40\u0e1b\u0e2d\u0e23\u0e4c\u0e40\u0e0b\u0e47\u0e19\u0e15\u0e4c"]),
+          dt,
+          subj: {
+            BIO: pct(r["BIO %"]), CHEM: pct(r["CHEM %"]), PHY: pct(r["PHY %"]),
+            ASTRO: pct(r["ASTRO %"]), EARTH: pct(r["EARTH %"])
+          },
+          _rowKey: (r["\u0e27\u0e31\u0e19-\u0e40\u0e27\u0e25\u0e32"]||"") + "|" + name + "|" + setCode
+        };
+      });
+
+    const byStudent = {};
+    attempts.forEach(a => {
+      if(!byStudent[a._key]) byStudent[a._key] = [];
+      byStudent[a._key].push(a);
+    });
+
+    renderKPIs(roster, attempts);
+    renderRoster(roster, byStudent);
+    renderLeaderboard(roster, byStudent);
+    renderSubjects(attempts);
+    renderAISets(attempts);
+    renderFeed(attempts);
+
+    setError(null);
+    document.getElementById("lastSync").textContent = new Date().toLocaleTimeString("th-TH",{hour12:false});
+    firstLoad = false;
+  } catch(err){
+    setError("\u0e0b\u0e34\u0e07\u0e04\u0e4c\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e44\u0e21\u0e48\u0e2a\u0e33\u0e40\u0e23\u0e47\u0e08: " + err.message + " \u2014 \u0e08\u0e30\u0e25\u0e2d\u0e07\u0e43\u0e2b\u0e21\u0e48\u0e2d\u0e31\u0e15\u0e42\u0e19\u0e21\u0e31\u0e15\u0e34");
+  } finally {
+    btn.classList.remove("spinning");
+    secondsLeft = REFRESH_MS/1000;
+  }
+}
+
+function tickCountdown(){
+  secondsLeft -= 1;
+  if(secondsLeft <= 0){
+    loadData(false);
+  } else {
+    document.getElementById("countdown").textContent = secondsLeft + " \u0e27\u0e34\u0e19\u0e32\u0e17\u0e35";
+  }
+}
+
+document.getElementById("refreshBtn").addEventListener("click", () => loadData(true));
+loadData(true);
+countdownTimer = setInterval(tickCountdown, 1000);
+</script>
+</body>
+</html>
