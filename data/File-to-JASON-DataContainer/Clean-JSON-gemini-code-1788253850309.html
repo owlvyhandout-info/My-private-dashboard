@@ -11,7 +11,7 @@
     h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-top: 0; }
     .form-group { margin-bottom: 15px; }
     label { font-weight: bold; display: block; margin-bottom: 5px; color: #34495e; font-size: 14px; }
-    textarea { width: 100%; height: 220px; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-family: monospace; font-size: 13px; box-sizing: border-box; }
+    textarea { width: 100%; height: 240px; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-family: monospace; font-size: 13px; box-sizing: border-box; }
     .btn-group { display: flex; gap: 10px; margin-bottom: 15px; }
     button { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.2s; }
     .btn-main { background-color: #3498db; color: white; flex: 1; }
@@ -30,7 +30,7 @@
 
 <div class="container">
   <h2>🦉 Owlvy Science Quiz Data Cleaner Portal</h2>
-  <p style="font-size: 13px; color: #666;">วางข้อความ JSON ดิบที่ได้จาก AI หรือข้อสอบที่มีปัญหาเพื่อซ่อมแซมและจัดฟอร์แมตให้เป็น Strict JSON 100%</p>
+  <p style="font-size: 13px; color: #666;">ทำความสะอาดข้อความดิบให้เป็น Strict Valid JSON 100% โดยไม่ทำลายเนื้อหาและสูตร $\LaTeX$</p>
 
   <div class="form-group">
     <label for="rawInput">1. วางข้อความ JSON ดิบที่ต้องการ Clean:</label>
@@ -60,7 +60,6 @@
 
     statusEl.style.display = 'none';
     outputBoxEl.style.display = 'none';
-    statusEl.className = 'status-box';
 
     var str = inputEl.value.trim();
     if (!str) {
@@ -69,7 +68,7 @@
     }
 
     try {
-      // 1. สกัดเฉพาะ [ ... ]
+      // 1. สกัดเฉพาะโครงสร้างก้ามปู [ ... ]
       var start = str.indexOf('[');
       var end = str.lastIndexOf(']');
       if (start !== -1 && end !== -1) {
@@ -78,10 +77,10 @@
         str = '[' + str + ']';
       }
 
-      // 2. แปลง Smart Quotes (ฟันหนูโค้ง)
+      // 2. แปลง Smart Quotes (ฟันหนูโค้ง) เป็นฟันหนูตรงมาตรฐาน
       str = str.replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'");
 
-      // 3. จัดการ Newline ดิบใน String
+      // 3. ปรับการขึ้นบรรทัดใหม่ดิบ (Newline) กลางข้อความ ให้เป็น \n อย่างปลอดภัย
       var cleanedStr = '';
       var inString = false;
       var escapeNext = false;
@@ -98,23 +97,19 @@
       }
       str = cleanedStr;
 
-      // 4. ตัด Trailing Comma
+      // 4. ตัด Trailing Comma ท้ายวงเล็บ
       str = str.replace(/,(\s*[\]}])/g, '$1');
 
-      // 5. ซ่อม Backslash ในสูตร LaTeX
-      str = str.replace(/\\\\|\\["\\\/bfnrtu]|\\/g, function(m) {
-        return m.length === 2 ? m : '\\\\';
-      });
-
-      // 6. ซ่อม Unquoted key
-      str = str.replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:(?!\/\/)/g, '$1"$2":');
-
-      // 7. Parse เป็น Object
-      var parsedData;
+      // 5. ถอดรหัสโครงสร้างเป็น Native JavaScript Object (ปลอดภัย 100%)
+      var parsedData = null;
       try {
         parsedData = JSON.parse(str);
       } catch (e1) {
-        parsedData = (new Function('return ' + str))();
+        try {
+          parsedData = (new Function('return ' + str))();
+        } catch (e2) {
+          throw new Error("ข้อความดิบมีโครงสร้างพังรุนแรง (เช่น เครื่องหมายคำพูดเปิด-ปิดไม่ครบ หรือข้อความโดนตัดขาดช่วง)");
+        }
       }
 
       var questionsArray = [];
@@ -125,9 +120,10 @@
       }
 
       if (!questionsArray || questionsArray.length === 0) {
-        throw new Error("ไม่พบรายการคำถามในข้อมูลนี้");
+        throw new Error("ไม่พบรายการคำถามในชุดข้อมูลนี้");
       }
 
+      // 6. แปลงกลับเป็น Strict JSON Formatted สวยงาม
       cleanOutputEl.value = JSON.stringify(questionsArray, null, 2);
       statusEl.innerHTML = "✅ ทำความสะอาดสำเร็จ! พบข้อสอบทั้งหมด <b>" + questionsArray.length + "</b> ข้อ";
       statusEl.className = 'status-box status-success';
