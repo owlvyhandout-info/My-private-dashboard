@@ -3,185 +3,158 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🦉 Owlvy House - Quiz Data Cleaner Portal</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>🦉 Owlvy House - Science Data Cleaner</title>
   <style>
-    body { font-family: 'Kanit', sans-serif; background-color: #f8fafc; }
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
+    .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-top: 0; }
+    .form-group { margin-bottom: 15px; }
+    label { font-weight: bold; display: block; margin-bottom: 5px; color: #34495e; font-size: 14px; }
+    textarea { width: 100%; height: 220px; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-family: monospace; font-size: 13px; box-sizing: border-box; }
+    .btn-group { display: flex; gap: 10px; margin-bottom: 15px; }
+    button { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.2s; }
+    .btn-main { background-color: #3498db; color: white; flex: 1; }
+    .btn-main:hover { background-color: #2980b9; }
+    .btn-clear { background-color: #e74c3c; color: white; }
+    .btn-clear:hover { background-color: #c0392b; }
+    .btn-copy { background-color: #2ecc71; color: white; width: 100%; margin-top: 10px; font-size: 16px; padding: 14px; }
+    .btn-copy:hover { background-color: #27ae60; }
+    .status-box { padding: 12px; border-radius: 8px; font-weight: bold; margin-bottom: 15px; display: none; font-size: 14px; }
+    .status-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .status-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .output-box { display: none; margin-top: 20px; border-top: 2px dashed #ddd; padding-top: 15px; }
   </style>
 </head>
-<body class="p-4 md:p-8">
+<body>
 
-  <div class="max-w-5xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-slate-100">
-    
-    <!-- Header -->
-    <div class="text-center mb-6">
-      <div class="text-4xl mb-2">🦉</div>
-      <h1 class="text-2xl font-bold text-slate-800">Owlvy Science Quiz Data Cleaner</h1>
-      <p class="text-xs text-slate-500 mt-1">โปรแกรมทำความสะอาดข้อมูลข้อสอบดิบ (Fix Newlines, Smart Quotes, Trailing Comma & LaTeX)</p>
-    </div>
+<div class="container">
+  <h2>🦉 Owlvy Science Quiz Data Cleaner Portal</h2>
+  <p style="font-size: 13px; color: #666;">วางข้อความ JSON ดิบที่ได้จาก AI หรือข้อสอบที่มีปัญหาเพื่อซ่อมแซมและจัดฟอร์แมตให้เป็น Strict JSON 100%</p>
 
-    <!-- Input Section -->
-    <div class="mb-4">
-      <label class="block text-sm font-semibold text-slate-700 mb-2">1. วางข้อความ JSON ดิบที่ได้จาก AI หรือไฟล์ข้อสอบที่ยังไม่ Clean:</label>
-      <textarea id="raw-input" class="w-full h-64 p-3 border border-slate-300 rounded-xl text-xs font-mono focus:ring-2 focus:ring-blue-500 outline-none" placeholder="วางข้อความดิบที่นี่..."></textarea>
-    </div>
-
-    <!-- Actions -->
-    <div class="flex flex-wrap gap-3 mb-6">
-      <button type="button" onclick="cleanAndFormat()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl shadow-md transition text-sm">
-        ⚡ ทำความสะอาดและจัดฟอร์แมต (Clean & Validate)
-      </button>
-      <button type="button" onclick="clearAll()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-5 py-3 rounded-xl transition text-sm">
-        🗑️ ล้างข้อมูล
-      </button>
-    </div>
-
-    <!-- Status Alert -->
-    <div id="status-box" class="hidden p-3 rounded-xl text-xs font-semibold mb-4 text-center"></div>
-
-    <!-- Output Section -->
-    <div id="output-container" class="hidden space-y-4">
-      <div class="flex justify-between items-center">
-        <label class="text-sm font-semibold text-slate-700">2. ผลลัพธ์ Strict Valid JSON (พร้อมใช้งาน 100%):</label>
-        <span id="question-count" class="text-xs font-bold text-green-600 bg-green-50 px-2.5 py-1 rounded-full border border-green-200"></span>
-      </div>
-      
-      <textarea id="clean-output" class="w-full h-80 p-3 border border-slate-300 rounded-xl text-xs font-mono bg-slate-50 focus:ring-2 focus:ring-green-500 outline-none" readonly></textarea>
-      
-      <button type="button" onclick="copyOutput()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl shadow-md transition text-base">
-        📋 คัดลอก Strict JSON ทั้งหมดไปใช้งาน
-      </button>
-    </div>
-
+  <div class="form-group">
+    <label for="rawInput">1. วางข้อความ JSON ดิบที่ต้องการ Clean:</label>
+    <textarea id="rawInput" placeholder="วางข้อความดิบที่นี่..."></textarea>
   </div>
 
-  <script>
-    function sanitizeJSON(rawText) {
-      var str = String(rawText).trim();
-      if (!str) return null;
+  <div class="btn-group">
+    <button class="btn-main" onclick="runCleaner()">⚡ ทำความสะอาดและจัดฟอร์แมต (Clean & Validate)</button>
+    <button class="btn-clear" onclick="resetForm()">🗑️ ล้างข้อมูล</button>
+  </div>
 
-      // 1. ดักจับกรณีเอา Prompt คำสั่งมาวาง[cite: 1]
-      var promptMarkers = ["ภารกิจของคุณ", "STRICT FORMAT", "ห้ามมีข้อความนำหน้า"];[cite: 1]
-      for (var i = 0; i < promptMarkers.length; i++) {
-        if (str.indexOf(promptMarkers[i]) !== -1) {
-          throw new Error("นี่คือข้อความ Prompt คำสั่ง ไม่ใช่ข้อความ JSON ที่ AI ตอบกลับมาครับ");[cite: 1]
-        }
-      }
+  <div id="statusBox" class="status-box"></div>
 
-      // 2. สกัดเอาเฉพาะก้อน Array [ ... ][cite: 1]
-      var firstBracket = str.indexOf('[');[cite: 1]
-      var lastBracket = str.lastIndexOf(']');[cite: 1]
-      if (firstBracket !== -1 && lastBracket !== -1) {
-        str = str.substring(firstBracket, lastBracket + 1);[cite: 1]
+  <div id="outputBox" class="output-box">
+    <label for="cleanOutput">2. ผลลัพธ์ Strict Valid JSON (พร้อมใช้งานทันที):</label>
+    <textarea id="cleanOutput" readonly style="background-color: #f8f9fa;"></textarea>
+    <button class="btn-copy" onclick="copyResult()">📋 คัดลอก Strict JSON ไปใช้งาน</button>
+  </div>
+</div>
+
+<script>
+  function runCleaner() {
+    var inputEl = document.getElementById('rawInput');
+    var statusEl = document.getElementById('statusBox');
+    var outputBoxEl = document.getElementById('outputBox');
+    var cleanOutputEl = document.getElementById('cleanOutput');
+
+    statusEl.style.display = 'none';
+    outputBoxEl.style.display = 'none';
+    statusEl.className = 'status-box';
+
+    var str = inputEl.value.trim();
+    if (!str) {
+      alert("กรุณาวางข้อความในช่องก่อนกดทำความสะอาดครับ");
+      return;
+    }
+
+    try {
+      // 1. สกัดเฉพาะ [ ... ]
+      var start = str.indexOf('[');
+      var end = str.lastIndexOf(']');
+      if (start !== -1 && end !== -1) {
+        str = str.substring(start, end + 1);
       } else if (!str.startsWith('[') && !str.startsWith('{')) {
         str = '[' + str + ']';
       }
 
-      // 3. แปลง Smart Quotes (ฟันหนูโค้ง)[cite: 1]
-      str = str.replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'");[cite: 1]
+      // 2. แปลง Smart Quotes (ฟันหนูโค้ง)
+      str = str.replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'");
 
-      // 4. แปลง Newline ดิบกลาง String ข้อความ[cite: 1]
-      var result = '', inString = false, escapeNext = false;[cite: 1]
-      for (var j = 0; j < str.length; j++) {
-        var ch = str[j];[cite: 1]
-        if (escapeNext) { result += ch; escapeNext = false; continue; }[cite: 1]
-        if (ch === '\\') { result += ch; escapeNext = true; continue; }[cite: 1]
-        if (ch === '"') { inString = !inString; result += ch; continue; }[cite: 1]
+      // 3. จัดการ Newline ดิบใน String
+      var cleanedStr = '';
+      var inString = false;
+      var escapeNext = false;
+      for (var i = 0; i < str.length; i++) {
+        var ch = str[i];
+        if (escapeNext) { cleanedStr += ch; escapeNext = false; continue; }
+        if (ch === '\\') { cleanedStr += ch; escapeNext = true; continue; }
+        if (ch === '"') { inString = !inString; cleanedStr += ch; continue; }
         if (inString && (ch === '\n' || ch === '\r')) {
-          result += (ch === '\n') ? '\\n' : '\\r';[cite: 1]
-          continue;[cite: 1]
+          cleanedStr += (ch === '\n') ? '\\n' : '\\r';
+          continue;
         }
-        result += ch;[cite: 1]
+        cleanedStr += ch;
       }
-      str = result;
+      str = cleanedStr;
 
-      // 5. ตัด Trailing Comma[cite: 1]
-      str = str.replace(/,(\s*[\]}])/g, '$1');[cite: 1]
+      // 4. ตัด Trailing Comma
+      str = str.replace(/,(\s*[\]}])/g, '$1');
 
-      // 6. รักษาและซ่อมแซม Backslash สำหรับสูตร LaTeX[cite: 1]
-      str = str.replace(/\\\\|\\["\\\/bfnrtu]|\\/g, function(match) {
-        return match.length === 2 ? match : '\\\\';[cite: 1]
+      // 5. ซ่อม Backslash ในสูตร LaTeX
+      str = str.replace(/\\\\|\\["\\\/bfnrtu]|\\/g, function(m) {
+        return m.length === 2 ? m : '\\\\';
       });
 
-      // 7. เติม Quotes ให้ Unquoted Keys
+      // 6. ซ่อม Unquoted key
       str = str.replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:(?!\/\/)/g, '$1"$2":');
 
-      // 8. ลอง Parse
+      // 7. Parse เป็น Object
+      var parsedData;
       try {
-        return JSON.parse(str);
+        parsedData = JSON.parse(str);
       } catch (e1) {
-        try {
-          return (new Function('return ' + str))();
-        } catch (e2) {
-          throw new Error("โครงสร้าง JSON เสียหายรุนแรง (ลืมปิดฟันหนูหรือข้อความขาดค้าง): " + e1.message);
-        }
-      }
-    }
-
-    function cleanAndFormat() {
-      var rawText = document.getElementById('raw-input').value;
-      var statusBox = document.getElementById('status-box');
-      var outputContainer = document.getElementById('output-container');
-      var cleanOutput = document.getElementById('clean-output');
-      var questionCount = document.getElementById('question-count');
-
-      statusBox.style.display = 'none';
-      outputContainer.style.display = 'none';
-
-      if (!rawText || !rawText.trim()) {
-        alert("กรุณาเปิดหรือวางข้อความในช่องก่อนครับ");
-        return;
+        parsedData = (new Function('return ' + str))();
       }
 
-      try {
-        var parsedData = sanitizeJSON(rawText);
-        
-        var questionsArray = [];
-        if (Array.isArray(parsedData)) {
-          questionsArray = parsedData;
-        } else if (parsedData && typeof parsedData === 'object') {
-          questionsArray = parsedData.questions || parsedData.data || parsedData.items || [parsedData];
-        }
-
-        if (questionsArray.length === 0) {
-          throw new Error("ไม่พบรายการคำถามในชุดข้อมูล");
-        }
-
-        cleanOutput.value = JSON.stringify(questionsArray, null, 2);
-        questionCount.innerText = "พบข้อสอบทั้งหมด " + questionsArray.length + " ข้อ";
-        
-        statusBox.innerText = "✅ ทำความสะอาดและจัดฟอร์แมต JSON เรียบร้อยแล้ว!";
-        statusBox.className = "p-3 rounded-xl text-xs font-semibold mb-4 text-center bg-green-50 text-green-700 border border-green-200";
-        statusBox.style.display = 'block';
-        outputContainer.style.display = 'block';
-
-      } catch (err) {
-        statusBox.innerText = "❌ เกิดข้อผิดพลาด: " + err.message;
-        statusBox.className = "p-3 rounded-xl text-xs font-semibold mb-4 text-center bg-red-50 text-red-700 border border-red-200";
-        statusBox.style.display = 'block';
+      var questionsArray = [];
+      if (Array.isArray(parsedData)) {
+        questionsArray = parsedData;
+      } else if (parsedData && typeof parsedData === 'object') {
+        questionsArray = parsedData.questions || parsedData.data || parsedData.items || [parsedData];
       }
-    }
 
-    function clearAll() {
-      document.getElementById('raw-input').value = '';
-      document.getElementById('clean-output').value = '';
-      document.getElementById('status-box').style.display = 'none';
-      document.getElementById('output-container').style.display = 'none';
-    }
-
-    function copyOutput() {
-      var copyText = document.getElementById("clean-output");
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(copyText.value).then(function() {
-          alert("คัดลอก Strict Valid JSON เรียบร้อยแล้ว!");
-        });
-      } else {
-        copyText.select();
-        document.execCommand("copy");
-        alert("คัดลอก Strict Valid JSON เรียบร้อยแล้ว!");
+      if (!questionsArray || questionsArray.length === 0) {
+        throw new Error("ไม่พบรายการคำถามในข้อมูลนี้");
       }
+
+      cleanOutputEl.value = JSON.stringify(questionsArray, null, 2);
+      statusEl.innerHTML = "✅ ทำความสะอาดสำเร็จ! พบข้อสอบทั้งหมด <b>" + questionsArray.length + "</b> ข้อ";
+      statusEl.className = 'status-box status-success';
+      statusEl.style.display = 'block';
+      outputBoxEl.style.display = 'block';
+
+    } catch (err) {
+      statusEl.innerText = "❌ เกิดข้อผิดพลาดในการ Clean: " + err.message;
+      statusEl.className = 'status-box status-error';
+      statusEl.style.display = 'block';
     }
-  </script>
+  }
+
+  function resetForm() {
+    document.getElementById('rawInput').value = '';
+    document.getElementById('cleanOutput').value = '';
+    document.getElementById('statusBox').style.display = 'none';
+    document.getElementById('outputBox').style.display = 'none';
+  }
+
+  function copyResult() {
+    var copyText = document.getElementById("cleanOutput");
+    copyText.select();
+    document.execCommand("copy");
+    alert("คัดลอก Strict Valid JSON เรียบร้อยแล้ว!");
+  }
+</script>
+
 </body>
 </html>
