@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<!---https://claude.ai/chat/9d8c301e-d3a5-4107-b91b-0336c2b70e5c เติมเองเพื่อระบุแหล่ง Claude--->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Data Cleaner - แปลงข้อมูลพร้อม Hardcode</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Kanit', sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; }
+  .container { max-width: 1000px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+  h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-top: 0; }
+  p.subtitle { color: #7f8c8d; font-size: 14px; margin-top: -5px; }
+  .form-group { margin-bottom: 15px; }
+  label { font-weight: bold; display: block; margin-bottom: 5px; color: #34495e; }
+  textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 13px; font-family: 'Consolas', monospace; height: 260px; resize: vertical; }
+  textarea[readonly] { background-color: #f8f9fa; }
+  .hint-text { font-weight: normal; font-size: 12px; color: #7f8c8d; margin-top: 4px; }
+  button { background-color: #3498db; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.2s; }
+  button:hover:not(:disabled) { background-color: #2980b9; }
+  button:disabled { background-color: #95a5a6; cursor: not-allowed; }
+  .btn-copy { background-color: #2ecc71; margin-top: 12px; width: 100%; font-size: 16px; padding: 13px; }
+  .btn-copy:hover:not(:disabled) { background-color: #27ae60; }
+  .status { margin-top: 12px; font-weight: bold; color: #e67e22; white-space: pre-line; line-height: 1.6; font-size: 14px; }
+  .status.success { color: #27ae60; }
+  .status.error { color: #c0392b; }
+  .status.warning { color: #d68910; }
+  .result-box { margin-top: 20px; display: none; }
+  .info-badge { display: inline-block; padding: 4px 10px; font-size: 12px; border-radius: 12px; font-weight: bold; background: #e8f4fd; color: #2980b9; margin-bottom: 10px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🧹 Quiz Data Cleaner</h2>
+  <p class="subtitle">แปลงข้อมูลดิบจาก AI (Gemini/ChatGPT) ให้พร้อมนำไป Hardcode ใน Quiz App โดยตรง — แก้ backslash หลุด escape, ลืมใส่ [ ] ครอบ, เครื่องหมายคำพูดโค้ง, newline ดิบ ให้อัตโนมัติ</p>
+
+  <div class="two-col">
+    <div class="form-group">
+      <label for="rawInput">1. วางข้อมูลดิบจาก AI ที่นี่:</label>
+      <textarea id="rawInput" placeholder="วางได้ทั้ง:
+- object เดี่ยว { id: 1, title: ... }
+- array ของ object [ {...}, {...} ]
+- object หลายตัวคั่นด้วย comma (ลืมใส่ [ ] ก็ได้)
+- ไฟล์เต็มแบบ const quizTitle = ...; const questions = [...];
+- รูปแบบ JSON strict ที่มี &quot;key&quot; ก็รองรับเช่นกัน"></textarea>
+      <p class="hint-text">รองรับทั้งสไตล์ unquoted key (id: 1) และ JSON strict (&quot;id&quot;: 1) โดยอัตโนมัติ</p>
+    </div>
+
+    <div class="form-group">
+      <label for="outputResult">2. โค้ดที่พร้อมวางใน App (ผลลัพธ์):</label>
+      <textarea id="outputResult" readonly placeholder="ผลลัพธ์ที่ทำความสะอาดแล้วจะปรากฏที่นี่..."></textarea>
+      <p class="hint-text" id="shapeInfo"></p>
+    </div>
+  </div>
+
+  <button id="cleanBtn" onclick="cleanData()">🧹 Clean & แปลงเป็นโค้ดพร้อมใช้</button>
+  <div id="status" class="status"></div>
+
+  <div id="resultBox" class="result-box">
+    <button class="btn-copy" onclick="copyResult()">📋 คัดลอกโค้ดผลลัพธ์</button>
+  </div>
+</div>
+
+<script>
+  // ===== [ ฟังก์ชันตรวจจับว่าเป็น object หลายตัวคั่นด้วย comma ที่ลืมใส่ [ ] ครอบหรือไม่ ] =====
+  // ป้องกันบั๊ก comma operator ของ JS: ถ้า eval "return ({...}, {...})" ตรงๆ โดยไม่ตรวจก่อน
+  // JS จะทิ้ง object แรกแล้วคืนแค่ตัวสุดท้ายเงียบๆ โดยไม่มี error ใดๆ เลย จึงต้องสแกนหา
+  // จุดปิด { } ตัวแรกที่ระดับบนสุดก่อน แล้วเช็คว่ามีเนื้อหาอื่นตามมาอีกหรือไม่ (นอกเหนือจาก
+  // comma/semicolon ที่คั่นระหว่าง object) ถ้ามี แปลว่าเป็นหลาย object ต้องครอบด้วย [ ] ก่อน eval
+  function looksLikeMultipleObjects(code) {
+    var trimmed = code.trim();
+    if (trimmed[0] !== '{') return false;
+    var depth = 0, inStr = false, strCh = '', esc = false;
+    for (var i = 0; i < trimmed.length; i++) {
+      var ch = trimmed[i];
+      if (esc) { esc = false; continue; }
+      if (ch === '\\') { esc = true; continue; }
+      if (inStr) { if (ch === strCh) inStr = false; continue; }
+      if (ch === '"' || ch === "'") { inStr = true; strCh = ch; continue; }
+      if (ch === '{') depth++;
+      else if (ch === '}') {
+        depth--;
+        if (depth === 0) {
+          var rest = trimmed.slice(i + 1).trim().replace(/^[,;]+/, '').trim();
+          return rest.length > 0;
+        }
+      }
+    }
+    return false;
+  }
+
+  // ===== [ แก้ raw newline ดิบในสตริงให้เป็น \n ที่ถูกต้อง ] =====
+  function fixRawNewlinesInStrings(str) {
+    var result = '', inString = false, escapeNext = false, quoteChar = '';
+    for (var i = 0; i < str.length; i++) {
+      var ch = str[i];
+      if (escapeNext) { result += ch; escapeNext = false; continue; }
+      if (ch === '\\') { result += ch; escapeNext = true; continue; }
+      if (!inString && (ch === '"' || ch === "'")) { inString = true; quoteChar = ch; result += ch; continue; }
+      if (inString && ch === quoteChar) { inString = false; result += ch; continue; }
+      if (inString && (ch === '\n' || ch === '\r')) {
+        result += (ch === '\n') ? '\\n' : '\\r';
+        continue;
+      }
+      result += ch;
+    }
+    return result;
+  }
+
+  // ===== [ แก้ backslash ที่หลุด escape (เช่น \Delta ที่ควรเป็น \\Delta สำหรับ LaTeX) ] =====
+  // ครอบคลุม escape ที่ถูกต้องตามกฎ JS string literal (กว้างกว่า JSON เพราะรองรับ \x \u ด้วย)
+  function fixStrayBackslashesJS(str) {
+    return str.replace(/\\\\|\\['"\\nrtbfv0\/]|\\x[0-9a-fA-F]{2}|\\u[0-9a-fA-F]{4}|\\u\{[0-9a-fA-F]+\}|\\/g, function (match) {
+      return (match.length >= 2) ? match : '\\\\';
+    });
+  }
+
+  // ===== [ ประเมินข้อความดิบให้กลายเป็นข้อมูล JS จริงในหน่วยความจำ ] =====
+  // รองรับ 4 รูปแบบอินพุตอัตโนมัติ: object เดี่ยว, array, หลาย object ไม่มี [ ] ครอบ,
+  // และไฟล์เต็มที่มี const quizTitle/questions/extraQuestions ประกาศอยู่
+  function safeEvalJsData(rawText) {
+    var code = rawText.replace(/^```(?:javascript|js|json)?\s*/i, '').replace(/```\s*$/, '').trim();
+    if (!code) {
+      throw new Error("ไม่มีข้อมูลให้ประมวลผล กรุณาวางข้อมูลก่อน");
+    }
+    code = code.replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'");
+    code = fixRawNewlinesInStrings(code);
+    code = fixStrayBackslashesJS(code);
+
+    var declNames = [];
+    var declRegex = /\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=/g;
+    var m;
+    while ((m = declRegex.exec(code)) !== null) declNames.push(m[1]);
+
+    var wrapped;
+    var shape;
+    var trimmed = code.trim();
+    if (declNames.length > 0) {
+      wrapped = code + '\n;return {' + declNames.map(function (n) { return n + ':' + n; }).join(',') + '};';
+      shape = 'template';
+    } else if (trimmed[0] === '[') {
+      wrapped = 'return (' + code + ');';
+      shape = 'array';
+    } else if (looksLikeMultipleObjects(code)) {
+      wrapped = 'return ([' + code + ']);';
+      shape = 'array';
+    } else {
+      wrapped = 'return (' + code + ');';
+      shape = 'object';
+    }
+
+    try {
+      var fn = new Function(wrapped);
+      return { data: fn(), shape: shape, declNames: declNames };
+    } catch (e) {
+      var contextMsg = "";
+      var snippetSource = code.length > 150 ? code.substring(0, 150) + "..." : code;
+      contextMsg = "\n\nโค้ดหลังทำความสะอาดเบื้องต้น (150 ตัวอักษรแรก):\n" + snippetSource;
+      var hint = "\n\n💡 สาเหตุที่พบบ่อย:\n1. วงเล็บ { } หรือ [ ] เปิด-ปิดไม่ครบ (อาจถูกตัดตอนกลางคันตอน copy)\n" +
+        "2. มีข้อความอื่นปนมานอกเหนือจากโค้ด (เช่น คำอธิบายของ AI ก่อน/หลังโค้ด)\n" +
+        "3. ขาด comma คั่นระหว่าง field หรือระหว่าง object";
+      throw new Error("ไม่สามารถอ่านข้อมูลได้: " + e.message + contextMsg + hint);
+    }
+  }
+
+  // ===== [ Serialize ข้อมูลกลับเป็นโค้ด JS พร้อมวางเป็น hardcode ] =====
+  function jsStringLiteral(str) {
+    return '"' + String(str)
+      .replace(/\\/g, '\\\\')
+      .replace(/"/g, '\\"')
+      .replace(/\n/g, '\\n')
+      .replace(/\r/g, '\\r')
+      .replace(/\t/g, '\\t')
+      + '"';
+  }
+
+  function serializeValue(v, indent) {
+    if (Array.isArray(v)) {
+      var pad = ' '.repeat(indent), pad2 = ' '.repeat(indent + 2);
+      if (v.length === 0) return '[]';
+      return '[\n' + v.map(function (item) { return pad2 + serializeValue(item, indent + 2); }).join(',\n') + '\n' + pad + ']';
+    } else if (typeof v === 'number' || typeof v === 'boolean') {
+      return String(v);
+    } else if (v === null || v === undefined) {
+      return '""';
+    } else if (typeof v === 'object') {
+      return serializeQuestion(v, indent);
+    } else {
+      return jsStringLiteral(v);
+    }
+  }
+
+  function serializeQuestion(q, indent) {
+    var pad = ' '.repeat(indent), pad2 = ' '.repeat(indent + 2);
+    var keys = Object.keys(q);
+    var lines = keys.map(function (k) {
+      return pad2 + k + ': ' + serializeValue(q[k], indent + 2);
+    });
+    return pad + '{\n' + lines.join(',\n') + '\n' + pad + '}';
+  }
+
+  function serializeQuestionsArray(arr, indent) {
+    indent = indent || 0;
+    var pad = ' '.repeat(indent);
+    if (!arr || arr.length === 0) return '[\n\n' + pad + ']';
+    return '[\n' + arr.map(function (q) { return serializeQuestion(q, indent + 2); }).join(',\n') + '\n' + pad + ']';
+  }
+
+  function serializeFullTemplate(data) {
+    var out = '';
+    if (data.quizTitle !== undefined) out += 'const quizTitle = ' + jsStringLiteral(data.quizTitle) + ';\n';
+    if (data.quizDomain !== undefined) out += 'const quizDomain = ' + jsStringLiteral(data.quizDomain) + ';\n';
+    if (data.quizContent !== undefined) out += 'const quizContent = ' + jsStringLiteral(data.quizContent) + ';\n';
+    if (Array.isArray(data.questions)) {
+      out += '\nconst questions = ' + serializeQuestionsArray(data.questions) + ';\n';
+    }
+    if (Array.isArray(data.extraQuestions)) {
+      out += '\nconst extraQuestions = ' + serializeQuestionsArray(data.extraQuestions) + ';\n';
+    }
+    return out;
+  }
+
+  // ===== [ ตรวจสอบ field จำเป็น (เตือนเฉยๆ ไม่บล็อกการทำงาน) ] =====
+  var REQUIRED_FIELDS = ['id', 'title', 'options', 'answer'];
+  function validateQuestions(list) {
+    var problems = [];
+    list.forEach(function (q, idx) {
+      var missing = REQUIRED_FIELDS.filter(function (f) { return q[f] === undefined; });
+      if (Array.isArray(q.options) && q.options.length === 0) missing.push('options (ว่างเปล่า)');
+      if (missing.length > 0) {
+        problems.push('ข้อที่ ' + (idx + 1) + ' (id=' + (q.id !== undefined ? q.id : '?') + '): ขาด ' + missing.join(', '));
+      }
+    });
+    return problems;
+  }
+
+  function cleanData() {
+    var input = document.getElementById('rawInput').value;
+    var statusDiv = document.getElementById('status');
+    var outputBox = document.getElementById('outputResult');
+    var resultBox = document.getElementById('resultBox');
+    var shapeInfo = document.getElementById('shapeInfo');
+    var btn = document.getElementById('cleanBtn');
+
+    statusDiv.className = 'status';
+    statusDiv.innerText = '';
+    resultBox.style.display = 'none';
+    outputBox.value = '';
+    shapeInfo.innerText = '';
+
+    btn.disabled = true;
+    btn.innerText = '⏳ กำลังประมวลผล...';
+
+    // หน่วงเล็กน้อยให้ UI อัปเดตก่อนเริ่มประมวลผล (เผื่อข้อมูลใหญ่)
+    setTimeout(function () {
+      try {
+        var result = safeEvalJsData(input);
+        var data = result.data;
+        var output = '';
+        var warnings = [];
+
+        if (result.shape === 'template') {
+          output = serializeFullTemplate(data);
+          var allQuestions = (data.questions || []).concat(data.extraQuestions || []);
+          warnings = validateQuestions(allQuestions);
+          shapeInfo.innerText = 'ตรวจพบ: ไฟล์เต็ม (' + result.declNames.join(', ') + ') — questions ' +
+            (data.questions ? data.questions.length : 0) + ' ข้อ' +
+            (data.extraQuestions ? ', extraQuestions ' + data.extraQuestions.length + ' ข้อ' : '');
+        } else if (result.shape === 'array') {
+          output = serializeQuestionsArray(data);
+          warnings = validateQuestions(data);
+          shapeInfo.innerText = 'ตรวจพบ: Array ของโจทย์ ' + data.length + ' ข้อ (นำไปแทนหรือรวมเข้ากับ const questions ที่มีอยู่ได้เลย)';
+        } else {
+          output = serializeQuestion(data, 0);
+          warnings = validateQuestions([data]);
+          shapeInfo.innerText = 'ตรวจพบ: โจทย์ 1 ข้อเดี่ยว (นำไปเติมต่อท้าย array เดิม แล้วคั่นด้วย comma)';
+        }
+
+        outputBox.value = output;
+        resultBox.style.display = 'block';
+
+        if (warnings.length > 0) {
+          statusDiv.className = 'status warning';
+          statusDiv.innerText = '⚠️ แปลงสำเร็จ แต่พบข้อมูลที่อาจไม่ครบถ้วน:\n' + warnings.join('\n');
+        } else {
+          statusDiv.className = 'status success';
+          statusDiv.innerText = '✅ แปลงสำเร็จ ข้อมูลครบถ้วนทุกฟิลด์ที่จำเป็น พร้อมนำไปวางใช้งานได้เลย';
+        }
+      } catch (e) {
+        statusDiv.className = 'status error';
+        statusDiv.innerText = '❌ ' + e.message;
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '🧹 Clean & แปลงเป็นโค้ดพร้อมใช้';
+      }
+    }, 30);
+  }
+
+  function copyResult() {
+    var text = document.getElementById('outputResult').value;
+    if (!text) return;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        alert('คัดลอกโค้ดเรียบร้อยแล้ว! นำไปวางใน const questions ของแอปได้เลยครับ');
+      }).catch(function () {
+        fallbackCopy();
+      });
+    } else {
+      fallbackCopy();
+    }
+
+    function fallbackCopy() {
+      var box = document.getElementById('outputResult');
+      box.select();
+      document.execCommand('copy');
+      alert('คัดลอกโค้ดเรียบร้อยแล้ว! นำไปวางใน const questions ของแอปได้เลยครับ');
+    }
+  }
+</script>
+
+</body>
+</html>
