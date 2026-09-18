@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supabase vs Firebase — ระบบข้อสอบ Adaptive Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B1210;
+    --bg-panel: #101A17;
+    --ink: #E9EEEB;
+    --ink-dim: #9BAAA4;
+    --line: #23342E;
+    --supabase: #3ECF8E;
+    --firebase: #FFA726;
+    --warn: #F2C14E;
+    --code-bg: #0E1613;
+  }
+  :root:not([data-theme="dark"]) {
+    --bg: #FBFBF9;
+    --bg-panel: #FFFFFF;
+    --ink: #16211D;
+    --ink-dim: #566860;
+    --line: #DDE4DF;
+    --supabase: #1C9A62;
+    --firebase: #C2760A;
+    --warn: #8A6A00;
+    --code-bg: #F2F5F1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B1210;
+      --bg-panel: #101A17;
+      --ink: #E9EEEB;
+      --ink-dim: #9BAAA4;
+      --line: #23342E;
+      --supabase: #3ECF8E;
+      --firebase: #FFA726;
+      --warn: #F2C14E;
+      --code-bg: #0E1613;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B1210;
+    --bg-panel: #101A17;
+    --ink: #E9EEEB;
+    --ink-dim: #9BAAA4;
+    --line: #23342E;
+    --supabase: #3ECF8E;
+    --firebase: #FFA726;
+    --warn: #F2C14E;
+    --code-bg: #0E1613;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Noto Sans Thai', system-ui, sans-serif;
+    line-height: 1.75;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 64px 24px 120px;
+  }
+
+  header.hero {
+    margin-bottom: 56px;
+  }
+  .kicker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-dim);
+    margin: 0 0 18px;
+    letter-spacing: 0.02em;
+  }
+  .kicker .dot { color: var(--supabase); }
+  h1 {
+    font-size: clamp(28px, 4.2vw, 40px);
+    line-height: 1.28;
+    margin: 0 0 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .hero-sub {
+    color: var(--ink-dim);
+    font-size: 17px;
+    max-width: 60ch;
+    margin: 0;
+  }
+
+  .verdict {
+    margin-top: 32px;
+    padding: 20px 22px;
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--supabase);
+    border-radius: 4px;
+  }
+  .verdict-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--supabase);
+    margin: 0 0 8px;
+  }
+  .verdict p { margin: 0; color: var(--ink); }
+
+  section { margin: 56px 0; }
+  h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 22px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 30px 0 12px;
+    color: var(--ink);
+  }
+  p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { font-weight: 600; }
+  a { color: var(--supabase); }
+
+  .pill-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    color: var(--ink-dim);
+  }
+  .pill.sb { border-color: var(--supabase); color: var(--supabase); }
+  .pill.fb { border-color: var(--firebase); color: var(--firebase); }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  @media (max-width: 620px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+  .col {
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 18px 20px;
+  }
+  .col-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    margin: 0 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .col-title.sb { color: var(--supabase); }
+  .col-title.fb { color: var(--firebase); }
+  .col ul { margin: 0; padding-left: 18px; }
+  .col li { font-size: 14.5px; margin-bottom: 8px; color: var(--ink); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14.5px;
+    margin: 8px 0 4px;
+  }
+  th, td {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-dim);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  td.win-sb { color: var(--supabase); font-weight: 600; white-space: nowrap; }
+  td.win-fb { color: var(--firebase); font-weight: 600; white-space: nowrap; }
+  .table-scroll { overflow-x: auto; }
+
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.88em;
+    color: var(--ink);
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--ink);
+  }
+  pre code { background: none; padding: 0; }
+
+  .flow {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    border-left: 2px solid var(--line);
+    padding-left: 0;
+  }
+  .flow li {
+    position: relative;
+    padding: 4px 0 22px 28px;
+    margin: 0;
+  }
+  .flow li::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: -13px;
+    top: 2px;
+    width: 24px;
+    height: 24px;
+    background: var(--bg);
+    border: 2px solid var(--supabase);
+    color: var(--supabase);
+    border-radius: 50%;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .callout {
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--warn);
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin: 18px 0;
+    font-size: 14.5px;
+    color: var(--ink);
+  }
+  .callout-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--warn);
+    margin: 0 0 8px;
+  }
+
+  .caution-list {
+    padding-left: 0;
+    list-style: none;
+    margin: 0;
+  }
+  .caution-list li {
+    padding-left: 26px;
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .caution-list li::before {
+    content: "!";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    background: var(--warn);
+    color: var(--bg);
+    border-radius: 50%;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  footer {
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-dim);
+    font-size: 13px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="kicker">DATABASE ARCHITECTURE NOTE <span class="dot">·</span> อ้างอิงการตัดสินใจเลือก Backend</p>
+    <h1>Supabase หรือ Firebase สำหรับระบบข้อสอบ Adaptive Learning</h1>
+    <p class="hero-sub">สรุปการเปรียบเทียบทั้งสองแพลตฟอร์ม และวิเคราะห์เจาะจงสำหรับระบบที่ต้องมีการวิเคราะห์ผลสอบ, AI สร้างข้อสอบใหม่จากแนวโน้มความผิดพลาด และรองรับภาพประกอบข้อสอบ</p>
+    <div class="verdict">
+      <p class="verdict-label">สรุปสั้น</p>
+      <p><strong>Supabase</strong> เหมาะกว่าอย่างชัดเจน เพราะระบบนี้มีข้อมูลเชิงสัมพันธ์ซับซ้อน ต้องทำ analytics หนัก และต้องค้นหาเชิงความหมายด้วย embedding — ทั้งสามอย่างเป็นจุดแข็งของ Postgres ที่ Firestore ทำได้ยากหรือทำไม่ได้เลย</p>
+    </div>
+  </header>
+
+  <section>
+    <h2>1 · จุดเด่นของ Supabase เทียบกับ Firebase (ภาพรวม)</h2>
+
+    <h3>ฐานข้อมูลแบบ Relational (PostgreSQL)</h3>
+    <p>ความต่างที่ใหญ่ที่สุดคือ Supabase ใช้ Postgres จริง ในขณะที่ Firebase ใช้ Firestore ซึ่งเป็น NoSQL เอกสารต้นฉบับ (document-based) ผลคือ Supabase เขียน SQL ซับซ้อนและ JOIN ตารางได้ มี foreign key และ ACID transaction รองรับ data type หลากหลายอย่าง JSONB, Array, PostGIS และทำความสัมพันธ์แบบ many-to-many ได้โดยไม่ต้อง workaround</p>
+
+    <h3>Open source และไม่ติด Vendor Lock-in</h3>
+    <p>โค้ด Supabase เปิดให้ดูและ self-host ได้ด้วย Docker ข้อมูลเป็น Postgres มาตรฐานจึง dump แล้วย้ายผู้ให้บริการอื่นได้ทันที ต่างจาก Firestore ที่การ export ข้อมูลออกไปใช้ที่อื่นทำได้ยากกว่า</p>
+
+    <h3>Row Level Security (RLS)</h3>
+    <p>กำหนดสิทธิ์การเข้าถึงที่ระดับฐานข้อมูลโดยตรง ทำให้ปลอดภัยแม้ query ผ่าน client โดยตรง เป็นมาตรฐานของ Postgres ที่ผ่านการพิสูจน์มายาวนาน ไม่ใช่ DSL เฉพาะของแพลตฟอร์มใดแพลตฟอร์มหนึ่ง</p>
+
+    <h3>Ecosystem ของ Extension</h3>
+    <p>ติดตั้ง extension เสริมได้ เช่น <code>pgvector</code> สำหรับเก็บ embedding เพื่อ semantic search, <code>PostGIS</code> สำหรับค้นหาตามพิกัด GPS และ <code>pg_cron</code> สำหรับตั้ง scheduled job</p>
+
+    <h3>ราคาที่คาดเดาได้ง่ายกว่า</h3>
+    <p>Firebase คิดเงินตามจำนวน read/write ทำให้บิลพุ่งเร็วเมื่อ traffic สูง ส่วน Supabase มี pricing แบบ tier ชัดเจน คาดการณ์ต้นทุนได้ง่ายกว่า</p>
+
+    <h3>ใช้เครื่องมือมาตรฐานได้</h3>
+    <p>เขียน SQL ตรง ๆ หรือใช้ ORM ยอดนิยมอย่าง Prisma และ Drizzle ได้เลย มี Supabase CLI สำหรับรัน local environment และทำ database branching</p>
+
+    <div class="two-col">
+      <div class="col">
+        <p class="col-title sb">● SUPABASE ได้เปรียบ</p>
+        <ul>
+          <li>SQL relational + JOIN + ACID</li>
+          <li>Open source, ย้ายข้อมูลง่าย</li>
+          <li>RLS ระดับฐานข้อมูล</li>
+          <li>pgvector, PostGIS, pg_cron</li>
+          <li>ราคาแบบ tier คาดเดาได้</li>
+        </ul>
+      </div>
+      <div class="col">
+        <p class="col-title fb">● FIREBASE ได้เปรียบ</p>
+        <ul>
+          <li>Offline sync บนมือถือ</li>
+          <li>Push notification ผ่าน FCM</li>
+          <li>Mobile ecosystem ครบ (Analytics, Crashlytics)</li>
+          <li>Auth หลากหลาย เช่น phone auth</li>
+        </ul>
+      </div>
+    </div>
+
+    <p><strong>สรุปภาพรวม:</strong> ถ้าโปรเจกต์มีความสัมพันธ์ของข้อมูลซับซ้อน ต้องการ query ที่ยืดหยุ่น หรือกังวลเรื่อง lock-in และบิลพุ่ง Supabase มักเป็นตัวเลือกที่ดีกว่า แต่ถ้าเป็น mobile app ที่เน้น offline-first และต้องการ ecosystem ของ Google ครบ Firebase อาจยังเหมาะกว่า</p>
+  </section>
+
+  <section>
+    <h2>2 · วิเคราะห์เจาะจง: ระบบข้อสอบ Adaptive Learning</h2>
+    <p>โจทย์คือระบบข้อสอบที่ต้องวิเคราะห์ผลการทดสอบ ให้ AI เสนอข้อสอบชุดใหม่จากการวิเคราะห์ วิเคราะห์แนวโน้มข้อที่มักเจอเมื่อทำผิดในหมวดเดียวกัน และมีภาพประกอบข้อสอบ — ความต้องการทั้งสี่ตรงกับจุดแข็งของ Supabase เกือบทั้งหมด</p>
+
+    <h3>2.1 โครงสร้างข้อมูลเป็น Relational โดยธรรมชาติ</h3>
+    <pre><code>students ──&lt; attempts &gt;── questions ──&lt; questions_topics &gt;── topics (parent ซ้อนกันได้)
+                              │
+                              ├── difficulty_level
+                              ├── image_url
+                              └── embedding (vector)</code></pre>
+    <p>คำถามแบบ "นักเรียนคนนี้อ่อนเรื่องอะไร และข้อไหนในเรื่องนั้นที่คนผิดบ่อยสุด" คือการ JOIN และ GROUP BY 3–4 ตาราง ทำได้ง่ายใน Postgres แต่ทำยากใน Firestore เพราะต้อง denormalize ข้อมูลซ้ำซ้อนจนดูแลรักษายาก การคำนวณ Adaptive เช่น IRT หรือ Elo rating ต่อหัวข้อ ต้องอ่าน-เขียนหลายตารางพร้อมกันใน transaction เดียว ซึ่ง Postgres รับประกันด้วย ACID ในขณะที่ Firestore ทำ multi-document transaction ได้แต่จำกัดและซับซ้อนกว่า</p>
+
+    <h3>2.2 การวิเคราะห์ผลและแนวโน้ม = งาน SQL Analytics โดยตรง</h3>
+    <p>การหารูปแบบ เช่น "เมื่อทำผิดข้อในหมวดนี้ มักผิดข้อไหนตามมา" คือการหา co-occurrence pattern ซึ่งทำได้ด้วย <code>GROUP BY</code>, <code>HAVING</code>, window function อย่าง <code>RANK()</code> และ <code>PERCENT_RANK()</code>, และ recursive CTE รวมถึงทำ materialized view เก็บสถิติสำเร็จรูป (error rate ต่อ topic, จุดอ่อนต่อ student) แล้ว refresh ตาม schedule และต่อ BI tool อย่าง Metabase หรือ Grafana เข้ากับฐานข้อมูลได้โดยตรง ในขณะที่ Firestore มีแค่ aggregation พื้นฐาน หากต้องวิเคราะห์จริงจังต้อง export ไป BigQuery เพิ่มท่อข้อมูล ค่าใช้จ่าย และความหน่วง</p>
+
+    <h3>2.3 AI สร้างข้อสอบใหม่ — จุดที่ pgvector ต่างมากที่สุด</h3>
+    <ol class="flow">
+      <li>นักเรียนทำข้อสอบ → เก็บ <code>attempts</code> ทุกข้อ</li>
+      <li>Cron หรือ Edge Function ดึงสถิติ เช่น ข้อที่ผิดบ่อยใน topic X และความยากเฉลี่ยที่เหมาะกับนักเรียนคนนั้น</li>
+      <li>ส่ง context ให้ LLM ผ่าน Edge Function เรียก OpenAI หรือ Claude API เพื่อสร้างโจทย์ใหม่</li>
+      <li>ตรวจความซ้ำด้วย pgvector: หาข้อที่มี embedding ใกล้เคียงกับที่เพิ่งสร้าง (<code>WHERE topic_id = X ORDER BY embedding &lt;=&gt; new_embedding LIMIT 5</code>) — filter ตาม metadata และค้นหาเชิงความหมายได้ในคำสั่งเดียว</li>
+      <li>บันทึกเป็น draft → ครูตรวจ → publish</li>
+    </ol>
+    <p>จุดสำคัญคือขั้นตอนที่ 4: ใน Supabase, embedding อยู่ในตารางเดียวกับโจทย์ ส่วน Firebase ต้องพ่วง vector database แยกต่างหาก เช่น Pinecone หรือ Vertex Vector Search ทำให้เกิดปัญหา sync ข้อมูลและ architecture ซับซ้อนขึ้นชัดเจน</p>
+
+    <h3>2.4 ภาพประกอบข้อสอบ</h3>
+    <p>ทั้งสองแพลตฟอร์มมี Storage ให้ แต่ Supabase มีข้อได้เปรียบเฉพาะระบบข้อสอบ: Signed URL ผสาน RLS ทำให้รูปข้อสอบเข้าถึงได้เฉพาะคนที่กำลังสอบจริงเท่านั้น ป้องกันการแชร์ลิงก์รูปข้อสอบ ซึ่งเป็น requirement ด้านความปลอดภัยที่สำคัญของระบบสอบ</p>
+  </section>
+
+  <section>
+    <h2>3 · สรุปเทียบตาม requirement</h2>
+    <div class="table-scroll">
+    <table>
+      <thead>
+        <tr><th>ความต้องการ</th><th>ระบบที่ได้เปรียบ</th><th>เหตุผล</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>โครงสร้างข้อสอบ / หัวข้อ / ผลการทำ</td><td class="win-sb">Supabase</td><td>Relational + JOIN + foreign key</td></tr>
+        <tr><td>วิเคราะห์ผลการทดสอบ</td><td class="win-sb">Supabase</td><td>SQL analytics, window function, materialized view</td></tr>
+        <tr><td>AI สร้างชุดข้อสอบใหม่</td><td class="win-sb">Supabase</td><td>pgvector ค้นหาโจทย์คล้าย + RAG ในระบบเดียว</td></tr>
+        <tr><td>แนวโน้มข้อผิดต่อหมวด</td><td class="win-sb">Supabase</td><td>Pattern mining ด้วย SQL โดยตรง</td></tr>
+        <tr><td>ภาพประกอบ + ควบคุมการเข้าถึง</td><td class="win-sb">Supabase (เล็กน้อย)</td><td>Signed URL + RLS</td></tr>
+        <tr><td>Offline sync / Push notification</td><td class="win-fb">Firebase</td><td>จุดเดียวที่ Firebase ยังได้เปรียบ แต่ระบบสอบมักต้องออนไลน์อยู่แล้ว</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>4 · ข้อควรระวังถ้าเลือก Supabase</h2>
+    <ul class="caution-list">
+      <li>ต้องออกแบบ schema ให้ดีตั้งแต่ต้น ทีมควรถนัด SQL และการ normalize ข้อมูล</li>
+      <li>AI ที่สร้างข้อสอบควรมี human-in-the-loop — ให้ AI สร้างเป็น draft แล้วให้ครูหรือผู้เชี่ยวชาญตรวจก่อนใช้จริง ทั้งเรื่องความถูกต้องของเนื้อหาและเฉลย</li>
+      <li>ระบบข้อสอบมี traffic แบบพุ่งช่วงสอบ ควรออกแบบ connection pooling (Supabase มี Supavisor ให้) และ cache สถิติด้วย materialized view ตั้งแต่แรก</li>
+      <li>ถ้าภายหลังข้อมูลใหญ่มาก สามารถทำ analytics หนักบน replica แยกได้ เพราะเป็น Postgres มาตรฐาน เส้นทางขยายตัวเปิดกว้างกว่า Firestore</li>
+    </ul>
+    <div class="callout">
+      <p class="callout-title">สรุปรวบ</p>
+      <p>ระบบที่อธิบายคือ "application ที่มีข้อมูลเชิงสัมพันธ์ + analytics หนัก + AI ที่ต้องค้นหาข้อมูลเชิงความหมาย" ซึ่งเป็นจุดแข็งสามอย่างพร้อมกันของ Supabase ส่วน Firebase เหมาะกว่าเฉพาะกรณีที่เน้น mobile app แบบ offline-first ล้วน ๆ ซึ่งไม่ใช่ลักษณะงานนี้</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>5 · เนื้อหาเสริม</h2>
+
+    <h3>5.1 โมเดลการให้คะแนน Adaptive ที่ใช้ได้จริงกับ Postgres</h3>
+    <p>นอกจาก IRT และ Elo rating ควรพิจารณา <strong>Bayesian Knowledge Tracing (BKT)</strong> ด้วย เพราะคำนวณง่ายกว่า IRT และเก็บ state เป็นเพียงค่า float ต่อคู่ (student, topic) เหมาะกับตาราง Postgres ธรรมดา ไม่ต้องพึ่ง library ML หนัก</p>
+
+    <h3>5.2 Edge Function กับ Rate Limit ของ LLM API</h3>
+    <p>เมื่อใช้ Supabase Edge Function เรียก LLM เพื่อ generate ข้อสอบ ควรออกแบบเป็น <strong>job queue</strong> เช่นใช้ตารางร่วมกับ <code>pg_cron</code> poll แทนการเรียกแบบ synchronous ตรง ๆ เพราะการ generate ข้อสอบพร้อมภาพอาจใช้เวลานาน และป้องกัน timeout ของ Edge Function ที่ปกติจำกัดไม่กี่สิบวินาที</p>
+
+    <h3>5.3 การจัดการภาพข้อสอบขนาดใหญ่</h3>
+    <p>ถ้าภาพประกอบมีจำนวนมากและต้องโหลดเร็วพร้อมกันหลายคนช่วงสอบ ควรพ่วง CDN เช่น Cloudflare หน้า Supabase Storage และตั้ง cache header ให้เหมาะสม เพราะ traffic พุ่งพร้อมกันช่วงสอบเป็นจุดเสี่ยงคอขวดจริง</p>
+
+    <h3>5.4 ทางเลือกอื่นที่ควรรู้จักไว้เผื่อเทียบ</h3>
+    <ul>
+      <li><strong>Neon / PlanetScale</strong> (Postgres/MySQL serverless) — คล้าย Supabase แต่เน้น database branching ล้วน ๆ ไม่มี Auth/Storage/Edge Function ในตัว ต้องประกอบเองมากกว่า</li>
+      <li>ถ้าองค์กรมีข้อจำกัดด้าน data residency เช่นข้อมูลนักเรียนต้องอยู่ในประเทศ ควรเช็คว่า Supabase self-host หรือเลือก region ที่ต้องการได้หรือไม่</li>
+    </ul>
+  </section>
+
+  <footer>
+    เอกสารอ้างอิงภายใน · สรุปจากการวิเคราะห์ Supabase vs Firebase สำหรับระบบข้อสอบ Adaptive Learning
+  </footer>
+
+</div>
+</body>
+</html>
