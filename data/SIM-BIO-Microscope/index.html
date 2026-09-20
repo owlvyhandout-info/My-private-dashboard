@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microscope Virtual Lab - คลินิกกล้องจุลทรรศน์</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --ink:#0f172a; --teal:#14b8a6; --sky:#0ea5e9; --violet:#7c3aed; --pink:#ec4899; --amber:#f59e0b;
+        }
+        body {
+            font-family: 'Prompt', sans-serif; color: var(--ink);
+            background:
+              radial-gradient(1100px 600px at 10% -10%, rgba(45,212,191,.35), transparent 60%),
+              radial-gradient(900px 600px at 100% 0%, rgba(167,139,250,.40), transparent 60%),
+              radial-gradient(900px 700px at 50% 110%, rgba(244,114,182,.30), transparent 60%),
+              linear-gradient(180deg,#0b1220 0%, #16123a 100%);
+            background-attachment: fixed; min-height:100vh;
+        }
+
+        /* ---------- เลนส์จำลอง ---------- */
+        .lens-view {
+            width: 250px; height: 250px;
+            border: 12px solid #1e293b;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #ffffff, #e0f2fe 70%);
+            box-shadow: inset 0 0 25px rgba(15,23,42,.25), 0 0 0 4px #64748b, 0 0 0 7px #cbd5e1, 0 18px 30px -8px rgba(30,27,75,.55);
+            position: relative; overflow: hidden; margin: 0 auto;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .microscope-text {
+            font-size: 6rem; font-weight: bold; color: #4c1d95;
+            transform: rotate(180deg); transition: all .3s ease; white-space: nowrap;
+        }
+        .lens-movement-wrapper {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); transition: transform .2s ease-out;
+            width: 150px; height: 150px; display: flex; justify-content: center; align-items: center;
+        }
+        .lens-specimen-img { width: 100%; height: 100%; object-fit: contain; transform: rotate(180deg); }
+
+        .stage-view {
+            width: 260px; height: 200px;
+            background: linear-gradient(145deg,#94a3b8,#cbd5e1 55%,#94a3b8);
+            border: 3px solid #64748b; border-radius: 14px;
+            position: relative; margin: 0 auto;
+            display: flex; justify-content: center; align-items: center; overflow: hidden;
+            box-shadow: inset 0 4px 10px rgba(15,23,42,.25);
+        }
+        .glass-slide {
+            width: 130px; height: 60px;
+            background: rgba(255,255,255,.75); border: 1px solid rgba(255,255,255,.95);
+            box-shadow: 0 6px 10px rgba(15,23,42,.25);
+            position: absolute; transition: transform .2s ease-out;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .specimen-actual-img { width: 80%; height: 80%; object-fit: contain; }
+
+        .d-pad-btn {
+            background: linear-gradient(180deg,#8b5cf6,#6d28d9); color: white;
+            border-radius: 10px; font-weight: bold;
+            display: flex; justify-content: center; align-items: center;
+            transition: all .1s; box-shadow: 0 4px 0 #4c1d95;
+        }
+        .d-pad-btn:active { transform: translateY(4px); box-shadow: 0 0 0 #4c1d95; }
+        .d-pad-grid { display: grid; grid-template-columns: repeat(3, 60px); grid-template-rows: repeat(3, 60px); gap: 8px; justify-content: center; }
+
+        .tab-active { background: linear-gradient(90deg,#0ea5e9,#6366f1); color: white; }
+        .tab-inactive { background-color: #e0f2fe; color: #0369a1; }
+
+        /* ---------- การ์ด / ส่วนหัว ---------- */
+        .card { background:#fff; border-radius: 1.25rem; box-shadow: 0 10px 30px -12px rgba(30,27,75,.35); position:relative; overflow:hidden; }
+        .card::before { content:''; position:absolute; left:0; top:0; right:0; height:6px; background: var(--bar, linear-gradient(90deg,#14b8a6,#0ea5e9)); }
+        .num-chip { width:2.5rem; height:2.5rem; border-radius:9999px; display:flex; justify-content:center; align-items:center; color:#fff; font-weight:700; background: var(--chip, #14b8a6); box-shadow:0 4px 10px -2px rgba(0,0,0,.3); }
+        .nav-pill { padding:.45rem 1rem; border-radius:9999px; background:rgba(255,255,255,.16); color:#fff; font-weight:500; font-size:.9rem; backdrop-filter: blur(4px); border:1px solid rgba(255,255,255,.35); transition:.2s; }
+        .nav-pill:hover { background:rgba(255,255,255,.35); transform: translateY(-2px); }
+
+        /* ---------- ห้องทดลองกำลังขยาย ---------- */
+        .lab-lens {
+            width: 330px; height: 330px; border-radius: 50%; position: relative; overflow: hidden; margin: 0 auto;
+            border: 14px solid #1e293b;
+            box-shadow: inset 0 0 40px rgba(0,0,0,.45), 0 0 0 4px #64748b, 0 0 0 8px #e2e8f0, 0 22px 40px -10px rgba(0,0,0,.6);
+            cursor: grab; touch-action: none; background:#0f172a;
+        }
+        .lab-lens:active { cursor: grabbing; }
+        .lab-lens canvas { position:absolute; inset:0; width:100%; height:100%; transform: rotate(180deg); }
+        .lab-lens::after { content:''; position:absolute; inset:0; border-radius:50%; pointer-events:none;
+            background: radial-gradient(circle at 50% 50%, transparent 55%, rgba(15,23,42,.35) 100%); }
+        .crosshair::before,.crosshair::after { content:''; position:absolute; background:rgba(15,23,42,.35); z-index:2; pointer-events:none; }
+        .crosshair::before { left:0; right:0; top:50%; height:1px; }
+        .crosshair::after  { top:0; bottom:0; left:50%; width:1px; }
+        .scale-bar { position:absolute; left:50%; bottom:18px; transform:translateX(-50%); z-index:3; text-align:center; color:#0f172a; font-size:.72rem; font-weight:600; background:rgba(255,255,255,.85); padding:2px 8px 3px; border-radius:8px; pointer-events:none; }
+        .scale-bar i { display:block; height:5px; border:2px solid #0f172a; border-top:none; margin-bottom:1px; }
+
+        .pick-btn { border:2px solid #e2e8f0; border-radius:14px; padding:.5rem .4rem; font-weight:600; transition:.15s; background:#fff; text-align:center; line-height:1.15; }
+        .pick-btn:hover { transform: translateY(-2px); box-shadow:0 6px 12px -6px rgba(0,0,0,.35); }
+        .pick-btn.on { color:#fff; border-color:transparent; box-shadow:0 8px 16px -6px rgba(0,0,0,.5); transform: translateY(-2px); }
+        .pick-btn small { display:block; font-weight:400; font-size:.68rem; opacity:.85; }
+
+        .stat { border-radius:16px; padding:.85rem 1rem; color:#fff; }
+        .stat .k { font-size:.78rem; opacity:.9; }
+        .stat .v { font-size:1.6rem; font-weight:700; line-height:1.15; }
+        .stat .s { font-size:.72rem; opacity:.9; }
+
+        input[type=range]{ -webkit-appearance:none; appearance:none; height:8px; border-radius:9999px; background:linear-gradient(90deg,#14b8a6,#6366f1,#ec4899); outline:none; }
+        input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:#fff; border:4px solid #7c3aed; box-shadow:0 2px 6px rgba(0,0,0,.3); cursor:pointer; }
+        input[type=range]::-moz-range-thumb{ width:16px; height:16px; border-radius:50%; background:#fff; border:4px solid #7c3aed; cursor:pointer; }
+
+        .mx td, .mx th { padding:.4rem .3rem; text-align:center; }
+        .mx td.cell { cursor:pointer; border-radius:12px; transition:.15s; border:2px solid transparent; }
+        .mx td.cell:hover { transform:scale(1.05); }
+        .mx td.cell.on { border-color:#7c3aed; box-shadow:0 0 0 3px rgba(124,58,237,.25); }
+
+        .badge { display:inline-block; padding:.2rem .7rem; border-radius:9999px; font-size:.8rem; font-weight:600; }
+        .gauge { position:relative; height:16px; border-radius:9999px; background:#e2e8f0; overflow:hidden; }
+        .gauge .zone { position:absolute; top:0; bottom:0; background:linear-gradient(90deg,#34d399,#10b981); }
+        .gauge-dot { position:absolute; top:-4px; width:8px; height:24px; background:#7c3aed; border-radius:4px; box-shadow:0 0 0 2px #fff; transform:translateX(-50%); transition:left .25s; }
+    </style>
+</head>
+<body class="p-3 md:p-8 flex flex-col items-center">
+
+    <div class="max-w-5xl w-full bg-white/95 rounded-3xl shadow-2xl overflow-hidden border-4 border-white/70 mb-10">
+        
+        <div class="bg-gradient-to-br from-teal-400 via-sky-500 to-violet-600 p-8 text-center text-white flex flex-col items-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" style="background-image: radial-gradient(#fff 2px, transparent 2px); background-size: 30px 30px;"></div>
+            
+            <img src="owlvybot.png" alt="Owlvy Mascot" class="w-40 h-40 object-cover rounded-full shadow-xl border-4 border-white z-10 mb-4 bg-black" onerror="this.style.display='none'">
+            
+            <h1 class="text-4xl font-bold z-10 drop-shadow-md">🔬 คลินิกกล้องจุลทรรศน์</h1>
+            <p class="mt-2 text-white/90 text-lg z-10 font-medium">เรียนรู้หลักการเกิดภาพ การคำนวณ กำลังขยาย และลานสายตา (Field of View)</p>
+            <div class="z-10 mt-5 flex flex-wrap justify-center gap-2">
+                <a href="#s1" class="nav-pill">1 ภาพหัวกลับ</a>
+                <a href="#s2" class="nav-pill">2 สูตรกำลังขยาย</a>
+                <a href="#s3" class="nav-pill">3 เลื่อนสไลด์</a>
+                <a href="#s4" class="nav-pill" style="background:rgba(251,191,36,.9);color:#3b1d00;border-color:#fff">⭐ 4 ห้องทดลองกำลังขยาย &amp; ลานสายตา</a>
+            </div>
+        </div>
+
+        <div class="p-4 md:p-10 space-y-12 bg-gradient-to-b from-slate-50 to-indigo-50">
+
+            <section id="s1" class="card p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center" style="--bar:linear-gradient(90deg,#14b8a6,#22d3ee)">
+                <div class="flex-1 space-y-4">
+                    <h2 class="text-2xl font-bold text-teal-700 flex items-center gap-2">
+                        <span class="num-chip" style="--chip:linear-gradient(135deg,#14b8a6,#22d3ee)">1</span>
+                        ทดสอบภาพเสมือนหัวกลับ
+                    </h2>
+                    <p class="text-slate-600">กล้องจุลทรรศน์ใช้เลนส์นูน 2 ชุด ทำให้ภาพที่ปรากฏในเลนส์ใกล้ตาเป็น <strong>ภาพเสมือนหัวกลับ (กลับซ้ายเป็นขวา และกลับบนลงล่าง)</strong></p>
+                    <div class="mt-4">
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">ลองพิมพ์ตัวอักษร (เช่น ก, A, R)</label>
+                        <input type="text" id="textInput" maxlength="3" value="ก" class="w-full p-4 border-2 border-teal-300 rounded-xl text-center text-xl focus:ring-teal-500 focus:border-teal-500 outline-none transition" placeholder="พิมพ์ที่นี่...">
+                    </div>
+                </div>
+                <div class="flex-none">
+                    <div class="lens-view bg-blue-50">
+                        <div class="absolute inset-0 flex justify-center items-center pointer-events-none opacity-20">
+                            <div class="w-full h-px bg-black"></div><div class="absolute h-full w-px bg-black"></div>
+                        </div>
+                        <div id="textOutput" class="microscope-text">ก</div>
+                    </div>
+                    <p class="text-center mt-3 font-semibold text-teal-600">ภาพที่เห็นในกล้อง</p>
+                </div>
+            </section>
+
+            <section id="s2" class="card p-6 md:p-8" style="--bar:linear-gradient(90deg,#0ea5e9,#6366f1)">
+                <h2 class="text-2xl font-bold text-sky-700 flex items-center gap-2 mb-6">
+                    <span class="num-chip" style="--chip:linear-gradient(135deg,#0ea5e9,#6366f1)">2</span>
+                    สูตรคำนวณกำลังขยาย
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <div class="flex mb-6 rounded-xl overflow-hidden font-bold shadow-sm">
+                            <button id="btnF1" class="flex-1 py-3 tab-active transition" onclick="switchTab(1)">สูตร 1: ขนาดภาพ</button>
+                            <button id="btnF2" class="flex-1 py-3 tab-inactive transition" onclick="switchTab(2)">สูตร 2: พลังเลนส์</button>
+                        </div>
+
+                        <div id="formF1" class="space-y-4">
+                            <div class="bg-slate-100 p-3 rounded-lg text-center font-semibold text-slate-700">กำลังขยาย = ขนาดภาพ ÷ ขนาดวัตถุจริง</div>
+                            <div>
+                                <label class="block text-sm text-slate-600 mb-1">ขนาดภาพที่วัดได้ (mm)</label>
+                                <input type="number" id="valImgSize" class="w-full p-3 border-2 border-slate-200 rounded-xl" placeholder="เช่น 10">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-slate-600 mb-1">ขนาดวัตถุจริง (mm)</label>
+                                <input type="number" id="valObjSize" class="w-full p-3 border-2 border-slate-200 rounded-xl" placeholder="เช่น 0.1">
+                            </div>
+                            <button onclick="calcM1()" class="w-full bg-gradient-to-r from-sky-500 to-indigo-500 text-white py-3 rounded-xl font-bold hover:brightness-110 shadow-md">คำนวณผลลัพธ์</button>
+                        </div>
+
+                        <div id="formF2" class="space-y-4 hidden">
+                            <div class="bg-slate-100 p-3 rounded-lg text-center font-semibold text-slate-700">กำลังขยาย = เลนส์ใกล้ตา × เลนส์ใกล้วัตถุ</div>
+                            <div class="flex items-center gap-3">
+                                <div class="text-3xl">👁️</div>
+                                <div class="flex-1">
+                                    <label class="block text-sm text-slate-600 mb-1">กำลังขยายเลนส์ใกล้ตา</label>
+                                    <select id="valEyeLens" class="w-full p-3 border-2 border-slate-200 rounded-xl">
+                                        <option value="5">5X</option>
+                                        <option value="10" selected>10X</option>
+                                        <option value="15">15X</option>
+                                        <option value="20">20X</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="text-3xl">🔬</div>
+                                <div class="flex-1">
+                                    <label class="block text-sm text-slate-600 mb-1">กำลังขยายเลนส์ใกล้วัตถุ</label>
+                                    <select id="valObjLens" class="w-full p-3 border-2 border-slate-200 rounded-xl">
+                                        <option value="4">4X (Scanning)</option>
+                                        <option value="10">10X (Low Power)</option>
+                                        <option value="40">40X (High Power)</option>
+                                        <option value="100">100X (Oil Immersion)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button onclick="calcM2()" class="w-full bg-gradient-to-r from-sky-500 to-indigo-500 text-white py-3 rounded-xl font-bold hover:brightness-110 shadow-md">คำนวณผลลัพธ์</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-sky-50 to-indigo-100 rounded-2xl border-2 border-sky-200 flex flex-col justify-center items-center p-8">
+                        <p class="text-sky-800 font-semibold mb-2">กำลังขยายของกล้อง</p>
+                        <div class="bg-white w-full py-6 rounded-xl shadow-inner text-center border-2 border-sky-200">
+                            <span id="calcResult" class="text-5xl font-bold text-indigo-600">-</span>
+                            <span class="text-xl font-bold text-sky-600 ml-2">เท่า</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="s3" class="card p-6 md:p-8" style="--bar:linear-gradient(90deg,#8b5cf6,#d946ef)">
+                <h2 class="text-2xl font-bold text-indigo-700 flex items-center gap-2 mb-2">
+                    <span class="num-chip" style="--chip:linear-gradient(135deg,#8b5cf6,#d946ef)">3</span>
+                    จำลองการเลื่อนแผ่นสไลด์
+                </h2>
+                <p class="text-slate-600 mb-6">เมื่อเลื่อนแผ่นสไลด์จริง ภาพที่เห็นในเลนส์จะเคลื่อนที่ไปใน <strong>ทิศทางตรงกันข้าม</strong> เสมอ</p>
+
+                <div class="mb-8 flex justify-center items-center gap-4 bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                    <label class="font-bold text-indigo-900">เลือกตัวอย่างสไลด์:</label>
+                    <select id="specimenImgSelect" class="p-2 border-2 border-indigo-300 rounded-lg font-medium outline-none cursor-pointer" onchange="updateSpecimenImage()">
+                        <option value="amoeba.png">🦠 อะมีบา (Amoeba)</option>
+                        <option value="paramecium.png">🥿 พารามีเซียม (Paramecium)</option>
+                        <option value="euglena.png">🍃 ยูกลีนา (Euglena)</option>
+                    </select>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-10 items-center">
+                    
+                    <div class="flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-4 text-slate-700">แท่นวางวัตถุ (แผ่นสไลด์จริง)</h3>
+                        <div class="stage-view mb-6">
+                            <div id="actualSlideBox" class="glass-slide">
+                                <img id="actualImg" src="amoeba.png" alt="Specimen" class="specimen-actual-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text x=\'50\' y=\'55\' text-anchor=\'middle\' font-size=\'40\'>🦠</text></svg>'">
+                            </div>
+                        </div>
+                        
+                        <div class="d-pad-grid">
+                            <div></div>
+                            <button class="d-pad-btn text-2xl" onclick="moveSlide(0, -1)" title="เลื่อนขึ้น">⬆️</button>
+                            <div></div>
+                            <button class="d-pad-btn text-2xl" onclick="moveSlide(-1, 0)" title="เลื่อนซ้าย">⬅️</button>
+                            <button class="d-pad-btn text-sm bg-slate-500 shadow-[0_4px_0_#475569] hover:bg-slate-600" onclick="resetSlide()">รีเซ็ต</button>
+                            <button class="d-pad-btn text-2xl" onclick="moveSlide(1, 0)" title="เลื่อนขวา">➡️</button>
+                            <div></div>
+                            <button class="d-pad-btn text-2xl" onclick="moveSlide(0, 1)" title="เลื่อนลง">⬇️</button>
+                            <div></div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-4 text-indigo-700">ภาพที่ปรากฏในเลนส์</h3>
+                        <div class="lens-view border-indigo-900 bg-indigo-50/30">
+                            <div class="absolute inset-0 flex justify-center items-center pointer-events-none opacity-20 z-10">
+                                <div class="w-full h-px bg-black"></div><div class="absolute h-full w-px bg-black"></div>
+                            </div>
+                            <div id="lensMovementBox" class="lens-movement-wrapper">
+                                <img id="lensImg" src="amoeba.png" alt="Lens View" class="lens-specimen-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text x=\'50\' y=\'55\' text-anchor=\'middle\' font-size=\'40\'>🦠</text></svg>'">
+                            </div>
+                        </div>
+                        <div class="mt-6 bg-yellow-50 border border-yellow-200 p-4 rounded-xl text-sm text-yellow-800 text-center shadow-sm">
+                            <strong>💡 สังเกตการเคลื่อนที่:</strong> หากเลื่อนสไลด์จริงไปทางซ้าย ภาพในเลนส์จะหนีไปทางขวาเสมอ
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+
+            <section id="s4" class="card p-5 md:p-8" style="--bar:linear-gradient(90deg,#f59e0b,#ef4444,#ec4899,#8b5cf6)">
+                <h2 class="text-2xl md:text-3xl font-bold flex items-center gap-3 mb-2" style="color:#9d174d">
+                    <span class="num-chip" style="--chip:linear-gradient(135deg,#f59e0b,#ec4899)">4</span>
+                    ห้องทดลองกำลังขยาย &amp; ลานสายตา (Field of View)
+                </h2>
+                <p class="text-slate-600 mb-6">ปรับกำลังขยายของ <strong>เลนส์ใกล้ตา</strong> และ <strong>เลนส์ใกล้วัตถุ</strong> แล้วดูว่า ภาพจะใหญ่ขึ้นเท่าไร ลานสายตากว้างแค่ไหน และเห็นรายละเอียดได้ละเอียดเพียงใด &nbsp;·&nbsp; <span class="text-violet-700 font-semibold">ลากภาพในเลนส์ หรือลากบนแผนที่สไลด์ เพื่อเลื่อนหาตัวอย่าง</span></p>
+
+                <!-- ตัวเลือกตัวอย่าง -->
+                <div class="flex flex-wrap items-center gap-2 mb-6 bg-gradient-to-r from-amber-50 to-pink-50 border border-amber-200 rounded-2xl p-3">
+                    <span class="font-bold text-amber-800 mr-1">ตัวอย่างบนสไลด์:</span>
+                    <button class="pick-btn px-3" data-spec="amoeba" onclick="setSpec('amoeba')">🦠 อะมีบา <small>~250 µm</small></button>
+                    <button class="pick-btn px-3" data-spec="paramecium" onclick="setSpec('paramecium')">🥿 พารามีเซียม <small>~200 µm</small></button>
+                    <button class="pick-btn px-3" data-spec="euglena" onclick="setSpec('euglena')">🍃 ยูกลีนา <small>~60 µm</small></button>
+                </div>
+
+                <div class="grid lg:grid-cols-5 gap-8">
+                    <!-- ซ้าย: เลนส์ + แผนที่สไลด์ -->
+                    <div class="lg:col-span-2 flex flex-col items-center gap-5">
+                        <div>
+                            <div id="labLens" class="lab-lens crosshair">
+                                <canvas id="labCanvas"></canvas>
+                                <div class="scale-bar" id="scaleBar"><i id="scaleLine" style="width:60px"></i><span id="scaleText">100 µm</span></div>
+                            </div>
+                            <p class="text-center mt-3 font-semibold text-violet-700">👁️ ภาพที่เห็นในเลนส์ใกล้ตา <span class="text-xs text-slate-500 font-normal">(ภาพหัวกลับ)</span></p>
+                        </div>
+
+                        <div class="flex flex-col items-center">
+                            <p class="text-sm font-semibold text-slate-600 mb-2">🗺️ แผนที่สไลด์ (มองจากด้านบน — วงกลม = ลานสายตา)</p>
+                            <canvas id="miniMap" width="200" height="200" class="rounded-2xl border-4 border-slate-300 shadow-md cursor-crosshair" style="touch-action:none;width:200px;height:200px"></canvas>
+                            <div class="mt-3 flex items-center gap-2">
+                                <button class="d-pad-btn w-11 h-11" onclick="nudge(-1,0)" title="เลื่อนสไลด์ไปซ้าย">⬅️</button>
+                                <div class="flex flex-col gap-2">
+                                    <button class="d-pad-btn w-11 h-11" onclick="nudge(0,-1)" title="เลื่อนสไลด์ขึ้น">⬆️</button>
+                                    <button class="d-pad-btn w-11 h-11" onclick="nudge(0,1)" title="เลื่อนสไลด์ลง">⬇️</button>
+                                </div>
+                                <button class="d-pad-btn w-11 h-11" onclick="nudge(1,0)" title="เลื่อนสไลด์ไปขวา">➡️</button>
+                                <button class="ml-2 px-3 h-11 rounded-xl bg-slate-600 text-white text-sm font-semibold hover:bg-slate-700" onclick="recenter()">🎯 กลับกลางสไลด์</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ขวา: ควบคุม + ผลลัพธ์ -->
+                    <div class="lg:col-span-3 space-y-5">
+
+                        <!-- เลนส์ใกล้ตา -->
+                        <div class="rounded-2xl p-4 border-2 border-sky-200 bg-gradient-to-br from-sky-50 to-cyan-50">
+                            <p class="font-bold text-sky-800 mb-2">👁️ เลนส์ใกล้ตา (Eyepiece)</p>
+                            <div class="grid grid-cols-4 gap-2" id="eyeBtns"></div>
+                            <div class="mt-4">
+                                <div class="flex justify-between text-sm">
+                                    <label class="font-semibold text-slate-700">Field Number (FN) ของเลนส์ใกล้ตา</label>
+                                    <span class="font-bold text-violet-700"><span id="fnVal">18</span> mm</span>
+                                </div>
+                                <input type="range" id="fnRange" min="8" max="26" step="1" value="18" class="w-full mt-2">
+                                <p class="text-xs text-slate-500 mt-1">FN คือเส้นผ่านศูนย์กลาง (mm) ของช่องรับภาพในเลนส์ใกล้ตา — เลนส์ที่ขยายมากมักมี FN น้อยลง ปรับเองเพื่อดูผลได้</p>
+                            </div>
+                        </div>
+
+                        <!-- เลนส์ใกล้วัตถุ -->
+                        <div class="rounded-2xl p-4 border-2 border-amber-200 bg-gradient-to-br from-amber-50 to-rose-50">
+                            <p class="font-bold text-amber-800 mb-2">🔬 เลนส์ใกล้วัตถุ (Objective) <span class="text-xs font-normal text-slate-500">— สีแถบตามมาตรฐานกล้อง</span></p>
+                            <div class="grid grid-cols-4 gap-2" id="objBtns"></div>
+                        </div>
+
+                        <!-- ตัวเลขหลัก -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div class="stat" style="background:linear-gradient(135deg,#7c3aed,#c026d3)"><div class="k">กำลังขยายรวม</div><div class="v" id="outM">100×</div><div class="s" id="outMs">10 × 10</div></div>
+                            <div class="stat" style="background:linear-gradient(135deg,#0891b2,#2563eb)"><div class="k">ลานสายตา (เส้นผ่านศูนย์กลาง)</div><div class="v" id="outFov">1.80 mm</div><div class="s" id="outFovs">= 1,800 µm</div></div>
+                            <div class="stat" style="background:linear-gradient(135deg,#f59e0b,#ea580c)"><div class="k">ขนาดตัวอย่างในภาพ</div><div class="v" id="outImg">-</div><div class="s" id="outImgs">-</div></div>
+                            <div class="stat" style="background:linear-gradient(135deg,#059669,#0d9488)"><div class="k">แยกรายละเอียดได้เล็กสุด</div><div class="v" id="outRes">-</div><div class="s" id="outNA">NA = -</div></div>
+                        </div>
+
+                        <!-- สูตร -->
+                        <div class="grid sm:grid-cols-2 gap-3 text-sm">
+                            <div class="rounded-xl bg-violet-50 border border-violet-200 p-3">
+                                <p class="font-bold text-violet-800">📐 กำลังขยายรวม</p>
+                                <p class="font-mono text-slate-700 mt-1">M = เลนส์ใกล้ตา × เลนส์ใกล้วัตถุ</p>
+                            </div>
+                            <div class="rounded-xl bg-cyan-50 border border-cyan-200 p-3">
+                                <p class="font-bold text-cyan-800">⭕ ลานสายตา (Field of View)</p>
+                                <p class="font-mono text-slate-700 mt-1">FOV = FN ÷ เลนส์ใกล้วัตถุ</p>
+                            </div>
+                        </div>
+
+                        <!-- คำอธิบายสด -->
+                        <div id="explain" class="rounded-2xl p-4 bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-300 text-slate-800 text-[0.95rem] leading-relaxed space-y-2"></div>
+
+                        <!-- เกจกำลังขยายที่มีประโยชน์ -->
+                        <div class="rounded-2xl p-4 border-2 border-emerald-200 bg-emerald-50/60">
+                            <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                                <p class="font-bold text-emerald-800">🎚️ กำลังขยายรวมนี้ "เหมาะสม" กับเลนส์ใกล้วัตถุตัวนี้ไหม?</p>
+                                <span id="usefulBadge" class="badge">-</span>
+                            </div>
+                            <div class="gauge" id="gauge"><div class="zone" id="gaugeZone"></div><div class="gauge-dot" id="gaugeDot"></div></div>
+                            <div class="flex justify-between text-[0.7rem] text-slate-500 mt-1"><span>10×</span><span>100×</span><span>1000×</span><span>3000×</span></div>
+                            <p class="text-xs text-slate-600 mt-2" id="usefulText"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- เปรียบเทียบ -->
+                <div class="grid lg:grid-cols-2 gap-6 mt-8">
+                    <div class="rounded-2xl p-5 bg-gradient-to-br from-indigo-50 to-violet-100 border-2 border-indigo-200">
+                        <h3 class="font-bold text-indigo-800 text-lg mb-1">⭕ เปรียบเทียบลานสายตาของเลนส์ใกล้วัตถุแต่ละตัว</h3>
+                        <p class="text-xs text-slate-600 mb-3">ใช้ค่า FN ปัจจุบัน · จุดสีแดงตรงกลาง = ขนาดจริงของตัวอย่างที่เลือก (ในมาตราส่วนเดียวกัน)</p>
+                        <div class="flex flex-wrap items-center justify-center gap-5">
+                            <svg id="fovSvg" viewBox="0 0 260 260" width="240" height="240"></svg>
+                            <div id="fovLegend" class="text-sm space-y-2"></div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-2xl p-5 bg-gradient-to-br from-rose-50 to-amber-50 border-2 border-rose-200">
+                        <h3 class="font-bold text-rose-800 text-lg mb-1">🔢 ตารางกำลังขยายรวม &amp; ลานสายตา</h3>
+                        <p class="text-xs text-slate-600 mb-3">คลิกช่องใดก็ได้เพื่อสลับไปดูผลทันที (ใช้ FN มาตรฐานของเลนส์ใกล้ตาแต่ละตัว)</p>
+                        <div class="overflow-x-auto">
+                            <table class="mx w-full text-sm" id="matrix"></table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- โครงสร้างที่มองเห็น -->
+                <div class="rounded-2xl p-5 mt-6 bg-gradient-to-br from-teal-50 to-sky-50 border-2 border-teal-200">
+                    <h3 class="font-bold text-teal-800 text-lg mb-1">🔍 ที่กำลังขยายนี้ เห็นอะไรได้บ้าง?</h3>
+                    <p class="text-xs text-slate-600 mb-3">คำนวณจากกำลังแยก (Resolution) d = 0.61 × λ ÷ NA เมื่อ λ = 550 nm (แสงสีเขียว)</p>
+                    <div id="detailList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+                </div>
+
+                <div class="mt-6 rounded-2xl p-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white">
+                    <p class="font-bold mb-1">🧠 สรุปหลักคิด</p>
+                    <ul class="list-disc pl-5 text-sm space-y-1 text-white/95">
+                        <li>เลนส์ใกล้วัตถุ <strong>ขยายเพิ่ม → ลานสายตาแคบลงเป็นสัดส่วนผกผัน</strong> (ขยาย 10 เท่า ลานสายตาเหลือ 1/10 ของเส้นผ่านศูนย์กลาง → พื้นที่เหลือ 1/100)</li>
+                        <li>เลนส์ใกล้ตาขยายภาพให้ใหญ่ขึ้นเท่านั้น แต่ <strong>ไม่ได้เพิ่มรายละเอียดจริง</strong> — ความละเอียดถูกกำหนดโดย NA ของเลนส์ใกล้วัตถุ</li>
+                        <li>ขยายมากเกินช่วง 500–1000 × NA จะได้แค่ภาพใหญ่แต่เบลอ (Empty magnification)</li>
+                        <li>เริ่มหาตัวอย่างที่กำลังขยายต่ำ (ลานสายตากว้าง) แล้วค่อยเพิ่มกำลังขยาย</li>
+                    </ul>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script>
+        // --- APP 1: Text Inversion ---
+        const textInput = document.getElementById('textInput');
+        const textOutput = document.getElementById('textOutput');
+        textInput.addEventListener('input', (e) => {
+            textOutput.textContent = e.target.value || '-';
+        });
+
+        // --- APP 2: Calculator ---
+        function switchTab(tab) {
+            const f1 = document.getElementById('formF1');
+            const f2 = document.getElementById('formF2');
+            const b1 = document.getElementById('btnF1');
+            const b2 = document.getElementById('btnF2');
+            document.getElementById('calcResult').textContent = '-';
+
+            if(tab === 1) {
+                f1.classList.remove('hidden'); f2.classList.add('hidden');
+                b1.className = 'flex-1 py-3 tab-active transition';
+                b2.className = 'flex-1 py-3 tab-inactive transition';
+            } else {
+                f1.classList.add('hidden'); f2.classList.remove('hidden');
+                b1.className = 'flex-1 py-3 tab-inactive transition';
+                b2.className = 'flex-1 py-3 tab-active transition';
+            }
+        }
+
+        function calcM1() {
+            const img = parseFloat(document.getElementById('valImgSize').value);
+            const obj = parseFloat(document.getElementById('valObjSize').value);
+            if(img > 0 && obj > 0) {
+                const result = img / obj;
+                document.getElementById('calcResult').textContent = result.toLocaleString();
+            } else { alert("กรุณากรอกตัวเลขให้ถูกต้องและมากกว่า 0"); }
+        }
+
+        function calcM2() {
+            const eye = parseFloat(document.getElementById('valEyeLens').value);
+            const obj = parseFloat(document.getElementById('valObjLens').value);
+            const result = eye * obj;
+            document.getElementById('calcResult').textContent = result.toLocaleString();
+        }
+
+        // --- APP 3: Slide Movement (X-Y) ---
+        let sX = 0; let sY = 0;
+        const step = 15; // ระยะการเลื่อนต่อคลิก
+        const actualSlideBox = document.getElementById('actualSlideBox');
+        const lensMovementBox = document.getElementById('lensMovementBox');
+        
+        function updateSpecimenImage() {
+            const imgSrc = document.getElementById('specimenImgSelect').value;
+            document.getElementById('actualImg').src = imgSrc;
+            document.getElementById('lensImg').src = imgSrc;
+        }
+
+        function moveSlide(dx, dy) {
+            sX += dx * step;
+            sY += dy * step;
+            // ล็อคขอบเขตไม่ให้เลื่อนหลุดกรอบ
+            sX = Math.max(-50, Math.min(50, sX));
+            sY = Math.max(-50, Math.min(50, sY));
+            renderSlide();
+        }
+
+        function renderSlide() {
+            // ขยับสไลด์จริง
+            actualSlideBox.style.transform = `translate(${sX}px, ${sY}px)`;
+            
+            // ขยับภาพในเลนส์ (สวนทางและคูณอัตราขยาย)
+            const lX = -sX * 1.5;
+            const lY = -sY * 1.5;
+            lensMovementBox.style.transform = `translate(calc(-50% + ${lX}px), calc(-50% + ${lY}px))`;
+        }
+
+        function resetSlide() {
+            sX = 0; sY = 0;
+            renderSlide();
+        }
+
+        // =====================================================
+        // APP 4: Magnification & Field of View Lab
+        // =====================================================
+        const OBJ = {
+            4:   { na: 0.10, color: '#ef4444', text: '#fff', name: 'Scanning',  ring: 'แดง'   },
+            10:  { na: 0.25, color: '#facc15', text: '#422006', name: 'Low Power', ring: 'เหลือง' },
+            40:  { na: 0.65, color: '#3b82f6', text: '#fff', name: 'High Power', ring: 'ฟ้า'   },
+            100: { na: 1.25, color: '#e2e8f0', text: '#0f172a', name: 'Oil Immersion', ring: 'ขาว' }
+        };
+        const EYE = { 5: 20, 10: 18, 15: 14, 20: 12 };      // FN มาตรฐานโดยประมาณ
+        const EYE_COL = { 5: '#06b6d4', 10: '#0ea5e9', 15: '#6366f1', 20: '#8b5cf6' };
+        const SPEC = {
+            amoeba:     { th: 'อะมีบา',        size: 250, emoji: '🦠', src: 'amoeba.png' },
+            paramecium: { th: 'พารามีเซียม',   size: 200, emoji: '🥿', src: 'paramecium.png' },
+            euglena:    { th: 'ยูกลีนา',        size: 60,  emoji: '🍃', src: 'euglena.png' }
+        };
+        const DETAILS = [
+            { n: 'เซลล์ยูกลีนา / โปรโตซัวเล็ก', s: 60,  icon: '🍃' },
+            { n: 'นิวเคลียสของเซลล์',          s: 8,   icon: '⚪' },
+            { n: 'เม็ดเลือดแดง',               s: 7,   icon: '🩸' },
+            { n: 'แบคทีเรียรูปแท่ง',           s: 1.5, icon: '🧫' },
+            { n: 'ไมโทคอนเดรีย',              s: 0.5, icon: '🔋' },
+            { n: 'ไวรัส',                     s: 0.1, icon: '🦠' }
+        ];
+        const WORLD = 4000;               // สไลด์จำลองกว้าง ±4000 µm (8 mm)
+        const LAMBDA = 0.55;              // µm
+
+        const st = { eye: 10, obj: 10, fn: 18, spec: 'amoeba', cx: 0, cy: 0 };
+
+        // ---------- สุ่มตัวอย่างแบบคงที่ ----------
+        function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+        function gauss(r){return Math.sqrt(-2*Math.log(1-r()))*Math.cos(2*Math.PI*r())}
+        const rnd = mulberry32(20240607);
+        const specimens = [], debris = [];
+        specimens.push({ x: 0, y: 0, rot: 0.6, k: 1 });
+        for (let i = 0; i < 11; i++) specimens.push({ x: gauss(rnd)*170, y: gauss(rnd)*170, rot: rnd()*6.283, k: 0.8 + rnd()*0.4 });
+        for (let c = 0; c < 7; c++) {
+            const ox = (rnd()*2-1)*3200, oy = (rnd()*2-1)*3200;
+            for (let i = 0; i < 12; i++) specimens.push({ x: ox + gauss(rnd)*380, y: oy + gauss(rnd)*380, rot: rnd()*6.283, k: 0.8 + rnd()*0.4 });
+        }
+        for (let i = 0; i < 700; i++) debris.push({ x: (rnd()*2-1)*WORLD, y: (rnd()*2-1)*WORLD, d: 1.5 + rnd()*rnd()*14, a: 0.25 + rnd()*0.4, h: rnd() });
+        const specImgs = {};
+        Object.keys(SPEC).forEach(k => {
+            const im = new Image(); const o = { im, ok: false };
+            im.onload = () => { o.ok = true; draw(); };
+            im.src = SPEC[k].src; specImgs[k] = o;
+        });
+
+        // ---------- ตัวช่วยฟอร์แมต ----------
+        const nf = (v, d=2) => v.toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: 0 });
+        function fmtLen(um) {
+            if (um >= 1000) return nf(um/1000, 2) + ' mm';
+            if (um >= 10)   return nf(um, 0) + ' µm';
+            if (um >= 1)    return nf(um, 1) + ' µm';
+            return nf(um*1000, 0) + ' nm';
+        }
+        function fmtMm(mm) { return mm >= 10 ? nf(mm,0) + ' mm' : mm >= 1 ? nf(mm,1) + ' mm' : nf(mm*1000,0)+' µm'; }
+        const fovUm = () => st.fn / st.obj * 1000;
+        const totalM = () => st.eye * st.obj;
+        const resolutionUm = () => 0.61 * LAMBDA / OBJ[st.obj].na;
+
+        // ---------- ปุ่ม ----------
+        function buildButtons() {
+            const eb = document.getElementById('eyeBtns'), ob = document.getElementById('objBtns');
+            eb.innerHTML = Object.keys(EYE).map(e => `<button class="pick-btn" data-eye="${e}" onclick="setEye(${e})">${e}×<small>FN ≈ ${EYE[e]}</small></button>`).join('');
+            ob.innerHTML = Object.keys(OBJ).map(o => `<button class="pick-btn" data-obj="${o}" onclick="setObj(${o})">${o}×<small>${OBJ[o].name} · NA ${OBJ[o].na}</small></button>`).join('');
+        }
+        function setEye(e) { st.eye = e; st.fn = EYE[e]; document.getElementById('fnRange').value = st.fn; update(); }
+        function setObj(o) { st.obj = o; update(); }
+        function setSpec(s) { st.spec = s; update(); }
+        function recenter() { st.cx = 0; st.cy = 0; draw(); }
+        function nudge(dx, dy) {                      // ทิศการเลื่อน "สไลด์จริง"
+            const step = fovUm() * 0.25;
+            st.cx = clamp(st.cx - dx*step, -WORLD, WORLD);
+            st.cy = clamp(st.cy - dy*step, -WORLD, WORLD);
+            draw();
+        }
+        const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+
+        document.getElementById('fnRange').addEventListener('input', e => { st.fn = +e.target.value; update(); });
+
+        // ---------- วาดเลนส์ ----------
+        const cv = document.getElementById('labCanvas'), ctx = cv.getContext('2d');
+        const mm = document.getElementById('miniMap'), mctx = mm.getContext('2d');
+        function sizeCanvas() {
+            const dpr = window.devicePixelRatio || 1;
+            const box = document.getElementById('labLens');
+            const L = box.clientWidth;      // ขนาดภายในกรอบ
+            cv.width = L * dpr; cv.height = L * dpr;
+            cv.dataset.L = L;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function draw() {
+            const L = +cv.dataset.L || 300;
+            const fov = fovUm(), s = L / fov;
+            // พื้นหลัง: นอกสไลด์ = ทึบ, ในสไลด์ = สว่าง
+            ctx.fillStyle = '#1e293b'; ctx.fillRect(0, 0, L, L);
+            const x0 = L/2 + (-WORLD - st.cx)*s, y0 = L/2 + (-WORLD - st.cy)*s, w = 2*WORLD*s;
+            const g = ctx.createLinearGradient(0, 0, L, L);
+            g.addColorStop(0, '#fffdf5'); g.addColorStop(1, '#e8f6ff');
+            ctx.fillStyle = g; ctx.fillRect(x0, y0, w, w);
+
+            // เศษ/แบคทีเรีย
+            for (const d of debris) {
+                const px = L/2 + (d.x - st.cx)*s, py = L/2 + (d.y - st.cy)*s;
+                if (px < -10 || py < -10 || px > L+10 || py > L+10) continue;
+                const r = Math.max(0.45, d.d * s / 2);
+                ctx.fillStyle = `hsla(${150 + d.h*60}, 35%, 35%, ${d.a})`;
+                ctx.beginPath(); ctx.arc(px, py, r, 0, 6.283); ctx.fill();
+            }
+            // ตัวอย่าง
+            const sp = SPEC[st.spec], im = specImgs[st.spec];
+            for (const o of specimens) {
+                const px = L/2 + (o.x - st.cx)*s, py = L/2 + (o.y - st.cy)*s;
+                const S = sp.size * o.k * s;               // ความยาวด้านยาว (px)
+                if (px < -S || py < -S || px > L+S || py > L+S) continue;
+                ctx.save(); ctx.translate(px, py); ctx.rotate(o.rot);
+                if (im.ok) {
+                    const ar = im.im.naturalWidth / im.im.naturalHeight;
+                    const dw = ar >= 1 ? S : S*ar, dh = ar >= 1 ? S/ar : S;
+                    ctx.drawImage(im.im, -dw/2, -dh/2, dw, dh);
+                } else {
+                    ctx.font = `${Math.max(3, S)}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillText(sp.emoji, 0, 0);
+                }
+                ctx.restore();
+            }
+            drawScaleBar(L, s);
+            drawMini();
+        }
+
+        function drawScaleBar(L, s) {
+            const target = fovUm() * 0.22;
+            const p = Math.pow(10, Math.floor(Math.log10(target)));
+            const nice = [1,2,5,10].map(m => m*p).reduce((a,b) => Math.abs(b-target) < Math.abs(a-target) ? b : a);
+            document.getElementById('scaleLine').style.width = (nice * s) + 'px';
+            document.getElementById('scaleText').textContent = fmtLen(nice);
+        }
+
+        function drawMini() {
+            const M = 200, k = M / (2*WORLD);
+            mctx.clearRect(0,0,M,M);
+            const g = mctx.createLinearGradient(0,0,M,M); g.addColorStop(0,'#fffdf5'); g.addColorStop(1,'#dbeafe');
+            mctx.fillStyle = g; mctx.fillRect(0,0,M,M);
+            mctx.strokeStyle = 'rgba(100,116,139,.18)'; mctx.lineWidth = 1;
+            for (let i=1;i<8;i++){ mctx.beginPath(); mctx.moveTo(i*M/8,0); mctx.lineTo(i*M/8,M); mctx.moveTo(0,i*M/8); mctx.lineTo(M,i*M/8); mctx.stroke(); }
+            mctx.fillStyle = '#7c3aed';
+            for (const o of specimens) { mctx.beginPath(); mctx.arc((o.x+WORLD)*k, (o.y+WORLD)*k, 2.4, 0, 6.283); mctx.fill(); }
+            const cxp = (st.cx + WORLD)*k, cyp = (st.cy + WORLD)*k, r = Math.max(4, fovUm()/2*k);
+            mctx.fillStyle = 'rgba(245,158,11,.25)'; mctx.strokeStyle = '#ea580c'; mctx.lineWidth = 2.5;
+            mctx.beginPath(); mctx.arc(cxp, cyp, r, 0, 6.283); mctx.fill(); mctx.stroke();
+            mctx.fillStyle = '#ea580c'; mctx.beginPath(); mctx.arc(cxp, cyp, 1.8, 0, 6.283); mctx.fill();
+            mctx.fillStyle = '#475569'; mctx.font = '10px Prompt, sans-serif';
+            mctx.fillText('สไลด์ 8 × 8 mm', 6, M - 6);
+        }
+
+        // ---------- ลากเพื่อเลื่อน ----------
+        (function setupDrag() {
+            const box = document.getElementById('labLens');
+            let drag = null;
+            box.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY }; box.setPointerCapture(e.pointerId); });
+            box.addEventListener('pointermove', e => {
+                if (!drag) return;
+                const L = +cv.dataset.L || 300, s = L / fovUm();
+                const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+                drag = { x: e.clientX, y: e.clientY };
+                st.cx = clamp(st.cx + dx / s, -WORLD, WORLD);       // ภาพกลับหัว 180°
+                st.cy = clamp(st.cy + dy / s, -WORLD, WORLD);
+                draw();
+            });
+            ['pointerup','pointercancel'].forEach(t => box.addEventListener(t, () => drag = null));
+
+            let md = false;
+            const setFromMini = e => {
+                const r = mm.getBoundingClientRect();
+                st.cx = clamp(((e.clientX - r.left) / r.width) * 2*WORLD - WORLD, -WORLD, WORLD);
+                st.cy = clamp(((e.clientY - r.top) / r.height) * 2*WORLD - WORLD, -WORLD, WORLD);
+                draw();
+            };
+            mm.addEventListener('pointerdown', e => { md = true; mm.setPointerCapture(e.pointerId); setFromMini(e); });
+            mm.addEventListener('pointermove', e => { if (md) setFromMini(e); });
+            ['pointerup','pointercancel'].forEach(t => mm.addEventListener(t, () => md = false));
+        })();
+
+        // ---------- อัปเดตตัวเลข/คำอธิบาย ----------
+        function update() {
+            // สถานะปุ่ม
+            document.querySelectorAll('#eyeBtns .pick-btn').forEach(b => {
+                const on = +b.dataset.eye === st.eye; b.classList.toggle('on', on);
+                b.style.background = on ? EYE_COL[b.dataset.eye] : '#fff'; b.style.color = on ? '#fff' : '#334155';
+            });
+            document.querySelectorAll('#objBtns .pick-btn').forEach(b => {
+                const on = +b.dataset.obj === st.obj, o = OBJ[b.dataset.obj]; b.classList.toggle('on', on);
+                b.style.borderBottom = `6px solid ${o.color}`;
+                b.style.background = on ? '#1e293b' : '#fff'; b.style.color = on ? '#fff' : '#334155';
+            });
+            document.querySelectorAll('[data-spec]').forEach(b => {
+                const on = b.dataset.spec === st.spec; b.classList.toggle('on', on);
+                b.style.background = on ? 'linear-gradient(135deg,#f59e0b,#ec4899)' : '#fff'; b.style.color = on ? '#fff' : '#334155';
+            });
+            document.getElementById('fnVal').textContent = st.fn;
+
+            const M = totalM(), fov = fovUm(), sp = SPEC[st.spec], o = OBJ[st.obj], d = resolutionUm();
+            const imgMm = sp.size * M / 1000;                   // ขนาดภาพ (mm) = ขนาดจริง × M
+            const frac = sp.size / fov;
+
+            document.getElementById('outM').textContent = nf(M) + '×';
+            document.getElementById('outMs').textContent = `${st.eye} × ${st.obj}`;
+            document.getElementById('outFov').textContent = fmtLen(fov);
+            document.getElementById('outFovs').textContent = `${st.fn} mm ÷ ${st.obj} = ${nf(st.fn/st.obj, 3)} mm`;
+            document.getElementById('outImg').textContent = fmtMm(imgMm);
+            document.getElementById('outImgs').textContent = `${sp.size} µm × ${nf(M)}`;
+            document.getElementById('outRes').textContent = fmtLen(d);
+            document.getElementById('outNA').textContent = `NA = ${o.na}`;
+
+            // คำอธิบาย
+            const fitTxt = frac > 1
+                ? `ตัวอย่างใหญ่กว่าลานสายตา (${nf(frac*100,0)}% ของเส้นผ่านศูนย์กลาง) จึง <strong>เห็นได้เพียงบางส่วน</strong> ต้องเลื่อนสไลด์ดูทีละส่วน`
+                : frac > 0.5 ? `ตัวอย่างกินพื้นที่ราว <strong>${nf(frac*100,0)}%</strong> ของเส้นผ่านศูนย์กลางลานสายตา — เห็นทั้งตัวชัดเจน`
+                : frac > 0.05 ? `ตัวอย่างกว้างราว <strong>${nf(frac*100,0)}%</strong> ของลานสายตา — เห็นทั้งตัวและมีที่ว่างรอบๆ พอเทียบตำแหน่งได้ สามารถวางเรียงข้างกันได้ราว <strong>${nf(1/frac,0)}</strong> ตัว`
+                : `ตัวอย่างเล็กมาก เพียง <strong>${nf(frac*100,1)}%</strong> ของลานสายตา — เห็นเป็นจุดเล็กๆ ซึ่งวางเรียงได้ราว <strong>${nf(1/frac,0)}</strong> ตัวทั่วลานสายตา`;
+            const objs = [4,10,40,100], idx = objs.indexOf(st.obj);
+            let what = '';
+            if (idx > 0) { const lo = objs[idx-1]; what += `⬇️ ถ้าลดเลนส์ใกล้วัตถุเป็น <strong>${lo}×</strong> → กำลังขยายรวม ${nf(st.eye*lo)}×, ลานสายตากว้าง <strong>${fmtLen(st.fn/lo*1000)}</strong> (กว้างขึ้น ${nf(st.obj/lo,1)} เท่า, เห็นพื้นที่มากขึ้น ${nf(Math.pow(st.obj/lo,2),0)} เท่า) แต่กำลังแยกลดเหลือ ${fmtLen(0.61*LAMBDA/OBJ[lo].na)}<br>`; }
+            if (idx < 3) { const hi = objs[idx+1]; what += `⬆️ ถ้าเพิ่มเป็น <strong>${hi}×</strong> → กำลังขยายรวม ${nf(st.eye*hi)}×, ลานสายตาแคบลงเหลือ <strong>${fmtLen(st.fn/hi*1000)}</strong> (เห็นพื้นที่น้อยลง ${nf(Math.pow(hi/st.obj,2),0)} เท่า) แต่แยกรายละเอียดได้ถึง ${fmtLen(0.61*LAMBDA/OBJ[hi].na)}`; }
+            document.getElementById('explain').innerHTML =
+                `<p>🔎 ที่กำลังขยายรวม <strong>${nf(M)}×</strong> ตัว${sp.th}ขนาดจริง ${sp.size} µm จะดูใหญ่ประมาณ <strong>${fmtMm(imgMm)}</strong> ในภาพที่ตามองเห็น · ลานสายตากว้าง <strong>${fmtLen(fov)}</strong></p>
+                 <p>${fitTxt}</p>
+                 <p class="text-sm bg-white/70 rounded-lg p-2 border border-yellow-200">${what}</p>
+                 <p class="text-xs text-slate-600">💡 สังเกต: เปลี่ยนเลนส์ใกล้ตา กำลังขยายรวมเปลี่ยน แต่ลานสายตาเปลี่ยนตามค่า FN เท่านั้น ไม่ได้เปลี่ยนตามกำลังขยายของเลนส์ใกล้ตาโดยตรง</p>`;
+
+            updateGauge(M, o);
+            updateFovDiagram();
+            updateMatrix();
+            updateDetails(d);
+            draw();
+        }
+
+        function updateGauge(M, o) {
+            const pos = v => (Math.log(v) - Math.log(10)) / (Math.log(3000) - Math.log(10)) * 100;
+            const lo = 500*o.na, hi = 1000*o.na;
+            const z = document.getElementById('gaugeZone');
+            z.style.left = pos(lo) + '%'; z.style.width = (pos(hi) - pos(lo)) + '%';
+            document.getElementById('gaugeDot').style.left = clamp(pos(M), 0, 100) + '%';
+            const b = document.getElementById('usefulBadge'), t = document.getElementById('usefulText');
+            const range = `ช่วงที่เหมาะสมของเลนส์ NA ${o.na} คือ ${nf(lo,0)}–${nf(hi,0)}×`;
+            if (M < lo) { b.textContent = 'ต่ำกว่าช่วงเหมาะสม'; b.style.cssText = 'background:#fef3c7;color:#92400e';
+                t.textContent = `${range} — กำลังขยาย ${nf(M)}× ยังน้อย ตาอาจแยกรายละเอียดที่เลนส์ทำได้ไม่หมด ลองเพิ่มเลนส์ใกล้ตา`; }
+            else if (M > hi) { b.textContent = 'ขยายเปล่า (Empty magnification)'; b.style.cssText = 'background:#fee2e2;color:#991b1b';
+                t.textContent = `${range} — ${nf(M)}× มากเกินไป ภาพใหญ่ขึ้นแต่ไม่มีรายละเอียดเพิ่ม ลองลดกำลังขยายเลนส์ใกล้ตา หรือใช้เลนส์ใกล้วัตถุที่ NA สูงกว่า`; }
+            else { b.textContent = 'อยู่ในช่วงเหมาะสม ✓'; b.style.cssText = 'background:#d1fae5;color:#065f46';
+                t.textContent = `${range} — ${nf(M)}× ใช้รายละเอียดจากเลนส์ได้คุ้มค่า`; }
+        }
+
+        function updateFovDiagram() {
+            const svg = document.getElementById('fovSvg'), leg = document.getElementById('fovLegend');
+            const objs = [4,10,40,100], R4 = 120, fov4 = st.fn / 4 * 1000;
+            let out = `<defs><radialGradient id="bgc"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e0e7ff"/></radialGradient></defs>
+                       <circle cx="130" cy="130" r="${R4+6}" fill="url(#bgc)" stroke="#c7d2fe" stroke-width="2"/>`;
+            objs.forEach(o => {
+                const r = R4 * 4 / o, on = o === st.obj, c = OBJ[o].color;
+                out += `<circle cx="130" cy="130" r="${r}" fill="${c}" fill-opacity="${on ? .38 : .14}" stroke="${o===100?'#94a3b8':c}" stroke-width="${on ? 3.5 : 1.8}" ${on ? '' : 'stroke-dasharray="4 3"'}/>`;
+            });
+            const sr = Math.max(1.2, SPEC[st.spec].size / fov4 * R4 / 1 );   // รัศมี = (size/2)/(fov4/2)*R4
+            out += `<circle cx="130" cy="130" r="${sr}" fill="#ef4444" fill-opacity=".85" stroke="#fff" stroke-width="1"/>`;
+            svg.innerHTML = out;
+            leg.innerHTML = objs.map(o => {
+                const on = o === st.obj, c = OBJ[o].color, f = st.fn / o * 1000;
+                return `<div class="flex items-center gap-2 px-2 py-1 rounded-lg ${on ? 'bg-white shadow font-bold' : ''}" style="cursor:pointer" onclick="setObj(${o})">
+                    <span style="width:16px;height:16px;border-radius:50%;background:${c};border:2px solid ${o===100?'#94a3b8':c};display:inline-block"></span>
+                    <span>${o}× &rarr; ${fmtLen(f)}</span></div>`;
+            }).join('') + `<div class="flex items-center gap-2 px-2 text-xs text-slate-600"><span style="width:12px;height:12px;border-radius:50%;background:#ef4444;display:inline-block"></span>${SPEC[st.spec].th} ${SPEC[st.spec].size} µm</div>`;
+        }
+
+        function updateMatrix() {
+            const objs = [4,10,40,100], eyes = [5,10,15,20];
+            let h = `<tr><th class="text-slate-500 text-xs">ใกล้ตา ╲ ใกล้วัตถุ</th>` + objs.map(o => `<th><span class="badge" style="background:${OBJ[o].color};color:${OBJ[o].text};border:1px solid #cbd5e1">${o}×</span></th>`).join('') + `</tr>`;
+            eyes.forEach(e => {
+                h += `<tr><th><span class="badge" style="background:${EYE_COL[e]};color:#fff">${e}×</span><div class="text-[0.65rem] text-slate-500">FN ${EYE[e]}</div></th>`;
+                objs.forEach(o => {
+                    const on = st.eye === e && st.obj === o && st.fn === EYE[e];
+                    const M = e*o, f = EYE[e]/o*1000;
+                    const t = Math.min(1, Math.log(M/20)/Math.log(2000/20));
+                    const bg = `hsl(${40 - t*40 + (1-t)*0}, ${85}%, ${94 - t*10}%)`;
+                    h += `<td class="cell ${on?'on':''}" style="background:${bg}" onclick="pickCell(${e},${o})"><div class="font-bold text-slate-800">${nf(M)}×</div><div class="text-[0.7rem] text-slate-600">FOV ${fmtLen(f)}</div></td>`;
+                });
+                h += `</tr>`;
+            });
+            document.getElementById('matrix').innerHTML = h;
+        }
+        function pickCell(e, o) { st.eye = e; st.obj = o; st.fn = EYE[e]; document.getElementById('fnRange').value = st.fn; update(); }
+
+        function updateDetails(d) {
+            document.getElementById('detailList').innerHTML = DETAILS.map(x => {
+                let cls, tag, note;
+                if (x.s >= d * 2)      { cls = 'bg-emerald-100 border-emerald-300 text-emerald-900'; tag = '✅ เห็นรายละเอียด'; note = 'แยกโครงสร้างได้ชัด'; }
+                else if (x.s >= d)     { cls = 'bg-amber-100 border-amber-300 text-amber-900';  tag = '⚠️ เห็นเป็นจุด';    note = 'ใกล้ขีดจำกัด เห็นรูปร่างไม่ชัด'; }
+                else                   { cls = 'bg-rose-100 border-rose-300 text-rose-900';     tag = '❌ มองไม่เห็น';       note = 'เล็กกว่าที่เลนส์แยกได้'; }
+                return `<div class="rounded-xl border-2 p-3 ${cls}"><div class="font-semibold">${x.icon} ${x.n}</div><div class="text-xs opacity-80">ขนาด ≈ ${fmtLen(x.s)}</div><div class="text-sm font-bold mt-1">${tag}</div><div class="text-xs">${note}</div></div>`;
+            }).join('');
+        }
+
+        window.addEventListener('resize', () => { sizeCanvas(); draw(); });
+        buildButtons(); sizeCanvas(); update();
+    </script>
+</body>
+</html>
