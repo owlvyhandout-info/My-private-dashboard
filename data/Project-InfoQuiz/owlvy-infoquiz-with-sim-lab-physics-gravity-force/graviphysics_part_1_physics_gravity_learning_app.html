@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GraviPhysics Lab - สื่อการเรียนรู้แรงโน้มถ่วงและสนามของแรง</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        space: {
+                            900: '#0B0F19',
+                            800: '#111827',
+                            700: '#1F2937',
+                            card: 'rgba(31, 41, 55, 0.7)',
+                        },
+                        cyanGlow: '#06b6d4',
+                        violetGlow: '#8b5cf6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Sarabun', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Sarabun & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- MathJax 3 Configuration & Library for Physics Equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Sarabun', 'Inter', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        .glow-cyan {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);
+        }
+        .glow-violet {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.35);
+        }
+        .backdrop-blur-custom {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-50 bg-space-900/80 backdrop-blur-custom border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-cyan-500/30">
+                    <i class="fa-solid font-earth-americas text-lg"></i>
+                    <span class="sr-only">Logo</span>
+                    🪐
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">
+                        GraviPhysics Lab
+                    </h1>
+                    <p class="text-xs text-gray-400">แบบเรียน & Simulation: แรงและสนามของแรง-แรงโน้มถ่วง</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <nav class="hidden md:flex items-center gap-1 bg-space-800 p-1.5 rounded-xl border border-gray-700/60">
+                <button onclick="switchTab('sec1')" id="tab-sec1" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-cyan-600 text-white shadow-md">
+                    <i class="fa-solid fa-calculator mr-1.5"></i>โจทย์คำนวณ (ชุดที่ 1)
+                </button>
+                <button onclick="switchTab('sandbox')" id="tab-sandbox" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white hover:bg-gray-700/50">
+                    <i class="fa-solid fa-atom mr-1.5"></i>Interactive Simulation
+                </button>
+                <button onclick="switchTab('ratios')" id="tab-ratios" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white hover:bg-gray-700/50">
+                    <i class="fa-solid fa-scale-balanced mr-1.5"></i>สูตรลัดการเปรียบเทียบ (ชุด 2-3)
+                </button>
+            </nav>
+
+            <div class="flex items-center gap-2">
+                <button onclick="toggleFormulaModal()" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-900/60 border border-indigo-500/40 text-indigo-200 hover:bg-indigo-800 transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>สรุปสูตรฟิสิกส์</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Tabs -->
+        <div class="flex md:hidden border-t border-gray-800 bg-space-800 px-2 py-2 overflow-x-auto gap-2 text-xs">
+            <button onclick="switchTab('sec1')" id="mob-tab-sec1" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-cyan-600 text-white font-medium">โจทย์คำนวณ (ชุด 1)</button>
+            <button onclick="switchTab('sandbox')" id="mob-tab-sandbox" class="px-3 py-1.5 rounded-lg whitespace-nowrap text-gray-400 bg-space-700">Interactive Sim</button>
+            <button onclick="switchTab('ratios')" id="mob-tab-ratios" class="px-3 py-1.5 rounded-lg whitespace-nowrap text-gray-400 bg-space-700">สูตรลัดการเปรียบเทียบ</button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+
+        <!-- ================= SECTION 1: MAIN PROBLEM SOLVER ================= -->
+        <section id="section-sec1" class="space-y-6">
+            
+            <!-- Hero Header Banner -->
+            <div class="bg-gradient-to-r from-space-800 via-indigo-950/40 to-space-800 rounded-2xl p-6 border border-cyan-500/20 relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-3xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-medium mb-3">
+                        <i class="fa-solid fa-bullseye"></i> ประเด็น: แรงและสนามของแรง-แรงโน้มถ่วง-1
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">
+                        เรียนรู้ฟิสิกส์ด้วยภาพ + แบบจำลองสถานการณ์จริง
+                    </h2>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        เลือกข้อสอบด้านล่างเพื่อดู <span class="text-cyan-300 font-semibold">แบบจำลองแรง (Simulation)</span>, 
+                        วิธีคำนวณแบบแยกสัญลักษณ์วิทยาศาสตร์ ($10^x$) และสามารถปรับเปลี่ยนค่าตัวแปรเพื่อทดลองคำนวณได้ทันที
+                    </p>
+                </div>
+            </div>
+
+            <!-- Problem Selector Bar -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <button onclick="loadProblem(1)" id="pbtn-1" class="p-4 rounded-xl border border-cyan-500 bg-cyan-950/30 text-left transition-all duration-200 hover:border-cyan-400 shadow-lg glow-cyan">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-bold px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300">ข้อ ①④⑤</span>
+                        <i class="fa-solid fa-satellite text-cyan-400"></i>
+                    </div>
+                    <div class="text-sm font-semibold text-white truncate">กล้องโทรทรรศน์ฮับเบิล</div>
+                    <div class="text-xs text-gray-400 mt-1">หาน้ำหนักบนโลก vs ในวงโคจรสูง 598 km</div>
+                </button>
+
+                <button onclick="loadProblem(2)" id="pbtn-2" class="p-4 rounded-xl border border-gray-800 bg-space-800 text-left transition-all duration-200 hover:border-gray-600">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-bold px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300">ข้อ ①④⑦</span>
+                        <i class="fa-solid fa-globe text-indigo-400"></i>
+                    </div>
+                    <div class="text-sm font-semibold text-white truncate">ดาวเทียมระบบสุริยะ</div>
+                    <div class="text-xs text-gray-400 mt-1">แรงดึงดูด $F_g$ & ความเร่ง $a_c$</div>
+                </button>
+
+                <button onclick="loadProblem(3)" id="pbtn-3" class="p-4 rounded-xl border border-gray-800 bg-space-800 text-left transition-all duration-200 hover:border-gray-600">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300">ข้อ ①④⑧/②</span>
+                        <i class="fa-solid fa-arrows-split-up-and-left text-purple-400"></i>
+                    </div>
+                    <div class="text-sm font-semibold text-white truncate">ดาวเทียม 2 ดวงในอวกาศ</div>
+                    <div class="text-xs text-gray-400 mt-1">คำนวณหามวลวัตถุจากแรงดึงดูด</div>
+                </button>
+
+                <button onclick="loadProblem(4)" id="pbtn-4" class="p-4 rounded-xl border border-gray-800 bg-space-800 text-left transition-all duration-200 hover:border-gray-600">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">ข้อ ①⑤①/③</span>
+                        <i class="fa-solid fa-weight-hanging text-emerald-400"></i>
+                    </div>
+                    <div class="text-sm font-semibold text-white truncate">ความเร่ง $g$ บริเวณผิวโลก</div>
+                    <div class="text-xs text-gray-400 mt-1">พิสูจน์ $g = GM_E / R_E^2 \approx 9.81\text{ m/s}^2$</div>
+                </button>
+            </div>
+
+            <!-- Active Problem Display Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Left Column: Simulation Canvas & Control Sliders (7 cols) -->
+                <div class="lg:col-span-7 flex flex-col gap-4">
+                    <div class="bg-space-800 rounded-2xl border border-gray-800 overflow-hidden flex flex-col shadow-xl">
+                        
+                        <!-- Canvas Header -->
+                        <div class="bg-space-900/90 px-4 py-3 border-b border-gray-800 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                                <h3 id="sim-title" class="text-sm font-bold text-white">Simulation: กล้องฮับเบิลโคจรรอบโลก</h3>
+                            </div>
+                            <div class="flex items-center gap-2 text-xs text-gray-400">
+                                <button onclick="resetCurrentSim()" class="hover:text-cyan-400 transition-colors flex items-center gap-1 bg-space-800 px-2.5 py-1 rounded border border-gray-700">
+                                    <i class="fa-solid fa-rotate-left"></i> รีเซ็ต
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Canvas Box -->
+                        <div class="relative w-full aspect-video bg-black/60 flex items-center justify-center overflow-hidden">
+                            <canvas id="simCanvas" class="w-full h-full block cursor-crosshair"></canvas>
+                            
+                            <!-- Canvas Overlay Badges -->
+                            <div class="absolute top-3 left-3 bg-space-900/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-gray-700 text-xs font-mono space-y-0.5 pointer-events-none">
+                                <div class="text-cyan-300 font-bold" id="badge-force">Fg = --- N</div>
+                                <div class="text-gray-300" id="badge-dist">r = --- km</div>
+                            </div>
+
+                            <div class="absolute bottom-3 right-3 bg-space-900/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-gray-700 text-[11px] text-gray-300 pointer-events-none">
+                                <i class="fa-solid fa-mouse-pointer text-cyan-400"></i> ลากเมาส์/สัมผัสเพื่อหมุนดูทิศทางแรง
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Control Panel -->
+                        <div class="p-4 bg-space-900/50 border-t border-gray-800 space-y-3">
+                            <div class="text-xs font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-sliders"></i> ปรับแต่งตัวแปรเพื่อดูผลกระทบแบบ Real-time
+                            </div>
+                            
+                            <div id="controls-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Dynamic Sliders injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Step-by-Step Physics Solver (5 cols) -->
+                <div class="lg:col-span-5">
+                    <div class="bg-space-800 rounded-2xl border border-gray-800 p-5 shadow-xl flex flex-col h-full justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between pb-3 border-b border-gray-700">
+                                <span class="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-file-signature"></i> แสดงวิธีทำอย่างละเอียด
+                                </span>
+                                <span id="prob-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                                    ข้อ ①④⑤
+                                </span>
+                            </div>
+
+                            <!-- Problem Statement Text -->
+                            <div id="prob-statement" class="mt-3 p-3.5 rounded-xl bg-space-900/80 border border-gray-700/80 text-sm text-gray-200 leading-relaxed font-medium">
+                                Loading problem statement...
+                            </div>
+
+                            <!-- Step-by-Step Accordion / List -->
+                            <div id="prob-steps" class="mt-4 space-y-3">
+                                <!-- Injected via JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Scientific Notation Exponent Trick Highlight Box -->
+                        <div class="p-3.5 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-xs space-y-1.5">
+                            <div class="font-bold text-indigo-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-lightbulb text-amber-400"></i> เทคนิคคิดเลข $10^x$ (Scientific Notation)
+                            </div>
+                            <p id="math-trick-text" class="text-gray-300 leading-relaxed">
+                                แยกคิดเป็น 2 ส่วน: (1) ตัวเลขทศนิยมข้างหน้า x (2) เลขยกกำลังฐาน 10 ย้าย $10^n$ ขึ้นมาเปลี่ยนตัวเลขเครื่องหมายชี้กำลัง!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= SECTION 2: INTERACTIVE SANDBOX SIMULATOR ================= -->
+        <section id="section-sandbox" class="hidden space-y-6">
+            <div class="bg-space-800 rounded-2xl border border-gray-800 p-6 shadow-xl">
+                <div class="max-w-3xl mb-6">
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-atom text-cyan-400"></i> ห้องทดลองจำลองแรงดึงดูดอิสระ (Sandbox Simulator)
+                    </h2>
+                    <p class="text-gray-400 text-sm mt-1">
+                        ทดลองปรับมวลวัตถุ $m_1, m_2$ และระยะห่าง $r$ สังเกตขนาดของ vector แรงดึงดูด $\vec{F}_{12}$ และ $\vec{F}_{21}$ ว่าปฏิบัติตามกฎข้อที่ 3 ของนิวตัน (Action = Reaction) อย่างไร
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                    <!-- Sandbox Canvas -->
+                    <div class="lg:col-span-8 bg-black/70 rounded-xl border border-gray-700 aspect-[16/9] relative overflow-hidden flex items-center justify-center">
+                        <canvas id="sandboxCanvas" class="w-full h-full block"></canvas>
+                        
+                        <div class="absolute top-4 left-4 bg-space-900/90 backdrop-blur-md p-3 rounded-lg border border-gray-700 text-xs space-y-1 font-mono">
+                            <div class="text-cyan-400 font-bold" id="sb-f-val">F_grav = 0.00 N</div>
+                            <div class="text-gray-300" id="sb-g-val">Field g_at_m2 = 0.00 m/s²</div>
+                        </div>
+                    </div>
+
+                    <!-- Sandbox Controls -->
+                    <div class="lg:col-span-4 bg-space-900/70 p-5 rounded-xl border border-gray-800 space-y-5">
+                        <h3 class="text-sm font-bold text-white border-b border-gray-800 pb-2">ตั้งค่าตัวแปรอวกาศ</h3>
+                        
+                        <div>
+                            <div class="flex justify-between text-xs text-gray-300 mb-1">
+                                <span>มวลวัตถุ 1 ($m_1$):</span>
+                                <span id="sb-m1-lbl" class="font-mono text-cyan-400">5.97 x 10²⁴ kg</span>
+                            </div>
+                            <input type="range" id="sb-m1" min="1" max="10" step="0.1" value="5.97" oninput="updateSandbox()" class="w-full accent-cyan-500 cursor-pointer">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs text-gray-300 mb-1">
+                                <span>มวลวัตถุ 2 ($m_2$):</span>
+                                <span id="sb-m2-lbl" class="font-mono text-indigo-400">1,000 kg</span>
+                            </div>
+                            <input type="range" id="sb-m2" min="100" max="10000" step="100" value="1000" oninput="updateSandbox()" class="w-full accent-indigo-500 cursor-pointer">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs text-gray-300 mb-1">
+                                <span>ระยะห่าง ($r$):</span>
+                                <span id="sb-r-lbl" class="font-mono text-amber-400">6,371 km</span>
+                            </div>
+                            <input type="range" id="sb-r" min="1000" max="50000" step="500" value="6371" oninput="updateSandbox()" class="w-full accent-amber-500 cursor-pointer">
+                        </div>
+
+                        <div class="p-3 bg-space-800 rounded-lg border border-gray-700 text-xs text-gray-300 space-y-1">
+                            <div class="font-bold text-cyan-300">💡 ข้อสังเกตหลัก:</div>
+                            <p>1. แรงดึงดูดที่ $m_1$ กระทำต่อ $m_2$ มีขนาด **เท่ากับ** แรงที่ $m_2$ กระทำต่อ $m_1$ เสมอ (ตามกฎข้อ 3 นิวตัน)</p>
+                            <p>2. ถ้าระยะห่าง $r$ เพิ่มขึ้น 2 เท่า $\rightarrow$ แรง $F$ จะลดลงเหลือเพียง $\frac{1}{4}$ เท่า ($F \propto \frac{1}{r^2}$)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 3: RATIOS & SHORTCUT FORMULAS ================= -->
+        <section id="section-ratios" class="hidden space-y-6">
+            <div class="bg-space-800 rounded-2xl border border-gray-800 p-6 shadow-xl">
+                <div class="max-w-3xl mb-6">
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-scale-balanced text-indigo-400"></i> สรุปแนวทางสูตรลัดการเปรียบเทียบ (ประเด็น 2 & 3)
+                    </h2>
+                    <p class="text-gray-400 text-sm mt-1">
+                        ใช้สำหรับโจทย์ประเภท "คิดเป็นกี่เท่าของ..." โดยไม่ต้องติดค่าคงที่ $G$ ให้ยุ่งยาก
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Table 1: Same Planet -->
+                    <div class="bg-space-900/80 p-5 rounded-xl border border-gray-700 space-y-3">
+                        <div class="flex items-center gap-2 text-cyan-400 font-bold text-sm">
+                            <i class="fa-solid fa-globe"></i> 1. เปรียบเทียบบน "ดาวเคราะห์ดวงเดียวกัน"
+                        </div>
+                        <p class="text-xs text-gray-400">เมื่อมวล $M$ คงที่ ค่าแรง $F, W$ และ $g$ จะแปรผกผันกับระยะห่างยกกำลังสอง ($r^2$)</p>
+                        
+                        <div class="p-3 bg-space-800 rounded-lg font-mono text-xs text-cyan-200 border border-cyan-500/30 space-y-2">
+                            <div>\(\frac{g_1}{g_2} = \left(\frac{r_2}{r_1}\right)^2\)</div>
+                            <div>\(\frac{W_1}{W_2} = \left(\frac{r_2}{r_1}\right)^2\)</div>
+                            <div class="text-[11px] text-amber-300 font-sans">⚠️ ระวังคำว่า "ห่างจากผิวโลกเป็น $n$ เท่า" $\rightarrow r_{ใหม่} = R_E + n R_E = (n+1)R_E$</div>
+                        </div>
+
+                        <!-- Interactive Calculator for Same Planet -->
+                        <div class="p-3 bg-space-950 rounded-lg space-y-2 border border-gray-800">
+                            <div class="text-xs font-bold text-gray-300">🧪 ทดลองคำนวณ: อยู่สูงจากผิวโลก $h = n \cdot R_E$</div>
+                            <div class="flex items-center gap-3">
+                                <label class="text-xs text-gray-400 whitespace-nowrap">ความสูง $h$ = </label>
+                                <input type="number" id="calc-n" value="2" min="0.1" step="0.5" oninput="calcRatioSamePlanet()" class="w-20 px-2.5 py-1 rounded bg-space-800 border border-gray-700 text-sm text-cyan-300 font-mono">
+                                <span class="text-xs text-gray-400">เท่าของรัศมีโลก ($R_E$)</span>
+                            </div>
+                            <div id="res-same-planet" class="text-xs font-bold text-emerald-400 pt-1">
+                                $\rightarrow$ ความเร่ง $g' = \frac{1}{9} g_{ผิว} \approx 1.11\text{ m/s}^2$
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Table 2: Different Planets -->
+                    <div class="bg-space-900/80 p-5 rounded-xl border border-gray-700 space-y-3">
+                        <div class="flex items-center gap-2 text-indigo-400 font-bold text-sm">
+                            <i class="fa-solid fa-meteor"></i> 2. เปรียบเทียบระหว่าง "ดาวเคราะห์ต่างดวงกัน"
+                        </div>
+                        <p class="text-xs text-gray-400">ต้องคิดทั้งผลของมวลดาวเคราะห์ ($M$) และรัศมีของดาว ($R$)</p>
+                        
+                        <div class="p-3 bg-space-800 rounded-lg font-mono text-xs text-indigo-200 border border-indigo-500/30 space-y-2">
+                            <div>\(\frac{g_1}{g_2} = \frac{M_1}{M_2} \times \left(\frac{r_2}{r_1}\right)^2\)</div>
+                            <div>\(\frac{W_1}{W_2} = \frac{M_1}{M_2} \times \left(\frac{r_2}{r_1}\right)^2\)</div>
+                        </div>
+
+                        <!-- Interactive Calculator for Different Planet -->
+                        <div class="p-3 bg-space-950 rounded-lg space-y-2 border border-gray-800">
+                            <div class="text-xs font-bold text-gray-300">🧪 ดาวเคราะห์ใหม่: มวล $M' = m \cdot M_E$, รัศมี $R' = k \cdot R_E$</div>
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div>
+                                    <label class="text-gray-400">มวลเพิ่ม $m$ เท่า:</label>
+                                    <input type="number" id="calc-m-times" value="2" min="0.1" step="0.5" oninput="calcRatioDiffPlanet()" class="w-full px-2 py-1 rounded bg-space-800 border border-gray-700 text-indigo-300 font-mono mt-0.5">
+                                </div>
+                                <div>
+                                    <label class="text-gray-400">รัศมีเพิ่ม $k$ เท่า:</label>
+                                    <input type="number" id="calc-r-times" value="0.5" min="0.1" step="0.1" oninput="calcRatioDiffPlanet()" class="w-full px-2 py-1 rounded bg-space-800 border border-gray-700 text-indigo-300 font-mono mt-0.5">
+                                </div>
+                            </div>
+                            <div id="res-diff-planet" class="text-xs font-bold text-emerald-400 pt-1">
+                                $\rightarrow$ ความเร่ง $g' = 8 g_E = 80\text{ m/s}^2$
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Formula Summary Modal -->
+    <div id="formulaModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-space-800 rounded-2xl border border-gray-700 max-w-2xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div class="flex items-center justify-between border-b border-gray-700 pb-3">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-book-bookmark text-cyan-400"></i> สรุปสูตรคำนวณ เรื่อง แรงโน้มถ่วง
+                </h3>
+                <button onclick="toggleFormulaModal()" class="text-gray-400 hover:text-white text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 text-sm text-gray-200">
+                <div class="p-3 bg-space-900 rounded-xl border border-cyan-500/30">
+                    <div class="font-bold text-cyan-300 mb-1">1. แรงดึงดูดระหว่างมวล (Law of Universal Gravitation)</div>
+                    <div class="font-mono text-center text-lg text-white py-1">Fg = G · (m₁ · m₂) / r²</div>
+                    <p class="text-xs text-gray-400">เมื่อ $G = 6.674 \times 10^{-11} \text{ N}\cdot\text{m}^2/\text{kg}^2$, $r$ คือระยะห่างระหว่างจุดศูนย์กลางมวล</p>
+                </div>
+
+                <div class="p-3 bg-space-900 rounded-xl border border-indigo-500/30">
+                    <div class="font-bold text-indigo-300 mb-1">2. ความเร่งเนื่องจากแรงโน้มถ่วง (g) & น้ำหนัก (W)</div>
+                    <div class="font-mono text-center text-lg text-white py-1">g = G · M / r² &nbsp;|&nbsp; W = m · g = G · M · m / r²</div>
+                </div>
+
+                <div class="p-3 bg-space-900 rounded-xl border border-emerald-500/30">
+                    <div class="font-bold text-emerald-300 mb-1">3. ความเร็วและแรงสู่ศูนย์กลางของดาวเทียม (Satellite Orbit)</div>
+                    <div class="font-mono text-center text-lg text-white py-1">Fc = m · v² / r = G · ME · m / r² &nbsp;➔&nbsp; v = √(G · ME / r)</div>
+                </div>
+            </div>
+
+            <div class="pt-2 flex justify-end">
+                <button onclick="toggleFormulaModal()" class="px-4 py-2 rounded-lg bg-cyan-600 text-white font-semibold text-sm hover:bg-cyan-500">
+                    เข้าใจแล้ว
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-space-900 border-t border-gray-800 py-4 mt-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-gray-500">
+            GraviPhysics Interactive Learning App &bull; พัฒนาตามชุดแบบฝึกหัดเรื่อง "แรงและสนามของแรง-แรงโน้มถ่วง"
+        </div>
+    </footer>
+
+    <script>
+        // ================= GLOBAL CONSTANTS & DATA =================
+        const G = 6.67430e-11; // N m^2 / kg^2
+        const ME = 5.972e24;   // kg (Earth Mass)
+        const RE = 6371000;    // meters (Earth Radius average = 6371 km)
+
+        // Problem Definitions based on the document
+        const problems = {
+            1: {
+                badge: "ข้อ ①④⑤",
+                title: "กล้องโทรทรรศน์ฮับเบิล (Hubble Space Telescope)",
+                statement: "มวลของกล้องโทรทรรศน์ฮับเบิลเท่ากับ 11,600 kg จงหาน้ำหนักของกล้องเมื่อ:<br><b>ก.) อยู่บนพื้นโลก</b> &nbsp;&nbsp;&nbsp; <b>ข.) อยู่ในวงโคจรสูง 598 km เหนือผิวโลก</b>",
+                params: {
+                    m: 11600,       // kg
+                    h: 598,         // km
+                    RE_km: 6380,    // km (from problem sheet value)
+                    ME_val: 5.98e24 // kg
+                },
+                controls: [
+                    { id: 'm', label: 'มวลกล้องฮับเบิล (kg)', min: 1000, max: 30000, step: 500, val: 11600 },
+                    { id: 'h', label: 'ความสูงเหนือผิวโลก (km)', min: 0, max: 2000, step: 10, val: 598 }
+                ]
+            },
+            2: {
+                badge: "ข้อ ①④⑦",
+                title: "ดาวเทียมระบบสุริยะ",
+                statement: "ดาวเทียมระบบสุริยะขนาด 2,500 kg โคจรรอบโลกที่ความสูง 3.8 x 10⁸ เมตร เหนือผิวโลก จงหา:<br><b>ก.) แรงดึงดูดระหว่างมวลของโลกกับดาวเทียม</b><br><b>ข.) ความเร่งของดาวเทียม ($a_c$)</b>",
+                params: {
+                    m: 2500,
+                    h_m: 3.8e8, // m
+                    RE_m: 6.37e6, // m
+                    ME_val: 5.97e24
+                },
+                controls: [
+                    { id: 'm', label: 'มวลดาวเทียม (kg)', min: 500, max: 10000, step: 100, val: 2500 },
+                    { id: 'h_m_exp', label: 'ความสูง h (x 10⁸ m)', min: 0.5, max: 5.0, step: 0.1, val: 3.8 }
+                ]
+            },
+            3: {
+                badge: "ข้อ ①④⑧/②",
+                title: "ดาวเทียม 2 ดวงในอวกาศ",
+                statement: "ดาวเทียมสองดวงมีมวลเท่ากัน ($m_1 = m_2 = m$) อยู่ในอวกาศห่างกัน 80 เมตร ถ้าแรงโน้มถ่วงระหว่างมวลเท่ากับ $2.88 \times 10^{-10}\text{ N}$ อยากทราบว่ามวลของดาวเทียมทั้งสองมีค่าเท่าใด",
+                params: {
+                    r: 80, // meters
+                    Fg: 2.88e-10 // N
+                },
+                controls: [
+                    { id: 'r', label: 'ระยะห่างระหว่างดาวเทียม (m)', min: 10, max: 200, step: 5, val: 80 },
+                    { id: 'Fg_exp', label: 'แรงดึงดูด Fg (x 10⁻¹⁰ N)', min: 0.5, max: 10.0, step: 0.1, val: 2.88 }
+                ]
+            },
+            4: {
+                badge: "ข้อ ①⑤①/③",
+                title: "การคำนวณความเร่ง g บริเวณผิวโลก",
+                statement: "จงคำนวณหาค่า $g$ บริเวณผิวโลก เมื่อมวลของโลกมีค่าเท่ากับ $5.97 \times 10^{24}\text{ kg}$ และโลกมีรัศมีเท่ากับ $6,371\text{ km}$",
+                params: {
+                    ME_val: 5.97e24,
+                    RE_km: 6371
+                },
+                controls: [
+                    { id: 'ME_val_exp', label: 'มวลโลก ME (x 10²⁴ kg)', min: 1.0, max: 10.0, step: 0.1, val: 5.97 },
+                    { id: 'RE_km', label: 'รัศมีโลก RE (km)', min: 3000, max: 10000, step: 50, val: 6371 }
+                ]
+            }
+        };
+
+        let currentProblemId = 1;
+        let activeParams = { ...problems[1].params };
+        let animFrameId = null;
+        let orbitAngle = 0;
+
+        // Re-renders MathJax typesetting dynamically when values or HTML change
+        function renderMath() {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch((err) => console.error("MathJax error:", err));
+            }
+        }
+
+        // Dynamically renders interactive control sliders for the active problem
+        function renderControls(controls) {
+            const container = document.getElementById('controls-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (!controls || controls.length === 0) return;
+
+            controls.forEach(ctrl => {
+                const div = document.createElement('div');
+                div.className = 'bg-space-800 p-2.5 rounded-lg border border-gray-700/70 space-y-1';
+                div.innerHTML = `
+                    <div class="flex justify-between text-xs font-medium text-gray-300">
+                        <span>${ctrl.label}:</span>
+                        <span id="ctrl-val-${ctrl.id}" class="font-mono text-cyan-300">${ctrl.val.toLocaleString()}</span>
+                    </div>
+                    <input type="range" id="ctrl-${ctrl.id}" min="${ctrl.min}" max="${ctrl.max}" step="${ctrl.step}" value="${ctrl.val}"
+                        oninput="onControlInput('${ctrl.id}', this.value)"
+                        class="w-full accent-cyan-500 cursor-pointer">
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Handles live slider inputs, updating problem state and re-triggering calculation updates
+        function onControlInput(id, value) {
+            const val = parseFloat(value);
+            activeParams[id] = val;
+
+            const lbl = document.getElementById(`ctrl-val-${id}`);
+            if (lbl) {
+                lbl.innerText = val.toLocaleString();
+            }
+
+            // Exponent / scientific unit conversions
+            if (id === 'h_m_exp') {
+                activeParams['h_m'] = val * 1e8;
+            } else if (id === 'Fg_exp') {
+                activeParams['Fg'] = val * 1e-10;
+            } else if (id === 'ME_val_exp') {
+                activeParams['ME_val'] = val * 1e24;
+            }
+
+            updateCalculationsAndSteps();
+            initSimCanvas();
+        }
+
+        // ================= TAB NAVIGATION =================
+        function switchTab(tabName) {
+            ['sec1', 'sandbox', 'ratios'].forEach(t => {
+                document.getElementById(`section-${t}`).classList.add('hidden');
+                
+                // Desktop buttons
+                const btn = document.getElementById(`tab-${t}`);
+                if (btn) {
+                    btn.className = (t === tabName) 
+                        ? 'px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-cyan-600 text-white shadow-md'
+                        : 'px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white hover:bg-gray-700/50';
+                }
+
+                // Mobile buttons
+                const mobBtn = document.getElementById(`mob-tab-${t}`);
+                if (mobBtn) {
+                    mobBtn.className = (t === tabName)
+                        ? 'px-3 py-1.5 rounded-lg whitespace-nowrap bg-cyan-600 text-white font-medium'
+                        : 'px-3 py-1.5 rounded-lg whitespace-nowrap text-gray-400 bg-space-700';
+                }
+            });
+
+            document.getElementById(`section-${tabName}`).classList.remove('hidden');
+
+            if (tabName === 'sec1') {
+                initSimCanvas();
+            } else if (tabName === 'sandbox') {
+                initSandboxCanvas();
+            }
+
+            renderMath();
+        }
+
+        function toggleFormulaModal() {
+            const modal = document.getElementById('formulaModal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                renderMath();
+            }
+        }
+
+        // ================= PROBLEM LOADER & SOLVER =================
+        function loadProblem(id) {
+            currentProblemId = id;
+            const prob = problems[id];
+
+            // Update selector active states
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.getElementById(`pbtn-${i}`);
+                if (i === id) {
+                    btn.className = 'p-4 rounded-xl border border-cyan-500 bg-cyan-950/30 text-left transition-all duration-200 hover:border-cyan-400 shadow-lg glow-cyan';
+                } else {
+                    btn.className = 'p-4 rounded-xl border border-gray-800 bg-space-800 text-left transition-all duration-200 hover:border-gray-600';
+                }
+            }
+
+            // Copy default parameters
+            activeParams = { ...prob.params };
+
+            // Render controls sliders
+            renderControls(prob.controls);
+
+            // Render Problem Text & Badges
+            document.getElementById('prob-badge').innerText = prob.badge;
+            document.getElementById('prob-statement').innerHTML = prob.statement;
+            document.getElementById('sim-title').innerText = `Simulation: ${prob.title}`;
+
+            // Calculate and Render Steps
+            updateCalculationsAndSteps();
+
+            // Re-init canvas
+            initSimCanvas();
+        }
+
+        function updateCalculationsAndSteps() {
+            const stepsContainer = document.getElementById('prob-steps');
+            stepsContainer.innerHTML = '';
+
+            if (currentProblemId === 1) {
+                // Hubble Problem
+                const m = activeParams.m || 11600;
+                const h = activeParams.h !== undefined ? activeParams.h : 598;
+                const RE_km = activeParams.RE_km || 6380;
+                const ME_val = activeParams.ME_val || 5.98e24;
+
+                // Earth Surface Weight
+                const W_surface = m * 9.8;
+                const W_surface_exact = (G * ME_val * m) / Math.pow(RE_km * 1000, 2);
+
+                // Orbit Weight at height h
+                const r_orbit_m = (RE_km + h) * 1000;
+                const W_orbit = (G * ME_val * m) / Math.pow(r_orbit_m, 2);
+
+                document.getElementById('badge-force').innerText = `W_orbit = ${W_orbit.toLocaleString('th-TH', {maximumFractionDigits: 0})} N`;
+                document.getElementById('badge-dist').innerText = `r = ${(RE_km + h).toLocaleString()} km`;
+
+                stepsContainer.innerHTML = `
+                    <div class="p-3 bg-space-900 rounded-xl border border-gray-700 space-y-1 text-xs">
+                        <div class="font-bold text-cyan-300">ก.) คำนวณน้ำหนักบนพื้นโลก ($h = 0$)</div>
+                        <div><b>คิดแบบที่ 1 (สูตรประมาณ):</b> $W = mg = (${m.toLocaleString()}) \\times 9.8 = \\mathbf{${W_surface.toLocaleString()}\\text{ N}}$</div>
+                        <div><b>คิดแบบที่ 2 (สูตรเต็ม):</b> $W = \\frac{G M_E m}{R_E^2} = \\mathbf{${(W_surface_exact/1e5).toFixed(2)} \\times 10^5\\text{ N}}$</div>
+                    </div>
+
+                    <div class="p-3 bg-space-900 rounded-xl border border-indigo-500/40 space-y-1.5 text-xs">
+                        <div class="font-bold text-indigo-300">ข.) คำนวณในวงโคจรสูง ${h} km ($r = R_E + h$)</div>
+                        <div class="font-mono text-gray-300">
+                            $r = ${RE_km} + ${h} = ${(RE_km + h).toLocaleString()}\\text{ km} = ${(r_orbit_m/1e6).toFixed(3)} \\times 10^6\\text{ m}$
+                        </div>
+                        <div class="font-mono text-gray-300">
+                            $W = \\frac{(6.67 \\times 10^{-11})(5.98 \\times 10^{24})(${m.toLocaleString()})}{(${(r_orbit_m/1e6).toFixed(3)} \\times 10^6)^2}$
+                        </div>
+                        <div class="font-bold text-emerald-400">
+                            คำตอบ: $W \\approx ${(W_orbit/1e5).toFixed(2)} \\times 10^5\\text{ N}$ (${W_orbit.toLocaleString('th-TH', {maximumFractionDigits: 0})} N)
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('math-trick-text').innerText = 
+                    `สังเกตการยกกำลังรัศมี: (6.98 x 10⁶)² = 48.72 x 10¹² จากนั้นรวมเลขชี้กำลัง 10⁻¹¹ x 10²⁴ / 10¹² = 10¹`;
+
+            } else if (currentProblemId === 2) {
+                // Solar Satellite
+                const m = activeParams.m || 2500;
+                const h_m = activeParams.h_m || 3.8e8;
+                const RE_m = activeParams.RE_m || 6.37e6;
+                const ME_val = activeParams.ME_val || 5.97e24;
+
+                const total_r = RE_m + h_m;
+                const Fg = (G * ME_val * m) / Math.pow(total_r, 2);
+                const ac = Fg / m;
+
+                document.getElementById('badge-force').innerText = `Fg = ${Fg.toFixed(2)} N`;
+                document.getElementById('badge-dist').innerText = `r = ${(total_r/1e6).toFixed(1)} x 10⁶ m`;
+
+                stepsContainer.innerHTML = `
+                    <div class="p-3 bg-space-900 rounded-xl border border-gray-700 space-y-1 text-xs">
+                        <div class="font-bold text-cyan-300">ก.) แรงดึงดูดระหว่างมวล ($F_g$)</div>
+                        <div class="font-mono text-gray-300">
+                            $r = 6.37\\times10^5 + 3.8\\times10^8 \\approx ${(total_r/1e8).toFixed(2)}\\times10^8\\text{ m}$
+                        </div>
+                        <div class="font-mono text-gray-300">
+                            $F_g = \\frac{G M_E m}{r^2} = \\frac{(6.67\\times 10^{-11})(5.97\\times 10^{24})(${m})}{(3.86\\times 10^8)^2}$
+                        </div>
+                        <div class="font-bold text-emerald-400">คำตอบ $F_g = ${Fg.toFixed(2)}\\text{ N}$</div>
+                    </div>
+
+                    <div class="p-3 bg-space-900 rounded-xl border border-indigo-500/40 space-y-1 text-xs">
+                        <div class="font-bold text-indigo-300">ข.) ความเร่งเข้าสู่ศูนย์กลาง ($a_c$)</div>
+                        <div class="font-mono text-gray-300">จาก $F_g = m a_c \\rightarrow a_c = \\frac{F_g}{m}$</div>
+                        <div class="font-mono text-gray-300">$a_c = \\frac{${Fg.toFixed(2)}}{${m}} = ${(ac).toExponential(2)}\\text{ m/s}^2$</div>
+                        <div class="font-bold text-emerald-400">คำตอบ $a_c \\approx ${(ac * 1000).toFixed(2)} \\times 10^{-3}\\text{ m/s}^2$</div>
+                    </div>
+                `;
+
+            } else if (currentProblemId === 3) {
+                // Two Satellites
+                const r = activeParams.r || 80;
+                const Fg = activeParams.Fg || 2.88e-10;
+
+                const m_sq = (Fg * Math.pow(r, 2)) / G;
+                const m = Math.sqrt(m_sq);
+
+                document.getElementById('badge-force').innerText = `Fg = ${(Fg*1e10).toFixed(2)} x 10⁻¹⁰ N`;
+                document.getElementById('badge-dist').innerText = `r = ${r} m`;
+
+                stepsContainer.innerHTML = `
+                    <div class="p-3 bg-space-900 rounded-xl border border-gray-700 space-y-1.5 text-xs">
+                        <div class="font-bold text-cyan-300">ขั้นตอนการแก้สมการหามวล ($m$)</div>
+                        <div class="font-mono text-gray-300">จาก $F_g = \\frac{G m_1 m_2}{r^2}$ เนื่องจาก $m_1 = m_2 = m$</div>
+                        <div class="font-mono text-gray-300">$m^2 = \\frac{F_g \\cdot r^2}{G} = \\frac{(${Fg.toExponential(2)})(${r}^2)}{6.67 \\times 10^{-11}}$</div>
+                        <div class="font-mono text-gray-300">$m^2 = ${(m_sq/1e4).toFixed(3)} \\times 10^4 \\rightarrow m = \\sqrt{${m_sq.toFixed(0)}}$</div>
+                        <div class="font-bold text-emerald-400">คำตอบ: มวลดาวเทียมแต่ละดวง $m = ${m.toFixed(2)}\\text{ kg}$</div>
+                    </div>
+                `;
+
+            } else if (currentProblemId === 4) {
+                // Surface g calculation
+                const ME_val = activeParams.ME_val || 5.97e24;
+                const RE_km = activeParams.RE_km || 6371;
+
+                const RE_m = RE_km * 1000;
+                const g_val = (G * ME_val) / Math.pow(RE_m, 2);
+
+                document.getElementById('badge-force').innerText = `g_surface = ${g_val.toFixed(2)} m/s²`;
+                document.getElementById('badge-dist').innerText = `RE = ${RE_km.toLocaleString()} km`;
+
+                stepsContainer.innerHTML = `
+                    <div class="p-3 bg-space-900 rounded-xl border border-gray-700 space-y-1.5 text-xs">
+                        <div class="font-bold text-cyan-300">การพิสูจน์ค่า $g$ บริเวณผิวโลก</div>
+                        <div class="font-mono text-gray-300">สูตร: $g = \\frac{G M_E}{R_E^2}$</div>
+                        <div class="font-mono text-gray-300">แทนค่า: $g = \\frac{(6.67 \\times 10^{-11})(5.97 \\times 10^{24})}{(${RE_km} \\times 10^3)^2}$</div>
+                        <div class="font-mono text-gray-300">$= \\frac{39.8199 \\times 10^{13}}{${Math.pow(RE_km, 2)} \\times 10^6} = \\mathbf{${g_val.toFixed(2)}\\text{ m/s}^2}$</div>
+                        <div class="font-bold text-emerald-400">สรุป: ความเร่งเนื่องจากแรงโน้มถ่วง ณ ผิวโลกมีค่าประมาณ $9.81\\text{ m/s}^2$</div>
+                    </div>
+                `;
+            }
+
+            renderMath();
+        }
+
+        function resetCurrentSim() {
+            loadProblem(currentProblemId);
+        }
+
+        // ================= CANVAS ANIMATION SIMULATOR =================
+        function initSimCanvas() {
+            const canvas = document.getElementById('simCanvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            
+            // Handle resizing
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+
+            if (animFrameId) cancelAnimationFrame(animFrameId);
+
+            function render() {
+                ctx.clearRect(0, 0, rect.width, rect.height);
+                const cx = rect.width / 2;
+                const cy = rect.height / 2;
+
+                orbitAngle += 0.015;
+
+                if (currentProblemId === 1 || currentProblemId === 2 || currentProblemId === 4) {
+                    // Earth and Satellite Orbit View
+                    const earthRadius = Math.min(rect.width, rect.height) * 0.22;
+
+                    // Draw Atmosphere Glow
+                    const glowGrad = ctx.createRadialGradient(cx, cy, earthRadius * 0.8, cx, cy, earthRadius * 1.3);
+                    glowGrad.addColorStop(0, 'rgba(6, 182, 212, 0.4)');
+                    glowGrad.addColorStop(1, 'rgba(6, 182, 212, 0)');
+                    ctx.fillStyle = glowGrad;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, earthRadius * 1.4, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Draw Earth Body
+                    const earthGrad = ctx.createRadialGradient(cx - earthRadius*0.3, cy - earthRadius*0.3, earthRadius*0.1, cx, cy, earthRadius);
+                    earthGrad.addColorStop(0, '#38bdf8');
+                    earthGrad.addColorStop(0.7, '#0284c7');
+                    earthGrad.addColorStop(1, '#0f172a');
+                    ctx.fillStyle = earthGrad;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, earthRadius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Earth Label
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 12px Sarabun';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('โลก (Earth)', cx, cy + 4);
+
+                    if (currentProblemId === 4) {
+                        // Surface object representation
+                        const objX = cx;
+                        const objY = cy - earthRadius;
+                        
+                        ctx.fillStyle = '#f59e0b';
+                        ctx.beginPath();
+                        ctx.arc(objX, objY, 8, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        // Downward force arrow g
+                        drawArrow(ctx, objX, objY, objX, objY + 45, '#ef4444', 'g (9.81 m/s²)');
+                    } else {
+                        // Satellite Orbiting
+                        const h_factor = currentProblemId === 1 ? (activeParams.h / 1000) : 0.8;
+                        const orbitRadius = earthRadius + 25 + Math.min(80, h_factor * 40);
+
+                        // Orbit Line
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                        ctx.setLineDash([4, 4]);
+                        ctx.beginPath();
+                        ctx.arc(cx, cy, orbitRadius, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+
+                        // Satellite position
+                        const satX = cx + orbitRadius * Math.cos(orbitAngle);
+                        const satY = cy + orbitRadius * Math.sin(orbitAngle);
+
+                        // Draw Satellite
+                        ctx.fillStyle = '#38bdf8';
+                        ctx.beginPath();
+                        ctx.arc(satX, satY, 6, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        // Solar panels
+                        ctx.fillStyle = '#818cf8';
+                        ctx.fillRect(satX - 12, satY - 2, 24, 4);
+
+                        // Gravitational force vector (pointing to center)
+                        drawArrow(ctx, satX, satY, satX - (satX - cx) * 0.4, satY - (satY - cy) * 0.4, '#ef4444', 'Fg');
+
+                        // Velocity vector (tangential)
+                        const vx = -Math.sin(orbitAngle) * 35;
+                        const vy = Math.cos(orbitAngle) * 35;
+                        drawArrow(ctx, satX, satY, satX + vx, satY + vy, '#10b981', 'v');
+                    }
+
+                } else if (currentProblemId === 3) {
+                    // Two Satellites Separation View
+                    const distScale = Math.min(rect.width * 0.6, activeParams.r * 2.5);
+                    const s1X = cx - distScale / 2;
+                    const s2X = cx + distScale / 2;
+
+                    // Separation Line
+                    ctx.strokeStyle = '#6b7280';
+                    ctx.beginPath();
+                    ctx.moveTo(s1X, cy);
+                    ctx.lineTo(s2X, cy);
+                    ctx.stroke();
+
+                    // Distance Label
+                    ctx.fillStyle = '#f3f4f6';
+                    ctx.font = '12px Sarabun';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(`r = ${activeParams.r} m`, cx, cy - 15);
+
+                    // Satellite 1
+                    ctx.fillStyle = '#a855f7';
+                    ctx.beginPath();
+                    ctx.arc(s1X, cy, 12, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillText('m₁', s1X, cy + 28);
+
+                    // Satellite 2
+                    ctx.fillStyle = '#a855f7';
+                    ctx.beginPath();
+                    ctx.arc(s2X, cy, 12, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillText('m₂', s2X, cy + 28);
+
+                    // Mutual Force Vectors
+                    drawArrow(ctx, s1X, cy, s1X + 45, cy, '#38bdf8', 'F₁₂');
+                    drawArrow(ctx, s2X, cy, s2X - 45, cy, '#38bdf8', 'F₂₁');
+                }
+
+                animFrameId = requestAnimationFrame(render);
+            }
+
+            render();
+        }
+
+        function drawArrow(ctx, fromx, fromy, tox, toy, color, label) {
+            const headlen = 8;
+            const dx = tox - fromx;
+            const dy = toy - fromy;
+            const angle = Math.atan2(dy, dx);
+
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            ctx.moveTo(fromx, fromy);
+            ctx.lineTo(tox, toy);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(tox, toy);
+            ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+            ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+            ctx.fill();
+
+            if (label) {
+                ctx.font = 'bold 11px Sarabun';
+                ctx.fillText(label, tox + Math.cos(angle)*12, toy + Math.sin(angle)*12);
+            }
+        }
+
+        // ================= SANDBOX SIMULATOR LOGIC =================
+        function initSandboxCanvas() {
+            updateSandbox();
+        }
+
+        function updateSandbox() {
+            const m1_val = parseFloat(document.getElementById('sb-m1').value);
+            const m2_val = parseFloat(document.getElementById('sb-m2').value);
+            const r_val = parseFloat(document.getElementById('sb-r').value);
+
+            document.getElementById('sb-m1-lbl').innerText = `${m1_val} x 10²⁴ kg`;
+            document.getElementById('sb-m2-lbl').innerText = `${m2_val.toLocaleString()} kg`;
+            document.getElementById('sb-r-lbl').innerText = `${r_val.toLocaleString()} km`;
+
+            const m1_kg = m1_val * 1e24;
+            const r_m = r_val * 1000;
+            const F_grav = (G * m1_kg * m2_val) / Math.pow(r_m, 2);
+            const g_at_m2 = (G * m1_kg) / Math.pow(r_m, 2);
+
+            document.getElementById('sb-f-val').innerText = `F_grav = ${F_grav.toFixed(2)} N`;
+            document.getElementById('sb-g-val').innerText = `Field g_at_m2 = ${g_at_m2.toFixed(3)} m/s²`;
+
+            // Draw Sandbox Canvas
+            const canvas = document.getElementById('sandboxCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+
+            ctx.clearRect(0, 0, rect.width, rect.height);
+            const cx = rect.width / 2;
+            const cy = rect.height / 2;
+
+            const visualDist = Math.min(rect.width * 0.7, (r_val / 50000) * (rect.width * 0.6) + 80);
+            const p1X = cx - visualDist / 2;
+            const p2X = cx + visualDist / 2;
+
+            // Draw Body 1 (Mass 1)
+            const r1 = 15 + Math.min(25, m1_val * 3);
+            ctx.fillStyle = '#06b6d4';
+            ctx.beginPath();
+            ctx.arc(p1X, cy, r1, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw Body 2 (Mass 2)
+            const r2 = 8 + Math.min(15, (m2_val/10000)*15);
+            ctx.fillStyle = '#6366f1';
+            ctx.beginPath();
+            ctx.arc(p2X, cy, r2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw Force Vectors (Action-Reaction)
+            const arrowLen = Math.min(60, Math.max(15, F_grav / 10));
+            drawArrow(ctx, p1X, cy, p1X + arrowLen, cy, '#f59e0b', 'F₁₂');
+            drawArrow(ctx, p2X, cy, p2X - arrowLen, cy, '#f59e0b', 'F₂₁');
+        }
+
+        // ================= SECTION 3 CALCULATOR LOGIC =================
+        function calcRatioSamePlanet() {
+            const n = parseFloat(document.getElementById('calc-n').value) || 1;
+            // g' / g = (r / (r + h))^2 = (1 / (1 + n))^2
+            const ratio = 1 / Math.pow(1 + n, 2);
+            const g_prime = ratio * 9.81;
+
+            document.getElementById('res-same-planet').innerHTML = 
+                `$\\rightarrow$ ความเร่ง $g' = \\frac{1}{${Math.pow(1+n, 2).toFixed(2)}} g_{\\text{ผิว}} = \\mathbf{${g_prime.toFixed(2)}\\text{ m/s}^2}$`;
+            renderMath();
+        }
+
+        function calcRatioDiffPlanet() {
+            const m_times = parseFloat(document.getElementById('calc-m-times').value) || 1;
+            const r_times = parseFloat(document.getElementById('calc-r-times').value) || 1;
+
+            // g_planet / g_earth = (M_p / M_e) * (R_e / R_p)^2 = m_times / (r_times^2)
+            const ratio = m_times / Math.pow(r_times, 2);
+            const g_prime = ratio * 10;
+
+            document.getElementById('res-diff-planet').innerHTML = 
+                `$\\rightarrow$ ความเร่ง $g_{\\text{ใหม่}} = ${ratio.toFixed(2)} \\cdot g_E = \\mathbf{${g_prime.toFixed(1)}\\text{ m/s}^2}$ (เมื่อกำหนด $g_E = 10\\text{ m/s}^2$)`;
+            renderMath();
+        }
+
+        // Initial Window Load
+        window.onload = function() {
+            loadProblem(1);
+            calcRatioSamePlanet();
+            calcRatioDiffPlanet();
+            renderMath();
+
+            window.addEventListener('resize', () => {
+                initSimCanvas();
+                updateSandbox();
+            });
+        };
+    </script>
+</body>
+</html>

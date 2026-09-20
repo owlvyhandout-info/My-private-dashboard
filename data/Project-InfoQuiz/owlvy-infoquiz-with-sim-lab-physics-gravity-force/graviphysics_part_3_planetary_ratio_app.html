@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GraviPhysics Part 3 - สื่อการเรียนรู้ดาวเคราะห์และระบบเปรียบเทียบสัดส่วน</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        space: {
+                            950: '#030712',
+                            900: '#0B0F19',
+                            800: '#111827',
+                            700: '#1F2937',
+                            card: 'rgba(17, 24, 39, 0.75)',
+                        },
+                        violetGlow: '#8b5cf6',
+                        emeraldGlow: '#10b981',
+                        roseGlow: '#f43f5e',
+                        cyanGlow: '#06b6d4'
+                    },
+                    fontFamily: {
+                        sans: ['Sarabun', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Sarabun & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- MathJax 3 Configuration & Library for LaTeX Equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Sarabun', 'Inter', sans-serif;
+            background-color: #030712;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        .glow-violet {
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.35);
+        }
+        .glow-emerald {
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.35);
+        }
+        .glow-rose {
+            box-shadow: 0 0 25px rgba(244, 63, 94, 0.35);
+        }
+        .backdrop-blur-custom {
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-50 bg-space-900/90 backdrop-blur-custom border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-violet-500/30">
+                    <i class="fa-solid fa-meteor"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-violet-400 via-purple-300 to-pink-300 bg-clip-text text-transparent">
+                        GraviPhysics Lab (ชุดที่ 3)
+                    </h1>
+                    <p class="text-xs text-gray-400">แบบเรียน & Simulation: ดาวเคราะห์ต่างดวงและระบบเปรียบเทียบสัดส่วน</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <nav class="hidden md:flex items-center gap-1 bg-space-800 p-1.5 rounded-xl border border-gray-700/60">
+                <button onclick="switchTab('sec3')" id="tab-sec3" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-violet-600 text-white shadow-md">
+                    <i class="fa-solid fa-calculator mr-1.5"></i>โจทย์คำนวณ (ชุดที่ 3)
+                </button>
+                <button onclick="switchTab('exoplanet-sandbox')" id="tab-exoplanet-sandbox" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white hover:bg-gray-800">
+                    <i class="fa-solid fa-globe mr-1.5"></i>Exoplanet Simulator
+                </button>
+                <button onclick="switchTab('summary')" id="tab-summary" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white hover:bg-gray-800">
+                    <i class="fa-solid fa-layer-group mr-1.5"></i>สรุปสูตรลัดดาวเคราะห์
+                </button>
+            </nav>
+
+            <div class="flex items-center gap-2">
+                <button onclick="toggleFormulaModal()" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-violet-950/80 border border-violet-500/40 text-violet-200 hover:bg-violet-900 transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>สรุปสูตร $\text{\LaTeX}$</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Tabs -->
+        <div class="flex md:hidden border-t border-gray-800 bg-space-800 px-2 py-2 overflow-x-auto gap-2 text-xs">
+            <button onclick="switchTab('sec3')" id="mob-tab-sec3" class="px-3 py-1.5 rounded-lg whitespace-nowrap bg-violet-600 text-white font-medium">โจทย์คำนวณ (ชุด 3)</button>
+            <button onclick="switchTab('exoplanet-sandbox')" id="mob-tab-exoplanet-sandbox" class="px-3 py-1.5 rounded-lg whitespace-nowrap text-gray-400 bg-space-700">Exoplanet Sim</button>
+            <button onclick="switchTab('summary')" id="mob-tab-summary" class="px-3 py-1.5 rounded-lg whitespace-nowrap text-gray-400 bg-space-700">สรุปสูตรดาวเคราะห์</button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+
+        <!-- ================= SECTION 1: PROBLEM SOLVER (PART 3) ================= -->
+        <section id="section-sec3" class="space-y-6">
+            
+            <!-- Hero Header Banner -->
+            <div class="bg-gradient-to-r from-space-800 via-violet-950/40 to-space-800 rounded-2xl p-6 border border-violet-500/30 relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-violet-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-3xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 text-xs font-medium mb-3">
+                        <i class="fa-solid fa-bullseye"></i> ประเด็น: แรงและสนามของแรง-แรงโน้มถ่วง-3 (ดาวเคราะห์ต่างดวง)
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">
+                        วิเคราะห์โจทย์ "เปรียบเทียบดาวเคราะห์ต่างดวงกัน" ($M_1 \neq M_2, R_1 \neq R_2$)
+                    </h2>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        ไขข้อสอบด้วยสูตรลัดสองมิติ: $\frac{g_P}{g_E} = \left(\frac{M_P}{M_E}\right) \times \left(\frac{R_E}{R_P}\right)^2$ 
+                        พร้อมแบบจำลองวงโคจรรอบดาวฤกษ์ และภาพเปรียบเทียบขนาดผิวดาวแบบ interactive
+                    </p>
+                </div>
+            </div>
+
+            <!-- Problem Cards Grid (Select problem) -->
+            <div id="problem-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                <!-- Dynamic cards populated by JS -->
+            </div>
+
+            <!-- Active Problem Display Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Left Column: Simulation Canvas & Controls (7 cols) -->
+                <div class="lg:col-span-7 flex flex-col gap-4">
+                    <div class="bg-space-800 rounded-2xl border border-gray-800 overflow-hidden flex flex-col shadow-xl">
+                        
+                        <!-- Canvas Header -->
+                        <div class="bg-space-900/90 px-4 py-3 border-b border-gray-800 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-violet-400 animate-pulse"></span>
+                                <h3 id="sim-title" class="text-sm font-bold text-white">Simulation: แบบจำลองระบบดาวเคราะห์</h3>
+                            </div>
+                            <div class="flex items-center gap-2 text-xs text-gray-400">
+                                <button onclick="resetCurrentSim()" class="hover:text-violet-400 transition-colors flex items-center gap-1 bg-space-800 px-2.5 py-1 rounded border border-gray-700">
+                                    <i class="fa-solid fa-rotate-left"></i> รีเซ็ต
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Canvas Box -->
+                        <div class="relative w-full aspect-video bg-black/80 flex items-center justify-center overflow-hidden">
+                            <canvas id="simCanvas" class="w-full h-full block cursor-crosshair"></canvas>
+                            
+                            <!-- Canvas Overlay Badges -->
+                            <div class="absolute top-3 left-3 bg-space-900/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-gray-700 text-xs font-mono space-y-0.5 pointer-events-none">
+                                <div class="text-violet-300 font-bold" id="badge-ratio">Ratio: ---</div>
+                                <div class="text-emerald-300" id="badge-param">State: ---</div>
+                            </div>
+
+                            <div class="absolute bottom-3 right-3 bg-space-900/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-gray-700 text-[11px] text-gray-300 pointer-events-none">
+                                <i class="fa-solid fa-circle-dot text-violet-400"></i> สังเกตขนาดดาวและขนาดเวกเตอร์ $\vec{g}$
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Control Panel -->
+                        <div class="p-4 bg-space-900/50 border-t border-gray-800 space-y-3">
+                            <div class="text-xs font-bold text-violet-400 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-sliders"></i> ปรับค่าตัวแปรในโจทย์ (Live Controls)
+                            </div>
+                            
+                            <div id="controls-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Dynamic Sliders injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Step-by-Step Physics Solver with LaTeX (5 cols) -->
+                <div class="lg:col-span-5">
+                    <div class="bg-space-800 rounded-2xl border border-gray-800 p-5 shadow-xl flex flex-col h-full justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between pb-3 border-b border-gray-700">
+                                <span class="text-xs font-bold uppercase tracking-wider text-violet-400 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-square-root-variable"></i> แสดงวิธีทำด้วยสมการ $\text{\LaTeX}$
+                                </span>
+                                <span id="prob-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-violet-500/20 text-violet-300 border border-violet-500/30">
+                                    ข้อ ③②
+                                </span>
+                            </div>
+
+                            <!-- Problem Statement Text -->
+                            <div id="prob-statement" class="mt-3 p-3.5 rounded-xl bg-space-900/90 border border-gray-700/80 text-sm text-gray-200 leading-relaxed font-medium">
+                                กำลังโหลดโจทย์...
+                            </div>
+
+                            <!-- Step-by-Step Math Solution -->
+                            <div id="prob-steps" class="mt-4 space-y-3">
+                                <!-- Injected via JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Trap Highlight Box -->
+                        <div class="p-3.5 rounded-xl bg-violet-950/40 border border-violet-500/30 text-xs space-y-1.5">
+                            <div class="font-bold text-violet-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-lightbulb text-amber-400"></i> ข้อสังเกตหลัก (Key Concept):
+                            </div>
+                            <p id="math-trap-text" class="text-gray-300 leading-relaxed">
+                                สัดส่วนรัศมีอยู่ในเทอมยกกำลังสองผกผัน $\left(\frac{R_E}{R_P}\right)^2$ ดังนั้น ถ้ารัศมีลดลงครึ่งหนึ่ง ($R_P = \frac{1}{2} R_E$) ผลคูณจะเพิ่มขึ้น $2^2 = 4$ เท่า!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= SECTION 2: EXOPLANET SANDBOX SIMULATOR ================= -->
+        <section id="section-exoplanet-sandbox" class="hidden space-y-6">
+            <div class="bg-space-800 rounded-2xl border border-gray-800 p-6 shadow-xl">
+                <div class="max-w-3xl mb-6">
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-globe text-violet-400"></i> Interactive Exoplanet Laboratory (สำรวจดาวเคราะห์ปริศนา)
+                    </h2>
+                    <p class="text-gray-400 text-sm mt-1">
+                        ทดลองปรับสัดส่วนมวล ($M_P/M_E$) และสัดส่วนรัศมี ($R_P/R_E$) ของดาวเคราะห์ แล้วดูความเร่งผิวดาว $g_P$, น้ำหนักนักบินอวกาศ $W_P$ และการเคลื่อนที่ของวัตถุเมื่อตกแบบเสรี
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                    <!-- Sandbox Canvas -->
+                    <div class="lg:col-span-8 bg-black/80 rounded-xl border border-gray-700 aspect-[16/9] relative overflow-hidden flex items-center justify-center">
+                        <canvas id="sandboxCanvas" class="w-full h-full block"></canvas>
+                        
+                        <div class="absolute top-4 left-4 bg-space-900/90 backdrop-blur-md p-3.5 rounded-xl border border-gray-700 text-xs space-y-1 font-mono">
+                            <div class="text-violet-300 font-bold" id="sb-g-ratio">g_planet = 1.00 g_earth (10.0 m/s²)</div>
+                            <div class="text-emerald-300" id="sb-w-ratio">W_astronaut = 900.0 N</div>
+                            <div class="text-pink-300" id="sb-r-ratio">R_planet = 1.00 R_earth</div>
+                        </div>
+
+                        <div class="absolute bottom-4 left-4">
+                            <button onclick="triggerDropBall()" class="px-3.5 py-1.5 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs shadow-lg flex items-center gap-1.5">
+                                <i class="fa-solid fa-play"></i> ทดสอบปล่อยวัตถุตกแบบเสรี
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sandbox Controls -->
+                    <div class="lg:col-span-4 bg-space-900/80 p-5 rounded-xl border border-gray-800 space-y-5">
+                        <h3 class="text-sm font-bold text-white border-b border-gray-800 pb-2">ตั้งค่าสัดส่วนดาวเคราะห์</h3>
+                        
+                        <div>
+                            <div class="flex justify-between text-xs text-gray-300 mb-1">
+                                <span>มวลของดาวเทียบกับโลก ($M_P / M_E$):</span>
+                                <span id="sb-m-lbl" class="font-mono text-violet-300">1.00 เท่า</span>
+                            </div>
+                            <input type="range" id="sb-m-slider" min="0.1" max="10" step="0.1" value="1.0" oninput="updateSandbox()" class="w-full accent-violet-500 cursor-pointer">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs text-gray-300 mb-1">
+                                <span>รัศมีของดาวเทียบกับโลก ($R_P / R_E$):</span>
+                                <span id="sb-r-lbl" class="font-mono text-pink-300">1.00 เท่า</span>
+                            </div>
+                            <input type="range" id="sb-r-slider" min="0.2" max="3.0" step="0.1" value="1.0" oninput="updateSandbox()" class="w-full accent-pink-500 cursor-pointer">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs text-gray-300 mb-1">
+                                <span>น้ำหนักนักบินบนโลก ($W_{\\text{Earth}}$):</span>
+                                <span id="sb-w0-lbl" class="font-mono text-emerald-300">900 N</span>
+                            </div>
+                            <input type="range" id="sb-w0-slider" min="100" max="1500" step="50" value="900" oninput="updateSandbox()" class="w-full accent-emerald-500 cursor-pointer">
+                        </div>
+
+                        <div class="p-3 bg-space-800 rounded-lg border border-gray-700 text-xs text-gray-300 space-y-1.5">
+                            <div class="font-bold text-violet-300">💡 คำนวณความเร่งผิวดาว:</div>
+                            <div id="sb-summary-math">
+                                $$\frac{g_P}{g_E} = \frac{1.0}{1.0} \times \left(\frac{1.0}{1.0}\right)^2 = 1.00$$
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 3: FORMULA SUMMARY MATRIX ================= -->
+        <section id="section-summary" class="hidden space-y-6">
+            <div class="bg-space-800 rounded-2xl border border-gray-800 p-6 shadow-xl">
+                <div class="max-w-3xl mb-6">
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-violet-400"></i> สรุปสูตรการเปรียบเทียบระหว่างดาวเคราะห์
+                    </h2>
+                    <p class="text-gray-400 text-sm mt-1">
+                        ข้อสรุปสำคัญเมื่อต้องเปรียบเทียบปริมาณทางฟิสิกส์ระหว่างดาวเคราะห์ต่างดวงกัน
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <div class="bg-space-900/90 p-5 rounded-xl border border-gray-700 space-y-4">
+                        <div class="flex items-center gap-2 text-violet-400 font-bold text-sm border-b border-gray-800 pb-2">
+                            <i class="fa-solid fa-globe"></i> 1. อัตราส่วนความเร่งโน้มถ่วงผิวดาว ($g$)
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            ขึ้นอยู่กับสองปัจจัยคือ "มวลของดาว" ($M$) แบบแปรผันตรง และ "รัศมีดาว" ($R$) แบบแปรผกผันยกกำลังสอง
+                        </p>
+                        <div class="p-3.5 bg-space-800 rounded-lg border border-violet-500/30 font-mono text-xs text-violet-200 space-y-2">
+                            $$\frac{g_P}{g_E} = \frac{M_P}{M_E} \times \left(\frac{R_E}{R_P}\right)^2$$
+                        </div>
+                    </div>
+
+                    <div class="bg-space-900/90 p-5 rounded-xl border border-gray-700 space-y-4">
+                        <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm border-b border-gray-800 pb-2">
+                            <i class="fa-solid fa-weight-hanging"></i> 2. อัตราส่วนน้ำหนักวัตถุบนผิวดาว ($W$)
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            เนื่องจากน้ำหนัก $W = mg$ และมวลวัตถุ $m$ ไม่เปลี่ยนแปลงตามสถานที่ ทำให้น้ำหนักมีอัตราส่วนเท่ากับ $g$
+                        </p>
+                        <div class="p-3.5 bg-space-800 rounded-lg border border-emerald-500/30 font-mono text-xs text-emerald-200 space-y-2">
+                            $$\frac{W_P}{W_E} = \frac{m g_P}{m g_E} = \frac{M_P}{M_E} \times \left(\frac{R_E}{R_P}\right)^2$$
+                        </div>
+                    </div>
+
+                    <div class="bg-space-900/90 p-5 rounded-xl border border-gray-700 space-y-4 md:col-span-2">
+                        <div class="flex items-center gap-2 text-pink-400 font-bold text-sm border-b border-gray-800 pb-2">
+                            <i class="fa-solid fa-orbit"></i> 3. ระบบดาวเคราะห์ A และ B โคจรรอบดาวฤกษ์ดวงเดียวกัน (ข้อ ③② O-NET)
+                        </div>
+                        <p class="text-xs text-gray-300 leading-relaxed">
+                            เมื่อใช้สมการแรงดึงดูด $F = G \frac{M_{\text{star}} m}{r^2}$ จะได้อัตราส่วนแรงดึงดูดเทียบกับระยะห่างดังนี้:
+                        </p>
+                        <div class="p-3.5 bg-space-800 rounded-lg border border-pink-500/30 font-mono text-xs text-pink-200 space-y-2">
+                            $$\frac{F_A}{F_B} = \frac{m_A}{m_B} \times \left(\frac{r_B}{r_A}\right)^2 \implies \frac{r_A}{r_B} = \sqrt{\frac{m_A}{m_B} \times \frac{F_B}{F_A}}$$
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Formula Summary Modal -->
+    <div id="formulaModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-space-800 rounded-2xl border border-gray-700 max-w-2xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div class="flex items-center justify-between border-b border-gray-700 pb-3">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-book-bookmark text-violet-400"></i> สรุปสูตร $\text{\LaTeX}$ เรื่อง ดาวเคราะห์ต่างดวง
+                </h3>
+                <button onclick="toggleFormulaModal()" class="text-gray-400 hover:text-white text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-sm text-gray-200">
+                <div class="p-3.5 bg-space-900 rounded-xl border border-violet-500/30">
+                    <div class="font-bold text-violet-300 mb-1">1. สูตรอัตราส่วนดาวเคราะห์ต่างดวงกัน</div>
+                    $$\frac{g_1}{g_2} = \frac{M_1}{M_2} \times \left(\frac{r_2}{r_1}\right)^2$$
+                    $$\frac{W_1}{W_2} = \frac{M_1}{M_2} \times \left(\frac{r_2}{r_1}\right)^2$$
+                </div>
+
+                <div class="p-3.5 bg-space-900 rounded-xl border border-pink-500/30">
+                    <div class="font-bold text-pink-300 mb-1">2. แรงโน้มถ่วงของดาวเคราะห์รอบดาวฤกษ์</div>
+                    $$\frac{F_A}{F_B} = \frac{m_A}{m_B} \times \left(\frac{r_B}{r_A}\right)^2$$
+                </div>
+            </div>
+
+            <div class="pt-2 flex justify-end">
+                <button onclick="toggleFormulaModal()" class="px-4 py-2 rounded-lg bg-violet-600 text-white font-semibold text-sm hover:bg-violet-500">
+                    ปิดหน้าต่าง
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-space-900 border-t border-gray-800 py-4 mt-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-gray-500">
+            GraviPhysics Interactive Learning App &bull; ชุดที่ 3 "ประเด็น: แรงและสนามของแรง-แรงโน้มถ่วง-3"
+        </div>
+    </footer>
+
+    <script>
+        // ================= GLOBAL DATA FOR PART 3 PROBLEMS =================
+        const problems = {
+            1: {
+                id: 1,
+                badge: "ข้อ ③② (O-NET2566)",
+                title: "ดาวเคราะห์ A และ B โคจรรอบดาวฤกษ์ดวงเดียวกัน",
+                statement: "ดาวเคราะห์ A และ B โคจรรอบดาวฤกษ์ดวงเดียวกัน พบว่าแรงโน้มถ่วงที่ดาวฤกษ์กระทำต่อดาวเคราะห์ A เป็น 2 เท่าของดาวเคราะห์ B ($F_A = 2 F_B$) และมวลของ A เป็น 8 เท่าของ B ($m_A = 8 m_B$) จงหาอัตราส่วนของระยะห่าง $r_A / r_B$",
+                params: { F_ratio: 2, m_ratio: 8 },
+                type: 'orbit',
+                controls: [
+                    { id: 'F_ratio', label: 'อัตราส่วนแรงดึงดูด F_A / F_B', min: 0.5, max: 10, step: 0.5, val: 2 },
+                    { id: 'm_ratio', label: 'อัตราส่วนมวล m_A / m_B', min: 1, max: 16, step: 1, val: 8 }
+                ]
+            },
+            2: {
+                id: 2,
+                badge: "ข้อ ①⑤⓪/③",
+                title: "ดาวเคราะห์มีแรงโน้มถ่วงและมวลมากกว่าโลก 10 เท่า",
+                statement: "ดาวเคราะห์ดวงหนึ่งมีแรงโน้มถ่วงมากกว่าโลก 10 เท่า ($g_P = 10 g_E$) ถ้าดาวเคราะห์ดวงนี้มีมวลมากกว่าโลก 10 เท่า ($M_P = 10 M_E$) อยากทราบว่าดาวเคราะห์ดวงนี้จะมีขนาด (รัศมี) เป็นอย่างไรเมื่อเทียบกับโลก",
+                params: { g_ratio: 10, M_ratio: 10 },
+                type: 'side_by_side',
+                controls: [
+                    { id: 'g_ratio', label: 'อัตราส่วน g_P / g_E', min: 1, max: 20, step: 1, val: 10 },
+                    { id: 'M_ratio', label: 'อัตราส่วนมวล M_P / M_E', min: 1, max: 20, step: 1, val: 10 }
+                ]
+            },
+            3: {
+                id: 3,
+                badge: "ข้อ ①⑤①/①",
+                title: "ดาวเคราะห์มวล 2 เท่า และรัศมีครึ่งหนึ่งของโลก",
+                statement: "ถ้าดาวเคราะห์ดวงหนึ่งมีมวลมากกว่าโลก 2 เท่า ($M_P = 2 M_E$) แต่มีรัศมีเป็นครึ่งหนึ่งของโลก ($R_P = 0.5 R_E$) อยากทราบว่าความเร่งโน้มถ่วงที่บริเวณผิวของดาวเคราะห์นี้มีค่าเท่าไร",
+                params: { M_ratio: 2, R_ratio: 0.5 },
+                type: 'side_by_side',
+                controls: [
+                    { id: 'M_ratio', label: 'มวลของดาว M_P (เท่าของ M_E)', min: 0.5, max: 10, step: 0.5, val: 2 },
+                    { id: 'R_ratio', label: 'รัศมีของดาว R_P (เท่าของ R_E)', min: 0.25, max: 2.0, step: 0.25, val: 0.5 }
+                ]
+            },
+            4: {
+                id: 4,
+                badge: "ข้อ ②⑧④",
+                title: "ดาวเคราะห์มวล 1/10 เท่า และรัศมี 1/2 เท่าของโลก",
+                statement: "ดาวเคราะห์มีมวลเป็น $\\frac{1}{10}$ เท่าของโลก และมีรัศมีเป็น $\\frac{1}{2}$ เท่าของรัศมีโลก จงหาความเร่งโน้มถ่วงบนผิวดาวเคราะห์นั้น (กำหนดความเร่งที่ผิวโลก $g_E = 10\\text{ m/s}^2$)",
+                params: { M_frac: 0.1, R_frac: 0.5 },
+                type: 'side_by_side',
+                controls: [
+                    { id: 'M_frac', label: 'อัตราส่วนมวล M_P / M_E', min: 0.05, max: 1.0, step: 0.05, val: 0.1 },
+                    { id: 'R_frac', label: 'อัตราส่วนรัศมี R_P / R_E', min: 0.1, max: 1.0, step: 0.1, val: 0.5 }
+                ]
+            },
+            5: {
+                id: 5,
+                badge: "ข้อ ②⑧⑤",
+                title: "น้ำหนักนักบินอวกาศบนดาวเคราะห์มวล 1/8 และรัศมี 1/2",
+                statement: "ดาวเคราะห์มีมวลเป็น $\\frac{1}{8}$ เท่าของมวลโลก และมีรัศมีเป็น $\\frac{1}{2}$ เท่าของรัศมีโลก ถ้านักบินอวกาศมีน้ำหนัก $900\\text{ N}$ เมื่อชั่งบนผิวโลก จงหาน้ำหนักของเขาบนผิวดาวเคราะห์นั้น",
+                params: { W_E: 900, M_frac: 0.125, R_frac: 0.5 },
+                type: 'side_by_side',
+                controls: [
+                    { id: 'W_E', label: 'น้ำหนักนักบินบนโลก (N)', min: 100, max: 1500, step: 50, val: 900 },
+                    { id: 'M_frac', label: 'อัตราส่วนมวล M_P / M_E', min: 0.05, max: 1.0, step: 0.025, val: 0.125 },
+                    { id: 'R_frac', label: 'อัตราส่วนรัศมี R_P / R_E', min: 0.1, max: 1.0, step: 0.1, val: 0.5 }
+                ]
+            }
+        };
+
+        let currentProblemId = 1;
+        let activeParams = { ...problems[1].params };
+        let animFrameId = null;
+        let orbitAngleA = 0;
+        let orbitAngleB = 0;
+        let dropBallY = 0;
+        let isDropping = false;
+
+        // Renders LaTeX dynamically
+        function renderMath() {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch((err) => console.error("MathJax error:", err));
+            }
+        }
+
+        function renderProblemCards() {
+            const grid = document.getElementById('problem-cards-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            Object.values(problems).forEach(prob => {
+                const isSelected = prob.id === currentProblemId;
+                const card = document.createElement('button');
+                card.onclick = () => loadProblem(prob.id);
+                card.className = isSelected 
+                    ? 'p-3.5 rounded-xl border border-violet-500 bg-violet-950/40 text-left transition-all duration-200 shadow-lg glow-violet'
+                    : 'p-3.5 rounded-xl border border-gray-800 bg-space-800 text-left transition-all duration-200 hover:border-gray-600';
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-bold px-2 py-0.5 rounded bg-violet-500/20 text-violet-300">${prob.badge}</span>
+                        <i class="fa-solid fa-planet-ringed text-violet-400"></i>
+                    </div>
+                    <div class="text-xs font-semibold text-white truncate">${prob.title}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderControls(controls) {
+            const container = document.getElementById('controls-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (!controls || controls.length === 0) return;
+
+            controls.forEach(ctrl => {
+                const div = document.createElement('div');
+                div.className = 'bg-space-800 p-2.5 rounded-lg border border-gray-700/70 space-y-1';
+                div.innerHTML = `
+                    <div class="flex justify-between text-xs font-medium text-gray-300">
+                        <span>${ctrl.label}:</span>
+                        <span id="ctrl-val-${ctrl.id}" class="font-mono text-violet-300">${ctrl.val}</span>
+                    </div>
+                    <input type="range" id="ctrl-${ctrl.id}" min="${ctrl.min}" max="${ctrl.max}" step="${ctrl.step}" value="${ctrl.val}"
+                        oninput="onControlInput('${ctrl.id}', this.value)"
+                        class="w-full accent-violet-500 cursor-pointer">
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function onControlInput(id, value) {
+            const val = parseFloat(value);
+            activeParams[id] = val;
+
+            const lbl = document.getElementById(`ctrl-val-${id}`);
+            if (lbl) lbl.innerText = val;
+
+            updateCalculationsAndSteps();
+            initSimCanvas();
+        }
+
+        // ================= TAB NAVIGATION =================
+        function switchTab(tabName) {
+            ['sec3', 'exoplanet-sandbox', 'summary'].forEach(t => {
+                document.getElementById(`section-${t}`).classList.add('hidden');
+                
+                const btn = document.getElementById(`tab-${t}`);
+                if (btn) {
+                    btn.className = (t === tabName) 
+                        ? 'px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-violet-600 text-white shadow-md'
+                        : 'px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-gray-400 hover:text-white hover:bg-gray-800';
+                }
+
+                const mobBtn = document.getElementById(`mob-tab-${t}`);
+                if (mobBtn) {
+                    mobBtn.className = (t === tabName)
+                        ? 'px-3 py-1.5 rounded-lg whitespace-nowrap bg-violet-600 text-white font-medium'
+                        : 'px-3 py-1.5 rounded-lg whitespace-nowrap text-gray-400 bg-space-700';
+                }
+            });
+
+            document.getElementById(`section-${tabName}`).classList.remove('hidden');
+
+            if (tabName === 'sec3') {
+                initSimCanvas();
+            } else if (tabName === 'exoplanet-sandbox') {
+                initSandboxCanvas();
+            }
+
+            renderMath();
+        }
+
+        function toggleFormulaModal() {
+            const modal = document.getElementById('formulaModal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) renderMath();
+        }
+
+        // ================= PROBLEM LOADER & SOLVER =================
+        function loadProblem(id) {
+            currentProblemId = id;
+            const prob = problems[id];
+
+            activeParams = { ...prob.params };
+
+            renderProblemCards();
+            renderControls(prob.controls);
+
+            document.getElementById('prob-badge').innerText = prob.badge;
+            document.getElementById('prob-statement').innerHTML = prob.statement;
+            document.getElementById('sim-title').innerText = `Simulation: ${prob.title}`;
+
+            updateCalculationsAndSteps();
+            initSimCanvas();
+        }
+
+        function updateCalculationsAndSteps() {
+            const stepsContainer = document.getElementById('prob-steps');
+            stepsContainer.innerHTML = '';
+
+            const id = currentProblemId;
+
+            if (id === 1) { // ข้อ ③② O-NET2566
+                const F_ratio = activeParams.F_ratio || 2;
+                const m_ratio = activeParams.m_ratio || 8;
+                // F_A / F_B = (m_A / m_B) * (r_B / r_A)^2
+                // r_A / r_B = sqrt(m_ratio / F_ratio)
+                const r_ratio = Math.sqrt(m_ratio / F_ratio);
+
+                document.getElementById('badge-ratio').innerText = `r_A / r_B = ${r_ratio.toFixed(2)}`;
+                document.getElementById('badge-param').innerText = `F_A=${F_ratio}F_B, m_A=${m_ratio}m_B`;
+
+                stepsContainer.innerHTML = `
+                    <div class="p-3 bg-space-900 rounded-xl border border-gray-700 space-y-2 text-xs">
+                        <div class="font-bold text-violet-300">1. ตั้งสมการแรงดึงดูดเข้าสู่ศูนย์กลาง:</div>
+                        <div>$$\\frac{F_A}{F_B} = \\frac{m_A}{m_B} \\times \\left(\\frac{r_B}{r_A}\\right)^2$$</div>
+                        <div class="font-bold text-violet-300">2. แทนค่าสัดส่วนตามโจทย์:</div>
+                        <div>$$${F_ratio} = ${m_ratio} \\times \\left(\\frac{r_B}{r_A}\\right)^2 \\implies \\left(\\frac{r_B}{r_A}\\right)^2 = \\frac{${F_ratio}}{${m_ratio}} = \\frac{1}{${m_ratio/F_ratio}}$$</div>
+                        <div>$$\\frac{r_B}{r_A} = \\frac{1}{${r_ratio.toFixed(2)}} \\implies \\frac{r_A}{r_B} = \\mathbf{${r_ratio.toFixed(2)}}$$</div>
+                        <div class="font-bold text-emerald-400 pt-1">
+                            คำตอบ: อัตราส่วนระยะห่าง $r_A / r_B = \\mathbf{${r_ratio.toFixed(2)}}$ (ตอบตัวเลือก ③)
+                        </div>
+                    </div>
+                `;
+            } else if (id === 2) { // ข้อ ①⑤⓪/③
+                const g_ratio = activeParams.g_ratio || 10;
+                const M_ratio = activeParams.M_ratio || 10;
+                // g_P / g_E = (M_P / M_E) * (R_E / R_P)^2
+                // R_P / R_E = sqrt(M_ratio / g_ratio)
+                const R_ratio = Math.sqrt(M_ratio / g_ratio);
+
+                document.getElementById('badge-ratio').innerText = `R_P / R_E = ${R_ratio.toFixed(2)}`;
+                document.getElementById('badge-param').innerText = `g_P=${g_ratio}g_E, M_P=${M_ratio}M_E`;
+
+                stepsContainer.innerHTML = `
+                    <div class="p-3 bg-space-900 rounded-xl border border-gray-700 space-y-2 text-xs">
+                        <div class="font-bold text-violet-300">ตั้งสมการเปรียบเทียบความเร่งผิวดาว:</div>
+                        <div>$$\\frac{g_P}{g_E} = \\frac{M_P}{M_E} \\times \\left(\\frac{R_E}{R_P}\\right)^2$$</div>
+                        <div>$$${g_ratio} = ${M_ratio} \\times \\left(\\frac{R_E}{R_P}\\right)^2 \\implies \\left(\\frac{R_E}{R_P}\\right)^2 = 1 \\implies R_P = R_E$$</div>
+                        <div class="font-bold text-emerald-400 pt-1">
+                            คำตอบ: ดาวเคราะห์ดวงนี้มีรัศมี (ขนาด) เท่ากับโลก ($R_P = R_E$)
+                        </div>
+                    </div>
+                `;
+            } else if (id === 3) { // ข้อ ①⑤①/①
+                const M_ratio = activeParams.M_ratio || 2;
+                const R_ratio = activeParams.R_ratio || 0.5;
+                const g_ans = M_ratio / Math.pow(R_ratio, 2);
+
+                document.getElementById('badge-ratio').innerText = `g_P = ${g_ans.toFixed(1)} g_E`;
+                document.getElementById('badge-param').innerText = `M_P=${M_ratio}M_E, R_P=${R_ratio}R_E`;
+
+                stepsContainer.innerHTML = `
+                    <div class="p-3 bg-space-900 rounded-xl border border-gray-700 space-y-2 text-xs">
+                        <div class="font-bold text-violet-300">คำนวณอัตราส่วนความเร่งผิวดาว:</div>
+                        <div>$$\\frac{g_P}{g_E} = \\frac{M_P}{M_E} \\times \\left(\\frac{R_E}{R_P}\\right)^2 = ${M_ratio} \\times \\left(\\frac{1}{${R_ratio}}\\right)^2$$</div>
+                        <div>$$\\frac{g_P}{g_E} = ${M_ratio} \\times 4 = \\mathbf{${g_ans.toFixed(0)}}$$</div>
+                        <div class="font-bold text-emerald-400 pt-1">
+                            คำตอบ: ความเร่งเนื่องจากแรงโน้มถ่วงที่ผิวดาว $g_P = \\mathbf{${g_ans.toFixed(0)} g_E}$ (8 เท่าของโลก)
+                        </div>
+                    </div>
+                `;
+            } else if (id === 4) { // ข้อ ②⑧④
+                const M_frac = activeParams.M_frac || 0.1;
+                const R_frac = activeParams.R_frac || 0.5;
+                const g_ratio = M_frac / Math.pow(R_frac, 2);
+                const g_P = g_ratio * 10;
+
+                document.getElementById('badge-ratio').innerText = `g_P = ${g_P.toFixed(1)} m/s²`;
+                document.getElementById('badge-param').innerText = `M_P=${M_frac}M_E, R_P=${R_frac}R_E`;
+
+                stepsContainer.innerHTML = `
+                    <div class="p-3 bg-space-900 rounded-xl border border-gray-700 space-y-2 text-xs">
+                        <div class="font-bold text-violet-300">แทนค่าในสูตรความเร่งผิวดาว:</div>
+                        <div>$$\\frac{g_P}{g_E} = \\frac{M_P}{M_E} \\times \\left(\\frac{R_E}{R_P}\\right)^2 = (${M_frac}) \\times \\left(\\frac{1}{${R_frac}}\\right)^2 = (${M_frac}) \\times 4 = ${g_ratio.toFixed(2)}$$</div>
+                        <div>$$g_P = ${g_ratio.toFixed(2)} \\times 10\\text{ m/s}^2 = \\mathbf{${g_P.toFixed(1)}\\text{ m/s}^2}$$</div>
+                        <div class="font-bold text-emerald-400 pt-1">
+                            คำตอบ: ความเร่งโน้มถ่วงบนผิวดาว $g_P = \\mathbf{${g_P.toFixed(1)}\\text{ m/s}^2}$
+                        </div>
+                    </div>
+                `;
+            } else if (id === 5) { // ข้อ ②⑧⑤
+                const W_E = activeParams.W_E || 900;
+                const M_frac = activeParams.M_frac || 0.125;
+                const R_frac = activeParams.R_frac || 0.5;
+                const W_ratio = M_frac / Math.pow(R_frac, 2);
+                const W_P = W_E * W_ratio;
+
+                document.getElementById('badge-ratio').innerText = `W_P = ${W_P.toFixed(1)} N`;
+                document.getElementById('badge-param').innerText = `W_E=${W_E}N, M_P=1/8, R_P=1/2`;
+
+                stepsContainer.innerHTML = `
+                    <div class="p-3 bg-space-900 rounded-xl border border-gray-700 space-y-2 text-xs">
+                        <div class="font-bold text-violet-300">เปรียบเทียบน้ำหนักวัตถุบนผิวดาว:</div>
+                        <div>$$\\frac{W_P}{W_E} = \\frac{M_P}{M_E} \\times \\left(\\frac{R_E}{R_P}\\right)^2 = \\left(${M_frac}\\right) \\times \\left(\\frac{1}{${R_frac}}\\right)^2 = \\frac{1}{8} \\times 4 = \\mathbf{\\frac{1}{2}}$$</div>
+                        <div>$$W_P = \\frac{W_E}{2} = \\frac{${W_E}}{2} = \\mathbf{${W_P.toFixed(0)}\\text{ นิวตัน}}$$</div>
+                        <div class="font-bold text-emerald-400 pt-1">
+                            คำตอบ: น้ำหนักนักบินอวกาศบนผิวดาวเคราะห์ $W_P = \\mathbf{${W_P.toFixed(0)}\\text{ นิวตัน}}$
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderMath();
+        }
+
+        function resetCurrentSim() {
+            loadProblem(currentProblemId);
+        }
+
+        // ================= CANVAS SIMULATION RENDERER =================
+        function initSimCanvas() {
+            const canvas = document.getElementById('simCanvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+
+            if (animFrameId) cancelAnimationFrame(animFrameId);
+
+            function render() {
+                ctx.clearRect(0, 0, rect.width, rect.height);
+                const cx = rect.width / 2;
+                const cy = rect.height / 2;
+
+                const prob = problems[currentProblemId];
+
+                if (prob.type === 'orbit') {
+                    // Draw Star at Center
+                    const starRadius = 22;
+                    const starGrad = ctx.createRadialGradient(cx, cy, 5, cx, cy, starRadius*1.5);
+                    starGrad.addColorStop(0, '#fef08a');
+                    starGrad.addColorStop(0.5, '#eab308');
+                    starGrad.addColorStop(1, 'rgba(234, 179, 8, 0)');
+                    ctx.fillStyle = starGrad;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, starRadius*1.5, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = '#fef08a';
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, starRadius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Calculate Orbits A and B
+                    const F_ratio = activeParams.F_ratio || 2;
+                    const m_ratio = activeParams.m_ratio || 8;
+                    const r_ratio = Math.sqrt(m_ratio / F_ratio); // r_A / r_B
+
+                    const rB_vis = Math.min(rect.width, rect.height) * 0.22;
+                    const rA_vis = rB_vis * Math.min(2.0, Math.max(0.5, r_ratio));
+
+                    orbitAngleA += 0.012;
+                    orbitAngleB += 0.02;
+
+                    // Draw Orbit Lines
+                    ctx.strokeStyle = 'rgba(139, 92, 246, 0.4)';
+                    ctx.setLineDash([4, 4]);
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, rA_vis, 0, Math.PI * 2);
+                    ctx.stroke();
+
+                    ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, rB_vis, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // Planet A
+                    const ax = cx + rA_vis * Math.cos(orbitAngleA);
+                    const ay = cy + rA_vis * Math.sin(orbitAngleA);
+                    ctx.fillStyle = '#8b5cf6';
+                    ctx.beginPath();
+                    ctx.arc(ax, ay, 9, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 11px Sarabun';
+                    ctx.fillText('ดาว A', ax, ay - 13);
+
+                    // Planet B
+                    const bx = cx + rB_vis * Math.cos(orbitAngleB);
+                    const by = cy + rB_vis * Math.sin(orbitAngleB);
+                    ctx.fillStyle = '#10b981';
+                    ctx.beginPath();
+                    ctx.arc(bx, by, 6, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillText('ดาว B', bx, by - 10);
+
+                    // Vector Force Arrows
+                    drawArrow(ctx, ax, ay, ax + (cx - ax)*0.3, ay + (cy - ay)*0.3, '#ec4899', 'FA');
+                    drawArrow(ctx, bx, by, bx + (cx - bx)*0.3, by + (cy - by)*0.3, '#3b82f6', 'FB');
+
+                } else {
+                    // Side-by-Side Planet Comparison Mode
+                    const earthX = cx - rect.width * 0.22;
+                    const planetX = cx + rect.width * 0.22;
+
+                    const baseR = Math.min(rect.width, rect.height) * 0.18;
+
+                    let R_factor = 1.0;
+                    let g_factor = 1.0;
+
+                    if (currentProblemId === 2) {
+                        R_factor = Math.sqrt((activeParams.M_ratio || 10) / (activeParams.g_ratio || 10));
+                        g_factor = activeParams.g_ratio || 10;
+                    } else if (currentProblemId === 3) {
+                        R_factor = activeParams.R_ratio || 0.5;
+                        g_factor = (activeParams.M_ratio || 2) / Math.pow(R_factor, 2);
+                    } else if (currentProblemId === 4) {
+                        R_factor = activeParams.R_frac || 0.5;
+                        g_factor = (activeParams.M_frac || 0.1) / Math.pow(R_factor, 2);
+                    } else if (currentProblemId === 5) {
+                        R_factor = activeParams.R_frac || 0.5;
+                        g_factor = (activeParams.M_frac || 0.125) / Math.pow(R_factor, 2);
+                    }
+
+                    const planetR_vis = baseR * Math.min(1.8, Math.max(0.3, R_factor));
+
+                    // Draw Earth Body
+                    const earthGrad = ctx.createRadialGradient(earthX - baseR*0.3, cy - baseR*0.3, 5, earthX, cy, baseR);
+                    earthGrad.addColorStop(0, '#38bdf8');
+                    earthGrad.addColorStop(0.8, '#0284c7');
+                    earthGrad.addColorStop(1, '#0f172a');
+                    ctx.fillStyle = earthGrad;
+                    ctx.beginPath();
+                    ctx.arc(earthX, cy, baseR, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 12px Sarabun';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('โลก (Earth)', earthX, cy + baseR + 20);
+
+                    // Draw Exoplanet Body
+                    const exoGrad = ctx.createRadialGradient(planetX - planetR_vis*0.3, cy - planetR_vis*0.3, 5, planetX, cy, planetR_vis);
+                    exoGrad.addColorStop(0, '#c084fc');
+                    exoGrad.addColorStop(0.8, '#7e22ce');
+                    exoGrad.addColorStop(1, '#0f172a');
+                    ctx.fillStyle = exoGrad;
+                    ctx.beginPath();
+                    ctx.arc(planetX, cy, planetR_vis, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillText(`ดาวเคราะห์ปริศนา (${R_factor.toFixed(2)} R_E)`, planetX, cy + planetR_vis + 20);
+
+                    // Surface Gravity Vectors g
+                    drawArrow(ctx, earthX, cy - baseR, earthX, cy - baseR + 35, '#38bdf8', 'g_E');
+                    
+                    const arrowLenP = Math.min(70, Math.max(15, 35 * g_factor));
+                    drawArrow(ctx, planetX, cy - planetR_vis, planetX, cy - planetR_vis + arrowLenP, '#c084fc', `g_P (${g_factor.toFixed(1)}g_E)`);
+                }
+
+                animFrameId = requestAnimationFrame(render);
+            }
+
+            render();
+        }
+
+        function drawArrow(ctx, fromx, fromy, tox, toy, color, label) {
+            const headlen = 7;
+            const dx = tox - fromx;
+            const dy = toy - fromy;
+            const angle = Math.atan2(dy, dx);
+
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 2.5;
+
+            ctx.beginPath();
+            ctx.moveTo(fromx, fromy);
+            ctx.lineTo(tox, toy);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(tox, toy);
+            ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+            ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+            ctx.fill();
+
+            if (label) {
+                ctx.font = 'bold 11px Sarabun';
+                ctx.fillStyle = color;
+                ctx.fillText(label, tox + Math.cos(angle)*12, toy + Math.sin(angle)*12);
+            }
+        }
+
+        // ================= EXOPLANET SANDBOX LOGIC =================
+        function initSandboxCanvas() {
+            updateSandbox();
+        }
+
+        function updateSandbox() {
+            const m_val = parseFloat(document.getElementById('sb-m-slider').value);
+            const r_val = parseFloat(document.getElementById('sb-r-slider').value);
+            const w0_val = parseFloat(document.getElementById('sb-w0-slider').value);
+
+            document.getElementById('sb-m-lbl').innerText = `${m_val.toFixed(2)} เท่า`;
+            document.getElementById('sb-r-lbl').innerText = `${r_val.toFixed(2)} เท่า`;
+            document.getElementById('sb-w0-lbl').innerText = `${w0_val} N`;
+
+            const g_ratio = m_val / Math.pow(r_val, 2);
+            const g_P = g_ratio * 10;
+            const w_P = w0_val * g_ratio;
+
+            document.getElementById('sb-g-ratio').innerText = `g_planet = ${g_ratio.toFixed(2)} g_earth (${g_P.toFixed(1)} m/s²)`;
+            document.getElementById('sb-w-ratio').innerText = `W_astronaut = ${w_P.toFixed(1)} N`;
+            document.getElementById('sb-r-ratio').innerText = `R_planet = ${r_val.toFixed(2)} R_earth`;
+
+            document.getElementById('sb-summary-math').innerHTML = `
+                $$\\frac{g_P}{g_E} = \\frac{${m_val.toFixed(1)}}{1.0} \\times \\left(\\frac{1.0}{${r_val.toFixed(1)}}\\right)^2 = \\mathbf{${g_ratio.toFixed(3)}} \\implies W_P = \\mathbf{${w_P.toFixed(1)}\\text{ N}}$$
+            `;
+
+            renderMath();
+            renderSandboxCanvas(g_P, r_val);
+        }
+
+        function triggerDropBall() {
+            isDropping = true;
+            dropBallY = 0;
+        }
+
+        function renderSandboxCanvas(g_P, r_val) {
+            const canvas = document.getElementById('sandboxCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+
+            ctx.clearRect(0, 0, rect.width, rect.height);
+            const cx = rect.width / 2;
+            const cy = rect.height / 2;
+
+            const baseR = 50;
+            const planetR = baseR * Math.min(2.0, Math.max(0.4, r_val));
+
+            // Planet Surface Arc
+            ctx.fillStyle = '#a855f7';
+            ctx.beginPath();
+            ctx.arc(cx, cy + planetR * 2, planetR * 2.2, Math.PI * 1.25, Math.PI * 1.75);
+            ctx.fill();
+
+            // Astronaut
+            const astroX = cx;
+            const astroY = cy + 10;
+
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(astroX - 8, astroY - 20, 16, 20); // body
+            ctx.fillStyle = '#38bdf8';
+            ctx.beginPath();
+            ctx.arc(astroX, astroY - 25, 7, 0, Math.PI * 2); // helmet
+            ctx.fill();
+
+            // Free fall ball simulation
+            if (isDropping) {
+                dropBallY += g_P * 0.15;
+                if (dropBallY > 80) dropBallY = 80;
+
+                ctx.fillStyle = '#f43f5e';
+                ctx.beginPath();
+                ctx.arc(astroX + 30, astroY - 70 + dropBallY, 6, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                ctx.fillStyle = '#f43f5e';
+                ctx.beginPath();
+                ctx.arc(astroX + 30, astroY - 70, 6, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Window Load Event
+        window.onload = function() {
+            loadProblem(1);
+            renderMath();
+
+            window.addEventListener('resize', () => {
+                initSimCanvas();
+                updateSandbox();
+            });
+        };
+    </script>
+</body>
+</html>
