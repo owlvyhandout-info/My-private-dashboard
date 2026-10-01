@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปขั้นตอนการติดตั้งและใช้งาน Google Analytics 4 (GA4) กับ Firebase Hosting</title>
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #34a853;
+            --warning-color: #fbbc04;
+            --danger-color: #ea4335;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #202124;
+            --text-sub: #5f6368;
+            --border-color: #dadce0;
+        }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #1a73e8, #174ea6);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.2);
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.8rem;
+        }
+
+        header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 2px solid #e8f0fe;
+            padding-bottom: 10px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .golden-rule {
+            background: #e8f0fe;
+            border: 2px dashed var(--primary-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #174ea6;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .step-item {
+            position: relative;
+            padding-left: 45px;
+            margin-bottom: 20px;
+        }
+
+        .step-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-badge {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .step-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .qa-box {
+            background-color: #f1f3f4;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 15px;
+        }
+
+        .qa-box:last-child {
+            margin-bottom: 0;
+        }
+
+        .qa-q {
+            font-weight: bold;
+            color: #174ea6;
+            margin-bottom: 5px;
+        }
+
+        .qa-a {
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+
+        code {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.88em;
+        }
+
+        .external-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .external-link:hover {
+            text-decoration: underline;
+        }
+
+        .badge-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: #e8f0fe;
+            color: #174ea6;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge-free {
+            background-color: #e6f4ea;
+            color: #137333;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: var(--text-sub);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>Google Analytics 4 (GA4) + Firebase Hosting</h1>
+        <p>คู่มือสรุปขั้นตอนการติดตั้ง สถาปัตยกรรมโปรเจกต์ เงื่อนไขค่าบริการ และการดูรายงานผล</p>
+    </header>
+
+    <!-- GOLDEN RULE SUMMARY -->
+    <div class="golden-rule">
+        💡 กฎทองสำหรับโปรเจกต์: 1 Project = 1 Property Name = 1 Tag (Measurement ID)<br>
+        <span style="font-size: 0.9rem; font-weight: normal; color: var(--text-sub);">นำชุดโค้ด Tag เดียวกันนี้ไปวางใส่ทุกไฟล์ HTML (ทั้ง <code>index.html</code> และไฟล์ลูกทุกไฟล์) เพื่อรวมข้อมูลไว้ที่เดียวกัน</span>
+    </div>
+
+    <!-- STEP BY STEP SETUP -->
+    <div class="card">
+        <h2>📌 1. ขั้นตอนการติดตั้งตั้งแต่เริ่มต้น</h2>
+        <ul class="step-list">
+            <li class="step-item">
+                <div class="step-badge">1</div>
+                <div class="step-title">สร้างและตั้งชื่อ Property ในระดับ Project Level</div>
+                <div>
+                    เข้าไปที่ <a href="https://analytics.google.com/" target="_blank" class="external-link">analytics.google.com 🔗</a> 
+                    กดไอคอน ⚙️ (ผู้ดูแลระบบ) ➔ เลือก <b>+ สร้าง Property</b> ➔ ตั้งชื่อเป็นชื่อโปรเจกต์กลาง (เช่น <code>Physics SimLab</code>) ไม่ตั้งเจาะจงเฉพาะเรื่อง เพื่อให้ครอบคลุมไฟล์ลูกทั้งหมด
+                </div>
+            </li>
+            <li class="step-item">
+                <div class="step-badge">2</div>
+                <div class="step-title">ตั้งค่า Data Stream (สตรีมข้อมูล)</div>
+                <div>
+                    เลือกแพลตฟอร์มเป็น <b>"เว็บ" (Web)</b> ➔ กรอก URL เว็บไซต์หลัก ➔ ตั้งชื่อสตรีม ➔ ระบบจะสร้างรหัส <b>Measurement ID</b> (เช่น <code>G-0J7ER1GJB...</code>)
+                </div>
+            </li>
+            <li class="step-item">
+                <div class="step-badge">3</div>
+                <div class="step-title">นำโค้ดแท็กสคริปต์ไปติดในทุกไฟล์ HTML</div>
+                <div>
+                    คัดลอกสคริปต์ <code>gtag.js</code> นำไปวางในแท็ก <code>&lt;head&gt;</code> ของ<b>ทุกไฟล์ HTML ในโปรเจกต์</b> (รวมถึง <code>index.html</code>, <code>buoyancy-force-full.html</code>, <code>buoyancy-force-lite.html</code>, <code>density-lab.html</code>)
+<pre><code>&lt;!-- Google tag (gtag.js) --&gt;
+&lt;script async src="https://www.googletagmanager.com/gtag/js?id=G-0J7ER1GJB..."&gt;&lt;/script&gt;
+&lt;script&gt;
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0J7ER1GJB...');
+&lt;/script&gt;</code></pre>
+                    <small style="color: var(--text-sub)">💡 <b>วิธีดึงสคริปต์เดิมกลับมาใช้:</b> ก๊อปปี้จากไฟล์ HTML เดิมที่เคยติดไว้ หรือไปที่ GA4 ➔ Admin ➔ Data Streams ➔ เลือก Stream ➔ View tag instructions ➔ Install manually</small>
+                </div>
+            </li>
+            <li class="step-item">
+                <div class="step-badge">4</div>
+                <div class="step-title">Deploy ขึ้น Firebase Hosting</div>
+                <div>
+                    เปิด Terminal ในโฟลเดอร์โปรเจกต์ แล้วสั่ง Deploy ขึ้น Server:
+                    <pre><code>firebase deploy --only hosting</code></pre>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- KEY DISCUSSION POINTS & ARCHITECTURE -->
+    <div class="card">
+        <h2>❓ 2. ประเด็นโครงสร้างเว็บและข้อสงสัยสำคัญ</h2>
+        
+        <div class="qa-box">
+            <div class="qa-q">Q: หากมี index.html ที่เป็นหน้ารวม แล้วคลิกไปเรียกไฟล์ลูก ต้องติด Tag อย่างไร?</div>
+            <div class="qa-a"><b>ติด Tag ตัวเดียวกันในทุกไฟล์:</b> ทั้ง <code>index.html</code> และไฟล์ลูกทุกไฟล์ ต้องใช้ Measurement ID เดียวกัน (เช่น <code>G-0J7ER1GJB...</code>) เพื่อให้ GA4 รวมข้อมูลการเดินทางของผู้เรียน (User Journey) ตั้งแต่หน้ารวมไปจนถึงการเข้าเล่น SimLab หน้าต่างๆ ไว้ในรายงานชุดเดียวกัน</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="qa-q">Q: การตั้งชื่อ Property ควรเจาะจงหรือตั้งระดับ Project?</div>
+            <div class="qa-a"><b>ควรตั้งชื่อระดับ Project:</b> เช่น ตั้งว่า <code>Physics SimLab</code> เพื่อไม่ให้สับสนเวลาเรียกดูรายงานรวมของสื่อหลายๆ เรื่อง (สามารถแก้ไขชื่อได้ที่ Admin ➔ Property Details)</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="qa-q">Q: ไม่มีไฟล์ index.html ติดตั้ง GA4 ได้ไหม?</div>
+            <div class="qa-a"><b>ทำได้ปกติ:</b> GA4 ทำงานแบบหน้าต่อหน้า (Page-by-Page) ตราบใดที่ไฟล์ HTML หน้านั้นๆ มีสคริปต์ GA4 ติดอยู่ ระบบจะบันทึก URL นั้นให้อัตโนมัติ</div>
+        </div>
+
+        <div class="qa-box">
+            <div class="qa-q">Q: ปุ่มกดทดสอบใน Analytics แจ้งว่า "ตรวจไม่พบแท็ก"?</div>
+            <div class="qa-a"><b>เกิดจากระบบวิ่งไปเช็กที่ Root URL (/):</b> ให้มองข้ามปุ่มทดสอบ แล้วเช็กผ่านแท็บ <b>Network (ค้นหา <code>collect</code> สถานะ 204)</b> ใน DevTools แทน ซึ่งยืนยันว่าส่งข้อมูลสำเร็จแล้ว</div>
+        </div>
+    </div>
+
+    <!-- PRICING & LIMITS -->
+    <div class="card">
+        <h2>💰 3. ค่าบริการ เงื่อนไข และโควต้าการใช้งานฟรี</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>บริการ</th>
+                    <th>เงื่อนไขโควต้าฟรี <span class="badge-free">FREE</span></th>
+                    <th>ข้อจำกัดที่ควรรู้</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><b>Google Analytics 4 (GA4)</b></td>
+                    <td>
+                        • ไม่จำกัดจำนวน Tag / หน้าเว็บ<br>
+                        • ฟรีสูงสุด <b>10,000,000 Events / เดือน</b><br>
+                        • สร้างได้สูงสุด 2,000 Properties
+                    </td>
+                    <td>เก็บข้อมูลรายบุคคลย้อนหลังสูงสุด <b>14 เดือน</b> (ต้องไปปรับตั้งค่าใน Data Retention)</td>
+                </tr>
+                <tr>
+                    <td><b>Firebase Hosting (Spark Plan)</b></td>
+                    <td>
+                        • ฟรีพื้นที่จัดเก็บข้อมูล <b>10 GB</b><br>
+                        • ปริมาณรับส่งข้อมูล (Bandwidth) ฟรี <b>360 MB/วัน (~10 GB/เดือน)</b>
+                    </td>
+                    <td>เพียงพอสำหรับผู้เข้าชมใช้งาน SimLab หลายพันถึงหมื่นครั้งต่อเดือนโดยไม่มีค่าใช้จ่าย</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- CONDITIONS FOR DATA DISPLAY -->
+    <div class="card">
+        <h2>⏳ 4. เงื่อนไขในการแสดงผลข้อมูล</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ประเภทรายงาน</th>
+                    <th>ระยะเวลาแสดงผล</th>
+                    <th>เงื่อนไขสำคัญ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><b>หน้าเว็บแบบเรียลไทม์ (Realtime)</b></td>
+                    <td><span class="badge-tag">แสดงผลทันที</span></td>
+                    <td>แสดงข้อมูลผู้ใช้เฉพาะคนที่อยู่ในเว็บย้อนหลัง <b>ไม่เกิน 30 นาที</b></td>
+                </tr>
+                <tr>
+                    <td><b>รายงานสรุปภาพรวม (Standard Reports)</b></td>
+                    <td><span class="badge-tag">รอ 24 - 48 ชั่วโมง</span></td>
+                    <td>รายงานเชิงลึก เช่น กราฟประจำวัน, ประเทศ, เบราว์เซอร์, เวลาใช้งานเฉลี่ย ต้องใช้เวลาประมวลผลย้อนหลัง</td>
+                </tr>
+                <tr>
+                    <td><b>การเลือก Property</b></td>
+                    <td><span class="badge-tag">สำคัญมาก</span></td>
+                    <td>ต้องสลับเลือก Property มุมซ้ายบนให้ตรงกับ Measurement ID (<code>G-XXXXXXXXXX</code>) ที่นำไปติดในไฟล์ HTML ไม่เช่นนั้นจะเห็นข้อมูลเป็น 0 (ดูผิดห้อง)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- HOW TO VIEW REPORTS & LINKS -->
+    <div class="card">
+        <h2>📊 5. หน้าจอที่ใช้เรียกดูข้อมูล และลิงก์เข้าใช้งาน</h2>
+        <p>เข้าใช้งาน Google Analytics ได้ที่: <a href="https://analytics.google.com/" target="_blank" class="external-link">analytics.google.com 🔗</a> โดยมีเมนูหลักดังนี้:</p>
+
+        <ul>
+            <li>
+                <b>หน้าเว็บแบบเรียลไทม์ (Realtime Report):</b>
+                <br><small style="color: var(--text-sub)">📍 แถบเมนูซ้ายมือ ➔ คลิก <b>"หน้าเว็บแบบเรียลไทม์"</b></small>
+                <br>➔ ใช้เช็กว่า ณ ตอนนี้มีคนเปิดเล่น SimLab อยู่กี่คน และเปิดหน้าไหนอยู่
+            </li>
+            <li style="margin-top: 10px;">
+                <b>รายงานภาพรวม (Reports Overview):</b>
+                <br><small style="color: var(--text-sub)">📍 แถบเมนูซ้ายมือ ➔ คลิก <b>"ภาพรวมรายงาน"</b></small>
+                <br>➔ สรุปจำนวนผู้ใช้รวม (Users), ผู้ใช้ใหม่ (New Users), และเวลาใช้งานเฉลี่ย (Engagement Time)
+            </li>
+            <li style="margin-top: 10px;">
+                <b>หน้ายอดนิยม (Pages & Screens):</b>
+                <br><small style="color: var(--text-sub)">📍 ทำความเข้าใจการเข้าชมเว็บ ➔ <b>หน้าเว็บและคลาสหน้าจอ</b></small>
+                <br>➔ เปรียบเทียบสถิติการใช้งานแต่ละไฟล์ (เช่น <code>index.html</code> vs <code>/buoyancy-force-lite</code> vs <code>/density-lab</code>)
+            </li>
+            <li style="margin-top: 10px;">
+                <b>อุปกรณ์ของผู้ใช้ (Tech Details):</b>
+                <br><small style="color: var(--text-sub)">📍 ผู้ใช้ ➔ เทคโนโลยี ➔ <b>รายละเอียดเทคโนโลยี</b></small>
+                <br>➔ เช็กสัดส่วนผู้ใช้ว่าใช้คอมพิวเตอร์ มือถือ หรือแท็บเล็ต
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+</body>
+</html>
