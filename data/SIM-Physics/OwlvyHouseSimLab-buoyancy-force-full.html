@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OwlvyHouseSimLAB + ห้องทดลองแรงลอยตัว</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#fff7e0;--card:#fff;--ink:#2b2d42;--pri:#ff6b6b;--sec:#4dabf7;--ok:#37b24d;--tbl:#c98b4b;}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d2340;--card:#2a3158;--ink:#f4f1ff;}}
+:root[data-theme="dark"]{--bg:#1d2340;--card:#2a3158;--ink:#f4f1ff;}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Sarabun","Noto Sans Thai",system-ui,sans-serif;font-size:16px}
+h1{margin:10px 12px 0;font-size:1.3rem;text-align:center}
+nav{display:flex;gap:6px;overflow-x:auto;padding:10px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+nav button{flex:0 0 auto;width:78px;border:3px solid transparent;border-radius:16px;background:var(--card);padding:4px 2px;cursor:pointer;color:var(--ink);font:inherit;font-size:.7rem;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+nav button .e{display:block;font-size:2rem;line-height:1.2}
+nav button.on{border-color:var(--pri);transform:translateY(-2px)}
+nav button.lock{opacity:.55}
+main{max-width:900px;margin:0 auto;padding:6px 12px 30px}
+.card{background:var(--card);border-radius:18px;padding:12px 14px;margin:10px 0;box-shadow:0 3px 0 rgba(0,0,0,.12)}
+.formula{font-size:1.5rem;text-align:center;font-weight:700;color:var(--pri)}
+.shelf{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;background:var(--tbl);padding:12px;border-radius:14px}
+.obj{background:var(--card);border:3px solid transparent;border-radius:14px;padding:6px;text-align:center;cursor:pointer;font:inherit;color:var(--ink)}
+.obj .e{font-size:2.2rem;display:block}.obj.sel{border-color:var(--pri);transform:scale(1.05)}
+.lab{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.stn{background:linear-gradient(#e7f5ff,#d0ebff);border-radius:14px;padding:10px;text-align:center;min-height:230px;color:#1c2b4a}
+.scale{margin:8px auto;width:150px;height:56px;background:#868e96;border-radius:10px;position:relative}
+.scale .pl{position:absolute;top:-30px;left:10px;right:10px;height:30px;font-size:1.8rem;line-height:30px}
+.disp{background:#0b2a0b;color:#7CFC00;font-family:monospace;font-size:1.4rem;border-radius:6px;margin:10px auto 0;width:110px;padding:3px}
+.canw{position:relative;height:190px;margin-top:6px}
+.can{position:absolute;left:8px;bottom:40px;width:100px;height:100px;border:4px solid #495057;border-top:0;border-radius:0 0 14px 14px;background:linear-gradient(#74c0fc,#4dabf7);overflow:visible}
+.can:after{content:"";position:absolute;right:-34px;top:-2px;width:34px;height:8px;background:#495057;transform:rotate(16deg);transform-origin:left}
+.ob{position:absolute;left:30px;font-size:2rem;top:-70px;transition:top .9s ease-in;z-index:2}
+.rim{position:absolute;left:-4px;right:-4px;top:-3px;height:6px;background:#495057;border-radius:3px}
+.cup{position:absolute;left:112px;bottom:0;width:48px;height:52px;border:3px solid #495057;border-top:0;border-radius:0 0 10px 10px;background:#fff8;overflow:hidden;transition:opacity .5s}
+.cup i,.pc i{position:absolute;left:0;right:0;bottom:0;background:#4dabf7;height:0;transition:height 1.2s}
+.dr{position:absolute;left:104px;bottom:92px;font-size:.9rem;opacity:0}
+.dr.on{animation:fall .6s linear infinite}
+@keyframes fall{0%{opacity:1;transform:translate(0,0)}100%{opacity:1;transform:translate(14px,48px)}}
+.cw{position:relative;height:215px}
+.pc{position:absolute;left:2px;top:6px;width:46px;height:50px;border:3px solid #495057;border-top:0;border-radius:0 0 10px 10px;background:#fff8;overflow:hidden;transform-origin:100% 0;transition:transform .9s,opacity .5s;opacity:0}
+.pc i{transition:height 1.6s}
+.strm{position:absolute;left:60px;top:44px;width:5px;height:0;background:#4dabf7;border-radius:3px;transition:height .5s}
+.cyl{position:absolute;left:62px;top:58px;width:56px;height:150px;border:3px solid #495057;border-top:0;border-radius:0 0 10px 10px;background:#fff8}
+.cyl i{position:absolute;bottom:0;left:0;right:0;background:#4dabf7;height:0;transition:height 1.6s}
+.tk{position:absolute;left:0;right:0;font-size:.6rem;border-top:1px solid #495057;line-height:0;text-align:left;padding-left:2px}
+.lbl{position:absolute;left:122px;font-size:.65rem;line-height:0}
+.disp{margin-top:0}
+.blk{display:inline-block;width:.95em;height:.95em;border-radius:3px;border:2px solid #868e96;vertical-align:middle;box-shadow:inset -4px -4px 0 rgba(0,0,0,.15),inset 3px 3px 0 rgba(255,255,255,.5)}
+.stk{position:absolute;left:44px;top:-96px;width:5px;height:70px;background:#6c757d;border-radius:3px;opacity:0;transition:top .6s,opacity .3s;z-index:3}
+#obA,#obA4,#obA5,.ob{line-height:0}
+#obA,#obA4,#obA5{height:30px}
+#obA .blk,#obA4 .blk,#obA5 .blk,.ob .blk{width:30px;height:30px;vertical-align:top}
+@keyframes bob{50%{transform:translateY(-8px)}}.bob{animation:bob 2s ease-in-out infinite}
+.hull{position:absolute;left:0;top:16px;width:100%;height:40px;clip-path:polygon(0 0,100% 0,88% 100%,12% 100%);background:#d9480f}
+.cab{position:absolute;left:32px;top:0;width:46px;height:16px;background:#f1f3f5;border:2px solid #495057;border-bottom:0;border-radius:4px 4px 0 0}
+.mk{position:absolute;left:14%;right:14%;height:3px;background:#ffd43b}
+.w8{position:relative;flex:1;min-width:200px;height:270px;border-radius:14px;overflow:hidden;background:linear-gradient(#e7f5ff 0 24px,#74c0fc 24px,#1c7ed6);color:#fff}
+.c8{position:absolute;left:calc(50% - 40px);transition:top 1.4s,font-size .6s;line-height:1;width:80px;text-align:center}
+#mute{position:fixed;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:8;width:44px;height:44px;border-radius:50%;border:3px solid var(--pri);background:var(--card);font-size:1.3rem;cursor:pointer;line-height:1;color:var(--ink)}
+.hm{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.hm button{text-align:left;font:inherit;color:var(--ink);background:var(--card);border:3px solid transparent;border-radius:14px;padding:8px 10px;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.12)}
+.hm button:hover{border-color:var(--pri)}.hm .e{font-size:1.8rem;display:block}.hm small{display:block;opacity:.85}
+.obj small{display:block;font-size:.68rem;opacity:.85}
+.msgb{background:#fff3bf;color:#2b2d42;border:3px dashed var(--pri);border-radius:14px;padding:10px;font-weight:700;margin:8px 0;font-size:1.05rem}
+button.go.pulse{animation:pl 1s infinite}@keyframes pl{50%{transform:scale(1.1)}}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+button.go{background:var(--pri);color:#fff;border:0;border-radius:12px;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.25)}
+button.go:disabled{opacity:.4;cursor:not-allowed}button.go.b{background:var(--sec)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{padding:5px 6px;border-bottom:1px solid #8884;text-align:center}
+.match{color:var(--ok);font-weight:700}
+.sw{overflow-x:auto}
+main{padding-bottom:120px}
+#owlw{position:fixed;left:6px;bottom:calc(6px + env(safe-area-inset-bottom,0px));display:flex;align-items:flex-end;gap:4px;z-index:6;pointer-events:none;max-width:70vw}
+#owlw img,.owle{width:78px;height:auto;font-size:3.4rem;line-height:1;display:inline-block;pointer-events:auto;cursor:pointer}
+@keyframes wobble{0%{transform:scale(1.15) translateY(-8px) rotate(0)}25%{transform:scale(1.15) translateY(-8px) rotate(-7deg)}50%{transform:scale(1.15) translateY(-8px) rotate(0)}75%{transform:scale(1.15) translateY(-8px) rotate(7deg)}100%{transform:scale(1.15) translateY(-8px) rotate(0)}}
+#owlw img:hover,.owle:hover{animation:wobble .6s ease-in-out infinite}
+#owlb{background:var(--card);border:2px solid var(--pri);border-radius:14px;padding:5px 9px;font-size:.78rem;max-width:190px;margin-bottom:30px}
+.tanks{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}
+.tk2{background:var(--card);border-radius:14px;padding:4px;text-align:center}
+.tk2 svg{width:100%;height:auto}.tk2 .eq{font-size:1.15rem;font-weight:700;min-height:2.4em}
+.tg{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.tg .go.off{background:#868e96}
+.gr{color:#2b8a3e}.bl{color:#1c7ed6}.rd{color:#e03131}.pu{color:#7048e8}.sgn{font-size:1.6rem;padding:0 4px;background:#fff3bf;color:#2b2d42;border-radius:8px}
+.tip{background:#d3f9d8;color:#1b4332;border-radius:12px;padding:8px 12px;margin-top:8px}
+.warn{background:#ffe3e3;color:#5c1a1a;border-radius:12px;padding:8px 12px;margin-top:8px}
+.stage{position:relative;height:260px;background:linear-gradient(#e7f5ff,#f8f9fa);border-radius:14px;overflow:hidden;color:#1c2b4a}
+.stage .zn{position:absolute;top:4px;font-size:.8rem;font-weight:700}
+.rt td{padding:6px}.rt td.ok{color:var(--ok);font-weight:700}
+.cut{text-decoration:line-through;text-decoration-color:#e03131;text-decoration-thickness:3px;opacity:.6}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#222;color:#fff;padding:8px 16px;border-radius:20px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9}
+</style></head><body>
+<h1><span aria-hidden="true">🦉</span> OwlvyHouseSimLAB + ห้องทดลองแรงลอยตัว</h1>
+<nav id="nav"></nav>
+<div id="owlw"><img src="owlvybot.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🦉',className:'owle'}))"><div id="owlb">สวัสดี! มาทดลองกันเลย 🧪</div></div>
+<main><div id="s0">
+<div class="card"><b style="font-size:1.15rem">🏠 ยินดีต้อนรับสู่ห้องทดลองแรงลอยตัว!</b><br>
+ทดลอง 8 เรื่อง เพื่อเข้าใจว่าทำไมของบางอย่างลอย บางอย่างจม และแรงพยุงคืออะไร · เริ่มจาก Section 1 แล้วไล่ไปตามลำดับ หรือกดเลือกจากด้านล่างได้เลย
+<div class="tg"><button class="go" onclick="showSec(1)">▶ เริ่มที่ Section 1</button></div></div>
+<div class="card"><b>🗺️ 8 Section</b><div class="hm" style="margin-top:8px">
+<button onclick="showSec(1)"><span class=e>🧪</span><b>1. ความหนาแน่น</b><small>ชั่งมวล + น้ำล้น → D = M/V</small></button>
+<button onclick="showSec(2)"><span class=e>⚖️</span><b>2. น้ำ vs วัตถุ</b><small>เทียบ ρ และเทียบ F<sub>B</sub> กับ W</small></button>
+<button onclick="showSec(3)"><span class=e>🪝</span><b>3. หาแรงพยุง 2 วิธี</b><small>ตาชั่งสปริง / ตาชั่ง + น้ำล้น</small></button>
+<button onclick="showSec(4)"><span class=e>🏊</span><b>4. จมบางส่วน</b><small>จมมาก แรงพยุงมาก</small></button>
+<button onclick="showSec(5)"><span class=e>⚓</span><b>5. จมมิดแล้ว</b><small>ลึกเท่าใดก็เท่าเดิม</small></button>
+<button onclick="showSec(6)"><span class=e>🧂</span><b>6. น้ำจืด vs เดดซี</b><small>ของเหลวต่างกัน แรงพยุงต่างกัน</small></button>
+<button onclick="showSec(7)"><span class=e>🌊</span><b>7. ความดันน้ำ</b><small>F<sub>B</sub> มาจาก ΔP·A</small></button>
+<button onclick="showSec(8)"><span class=e>🐡</span><b>8. ปลาปักเป้า/เรือดำน้ำ</b><small>ปรับ V หรือ m ให้ลอย/จม</small></button></div></div>
+<div class="card"><b>📐 สูตรที่ใช้ (g = 10 m/s²)</b>
+<ul style="margin:6px 0 0;padding-left:20px;line-height:1.7">
+<li>ความหนาแน่น <b>D (ρ) = M ÷ V</b> · น้ำหนัก <b>W = mg</b></li>
+<li>แรงพยุง <b>F<sub>B</sub> = ρ<sub>ของเหลว</sub> · V<sub>จม</sub> · g</b> (= น้ำหนักของเหลวที่ถูกแทนที่)</li>
+<li>จากตาชั่ง: <b>F<sub>B</sub> = W<sub>อากาศ</sub> − W<sub>น้ำ</sub></b></li>
+<li>จากความดัน: <b>F<sub>B</sub> = (P<sub>ล่าง</sub> − P<sub>บน</sub>)·A</b> โดย P = ρgd</li>
+<li>ลอยนิ่ง: <b>F<sub>B</sub> = W</b> · ลอยขึ้น: F<sub>B</sub> &gt; W · จม: F<sub>B</sub> &lt; W</li></ul></div>
+<div class="card"><b>💡 วิธีใช้</b><br>🦉 ทำตามปุ่มที่กระพริบและข้อความในกล่องสีเหลืองทีละขั้น · 🔊 ปุ่มลำโพงมุมขวาล่างใช้ปิด/เปิดเสียง · แถบด้านบนใช้สลับ Section ได้ตลอด</div>
+</div><div id="s1" hidden>
+<div class="card"><b>Section 1: การหาความหนาแน่นของวัตถุ</b><br>
+จุดประสงค์: หาความหนาแน่นของวัตถุหลายชนิด แล้วเทียบกับค่าในตาราง
+<div class="formula">D = M ÷ V</div>
+<div style="text-align:center;font-size:.9rem">D = ความหนาแน่น (g/cm³) · M = มวล (g) · V = ปริมาตร (cm³ = mL)</div></div>
+
+<div class="card"><b>🪑 โต๊ะทดลอง: เลือกวัตถุ 1 ชิ้น</b>
+<div class="shelf" id="shelf"></div></div>
+
+<div class="card"><b>🎮 ขั้นตอนการทดลอง</b>
+<div class="msgb" id="msg">👆 ขั้นเริ่มต้น: เลือกวัตถุ 1 ชิ้นจากโต๊ะทดลองก่อน</div>
+<div class="btns">
+<button class="go b" id="b1" disabled>① วางบนตาชั่ง</button>
+<button class="go b" id="b2" disabled>② หย่อนลงถ้วยยูเรก้า</button>
+<button class="go" id="b3" disabled>③ คำนวณ D = M/V</button></div>
+<div class="lab" style="margin-top:10px">
+<div class="stn"><b>① ชั่งมวล</b>
+<div class="scale"><div class="pl" id="onScale"></div></div>
+<div class="disp" id="mDisp">0.0 g</div></div>
+<div class="stn"><b>② ถ้วยยูเรก้า</b>
+<div class="canw"><div class="can"><span class="ob" id="inCan"></span><div class="rim"></div><div class="stk" id="stk"></div></div>
+<span class="dr" id="d1">💧</span><span class="dr" id="d2" style="left:112px;animation-delay:.3s">💧</span>
+<div class="cup" id="cup"><i id="cupW"></i></div></div></div>
+<div class="stn"><b>③ ถ้วยตวง (mL)</b>
+<div class="cw"><div class="pc" id="pc"><i id="pcW"></i></div><div class="strm" id="strm"></div>
+<div class="cyl" id="cyl"><i id="water"></i></div></div>
+<div class="disp" id="vDisp">0.0 mL</div></div></div>
+<div id="calc"></div></div>
+
+<div class="card"><b>📋 บันทึกผลการทดลอง</b>
+<div class="sw"><table><thead><tr><th>วัตถุ</th><th>M (g)</th><th>V (cm³)</th><th>D = M/V</th><th>ค่าตาราง</th><th>ผล</th></tr></thead><tbody id="log"><tr><td colspan="6">ยังไม่มีข้อมูล ลองทดลองดู!</td></tr></tbody></table></div></div>
+
+<div class="card"><b>📚 สรุป: ความหนาแน่นของวัสดุสำคัญ</b>
+<div class="sw"><table id="sum"></table></div>
+<p style="margin:8px 0 0;font-size:.92rem">💡 น้ำมี D = 1.00 g/cm³ — วัตถุที่ D <b>น้อยกว่า</b> น้ำจะลอย (ไม้ โฟม) ส่วนที่ D <b>มากกว่า</b> น้ำจะจม (อะลูมิเนียม เหล็ก เงิน ทองคำ)<br>
+🛟 วัตถุที่ลอยน้ำ เราใช้เข็มกดให้จมพอดีผิวน้ำ เพื่อวัดปริมาตรทั้งก้อน<br>🥫 กระป๋องอะลูมิเนียมลอยน้ำได้เพราะข้างในกลวงมีอากาศ แต่แท่งอะลูมิเนียมตัน (D = 2.70) จมน้ำ</p></div>
+</div><div id="s2" hidden>
+<div class="card"><b>Section 2: ภาพเดียวกัน แต่อ่านได้ 2 ความหมาย</b><br>
+วัตถุจม/ลอย/ลอยปริ่ม ดูได้ทั้งจาก <b class=gr>ความหนาแน่น (ρ)</b> และจาก <b class=rd>แรง (F)</b> — เครื่องหมายเปรียบเทียบจะ<b>ไม่เหมือนกัน</b> ระวังสับสน!
+<div class="tg"><button class="go b" id="vd">🧪 มองความหนาแน่น</button><button class="go off" id="vf">➡️ มองแรง</button>
+<button class="go off" id="up" hidden>⬆️ กรณีลอย: ตอนนี้ลอยนิ่ง</button></div>
+<div id="vt" class="msgb" style="margin:4px 0"></div>
+<div class="tanks" id="tanks"></div></div>
+<div class="card"><div class="tip">💡 จำง่าย ๆ: <b>ของเหลวหนาแน่นกว่า → ดันขึ้นแรงกว่า → วัตถุลอย</b></div>
+<div class="warn">⚠️ ระวัง: "ลอยนิ่ง" ต้องมี F<sub>B</sub> = F<sub>g</sub> เสมอ แต่ ρวัตถุ ยัง &lt; ρของเหลว (เพราะจมแค่บางส่วน) · ส่วน "กำลังลอยขึ้น" จะมี F<sub>B</sub> &gt; F<sub>g</sub></div></div>
+</div><div id="s3" hidden>
+<div class="card"><b>Section 3: หาแรงพยุงของวัตถุที่ลอย หรือจมทั้งก้อน</b> (ใช้ g = 10 m/s², น้ำหนัก W = mg)<br>
+<b>วิธี A</b> ตาชั่งสปริงแขวน (วัตถุเล็ก): <b>F<sub>B</sub> = W<sub>อากาศ</sub> − W<sub>น้ำ</sub></b><br>
+<b>วิธี B</b> ตาชั่ง + น้ำล้น (วัตถุใหญ่): <b>F<sub>B</sub> = น้ำหนักน้ำที่ล้น</b>
+<div class="shelf" style="margin-top:8px;grid-template-columns:repeat(2,1fr)" id="sh3"></div>
+<div class="tg"><button class="go b" id="mA">วิธี A: ตาชั่งสปริง</button><button class="go off" id="mB">วิธี B: ตาชั่ง + น้ำล้น</button></div></div>
+<div class="card"><b>🎮 ขั้นตอนการทดลอง</b>
+<div class="msgb" id="msg3">👆 เริ่มต้น: เลือกวัตถุ (บล็อกไม้ หรือ อะลูมิเนียม) และวิธีทดลองก่อน</div>
+<div class="btns" id="bt3"></div>
+<div style="overflow-x:auto;margin-top:10px"><div class="stage" id="stg3"></div></div><div id="calc3"></div></div>
+<div class="card"><b>📋 สรุปค่าแรงพยุง (N) เทียบ 2 วิธี</b>
+<div class="sw"><table class="rt"><tr><th>วัตถุ</th><th>วิธี A</th><th>วิธี B</th></tr>
+<tr><td id="n_w"></td><td id="r_wA">–</td><td id="r_wB">–</td></tr><tr><td id="n_a"></td><td id="r_aA">–</td><td id="r_aB">–</td></tr></table></div>
+<div class="tip" id="cmp" hidden>✔ ทั้ง 2 วิธีได้ค่าแรงพยุงเท่ากัน</div></div>
+</div><div id="s4" hidden>
+<div class="card"><b>Section 4: แรงพยุงเมื่อวัตถุจมในน้ำ "บางส่วน"</b><br>
+เป้าหมาย: ดูว่า <b>จมต่างกัน → แรงพยุงต่างกัน</b> และวัตถุที่ ρ ต่างกันต้องใช้ <b>วิธีต่างกัน</b><br>
+• ρ <b>มากกว่า</b>น้ำ (อะลูมิเนียม): <b>หย่อน</b>ด้วยตาชั่งสปริงแขวน F<sub>B</sub> = W<sub>อากาศ</sub> − W<sub>น้ำ</sub><br>
+• ρ <b>น้อยกว่า</b>น้ำ (ไม้): <b>ใช้นิ้วกด</b> + ถ้วยยูเรก้า F<sub>B</sub> = น้ำหนักน้ำที่ล้น
+<div class="shelf" style="margin-top:8px;grid-template-columns:repeat(2,1fr)" id="sh4"></div></div>
+<div class="card"><b>🎮 ขั้นตอนการทดลอง</b>
+<div class="msgb" id="msg4">👆 เริ่มต้น: เลือกวัตถุก่อน</div>
+<div class="btns" id="bt4"></div>
+<div style="overflow-x:auto;margin-top:10px"><div class="stage" id="stg4"></div></div><div id="calc4"></div></div>
+<div class="card"><b>📋 บันทึกผล</b> <span id="ttl4"></span>
+<div class="sw"><table class="rt" id="tb4"><tr><td>เลือกวัตถุก่อน</td></tr></table></div>
+<div class="tip" id="cl4" hidden>💡 ปริมาตรส่วนที่จมมากขึ้น → แรงพยุงมากขึ้น (จมครึ่งก้อน แรงพยุงเป็นครึ่งหนึ่งของจมทั้งก้อน)</div></div>
+<div class="card"><b>🔍 ทำไมสองวัตถุใช้วิธีต่างกัน?</b><br>
+อะลูมิเนียม (ρ = 2.70 &gt; 1) <b>จมเอง</b> หย่อนลงน้ำได้ตามต้องการและตาชั่งสปริงยังอ่านค่าได้ · บล็อกไม้ (ρ = 0.60 &lt; 1) <b>ลอยเอง</b> ตาชั่งสปริงจะอ่าน 0 จึงต้องใช้นิ้วกดให้จมแล้ววัดน้ำที่ล้นแทน</div>
+</div><div id="s5" hidden>
+<div class="card"><b>Section 5: จมมิดแล้ว ลึกเท่าใด แรงพยุงก็เท่าเดิม</b><br>
+ใช้ <span id="al5"></span> บล็อกอะลูมิเนียม (m = 54 g, V = 20 cm³) แขวนกับตาชั่งสปริง แล้วลองหย่อนที่ความลึกต่าง ๆ — ดูที่ไม้บรรทัดข้างบีกเกอร์ (ความลึกวัดจากผิวน้ำถึงหน้าบนของก้อน)</div>
+<div class="card"><b>🎮 ขั้นตอนการทดลอง</b>
+<div class="msgb" id="msg5">👆 เริ่มต้น: กดปุ่ม <u>① ชั่งในอากาศ</u></div>
+<div class="btns" id="bt5"></div>
+<div style="overflow-x:auto;margin-top:10px"><div class="stage" id="stg5" style="height:350px"></div></div><div id="calc5"></div></div>
+<div class="card"><b>📋 บันทึกผล</b>
+<div class="sw"><table class="rt" id="tb5"></table></div>
+<div class="tip" id="cl5" hidden></div></div>
+<div class="card" style="text-align:center;background:linear-gradient(#d0ebff,#74c0fc);color:#1c2b4a">
+<b style="font-size:1.15rem">🤔 คำถามชวนคิด</b>
+<div style="display:flex;justify-content:center;align-items:flex-end;gap:18px;flex-wrap:wrap;margin:8px 0">
+<div class="bob"><svg viewBox="0 0 150 80" width="150" aria-label="เรือดำน้ำการ์ตูน"><rect x="72" y="4" width="4" height="16" fill="#495057"/><rect x="62" y="4" width="14" height="4" fill="#495057"/><rect x="58" y="18" width="34" height="16" rx="5" fill="#fab005" stroke="#e67700" stroke-width="2"/><ellipse cx="75" cy="50" rx="62" ry="22" fill="#ffd43b" stroke="#e67700" stroke-width="3"/><circle cx="45" cy="48" r="8" fill="#a5d8ff" stroke="#495057" stroke-width="3"/><circle cx="75" cy="48" r="8" fill="#a5d8ff" stroke="#495057" stroke-width="3"/><circle cx="105" cy="48" r="8" fill="#a5d8ff" stroke="#495057" stroke-width="3"/><path d="M137 50 l12 -10 v20z" fill="#e67700"/><circle cx="45" cy="46" r="2" fill="#fff"/><path d="M60 62 q15 6 30 0" stroke="#e67700" stroke-width="2" fill="none"/></svg><div style="font-size:.85rem">เรือดำน้ำ</div></div>
+<div class="bob" style="animation-delay:.6s"><span style="font-size:4rem;line-height:1;display:block">🐡</span><div style="font-size:.85rem">ปลาปักเป้า</div></div>
+<div style="font-size:3rem" class="bob">❓</div></div>
+<div style="font-size:1.05rem;font-weight:700">เรือดำน้ำ หรือ ปลาปักเป้า ปรับการลอยจมของตัวเองด้วยวิธีไหนกันนะ?</div>
+<div style="margin-top:6px">✨ <b>คอยติดตามตอนต่อไป</b> ✨</div></div>
+</div><div id="s6" hidden>
+<div class="card"><b>Section 6: ของเหลวต่างชนิด แรงพยุงต่างกัน</b><br>เหมือนกันที่เป็นน้ำ แต่ความหนาแน่นไม่เท่ากัน ลองเทียบกัน!
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;text-align:center;font-weight:700">
+<div style="background:linear-gradient(#a5d8ff,#4dabf7);border-radius:14px;padding:12px 4px;color:#0b2545">💧 น้ำจืด<br><span style="font-size:1.3rem">ρ = 1.00 g/cm³</span><br><span style="font-size:1.6rem">🐟</span></div>
+<div style="background:radial-gradient(#ffffffaa 1.5px,transparent 2px) 0 0/14px 14px,linear-gradient(#99e9f2,#3bc9db);border-radius:14px;padding:12px 4px;color:#0b2545">🧂 ทะเลเดดซี<br><span style="font-size:1.3rem">ρ = 1.24 g/cm³</span><br><span style="font-size:1.6rem">🧘 (ลอยอ่านหนังสือ)</span></div></div>
+<div style="font-size:.88rem;margin-top:6px">เดดซีเค็มประมาณ 34% (น้ำทะเลทั่วไปราว 3.5%) ความหนาแน่นจึงสูงกว่าน้ำจืดประมาณ 24%</div></div>
+<div class="card"><b>🪑 วัตถุทดลอง</b> (ทุกก้อน V = 20 cm³): เลือก 1 ชิ้น → วัตถุจะถูกหย่อนลงทั้ง 2 ของเหลวพร้อมกัน
+<div class="shelf" id="sh6" style="margin-top:8px"></div></div>
+<div class="card"><b>🎮 ผลการทดลอง</b>
+<div class="msgb" id="msg6">👆 เริ่มต้น: เลือกวัตถุจากโต๊ะด้านบน</div>
+<div style="overflow-x:auto"><div class="stage" id="stg6" style="height:270px;min-width:380px"></div></div><div id="calc6"></div></div>
+<div class="card"><b>📋 สรุปผล</b>
+<div class="sw"><table class="rt" id="tb6"></table></div>
+<div class="tip" id="cl6" hidden>💡 ของเหลวหนาแน่นกว่า → ดันขึ้นได้มากกว่า → วัตถุลอยสูงขึ้น (หรือบางชิ้นที่จมในน้ำจืดก็ลอยได้) · ลอยแล้ว F<sub>B</sub> = W เท่ากันทั้งสองของเหลว แต่จมน้อยลง</div></div>
+<div class="card"><b>🚢 เรือลำเดียวกัน แต่แล่นในน้ำต่างกัน</b>
+<div class="tg"><label style="font-size:.9rem"><input type="checkbox" id="ex" checked> ขยายความต่างให้เห็นชัด (ภาพเกินจริง)</label></div>
+<div style="overflow-x:auto"><div class="stage" id="stg7" style="height:170px;min-width:320px"></div></div>
+<div id="shT" style="font-size:.92rem;margin-top:6px"></div>
+<div class="tip">⚓ เรือมวลเท่าเดิม น้ำหนักเท่าเดิม แรงพยุงจึงต้องเท่าเดิม แต่น้ำทะเลหนาแน่นกว่า จึงแทนที่น้ำน้อยลงก็พอ → เรือจมตื้นขึ้น (ขีดบนท้องเรือ "Plimsoll line" ใช้บอกระดับนี้)</div></div>
+</div><div id="s7" hidden>
+<div class="card"><b>Section 7: แรงพยุงมาจากความดันน้ำ</b><br>
+ความดันที่ความลึก d: <b>P = ρ·g·d</b> (ใช้ ความดันเกจ — ความดันบรรยากาศกระทำทั้งด้านบนและล่าง จึงหักล้างกันไป)<br>
+⚠️ <b>ต้องคูณพื้นที่ A ก่อนจึงเป็นแรง</b>: F = P·A แรงพยุง <b>F<sub>B</sub> = F<sub>ล่าง</sub> − F<sub>บน</sub> = (P<sub>ล่าง</sub> − P<sub>บน</sub>)·A = ΔP·A</b> — ใช้ ΔP เฉย ๆ ไม่ได้ (หน่วยเป็น Pa ไม่ใช่ N) · แรงที่ผนังข้างหักล้างกันหมด<br>
+<small>บล็อกสมมติ: หน้าตัด A = 4 cm² (0.0004 m²) สูง h = 5 cm → V = 20 cm³ · ρ<sub>น้ำ</sub> = 1000 kg/m³ · g = 10 m/s² (ภาพไม่ตรงสัดส่วนความกว้าง)</small></div>
+<div class="card"><b>🎮 เลือกระดับของบล็อก</b>
+<div class="msgb" id="msg7">👆 เริ่มต้น: กดเลือกระดับด้านล่างทีละปุ่ม</div>
+<div class="btns" id="bt7"></div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px"><span style="font-size:.9rem">🎚️ ลากให้บล็อก (อะลูมิเนียม) จมลึกขึ้น: ผิวบนอยู่ลึก</span><input type="range" id="sl7" min="0" max="9" step="1" value="2" style="flex:1;min-width:140px"><b id="sv7">2 cm</b></div>
+<div class="tanks" style="margin-top:10px"><div class="tk2"><svg id="svg7" viewBox="0 0 200 290"></svg></div><div class="tk2" id="pn7" style="text-align:left;font-size:.92rem"></div></div></div>
+<div class="card"><b>📋 เปรียบเทียบทุกระดับ</b>
+<div class="sw"><table class="rt" id="tb7"></table></div>
+<div class="tip" id="cl7" hidden></div></div>
+</div><div id="s8" hidden>
+<div class="card"><b>Section 8: สิ่งมีชีวิตและเรือดำน้ำ ปรับการลอย/จมอย่างไร?</b><br>
+ใช้หลักเดียวกัน: เปรียบเทียบ <b class=rd>แรงพยุง F<sub>B</sub> = ρ·V·g</b> กับ <b class=pu>น้ำหนัก W = mg</b> — จะเปลี่ยนการลอย/จมได้ต้องเปลี่ยน <b>V</b> (ปริมาตร) หรือ <b>m</b> (มวล) หรือใช้แรงจากครีบ<br>
+<small>ตัวเลขจำลอง: ปลา V ≈ 520 cm³, m = 520 g · เรือดำน้ำจำลอง V = 1000 cm³, ตัวเรือ 900 g · ρ<sub>น้ำ</sub> = 1 g/cm³, g = 10 m/s²</small></div>
+<div class="card"><div class="tg" id="tb8"></div>
+<div class="msgb" id="msg8">👆 เลือกตัวละครด้านบน แล้วกดสถานการณ์</div>
+<div class="btns" id="bs8"></div>
+<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"><div class="w8" id="w8"><div class="c8" id="c8" style="top:110px"></div><div id="in8" style="position:absolute;right:6px;top:100px;font-size:.72rem;text-align:center;width:90px"></div></div>
+<svg id="f8" viewBox="0 0 130 270" width="130" style="flex:0 0 130px;background:var(--card);border-radius:14px"></svg></div>
+<div id="pn8" class="card" style="background:#fff3bf;color:#2b2d42;margin-top:8px">เลือกสถานการณ์เพื่อดูว่าทำอย่างไร และสมการเป็นอย่างไร</div></div>
+<div class="card"><b>📋 เปรียบเทียบ</b><div class="sw"><table class="rt"><tr><th></th><th>🐡 ปลาปักเป้า (ถุงลม)</th><th>🛥️ เรือดำน้ำ</th></tr>
+<tr><td>⬆️ ขึ้น</td><td>เพิ่มแก๊ส V↑: F<sub>B</sub> &gt; W</td><td>ไล่น้ำออก m↓: W &lt; F<sub>B</sub></td></tr>
+<tr><td>⬇️ ลง</td><td>ปล่อยแก๊ส V↓: F<sub>B</sub> &lt; W</td><td>รับน้ำเข้า m↑: W &gt; F<sub>B</sub></td></tr>
+<tr><td>⏸️ นิ่ง</td><td>F<sub>B</sub> = W</td><td>F<sub>B</sub> = W</td></tr></table></div>
+<div class="tip">🔑 ปลาปรับ <b>V</b> (ปริมาตรส่วนที่จมมากขึ้น → F<sub>B</sub> มากขึ้น) ส่วนเรือดำน้ำ V คงที่ ปรับ <b>m</b> แทน</div></div>
+<div class="card"><b>📝 หมายเหตุ: กลไกอื่นของปลาปักเป้า</b>
+<ul style="margin:6px 0 0;padding-left:20px;font-size:.92rem">
+<li><b>ครีบ:</b> ลำตัวแข็ง ใช้ครีบอก/ครีบหลังบังคับทิศทางและดันตัวขึ้น-ลง เกิดแรง T เพิ่มเข้าสมการ (เทียบ F<sub>B</sub> + T กับ W)</li>
+<li><b>พองตัวด้วยน้ำ:</b> เป็นกลไกป้องกันตัว น้ำที่กลืนเพิ่ม V และ m เท่ากัน → F<sub>B</sub> และ W เพิ่มเท่ากัน จึง<u>ไม่ทำให้ลอยหรือจมเปลี่ยน</u> (ต่างจากการเพิ่มแก๊สในถุงลม ซึ่งเพิ่ม V โดย m แทบไม่เปลี่ยน)</li>
+<li><b>พองตัวด้วยอากาศ:</b> เกิดเมื่อพ้นน้ำ เพิ่ม V โดย m แทบเท่าเดิม → F<sub>B</sub> &gt; W จึงลอย</li>
+<li><b>ถุงลมบางชนิดเล็กลง:</b> งานวิจัยกายวิภาคพบถุงลมในปลาปักเป้า แต่บางสกุล (เช่น <i>Lagocephalus</i>) เหลือเพียงร่องรอย และแหล่งข้อมูลทั่วไปบางแห่งระบุว่าไม่มี — ปลาในอันดับเดียวกันบางชนิด (เช่น ปลาพระอาทิตย์ Molidae) ไม่มีถุงลมจริง</li></ul></div>
+</div></main>
+<button id="mute" aria-label="เปิด/ปิดเสียง">🔊</button><div id="toast"></div>
+<script>
+const O=[
+{n:"โฟม",e:'<span class="blk" style="background:#fff9db;border-color:#e6d27a"></span>',d:0.05,v:60,c:"ลอย"},
+{n:"บล็อกไม้",e:'<span class="blk" style="background:repeating-linear-gradient(90deg,#c68642 0 5px,#a9692a 5px 7px);border-color:#7a4a1a"></span>',d:0.60,v:40,c:"ลอย"},
+{n:"อะลูมิเนียม",s:"แท่งตัน (ไม่ใช่กระป๋อง 🥫)",e:'<span class="blk" style="background:linear-gradient(135deg,#f8f9fa,#adb5bd)"></span>',d:2.70,v:20,c:"จม"},
+{n:"เหล็ก",e:"🔩",d:7.87,v:10,c:"จม"},
+{n:"เงิน",e:"🥈",d:10.5,v:8,c:"จม"},
+{n:"ทองคำ",e:"🥇",d:19.3,v:5,c:"จม"}];
+const S=[["🏠","ภาพรวม"],["🧪","ความหนาแน่น"],["⚖️","น้ำ vs วัตถุ"],["🪝","ตาชั่งสปริง"],["🏊","จมมาก แรงพยุงมาก"],["⚓","จมมิดแล้ว คงที่"],["🧂","ทะเลเดดซี"],["🌊","ความดันน้ำ"],["🐡","เรือดำน้ำ/ปักเป้า"]];
+const $=id=>document.getElementById(id);
+const nav=$("nav");
+S.forEach((s,i)=>{const b=document.createElement("button");b.className=i==0?"on":i<9?"":"lock";b.innerHTML=`<span class=e>${s[0]}</span>${i?i+". ":""}${s[1]}`;b.onclick=()=>{if(i>8){toast("🚧 Section "+i+" กำลังจะมาเร็ว ๆ นี้");beep(220,.2);return}showSec(i)};nav.appendChild(b)});
+let ac,muted=false;function beep(f,t=.12,type="sine"){if(muted)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;g.gain.value=.15;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+t);o.stop(ac.currentTime+t)}catch(e){}}
+function melody(a){a.forEach((f,i)=>setTimeout(()=>beep(f,.15,"triangle"),i*130))}
+function splash(){for(let i=0;i<6;i++)setTimeout(()=>beep(300+Math.random()*500,.08,"sawtooth"),i*70)}
+function toast(t){const e=$("toast");e.textContent=t;e.style.opacity=1;clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.opacity=0,2200)}
+const sh=$("shelf");
+O.forEach((o,i)=>{const b=document.createElement("button");b.className="obj";b.innerHTML=`<span class=e>${o.e}</span>${o.n}<small>${o.s||""}</small>`;b.onclick=()=>pick(i);sh.appendChild(b)});
+let cur=null;
+const cyl=$("cyl");for(let v=0;v<=100;v+=10){const t=document.createElement("div");t.className="tk";t.style.bottom=(v*1.5)+"px";t.style.width=(v%50?"14px":"22px");cyl.appendChild(t);const l=document.createElement("span");l.className="lbl";l.style.top="auto";l.textContent=v;l.style.position="absolute";l.style.left="-34px";l.style.bottom=(v*1.5)+"px";cyl.appendChild(l)}
+function hi(id){["b1","b2","b3"].forEach(x=>{$(x).classList.remove("pulse");$(x).disabled=x!=id;});if(id)$(id).classList.add("pulse")}
+function reset(){$("onScale").innerHTML="";$("inCan").innerHTML="";$("inCan").style.top="-70px";$("stk").style.opacity=0;$("stk").style.top="-96px";$("mDisp").textContent="0.0 g";$("vDisp").textContent="0.0 mL";$("water").style.height=0;$("cupW").style.height=0;$("pcW").style.height=0;$("pc").style.opacity=0;$("pc").style.transform="";$("strm").style.height=0;$("cup").style.opacity=1;$("d1").classList.remove("on");$("d2").classList.remove("on");$("calc").innerHTML=""}
+function pick(i){cur=i;[...sh.children].forEach((c,j)=>c.classList.toggle("sel",j==i));reset();hi("b1");
+$("msg").innerHTML="✅ เลือก "+O[i].e+" "+O[i].n+" แล้ว<br>👉 ต่อไป: กดปุ่ม <u>① วางบนตาชั่ง</u>";beep(520)}
+$("b1").onclick=()=>{const o=O[cur],m=o.d*o.v;$("onScale").innerHTML=o.e;$("mDisp").textContent=m.toFixed(1)+" g";beep(440,.1);setTimeout(()=>beep(660,.2),100);
+hi("b2");$("msg").innerHTML="✅ อ่านค่ามวลได้ M = "+m.toFixed(1)+" g<br>👉 ต่อไป: กดปุ่ม <u>② หย่อนลงถ้วยยูเรก้า</u>"};
+$("b2").onclick=()=>{const o=O[cur],m=o.d*o.v,fl=o.c=="ลอย",k=fl?2000:0;hi(null);$("onScale").innerHTML="";$("inCan").innerHTML=o.e;
+$("msg").textContent=fl?"🛟 วัตถุนี้ลอย! จมเพียงบางส่วน น้ำล้นออกมาเท่ากับมวลของมัน…":"💦 วัตถุจมลงไป น้ำกำลังล้นออกทางปาก…";
+const dr=x=>{$("d1").classList[x]("on");$("d2").classList[x]("on")};
+setTimeout(()=>{$("inCan").style.top=fl?(o.d*30-30)+"px":"38px";beep(200,.2)},50);
+setTimeout(()=>{splash();dr("add");$("cupW").style.height=Math.min((fl?m:o.v)/60,1)*100+"%"},1000);
+if(fl){setTimeout(()=>dr("remove"),1900);
+setTimeout(()=>{$("msg").textContent="📌 ใช้เข็มกดวัตถุให้จมพอดีผิวน้ำ เพื่อวัดปริมาตรทั้งก้อน…";$("stk").style.opacity=1;$("stk").style.top="-68px";$("inCan").style.top="2px";splash();dr("add");$("cupW").style.height=Math.min(o.v/60,1)*100+"%"},2300);}
+setTimeout(()=>{dr("remove");$("stk").style.opacity=0;$("msg").textContent="🥛 เทน้ำที่ล้นลงถ้วยตวง…";$("cup").style.opacity=0;$("pc").style.opacity=1;$("pcW").style.height=Math.min(o.v/60,1)*100+"%"},2700+k+400);
+setTimeout(()=>{$("pc").style.transform="rotate(-70deg)";$("pcW").style.height="0";$("water").style.height=(o.v*1.5)+"px";$("strm").style.height=Math.max(0,150-o.v*1.5)+"px";splash()},3500+k+400);
+setTimeout(()=>{$("strm").style.height=0;$("pc").style.opacity=0;$("vDisp").textContent=o.v.toFixed(1)+" mL";melody([660,880]);hi("b3");
+$("msg").innerHTML="✅ ถ้วยตวงอ่านได้ V = "+o.v+" mL (น้ำที่ล้น = ปริมาตรวัตถุ)<br>👉 ต่อไป: กดปุ่ม <u>③ คำนวณ D = M/V</u>"},5200+k+400)};
+$("b3").onclick=()=>{const o=O[cur],m=o.d*o.v,d=m/o.v;hi(null);
+$("calc").innerHTML=`<div class=card style="background:#fff3bf;color:#2b2d42"><b>D = M ÷ V = ${m.toFixed(1)} ÷ ${o.v} = <span class=match>${d.toFixed(2)} g/cm³</span></b><br>ค่าในตาราง: ${o.d} g/cm³ → <span class=match>✔ เท่ากัน!</span> ${d<1?"(น้อยกว่าน้ำ จึงลอย)":"(มากกว่าน้ำ จึงจม)"}</div>`;
+melody([523,659,784,1047]);$("msg").innerHTML="🎉 ทดลองสำเร็จ! ลองเลือกวัตถุชิ้นอื่นจากโต๊ะเพื่อทดลองต่อได้เลย";
+const L=$("log");if(L.children[0].children.length==1)L.innerHTML="";
+const r=document.createElement("tr");r.innerHTML=`<td>${o.e} ${o.n}</td><td>${m.toFixed(1)}</td><td>${o.v}</td><td>${d.toFixed(2)}</td><td>${o.d}</td><td class=match>✔</td>`;L.appendChild(r)};
+
+$("mute").onclick=()=>{muted=!muted;$("mute").textContent=muted?"🔇":"🔊";toast(muted?"🔇 ปิดเสียงแล้ว":"🔊 เปิดเสียงแล้ว")};
+const sec=[$("s0"),$("s1"),$("s2"),$("s3"),$("s4"),$("s5"),$("s6"),$("s7"),$("s8")];
+function showSec(i){sec.forEach((e,j)=>e.hidden=j!=i);[...nav.children].forEach((b,j)=>{b.classList.toggle("on",j==i)});window.scrollTo(0,0);beep(600,.1);say(["ยินดีต้อนรับ! เลือก Section ที่อยากเริ่มได้เลย 🦉","เลือกวัตถุจากโต๊ะก่อนนะ 🧪","ภาพเดียวกัน อ่านได้ 2 แบบ! ลองสลับดูนะ","เลือกวัตถุและวิธีทดลองก่อนนะ 🪝","จมมาก แรงพยุงมาก! ลองหลายระดับนะ 🏊","จมมิดแล้ว ลึกแค่ไหนก็เท่าเดิม ลองดูนะ ⚓","เลือกวัตถุ แล้วดูว่าน้ำจืดกับเดดซีต่างกันยังไง 🧂","แรงพยุงมาจากความดันด้านล่างมากกว่าด้านบน! 🌊","ปลาและเรือดำน้ำ ปรับ F_B หรือ W ยังไงนะ? 🐡"][i])}
+function say(t){$("owlb").textContent=t}
+let view="d",up=false;
+const arrow=(x,y,L,dir,c)=>`<line x1="${x}" y1="${y}" x2="${x}" y2="${y+dir*L}" stroke="${c}" stroke-width="4"/><polygon points="${x-6},${y+dir*L} ${x+6},${y+dir*L} ${x},${y+dir*(L+9)}" fill="${c}"/>`;
+function tank(v,st,pu,ho,hf){const y={f:pu?78:39,m:74,s:120}[st],cy=y+13;let o=`<svg viewBox="0 0 230 168"><rect x="10" y="8" width="140" height="142" fill="none" stroke="#495057" stroke-width="3"/><rect x="12" y="52" width="136" height="97" fill="#a5d8ff" opacity=".7"/><line x1="12" y1="52" x2="148" y2="52" stroke="#339af0" stroke-width="2"/><rect x="63" y="${y}" width="54" height="26" rx="3" fill="#e9ecef" stroke="#495057" stroke-width="2"/>`;
+if(v=="d"){const n={f:5,m:10,s:18}[st];for(let k=0;k<18;k++)if(k<n)o+=`<circle cx="${70+(k%6)*8.5}" cy="${y+6+Math.floor(k/6)*7}" r="2.4" fill="#2b8a3e"/>`;
+o+=`<rect x="165" y="${150-ho}" width="22" height="${ho}" fill="#2b8a3e"/><rect x="195" y="${150-hf}" width="22" height="${hf}" fill="#1c7ed6"/><text x="150" y="162" font-size="8" fill="currentColor">ρวัตถุ</text><text x="190" y="162" font-size="8" fill="currentColor">ρของเหลว</text>`}
+else{const L={f:pu?[52,38]:[40,40],m:[40,40],s:[26,40]}[st];o+=arrow(90,cy,L[0],-1,"#e03131")+arrow(76,cy,L[1],1,"#7048e8")+`<text x="94" y="${cy-L[0]+4}" font-size="11" fill="#e03131" font-weight="700">F_B</text><text x="40" y="${cy+L[1]}" font-size="11" fill="#7048e8" font-weight="700">F_g</text>`;if(st=="s")o+=arrow(104,146,14,-1,"#2b8a3e")+`<text x="110" y="136" font-size="11" fill="#2b8a3e" font-weight="700">N</text>`}
+return o+"</svg>"}
+function eq(v,st,pu){const m={f:["<",pu?">":"="],m:["=","="],s:[">","<"]}[st];
+if(v=="d"){return `<span class=gr>ρวัตถุ</span><span class=sgn>${m[0]}</span><span class=bl>ρของเหลว</span>`}
+const R={f:pu?`F<sub>B</sub> &gt; mg`:`F<sub>B</sub> = mg`,m:`F<sub>B</sub> = mg`,s:`F<sub>B</sub> + <span style="color:#2b8a3e">N</span> = mg`}[st];
+return `<span class=rd>F<sub>B</sub></span><span class=sgn>${m[1]}</span><span class=pu>F<sub>g</sub></span><div style="font-size:1rem;margin-top:4px">${R}</div>`}
+const names={f:"ลอย",m:"ลอยปริ่ม / จมนิ่งใต้ผิว",s:"จม"},H={f:[40,70],m:[70,70],s:[110,70]};
+function render(){$("up").hidden=view!="f";$("up").textContent=up?"⬆️ กรณีลอย: ตอนนี้กำลังลอยขึ้น":"⏸️ กรณีลอย: ตอนนี้ลอยนิ่ง";
+$("vd").className="go "+(view=="d"?"b":"off");$("vf").className="go "+(view=="f"?"b":"off");
+$("vt").innerHTML=view=="d"?"🧪 <b>มุมมองความหนาแน่น</b>: เทียบ ρวัตถุ กับ ρของเหลว — ใครแน่นกว่า?":"➡️ <b>มุมมองแรง</b>: เทียบแรงพยุง F<sub>B</sub> (แดง ขึ้น) กับน้ำหนัก F<sub>g</sub> (ม่วง ลง) — ใครมากกว่า?";
+$("tanks").innerHTML=["f","m","s"].map(k=>`<div class="tk2"><b>${names[k]}${k=="f"&&view=="f"?(up?" (กำลังลอยขึ้น)":" (ลอยนิ่ง)"):""}</b>${tank(view,k,up,H[k][0],H[k][1])}<div class="eq">${eq(view,k,up)}</div></div>`).join("")}
+$("vd").onclick=()=>{view="d";render();beep(500);say("ดูที่ความหนาแน่น: ใครแน่นกว่า?")};
+$("vf").onclick=()=>{view="f";render();beep(600);say("ดูที่แรง: F_B กับ F_g ใครมากกว่า? ลอยนิ่งแรงเท่ากันนะ!")};
+$("up").onclick=()=>{up=!up;render();beep(700)};
+render();
+
+const G=10,P={w:{n:"บล็อกไม้",e:O[1].e,m:24,v:40,fl:1},a:{n:"บล็อกอะลูมิเนียม",e:O[2].e,m:54,v:20,fl:0}};
+let ob3=null,me="A",res3={};const N2=x=>x.toFixed(2);
+["w","a"].forEach(k=>{const b=document.createElement("button");b.className="obj";b.id="o3"+k;b.innerHTML=`<span class=e>${P[k].e}</span>${P[k].n}<small>${P[k].fl?"ลอยน้ำ":"จมน้ำ"} · m = ${P[k].m} g</small>`;b.onclick=()=>{ob3=k;buildS3();beep(520)};$("sh3").appendChild(b);$("n_"+k).innerHTML=P[k].e+" "+P[k].n});
+function tw(el,a,b,ms,cb){const t0=performance.now();(function f(t){const p=Math.min((t-t0)/ms,1);el.textContent=N2(a+(b-a)*p)+" N";if(p<1)requestAnimationFrame(f);else if(cb)cb()})(t0)}
+function hi3(id){["p1","p2","p3","p4"].forEach(x=>{const e=$(x);if(!e)return;e.classList.remove("pulse");e.disabled=x!=id});if(id)$(id).classList.add("pulse")}
+function m3(h){$("msg3").innerHTML=h}
+$("mA").onclick=()=>{me="A";buildS3();beep(500)};$("mB").onclick=()=>{me="B";buildS3();beep(500)};
+function buildS3(){["w","a"].forEach(k=>$("o3"+k).classList.toggle("sel",k==ob3));$("mA").className="go "+(me=="A"?"b":"off");$("mB").className="go "+(me=="B"?"b":"off");$("calc3").innerHTML="";
+if(!ob3){return}const o=P[ob3];
+$("bt3").innerHTML=me=="A"?'<button class="go b" id="p1">① ชั่งในอากาศ</button><button class="go b" id="p2">② ชั่งในน้ำ</button><button class="go" id="p3">③ หาแรงพยุง</button>':'<button class="go b" id="p1">① ชั่งในอากาศ</button><button class="go b" id="p2">② วางในน้ำ (น้ำล้น)</button><button class="go b" id="p3">③ ชั่งน้ำที่ล้น</button><button class="go" id="p4">④ หาแรงพยุง</button>';
+$("stg3").style.minWidth=me=="B"?"480px":"0";
+const sc=(l,id,sl,lab,op)=>`<div style="position:absolute;left:${l};width:120px;top:64px;text-align:center;opacity:${op}" id="${id}w"><div style="font-size:.74rem;font-weight:700;min-height:2.4em">${lab}</div><div style="height:36px;font-size:1.8rem" id="${sl}"></div><div style="margin:0 auto;width:110px;height:46px;background:#868e96;border-radius:10px"></div><div class="disp" id="${id}" style="margin:-36px auto 0;position:relative;width:96px;font-size:1.1rem">-- N</div></div>`;
+if(me=="A"){$("stg3").innerHTML=`<div style="position:absolute;left:30%;right:30%;top:0;height:6px;background:#495057;border-radius:3px"></div>
+<div style="position:absolute;left:calc(50% - 14px);top:6px;width:28px;height:72px;border:3px solid #495057;border-radius:6px 6px 14px 14px;background:repeating-linear-gradient(#fff 0 6px,#adb5bd 6px 9px)"></div>
+<div style="position:absolute;left:calc(50% - 3px);top:78px;width:6px;height:8px;background:#495057;border-radius:0 0 3px 3px"></div>
+<div style="position:absolute;left:8px;top:12px;width:112px;text-align:center;font-size:.72rem;font-weight:700">หน้าจอแสดงค่า<br>ตาชั่งสปริงแขวน<div class="disp" id="rA" style="margin:2px auto 0;width:100px;font-size:1.2rem">-- N</div></div>
+<div id="strA" style="position:absolute;left:50%;top:86px;width:3px;background:#495057;height:18px;transition:height 1.3s"></div><div id="obA" style="position:absolute;left:calc(50% - 16px);top:104px;font-size:2rem;transition:top 1.3s">${o.e}</div>
+<div style="position:absolute;left:calc(50% - 75px);bottom:0;width:150px;height:110px;border:4px solid #495057;border-top:0;border-radius:0 0 14px 14px;background:linear-gradient(#74c0fc,#4dabf7)"></div>`;m3(`✅ เลือก ${o.e} ${o.n} · วิธี A แล้ว<br>👉 กดปุ่ม <u>① ชั่งในอากาศ</u>`)}
+else{$("stg3").innerHTML=sc("2%","dB","plB","⚖️ ตาชั่ง 1: ชั่งน้ำหนักวัตถุ",1)+`<div class="zn" style="left:30%">ถ้วยยูเรก้า + ถ้วยรองน้ำ</div><div class="canw" style="position:absolute;left:30%;width:170px;top:40px"><div class="can"><span class="ob" id="obB">${o.e}</span><div class="rim"></div></div><span class="dr" id="e1">💧</span><span class="dr" id="e2" style="left:112px;animation-delay:.3s">💧</span><div class="cup" id="cupB"><i id="cupBW"></i></div></div>`+sc("72%","dB2","plB2","⚖️ ตาชั่ง 2: ชั่งน้ำหนักน้ำที่ล้น",.45);m3(`✅ เลือก ${o.e} ${o.n} · วิธี B แล้ว<br>👉 กดปุ่ม <u>① ชั่งในอากาศ</u>`)}
+hi3("p1");$("p1").onclick=p1;$("p2").onclick=p2;$("p3").onclick=p3;if($("p4"))$("p4").onclick=p4;say("ทำตามปุ่มที่กระพริบทีละขั้นนะ!")}
+const Wt=()=>P[ob3].m/1000*G,Fb=()=>P[ob3].v*(P[ob3].fl?0:1)/1000*G+(P[ob3].fl?Wt():0);
+function p1(){const o=P[ob3],W=Wt();beep(440,.1);
+if(me=="A"){tw($("rA"),0,W,800);m3(`✅ ในอากาศอ่านได้ W<sub>อากาศ</sub> = <b>${N2(W)} N</b><br>👉 ต่อไป กดปุ่ม <u>② ชั่งในน้ำ</u>`)}
+else{tw($("dB"),0,W,800);m3(`✅ ชั่งในอากาศได้ W<sub>อากาศ</sub> = <b>${N2(W)} N</b><br>👉 ต่อไป กดปุ่ม <u>② วางในน้ำ (น้ำล้น)</u>`)}
+hi3("p2")}
+function p2(){const o=P[ob3],W=Wt(),F=Fb();hi3(null);
+if(me=="A"){const t=o.fl?"138px":"185px",sh=o.fl?"52px":"99px";$("obA").style.top=t;$("strA").style.height=sh;setTimeout(()=>{splash();tw($("rA"),W,W-F,1200)},900);
+setTimeout(()=>{m3(o.fl?`✅ บล็อกไม้ลอยเอง เส้นแขวนหย่อน ตาชั่งอ่านได้ <b>0.00 N</b><br>⚠️ ไม่ได้แปลว่าไม่มีแรงพยุง แรงพยุงดันไว้เท่ากับน้ำหนักพอดี<br>👉 ต่อไป กดปุ่ม <u>③ หาแรงพยุง</u>`:`✅ จมมิดก้อน ตาชั่งอ่านลดลงเหลือ W<sub>น้ำ</sub> = <b>${N2(W-F)} N</b><br>👉 ต่อไป กดปุ่ม <u>③ หาแรงพยุง</u>`);melody([660,880]);hi3("p3")},2400);m3("💦 กำลังหย่อนลงน้ำ…")}
+else{$("plB").innerHTML="";const e=$("obB");e.innerHTML=o.e;e.style.top=o.fl?"-12px":"38px";beep(200,.2);m3("💦 วางวัตถุลงในน้ำ น้ำกำลังล้นออกมา…");
+setTimeout(()=>{splash();$("e1").classList.add("on");$("e2").classList.add("on");$("cupBW").style.height=Math.min(o.fl?o.m/60:o.v/60,1)*100+"%"},900);
+setTimeout(()=>{$("e1").classList.remove("on");$("e2").classList.remove("on");melody([660,880]);m3(`✅ น้ำที่ล้นออกมา = ปริมาตรของวัตถุ<b>ส่วนที่จมในน้ำ</b>${o.fl?" (บล็อกไม้ลอย จึงจมแค่บางส่วน)":" (อะลูมิเนียมจมทั้งก้อน)"}<br>👉 ต่อไป กดปุ่ม <u>③ ชั่งน้ำที่ล้น</u>`);hi3("p3")},2300)}}
+function p3(){const F=Fb();hi3(null);
+if(me=="A"){const W=Wt(),R=W-F;calcA(W,R,F)}
+else{$("cupB").style.opacity=0;$("dB2w").style.opacity=1;$("plB2").innerHTML='<span style="display:inline-block;width:28px;height:24px;border:3px solid #495057;border-top:0;border-radius:0 0 7px 7px;background:#4dabf7;vertical-align:bottom"></span>';
+$("dB2").textContent="TARE 0.00 N";beep(500);setTimeout(()=>{tw($("dB2"),0,F,900);beep(660,.2)},800);
+setTimeout(()=>{m3(`✅ ชั่งเฉพาะน้ำ (หักน้ำหนักถ้วยแล้ว) ที่ตาชั่ง 2 ได้ <b>${N2(F)} N</b> (ตาชั่ง 1 ยังแสดงน้ำหนักวัตถุ <b>${N2(Wt())} N</b> ไว้เปรียบเทียบ)<br>👉 ต่อไป กดปุ่ม <u>④ หาแรงพยุง</u>`);hi3("p4")},1900)}}
+function p4(){hi3(null);calcB(Wt(),Fb(),Fb())}
+function fin(k,F,html){$("calc3").innerHTML='<div class="card" style="background:#fff3bf;color:#2b2d42">'+html+'</div>';res3[ob3+k]=F;$("r_"+ob3+k).textContent=N2(F);$("r_"+ob3+k).className="ok";melody([523,659,784,1047]);m3("🎉 ทดลองสำเร็จ! ลองวัตถุอื่นหรือวิธีอื่นเพื่อเทียบผล");
+if(["wA","wB","aA","aB"].every(x=>res3[x]!=null))$("cmp").hidden=false;say("เทียบทั้ง 2 วิธี ได้ค่าเท่ากัน!")}
+function calcA(W,R,F){const o=P[ob3];fin("A",F,`<b>วิธี A:</b> F<sub>B</sub> = W<sub>อากาศ</sub> − W<sub>น้ำ</sub><br>F<sub>B</sub> = ${N2(W)} − ${N2(R)} = <b class=match>${N2(F)} N</b>`+(o.fl?`<br><small>บล็อกไม้ลอย: ตาชั่งอ่าน 0 จึงได้ F<sub>B</sub> = W (แรงพยุงขณะลอยนิ่ง)</small>`:`<br><small>จมมิดก้อน: V = ${o.v} cm³</small>`))}
+function calcB(W,F){fin("B",F,`<b>วิธี B:</b> F<sub>B</sub> = น้ำหนักน้ำที่ล้น<br>F<sub>B</sub> = <b class=match>${N2(F)} N</b> (W<sub>วัตถุ</sub> = ${N2(W)} N)`+(P[ob3].fl?`<br><small>บล็อกไม้ลอย: F<sub>B</sub> = W</small>`:""))}
+
+const L4={a:[[.25,"1/4"],[.5,"1/2"],[.75,"3/4"],[1,"ทั้งก้อน"]],w:[[.6,"ลอยปกติ 3/5"],[.8,"กดลง 4/5"],[1,"กดจนจมมิด"]]};
+let ob4=null,r4={a:{},w:{}},bz=false,cur4=0;
+["w","a"].forEach(k=>{const b=document.createElement("button");b.className="obj";b.id="o4"+k;b.innerHTML=`<span class=e>${P[k].e}</span>${P[k].n}<small>${k=="a"?"ρ > น้ำ · หย่อน":"ρ < น้ำ · กดด้วยนิ้ว"}</small>`;b.onclick=()=>{ob4=k;build4();beep(520)};$("sh4").appendChild(b)});
+const sc4=(l,id,sl,lab,op)=>`<div style="position:absolute;left:${l};width:120px;top:64px;text-align:center;opacity:${op}" id="${id}w"><div style="font-size:.74rem;font-weight:700;min-height:2.4em">${lab}</div><div style="height:36px;font-size:1.8rem" id="${sl}"></div><div style="margin:0 auto;width:110px;height:46px;background:#868e96;border-radius:10px"></div><div class="disp" id="${id}" style="margin:-36px auto 0;position:relative;width:96px;font-size:1.1rem">-- N</div></div>`;
+const m4=h=>$("msg4").innerHTML=h;
+function build4(){["w","a"].forEach(k=>$("o4"+k).classList.toggle("sel",k==ob4));const o=P[ob4],L=L4[ob4];$("calc4").innerHTML="";$("cl4").hidden=true;cur4=0;bz=false;
+$("bt4").innerHTML='<button class="go b pulse" id="q0">① ชั่งในอากาศ</button>'+L.map((x,i)=>`<button class="go lv" data-i="${i}" disabled>${ob4=="a"?"หย่อน ":""}${x[1]}</button>`).join("");
+$("q0").onclick=q0;document.querySelectorAll("#bt4 .lv").forEach(b=>b.onclick=()=>lv4(+b.dataset.i));
+$("stg4").style.minWidth=ob4=="w"?"480px":"0";
+if(ob4=="a"){$("stg4").innerHTML=`<div class="zn" style="right:8px">วิธีหย่อน (ρ &gt; น้ำ)</div><div style="position:absolute;left:30%;right:30%;top:0;height:6px;background:#495057;border-radius:3px"></div>
+<div style="position:absolute;left:calc(50% - 14px);top:6px;width:28px;height:72px;border:3px solid #495057;border-radius:6px 6px 14px 14px;background:repeating-linear-gradient(#fff 0 6px,#adb5bd 6px 9px)"></div>
+<div style="position:absolute;left:calc(50% - 3px);top:78px;width:6px;height:8px;background:#495057;border-radius:0 0 3px 3px"></div>
+<div style="position:absolute;left:8px;top:12px;width:112px;text-align:center;font-size:.72rem;font-weight:700">หน้าจอแสดงค่า<br>ตาชั่งสปริงแขวน<div class="disp" id="rA4" style="margin:2px auto 0;width:100px;font-size:1.2rem">-- N</div></div>
+<div id="strA4" style="position:absolute;left:50%;top:86px;width:3px;background:#495057;height:18px;transition:height 1.3s"></div><div id="obA4" style="position:absolute;left:calc(50% - 16px);top:104px;font-size:2rem;transition:top 1.3s">${o.e}</div>
+<div style="position:absolute;left:calc(50% - 75px);bottom:0;width:150px;height:110px;border:4px solid #495057;border-top:0;border-radius:0 0 14px 14px;background:linear-gradient(#74c0fc,#4dabf7)"></div>`}
+else{$("stg4").innerHTML=sc4("2%","dW1","plW1","⚖️ ตาชั่ง 1: ชั่งน้ำหนักวัตถุ",1)+`<div class="zn" style="left:30%">วิธีกดด้วยนิ้ว (ρ &lt; น้ำ)</div><div class="canw" style="position:absolute;left:30%;width:170px;top:40px"><div class="can"><span class="ob" id="obW">${o.e}</span><span id="fg" style="position:absolute;left:34px;top:-106px;font-size:1.6rem;opacity:0;transition:top .9s,opacity .3s;z-index:3">👇</span><div class="rim"></div></div><span class="dr" id="e41">💧</span><span class="dr" id="e42" style="left:112px;animation-delay:.3s">💧</span><div class="cup" id="cupW"><i id="cupWW"></i></div></div>`+sc4("72%","dW2","plW2","⚖️ ตาชั่ง 2: ชั่งน้ำหนักน้ำที่ล้น",.45)}
+$("ttl4").textContent=o.n;tb4();m4(`✅ เลือก ${o.e} ${o.n} แล้ว<br>👉 กดปุ่ม <u>① ชั่งในอากาศ</u>`);say(ob4=="a"?"ρ มากกว่าน้ำ ใช้วิธีหย่อนนะ":"ρ น้อยกว่าน้ำ ต้องใช้นิ้วกดช่วย!")}
+function q0(){const W=Wt4();beep(440,.1);tw($(ob4=="a"?"rA4":"dW1"),0,W,800);cur4=W;$("q0").classList.remove("pulse");$("q0").disabled=true;
+document.querySelectorAll("#bt4 .lv").forEach(b=>b.disabled=false);document.querySelectorAll("#bt4 .lv")[0].classList.add("pulse");
+m4(`✅ ชั่งในอากาศได้ W<sub>อากาศ</sub> = <b>${N2(W)} N</b><br>👉 ต่อไป เลือก<u>ระดับ${ob4=="a"?"การหย่อน":"การจม"}</u>จากปุ่มด้านบน (ลองทีละระดับ)`)}
+const Wt4=()=>P[ob4].m/1000*G;
+function lv4(i){if(bz||cur4==0&&$("q0").disabled==false)return;bz=true;document.querySelectorAll("#bt4 .lv").forEach(b=>{b.disabled=true;b.classList.remove("pulse")});const o=P[ob4],f=L4[ob4][i][0],Vs=f*o.v,F=Vs*G/1000,W=Wt4();$("calc4").innerHTML="";
+if(ob4=="a"){const y=f<1?150+f*30-30:158;$("obA4").style.top=y+"px";$("strA4").style.height=(y-86)+"px";m4("💦 กำลังหย่อนลงน้ำ…");
+setTimeout(()=>{splash();tw($("rA4"),cur4,W-F,1100)},700);
+setTimeout(()=>{cur4=W-F;fin4(i,`<b>จมระดับ ${L4.a[i][1]}</b><br>F<sub>B</sub> = W<sub>อากาศ</sub> − W<sub>น้ำ</sub> = ${N2(W)} − ${N2(W-F)} = <b class=match>${N2(F)} N</b>`,[N2(W-F),N2(F)])},2000)}
+else{const T=[-12,-6,2][i];$("obW").style.top="-70px";$("fg").style.opacity=0;$("fg").style.top="-106px";$("cupWW").style.height=0;$("cupW").style.opacity=1;$("plW2").innerHTML="";$("dW2").textContent="-- N";$("dW2w").style.opacity=.45;
+m4(i?"👆 ใช้นิ้วกดบล็อกไม้ให้จมลง…":"🛟 บล็อกไม้ลอยเอง ไม่ต้องกด…");
+setTimeout(()=>{$("obW").style.top=T+"px";beep(200,.2);if(i){$("fg").style.opacity=1;$("fg").style.top=(T-36)+"px"}},300);
+setTimeout(()=>{splash();$("e41").classList.add("on");$("e42").classList.add("on");$("cupWW").style.height=Math.min(Vs/60,1)*100+"%"},1400);
+setTimeout(()=>{$("e41").classList.remove("on");$("e42").classList.remove("on");m4(`💧 น้ำล้น = ปริมาตรส่วนที่จม = ${Vs} mL · กำลังนำไปชั่ง…`);$("cupW").style.opacity=0;$("plW2").innerHTML='<span style="display:inline-block;width:28px;height:24px;border:3px solid #495057;border-top:0;border-radius:0 0 7px 7px;background:#4dabf7;vertical-align:bottom"></span>';$("dW2w").style.opacity=1;$("dW2").textContent="TARE 0.00 N";beep(500)},2700);
+setTimeout(()=>{tw($("dW2"),0,F,900);beep(660,.2)},3500);
+setTimeout(()=>fin4(i,`<b>${L4.w[i][1]}</b> · จม ${Vs} cm³ → น้ำล้น ${Vs} mL (${Vs} g)<br>F<sub>B</sub> = น้ำหนักน้ำที่ล้น = <b class=match>${N2(F)} N</b>`+(i?`<br><small>แรงจากนิ้วที่ต้องกด = F<sub>B</sub> − W = ${N2(F-W)} N</small>`:`<br><small>ลอยนิ่ง: F<sub>B</sub> = W = ${N2(W)} N</small>`),[Vs,N2(F)]),4600)}}
+function fin4(i,h,v){$("calc4").innerHTML='<div class="card" style="background:#fff3bf;color:#2b2d42">'+h+'</div>';r4[ob4][i]=v;tb4();melody([523,659,784]);bz=false;
+const bs=document.querySelectorAll("#bt4 .lv");bs.forEach(b=>b.disabled=false);const n=L4[ob4].length,done=Object.keys(r4[ob4]).length;
+if(done<n){m4(`✅ ได้ F<sub>B</sub> = <b>${N2(v[1]=="x"?0:+v[1])} N</b><br>🔁 ลองเลือกระดับอื่นต่อ (ทำแล้ว ${done}/${n})`);const nx=[...bs].find((b,j)=>!r4[ob4][j]);if(nx)nx.classList.add("pulse")}
+else{m4("🎉 ครบทุกระดับแล้ว! สังเกตว่าจมมาก แรงพยุงยิ่งมาก");$("cl4").hidden=false;say("จมมาก แรงพยุงมาก!")}}
+function tb4(){if(!ob4)return;const w=ob4=="w";$("tb4").innerHTML=`<tr><th>ระดับ</th><th>${w?"น้ำล้น (mL)":"W<sub>น้ำ</sub> (N)"}</th><th>F<sub>B</sub> (N)</th></tr>`+L4[ob4].map((x,i)=>{const v=r4[ob4][i];return `<tr><td>${x[1]}</td><td>${v?v[0]:"–"}</td><td class="${v?"ok":""}">${v?v[1]:"–"}</td></tr>`}).join("")}
+
+const D5=[["จมครึ่งก้อน (เทียบ)",0],["จมมิด ลึก 2 cm",2],["จมมิด ลึก 4 cm",4],["จมมิด ลึก 6 cm",6],["จมมิด ลึก 8 cm",8]];
+let r5={},bz5=false,cur5=0,W5=0.54;
+$("al5").innerHTML=P.a.e;
+let tk="";for(let k=0;k<=10;k++)tk+=`<div style="position:absolute;left:0;top:${150+14*k}px;width:${k%2?8:14}px;border-top:1px solid #495057"></div>${k%2==0?`<span style="position:absolute;left:16px;top:${150+14*k-6}px;font-size:.62rem;line-height:1">${k}</span>`:""}`;
+$("stg5").innerHTML=`<div style="position:absolute;left:30%;right:30%;top:0;height:6px;background:#495057;border-radius:3px"></div>
+<div style="position:absolute;left:calc(50% - 14px);top:6px;width:28px;height:72px;border:3px solid #495057;border-radius:6px 6px 14px 14px;background:repeating-linear-gradient(#fff 0 6px,#adb5bd 6px 9px)"></div>
+<div style="position:absolute;left:calc(50% - 3px);top:78px;width:6px;height:8px;background:#495057;border-radius:0 0 3px 3px"></div>
+<div style="position:absolute;left:8px;top:12px;width:112px;text-align:center;font-size:.72rem;font-weight:700">หน้าจอแสดงค่า<br>ตาชั่งสปริงแขวน<div class="disp" id="rA5" style="margin:2px auto 0;width:100px;font-size:1.2rem">-- N</div></div>
+<div id="strA5" style="position:absolute;left:50%;top:86px;width:3px;background:#495057;height:14px;transition:height 1.3s"></div><div id="obA5" style="position:absolute;left:calc(50% - 15px);top:100px;transition:top 1.3s">${P.a.e}</div>
+<div style="position:absolute;left:calc(50% - 75px);top:150px;width:150px;height:200px;border:4px solid #495057;border-top:0;border-radius:0 0 14px 14px;background:linear-gradient(#74c0fc,#4dabf7);z-index:0"></div>
+<div style="position:absolute;left:calc(50% + 80px);top:0;width:60px;height:350px">${tk}<span style="position:absolute;left:2px;top:128px;font-size:.62rem;line-height:1.1">ลึก (cm)</span></div>`;
+$("obA5").style.zIndex=2;$("strA5").style.zIndex=2;
+$("bt5").innerHTML='<button class="go b pulse" id="g0">① ชั่งในอากาศ</button>'+D5.map((x,i)=>`<button class="go lv5" data-i="${i}" disabled>${x[0]}</button>`).join("");
+const m5=h=>$("msg5").innerHTML=h;
+function tb5(){$("tb5").innerHTML='<tr><th>ระดับ</th><th>W<sub>น้ำ</sub> (N)</th><th>F<sub>B</sub> (N)</th></tr>'+D5.map((x,i)=>{const v=r5[i];return `<tr><td>${x[0]}</td><td>${v?v[0]:"–"}</td><td class="${v?"ok":""}">${v?v[1]:"–"}</td></tr>`}).join("")}tb5();
+$("g0").onclick=()=>{beep(440,.1);tw($("rA5"),0,W5,800);cur5=W5;$("g0").classList.remove("pulse");$("g0").disabled=true;const b=document.querySelectorAll(".lv5");b.forEach(x=>x.disabled=false);b[0].classList.add("pulse");m5(`✅ ชั่งในอากาศได้ W<sub>อากาศ</sub> = <b>${N2(W5)} N</b><br>👉 ต่อไป เลือกระดับการหย่อน (เริ่มจาก "จมครึ่งก้อน" เพื่อเทียบ แล้วลองจมมิดที่ความลึกต่าง ๆ)`)};
+document.querySelectorAll(".lv5").forEach(b=>b.onclick=()=>{if(bz5)return;bz5=true;const i=+b.dataset.i,d=D5[i][1],y=d?150+14*d:135,F=(d?20:10)*G/1000;
+document.querySelectorAll(".lv5").forEach(x=>{x.disabled=true;x.classList.remove("pulse")});$("calc5").innerHTML="";m5("💦 กำลังหย่อนลงน้ำ…");
+$("obA5").style.top=y+"px";$("strA5").style.height=(y-100+14)+"px";
+setTimeout(()=>{splash();tw($("rA5"),cur5,W5-F,1100)},800);
+setTimeout(()=>{cur5=W5-F;r5[i]=[N2(W5-F),N2(F)];tb5();melody([523,659,784]);bz5=false;
+$("calc5").innerHTML=`<div class="card" style="background:#fff3bf;color:#2b2d42"><b>${D5[i][0]}</b> (V<sub>จม</sub> = ${d?20:10} cm³)<br>F<sub>B</sub> = W<sub>อากาศ</sub> − W<sub>น้ำ</sub> = ${N2(W5)} − ${N2(W5-F)} = <b class=match>${N2(F)} N</b></div>`;
+const bs=document.querySelectorAll(".lv5");bs.forEach(x=>x.disabled=false);const n=Object.keys(r5).length;
+if(n<5){m5(`✅ F<sub>B</sub> = <b>${N2(F)} N</b> · 🔁 ลองระดับอื่นต่อ (ทำแล้ว ${n}/5)`);const nx=[...bs].find((x,j)=>!r5[j]);if(nx)nx.classList.add("pulse")}
+else{m5("🎉 ครบแล้ว! จมมิดแล้ว ลึกกี่ cm แรงพยุงก็เท่าเดิม");say("จมมิดแล้ว ลึกแค่ไหน F_B ก็เท่าเดิม!");$("cl5").hidden=false;$("cl5").innerHTML="💡 จมมิดแล้ว ปริมาตรน้ำที่ถูกแทนที่คงที่ (20 cm³) แรงพยุงจึงคงที่ 0.20 N<br>F<sub>B</sub> = ρ<sub>น้ำ</sub>·V·g = 1000 × 0.000020 × 10 = 0.20 N"}},2300)});
+
+const blk=(c,b)=>`<span class="blk" style="background:${c};border-color:${b||"#868e96"}"></span>`;
+const O6=[{n:"บล็อกไม้",d:.60,e:blk("repeating-linear-gradient(90deg,#c68642 0 5px,#a9692a 5px 7px)","#7a4a1a")},{n:"ก้อนพลาสติก",d:1.05,e:blk("linear-gradient(135deg,#ffa8a8,#e03131)","#a61e1e")},{n:"ก้อนยาง",d:1.15,e:blk("linear-gradient(135deg,#868e96,#343a40)","#212529")},{n:"อะลูมิเนียม",d:2.70,e:blk("linear-gradient(135deg,#f8f9fa,#adb5bd)")}];
+const FL=[1.00,1.24],R6={};let c6=null;
+O6.forEach((o,i)=>{const b=document.createElement("button");b.className="obj";b.innerHTML=`<span class=e>${o.e}</span>${o.n}<small>ρ = ${o.d.toFixed(2)} g/cm³</small>`;b.onclick=()=>run6(i);$("sh6").appendChild(b)});
+$("stg6").innerHTML=`<div style="position:absolute;left:3%;width:44%;top:3px;text-align:center;font-size:.78rem;font-weight:700">💧 น้ำจืด · ρ = 1.00</div><div style="position:absolute;left:53%;width:44%;top:3px;text-align:center;font-size:.78rem;font-weight:700">🧂 เดดซี · ρ = 1.24</div>
+<div style="position:absolute;left:3%;width:44%;top:70px;height:200px;border:4px solid #495057;border-top:0;border-radius:0 0 14px 14px;background:linear-gradient(#a5d8ff,#4dabf7)"></div>
+<div style="position:absolute;left:53%;width:44%;top:70px;height:200px;border:4px solid #495057;border-top:0;border-radius:0 0 14px 14px;background:radial-gradient(#ffffffaa 1.5px,transparent 2px) 0 0/14px 14px,linear-gradient(#99e9f2,#3bc9db)"></div>
+<div id="x0" style="position:absolute;left:calc(25% - 15px);top:34px;width:30px;height:30px;line-height:0;opacity:0"></div><div id="x1" style="position:absolute;left:calc(75% - 15px);top:34px;width:30px;height:30px;line-height:0;opacity:0"></div>`;
+document.querySelectorAll("#x0 .blk,#x1 .blk");
+const st=document.createElement("style");st.textContent="#x0 .blk,#x1 .blk{width:30px;height:30px;vertical-align:top}";document.head.appendChild(st);
+function ev(d,rf){const W=d*.2,fl=d<rf;return fl?{fl,f:d/rf,F:W,N:0,W}:{fl,f:1,F:rf*.2,N:W-rf*.2,W}}
+function run6(i){const o=O6[i];c6=i;[...$("sh6").children].forEach((b,j)=>b.classList.toggle("sel",j==i));$("calc6").innerHTML="";$("cl6").hidden=true;beep(520);
+m6(`✅ เลือก ${o.n} (ρ = ${o.d.toFixed(2)}) · กำลังหย่อนลงน้ำจืดและเดดซี…`);
+const r=FL.map(rf=>ev(o.d,rf));
+[0,1].forEach(k=>{const e=$("x"+k);e.style.transition="none";e.style.top="34px";e.innerHTML=o.e;e.style.opacity=1;void e.offsetWidth;
+setTimeout(()=>{e.style.transition="top "+(r[k].fl?1.2:1.6)+"s ease-in";e.style.top=(r[k].fl?40+30*r[k].f:236)+"px"},150)});
+setTimeout(splash,700);
+setTimeout(()=>{melody([660,880]);const N3=x=>x.toFixed(3),pc=x=>Math.round(x.f*100),bar=p=>`<div style="height:10px;border-radius:5px;margin:4px 8px;background:linear-gradient(90deg,#339af0 ${p}%,#dee2e6 ${p}%)"></div>`;
+const T=r.map((x,k)=>x.fl?`<b class=match>ลอย</b><br>จมใต้ผิว <b>${pc(x)}%</b> · โผล่พ้นผิว <b>${100-pc(x)}%</b>${bar(pc(x))}F<sub>B</sub> = W = <b>${N3(x.F)} N</b>`:`<b style="color:#e03131">จม</b> (จมมิด 100%)${bar(100)}F<sub>B</sub> = ρ·V·g = ${FL[k].toFixed(2)}×20×10÷1000 = <b>${N3(x.F)} N</b><br>F<sub>B</sub> + N = mg → N = ${N3(x.W)} − ${N3(x.F)} = <b>${N3(x.N)} N</b>`);
+const cmp=r[0].fl&&r[1].fl?`ในเดดซี <b>โผล่พ้นผิวมากขึ้น</b> จาก ${100-pc(r[0])}% เป็น ${100-pc(r[1])}% (ลอยสูงขึ้น) · แรงพยุง F<sub>B</sub> เท่ากัน = W เพราะลอยนิ่ง`:!r[0].fl&&r[1].fl?`น้ำจืด: จมถึงก้นภาชนะ · เดดซี: <b>ลอยได้</b> โผล่พ้นผิว ${100-pc(r[1])}%`:`จมทั้งสองของเหลว แต่เดดซีพยุงได้มากกว่า (${N3(r[1].F)} เทียบ ${N3(r[0].F)} N) แรงที่ก้นภาชนะ N จึงลดลง (${N3(r[1].N)} เทียบ ${N3(r[0].N)} N)`;
+$("calc6").innerHTML=`<div class="tanks" style="margin-top:8px"><div class="tk2"><b>💧 น้ำจืด</b><br>${T[0]}</div><div class="tk2"><b>🧂 เดดซี</b><br>${T[1]}</div></div><div class="card" style="background:#fff3bf;color:#2b2d42;margin-top:8px"><b>เปรียบเทียบ:</b> ${cmp}<br><small>แรงพยุงสูงสุด (ถ้าจมมิด) ρ·V·g: น้ำจืด 0.200 N · เดดซี 0.248 N (มากกว่า 24%) · W = ${N3(r[0].W)} N</small></div>`;
+R6[i]=r.map(x=>x.fl?`ลอย · โผล่ ${100-Math.round(x.f*100)}%`:"จม");tb6();
+const n=Object.keys(R6).length;m6(n<4?`🔁 ลองเลือกวัตถุอื่นต่อ (ทำแล้ว ${n}/4)`:"🎉 ครบทั้ง 4 ชนิดแล้ว!");if(n==4){$("cl6").hidden=false;say("เดดซีหนาแน่นกว่า ของลอยได้มากกว่า!")}},2000)}
+const m6=h=>$("msg6").innerHTML=h;
+function tb6(){$("tb6").innerHTML='<tr><th>วัตถุ</th><th>ρ</th><th>น้ำจืด 1.00</th><th>เดดซี 1.24</th></tr>'+O6.map((o,i)=>{const r=R6[i];return `<tr><td>${o.e} ${o.n}</td><td>${o.d.toFixed(2)}</td><td class="${r?"ok":""}">${r?r[0]:"–"}</td><td class="${r?"ok":""}">${r?r[1]:"–"}</td></tr>`}).join("")}tb6();
+function ships(){const ex=$("ex").checked,rf=[1.00,1.03],D0=26,dr=rf.map(r=>ex?D0*(1-5*(1-1/r)*(r>1?1:0)):D0/r*1);
+$("stg7").innerHTML=[0,1].map(k=>{const L=k?"50%":"0",d=k?(ex?D0*(1-5*(1-1/1.03)):D0/1.03):D0,top=14+d;return `<div style="position:absolute;left:${L};width:50%;top:3px;text-align:center;font-size:.78rem;font-weight:700">${k?"🌊 ทะเล · ρ = 1.03":"🏞️ แม่น้ำ/น้ำจืด · ρ = 1.00"}</div>
+<div style="position:absolute;left:calc(${L} + 50% - 55px - 25%);width:110px;height:56px;top:${top+20}px"><div class="cab"></div><div class="hull"><div class="mk" style="top:${40-D0}px"></div></div></div>
+<div style="position:absolute;left:${L};width:50%;top:90px;bottom:0;background:#4dabf7a0;${k?"background:#2f9e9ea0":""}"></div>`}).join("");
+$("shT").innerHTML=`ขีดเหลืองคือระดับน้ำของเรือในน้ำจืด · จมลึกในทะเล = 1.00 ÷ 1.03 ≈ <b>97%</b> ของน้ำจืด (V<sub>จม</sub> = m ÷ ρ)${ex?"<br><small>⚠️ ภาพขยายความต่างเกินจริง ความต่างจริงน้อยกว่านี้มาก</small>":""}`}
+$("ex").onchange=ships;ships();
+
+const A7=4e-4,H7=5,C7=[["A","🪵 ลอยโผล่เหนือน้ำ","บล็อกไม้ ρ = 0.60",-2,.12,"repeating-linear-gradient(#c68642 0 5px,#a9692a 5px 7px)"],["B","⚖️ ลอยปริ่มน้ำ","วัตถุ ρ = 1.00",0,.20,"#ffa94d"],["C","⬇️ จมทั้งก้อน (ตื้น)","อะลูมิเนียม แขวนไว้",2,.54,"#ced4da"],["D","⏬ จมทั้งก้อน (ลึก)","อะลูมิเนียม แขวนไว้",8,.54,"#ced4da"]];
+const R7={};let w7=0;
+C7.forEach((c,i)=>{const b=document.createElement("button");b.className="go b";b.textContent=c[1];b.onclick=()=>sel7(c[1],c[2],c[3],c[4],c[5],c[0]);$("bt7").appendChild(b)});
+function arr7(x,y,L,dir){return `<line x1="${x}" y1="${y}" x2="${x}" y2="${y+dir*L}" stroke="${dir>0?"#7048e8":"#e03131"}" stroke-width="4"/>`}
+function sel7(nm,ob,yt,W,col,key){w7++;const yb=yt+H7,Pt=yt>0?100*yt:0,Pb=100*yb,Ft=Pt*A7,Fb=Pb*A7,FB=Fb-Ft,dP=Pb-Pt,Vs=4*(yb-Math.max(yt,0)),FB2=1000*10*Vs*1e-6;
+const S=12,y0=50,yTop=y0+yt*S,yBot=yTop+H7*S,x=82;let sv=`<rect x="10" y="${y0}" width="180" height="216" fill="#4dabf7" opacity=".6"/><rect x="10" y="20" width="180" height="246" fill="none" stroke="#495057" stroke-width="3"/><line x1="10" y1="${y0}" x2="190" y2="${y0}" stroke="#1971c2" stroke-width="2" stroke-dasharray="4"/><text x="132" y="${y0-4}" font-size="9" fill="currentColor">ผิวน้ำ (d = 0)</text>`;
+for(let k=2;k<=16;k+=2)sv+=`<line x1="10" y1="${y0+k*S}" x2="18" y2="${y0+k*S}" stroke="#495057"/><text x="20" y="${y0+k*S+3}" font-size="8" fill="currentColor">${k}</text>`;
+sv+=`<rect x="${x}" y="${yTop}" width="36" height="${H7*S}" fill="none" stroke="#212529" stroke-width="2"/><rect x="${x}" y="${yTop}" width="36" height="${H7*S}" style="fill:${col.includes("gradient")?"#c68642":col}"/>`;
+if(Pt>0)sv+=arr7(x+18,yTop-6-Pt*.025,6+Pt*.025,1)+`<polygon points="${x+12},${yTop-8} ${x+24},${yTop-8} ${x+18},${yTop}" fill="#7048e8"/><text x="${x+42}" y="${yTop-6}" font-size="9" fill="#7048e8">P บน ${Pt} Pa</text>`;
+else sv+=`<text x="${x+42}" y="${Math.max(yTop,26)+4}" font-size="9" fill="#7048e8">P บน = 0 (อากาศ)</text>`;
+sv+=arr7(x+18,yBot+6+Pb*.025,6+Pb*.025,-1)+`<polygon points="${x+12},${yBot+8} ${x+24},${yBot+8} ${x+18},${yBot}" fill="#e03131"/><text x="${x+42}" y="${yBot+14}" font-size="9" fill="#e03131">P ล่าง ${Pb} Pa</text>`;
+$("svg7").innerHTML=sv;
+const n3=v=>v.toFixed(3),fl=yt<=0?`ลอยนิ่ง: F<sub>B</sub> = W = ${n3(W)} N ✔`:`ตาชั่งสปริงอ่าน W − F<sub>B</sub> = ${n3(W)} − ${n3(FB)} = ${n3(W-FB)} N`;
+$("pn7").innerHTML=`<b>${nm}</b> · ${ob}<br>${yt<0?"ผิวบนโผล่พ้นน้ำ "+(-yt)+" cm":"ผิวบนลึก "+yt+" cm"} · ผิวล่างลึก ${yb} cm<br><br>
+<b>① ความดัน</b> P = ρgd<br>P<sub>บน</sub> = ${Pt} Pa · P<sub>ล่าง</sub> = 1000×10×${yb/100} = <b>${Pb} Pa</b> (ΔP = ${dP} Pa)<br>
+<b>② แรง F = P·A</b> (A = 0.0004 m²)<br>F<sub>บน</sub> = ${n3(Ft)} N ↓ · F<sub>ล่าง</sub> = ${n3(Fb)} N ↑<br>
+<b>③ วิธีผลต่างความดัน</b><br>F<sub>B</sub> = F<sub>ล่าง</sub> − F<sub>บน</sub> = ${n3(Fb)} − ${n3(Ft)} = <b>${n3(FB)} N</b><br>
+<b>④ วิธีสูตร</b> F<sub>B</sub> = ρ·V<sub>จม</sub>·g = 1000×${Vs*1e-6}×10 = <b>${n3(FB2)} N</b><br>
+<span class=match>✔ เท่ากัน</span> · ${fl}<br><small>(ΔP·A = ${dP}×0.0004 = ${n3(dP*A7)} N)</small>`;
+if(yt>=0)$("pn7").innerHTML+=`<div class="tip" style="margin-top:6px">ทำไมไม่ขึ้นกับความลึก? F<sub>B</sub> = ρg(d+h)A − ρg·d·A = <b>ρ·g·h·A = ρ·g·V</b> — ค่า d (ความลึก) <b>หักล้างหายไป</b> เหลือแค่ปริมาตรบล็อก</div>`;
+R7[key]=[nm,Pt,Pb,dP,n3(FB)];tb7();beep(500);m7(`✅ ${nm}: F<sub>B</sub> = ${n3(FB)} N · ลองระดับอื่นต่อ`);
+const deep=Object.keys(R7).filter(k=>/^[CD]|^s/.test(k)).length;if(deep>=2){$("cl7").hidden=false;$("cl7").innerHTML="💡 จมทั้งก้อนแล้ว ความดันทั้งบนและล่างเพิ่มขึ้นตามความลึก แต่ <b>ผลต่าง ΔP คงที่ = ρ·g·h = 500 Pa</b> แรงพยุงจึงคงที่ 0.200 N ไม่ว่าลึกเท่าใด";say("ลึกขึ้น ความดันเพิ่ม แต่ผลต่างเท่าเดิม!")}}
+const m7=h=>$("msg7").innerHTML=h;
+function tb7(){$("tb7").innerHTML='<tr><th>ระดับ</th><th>P<sub>บน</sub> (Pa)</th><th>P<sub>ล่าง</sub> (Pa)</th><th>ΔP (Pa)</th><th>F<sub>B</sub> (N)</th></tr>'+Object.values(R7).map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td class=ok>${r[4]}</td></tr>`).join("")}
+$("sl7").oninput=()=>{const v=+$("sl7").value;$("sv7").textContent=v+" cm";sel7("🎚️ จมทั้งก้อน ผิวบนลึก "+v+" cm","อะลูมิเนียม แขวนไว้",v,.54,"#ced4da","s"+v)};
+$("svg7").innerHTML='<rect x="10" y="50" width="180" height="216" fill="#4dabf7" opacity=".6"/><rect x="10" y="20" width="180" height="246" fill="none" stroke="#495057" stroke-width="3"/><line x1="10" y1="50" x2="190" y2="50" stroke="#1971c2" stroke-width="2" stroke-dasharray="4"/><text x="132" y="46" font-size="9" fill="currentColor">ผิวน้ำ (d = 0)</text><text x="100" y="160" font-size="10" text-anchor="middle" fill="#fff">เลือกระดับเพื่อเริ่ม</text>';
+$("pn7").innerHTML="👆 กดเลือกระดับด้านบน หรือลากแถบความลึก เพื่อดูค่าความดันและแรงพยุง";tb7();$("tb7").innerHTML+='<tr><td colspan="5">ยังไม่มีข้อมูล</td></tr>';m7("👆 ลองกดเลือกระดับทั้ง 4 ปุ่ม และลากแถบความลึก แล้วสังเกตค่า P บน/ล่าง กับ ΔP");
+
+const subS='<svg viewBox="0 0 150 80" width="80"><rect x="72" y="4" width="4" height="16" fill="#495057"/><rect x="58" y="18" width="34" height="16" rx="5" fill="#fab005" stroke="#e67700" stroke-width="2"/><ellipse cx="75" cy="50" rx="62" ry="22" fill="#ffd43b" stroke="#e67700" stroke-width="3"/><circle cx="45" cy="48" r="8" fill="#a5d8ff" stroke="#495057" stroke-width="3"/><circle cx="75" cy="48" r="8" fill="#a5d8ff" stroke="#495057" stroke-width="3"/><path d="M137 50 l12 -10 v20z" fill="#e67700"/></svg>';
+const gauge=(l,v,mx,u)=>`${l}<div style="height:60px;width:22px;margin:3px auto;border:2px solid #fff;border-radius:3px;position:relative;overflow:hidden"><i style="position:absolute;bottom:0;left:0;right:0;height:${v/mx*100}%;background:#ffd43b"></i></div>${v} ${u}`;
+const D8={p:{n:"🐡 ปลาปักเป้า",e:"🐡",sc:15,main:["u","d","s"],S:{
+u:["⬆️ เคลื่อนที่ขึ้น","u",5.6,5.2,0,1,"เพิ่มแก๊สเข้าถุงลม → ปริมาตรตัว V ใหญ่ขึ้น (มวลแทบไม่เปลี่ยน) ปริมาตรส่วนที่จมจึงมากขึ้น","V = 480 + 80 = 560 cm³<br>F<sub>B</sub> = ρVg = 5.6 N &gt; W = 5.2 N → ΣF = <b>+0.4 N</b> (ขึ้น)","ถุงลม 80 cm³"],
+d:["⬇️ เคลื่อนที่ลง","d",4.8,5.2,0,1,"ปล่อยแก๊สออกจากถุงลม → V เล็กลง แรงพยุงลดลง","V = 480 + 0 = 480 cm³<br>F<sub>B</sub> = ρVg = 4.8 N &lt; W = 5.2 N → ΣF = <b>−0.4 N</b> (ลง)","ถุงลม 0 cm³"],
+s:["⏸️ อยู่กับที่","s",5.2,5.2,0,1,"ปรับปริมาณแก๊สให้พอดี (ยิ่งลึก ความดันมาก ถุงลมหด ต้องเติมแก๊ส)","V = 480 + 40 = 520 cm³<br>F<sub>B</sub> = ρVg = 5.2 N = W → ΣF = <b>0</b>","ถุงลม 40 cm³"],
+fu:["🪽 ตีครีบดันขึ้น","u",5.2,5.2,0.4,1,"หมายเหตุ: ครีบอก/ครีบหลังโบกดันน้ำลง ได้แรง T ขึ้น (ปริมาตรไม่เปลี่ยน)","F<sub>B</sub> + T &gt; W<br>ΣF = 5.2 + 0.4 − 5.2 = <b>+0.4 N</b>","แรงจากครีบ T = 0.4 N"],
+fd:["🪽 ตีครีบดันลง","d",5.2,5.2,-0.4,1,"หมายเหตุ: ครีบดันน้ำขึ้น ได้แรง T ชี้ลง","F<sub>B</sub> &lt; W + T<br>ΣF = 5.2 − 5.2 − 0.4 = <b>−0.4 N</b>","แรงจากครีบ T = 0.4 N (ลง)"],
+w:["🫧 พองด้วยน้ำ","s",7.2,7.2,0,1.35,"หมายเหตุ: ตกใจ → กลืนน้ำ 200 cm³ ตัวใหญ่ขึ้นเพื่อขู่ศัตรู แต่น้ำที่กลืนก็มีน้ำหนัก","V↑ 200 cm³ → F<sub>B</sub> = 7.2 N · m↑ 200 g → W = 7.2 N<br>ΣF = 7.2 − 7.2 = <b>0</b> → <b>ลอย/จมไม่เปลี่ยน</b>","กลืนน้ำ +200 cm³"],
+a:["💨 พองด้วยอากาศ","u",7.2,5.2,0,1.35,"หมายเหตุ: ถ้าถูกจับพ้นน้ำจะสูดอากาศ V↑ แต่มวลเพิ่มน้อยมาก","V↑ 200 cm³ → F<sub>B</sub> = 7.2 N · W = 5.2 N<br>ΣF = 7.2 − 5.2 = <b>+2.0 N</b> → <b>ลอยขึ้น</b>","อากาศ +200 cm³"]}},
+m:{n:"🛥️ เรือดำน้ำ",e:subS,sc:10,main:["u","d","s"],S:{
+u:["⬆️ เคลื่อนที่ขึ้น","u",10,9,0,1,"อัดอากาศไล่น้ำออกจากถังบัลลาสต์ → มวลลด (V ตัวเรือเท่าเดิม)","W = (900 + 0) g × 10 = 9.0 N<br>F<sub>B</sub> = ρVg = 10.0 N &gt; W → ΣF = <b>+1.0 N</b>","น้ำในถัง"],
+d:["⬇️ เคลื่อนที่ลง","d",10,11,0,1,"เปิดรับน้ำเข้าถังบัลลาสต์ → มวลเพิ่ม (V เท่าเดิม)","W = (900 + 200) g × 10 = 11.0 N<br>F<sub>B</sub> = 10.0 N &lt; W → ΣF = <b>−1.0 N</b>","น้ำในถัง"],
+s:["⏸️ อยู่กับที่","s",10,10,0,1,"ปรับน้ำในถังให้พอดี","W = (900 + 100) g × 10 = 10.0 N<br>F<sub>B</sub> = 10.0 N = W → ΣF = <b>0</b>","น้ำในถัง"]}}};
+const WT={u:0,s:100,d:200};let ch8=null,Y8={u:25,s:110,d:190};
+Object.keys(D8).forEach(k=>{const b=document.createElement("button");b.className="go b";b.textContent=D8[k].n;b.onclick=()=>pick8(k);$("tb8").appendChild(b)});
+function pick8(k){ch8=k;const c=D8[k];[...$("tb8").children].forEach((b,i)=>b.className="go "+(Object.keys(D8)[i]==k?"":"b"));
+const ex=Object.keys(c.S).filter(q=>!c.main.includes(q));$("bs8").innerHTML=c.main.map(q=>`<button class="go b" data-q="${q}">${c.S[q][0]}</button>`).join("")+(ex.length?'<span style="width:100%;font-size:.85rem;margin-top:4px">📝 <b>หมายเหตุ: กลไกอื่น ๆ</b></span>'+ex.map(q=>`<button class="go off" data-q="${q}">${c.S[q][0]}</button>`).join(""):"");
+$("bs8").querySelectorAll("button[data-q]").forEach(b=>b.onclick=()=>st8(b.dataset.q));
+$("c8").innerHTML=c.e;$("c8").style.fontSize=k=="m"?"1rem":"3.4rem";$("c8").style.top="110px";$("in8").innerHTML="";fbd(0,0,0,1);$("pn8").innerHTML="เลือกสถานการณ์เพื่อดูว่าทำอย่างไร และสมการเป็นอย่างไร";
+$("msg8").innerHTML=`✅ เลือก ${c.n} · 👉 กดสถานการณ์ด้านล่าง (ขึ้น / ลง / อยู่กับที่)${k=="p"?" แล้วดูหมายเหตุกลไกอื่นด้านล่าง":""}`;beep(520)}
+function fbd(FB,W,T,sc){let o='<text x="4" y="14" font-size="9" fill="currentColor">แผนภาพแรง (N)</text><circle cx="60" cy="140" r="4" fill="currentColor"/>';
+const ar=(x,L,d,c,l)=>L<=0?"":`<line x1="${x}" y1="140" x2="${x}" y2="${140-d*L}" stroke="${c}" stroke-width="4"/><polygon points="${x-6},${140-d*L} ${x+6},${140-d*L} ${x},${140-d*(L+9)}" fill="${c}" transform="rotate(0)"/><text x="${x+8}" y="${140-d*L/1.5}" font-size="10" fill="${c}" font-weight="700">${l}</text>`;
+o+=ar(40,FB*sc,1,"#e03131","F_B "+FB.toFixed(1)).replace(/(<polygon points=")([^"]*)/,(m,a,b)=>m);
+o+=ar(40,W*sc,-1,"#7048e8","W "+W.toFixed(1));
+if(T)o+=ar(90,Math.abs(T)*sc+4,T>0?1:-1,"#2b8a3e","T "+Math.abs(T));
+$("f8").innerHTML=o}
+function st8(q){const c=D8[ch8],v=c.S[q];beep(440);const[nm,pos,FB,W,T,z,how,eq,ind]=v,y=Y8[pos];
+$("c8").style.top=y+"px";$("c8").style.fontSize=ch8=="m"?(z>1?"1rem":"1rem"):(3.4*z)+"rem";
+$("in8").innerHTML=ch8=="m"?gauge("น้ำในถัง",WT[pos],200,"g"):ind.startsWith("ถุงลม")?`<div style="margin:0 auto;border-radius:50%;background:#e9ecef;width:${10+parseInt(ind.match(/\d+/)[0])*.4}px;height:${10+parseInt(ind.match(/\d+/)[0])*.4}px"></div>${ind}`:ind;
+fbd(FB,W,T,c.sc);
+$("pn8").innerHTML=`<b>${c.n} · ${nm}</b><br>🛠️ <b>ทำอย่างไร:</b> ${how}<br>📐 <b>สมการ:</b><br>${eq}`;
+setTimeout(()=>{melody(pos=="u"?[440,660]:pos=="d"?[660,440]:[550,550]);say(pos=="u"?"ขึ้น: ต้องให้แรงขึ้นมากกว่าแรงลง!":pos=="d"?"ลง: แรงลงต้องมากกว่า!":"นิ่ง: แรงสองฝั่งเท่ากัน!")},1000)}
+$("sum").innerHTML="<tr><th>วัสดุ</th><th>D (g/cm³)</th><th>เทียบน้ำ</th></tr>"+[["💧 น้ำ",1,""],...O.map(o=>[o.e+" "+o.n,o.d,""])].sort((a,b)=>a[1]-b[1]).map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td><td>${x[1]<1?"ลอย":x[1]==1?"—":"จม"}</td></tr>`).join("");
+</script></body></html>
