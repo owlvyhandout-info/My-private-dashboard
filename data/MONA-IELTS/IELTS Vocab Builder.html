@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IELTS Vocab Builder</title>
+<style>
+:root{--bg:#faf8f4;--card:#fff;--ink:#222;--mut:#777;--acc:#1f6f5c;--acc2:#e7f2ee;--bd:#e3ded4;--bad:#b3392f;--good:#1f7a43;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17191a;--card:#212425;--ink:#ece8e0;--mut:#9a9a94;--acc:#5cc2a6;--acc2:#1f3a33;--bd:#33383a;--bad:#ef8a80;--good:#6fd093}}
+:root[data-theme="dark"]{--bg:#17191a;--card:#212425;--ink:#ece8e0;--mut:#9a9a94;--acc:#5cc2a6;--acc2:#1f3a33;--bd:#33383a;--bad:#ef8a80;--good:#6fd093}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Georgia,"Times New Roman",serif}
+main{max-width:720px;margin:0 auto;padding:16px}
+h1{font-size:1.5rem;margin:8px 0 12px}
+nav{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:6px 0;z-index:2}
+nav button{flex:none;font:inherit;font-size:.9rem;padding:8px 12px;border:1px solid var(--bd);background:var(--card);color:var(--ink);border-radius:20px;cursor:pointer}
+nav button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:10px}
+input,textarea{width:100%;font:inherit;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--ink);margin-bottom:8px}
+button.p{font:inherit;padding:10px 16px;border:0;border-radius:8px;background:var(--acc);color:#fff;cursor:pointer}
+button.p:disabled{opacity:.5}
+button.g{font:inherit;font-size:.85rem;padding:4px 10px;border:1px solid var(--bd);border-radius:6px;background:none;color:var(--mut);cursor:pointer}
+.w{font-weight:bold;font-size:1.1rem}.d{color:var(--mut);font-size:.95rem}.row{display:flex;justify-content:space-between;gap:8px;align-items:start}
+.badge{background:var(--acc2);color:var(--acc);border-radius:10px;padding:2px 9px;font-size:.8rem;white-space:nowrap}
+.opt{display:block;width:100%;text-align:left;font:inherit;padding:12px;margin-bottom:8px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--ink);cursor:pointer}
+.opt.ok{border-color:var(--good);background:var(--acc2)}.opt.no{border-color:var(--bad)}
+.msg{color:var(--mut);font-size:.9rem;margin:6px 0}
+#art p{margin:0 0 12px}#art mark{background:var(--acc2);color:var(--acc);padding:0 3px;border-radius:3px;font-weight:bold}
+.sort{display:flex;gap:6px;margin-bottom:10px}
+</style>
+</head>
+<body>
+<main>
+<h1>📚 IELTS Vocab Builder</h1>
+<nav id="nav"></nav>
+<div id="view"></div>
+<p class="msg" id="status"></p>
+</main>
+<script>
+(function(){
+var words=[],tab='add',db=null,docRef=null,sample=null,cloud=false,busy=false;
+var LS='ielts_vocab_v1';
+var $=function(i){return document.getElementById(i)};
+var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+var tabs=[['add','Add'],['list','All words'],['usage','By usage'],['quiz','Quiz'],['read','Reading']];
+
+function loadLocal(){try{var r=localStorage.getItem(LS);return r?JSON.parse(r):[]}catch(e){return []}}
+function save(){
+  try{localStorage.setItem(LS,JSON.stringify(words))}catch(e){}
+  if(docRef){docRef.set({words:words}).catch(function(){setStatus('Could not sync to cloud; saved on this device only.')})}
+}
+function setStatus(t){$('status').textContent=t||''}
+
+function nav(){
+  $('nav').innerHTML=tabs.map(function(t){return '<button data-t="'+t[0]+'" class="'+(tab===t[0]?'on':'')+'">'+t[1]+'</button>'}).join('');
+  $('nav').querySelectorAll('button').forEach(function(b){b.onclick=function(){tab=b.dataset.t;quizState=null;render()}});
+}
+function render(){nav();({add:vAdd,list:function(){vList(false)},usage:function(){vList(true)},quiz:vQuiz,read:vRead})[tab]()}
+
+/* ADD */
+function vAdd(){
+  $('view').innerHTML='<div class="card"><input id="nw" placeholder="Word or phrase, e.g. mitigate" autocomplete="off" autocapitalize="off">'+
+  '<textarea id="nd" rows="2" placeholder="Definition (leave empty to let AI write it)"></textarea>'+
+  '<button class="p" id="addb">+ Add word</button><div class="msg" id="am"></div></div>'+
+  '<p class="msg">'+words.length+' word(s) saved. '+(cloud?'Synced to your account.':'Saved on this device only.')+'</p>';
+  $('addb').onclick=addWord;
+  $('nw').onkeydown=function(e){if(e.key==='Enter')addWord()};
+}
+function speak(t){
+  if(!('speechSynthesis' in window)){setStatus('This browser does not support speech.');return}
+  var vs=speechSynthesis.getVoices();
+  var u=new SpeechSynthesisUtterance(t);u.lang='en-GB';u.rate=.85;
+  var v=vs.filter(function(v){return v.lang&&v.lang.replace('_','-').indexOf('en-GB')===0})[0]||vs.filter(function(v){return v.lang&&v.lang.indexOf('en')===0})[0];
+  if(v)u.voice=v;
+  speechSynthesis.cancel();speechSynthesis.speak(u);
+}
+function getInfo(w){return sample.json('You are an IELTS vocabulary tutor. For the word/phrase "'+w+'" reply ONLY JSON: {"ipa":"British IPA between slashes","pos":"part of speech abbreviation e.g. v., n., adj.","definition":"one short simple English sentence","example":"one short example sentence","synonyms":["3-4 synonyms"],"collocations":[{"phrase":"common collocation","use":"when or in what context to use it, one short English sentence","use_th":"same explanation in Thai, short"}]} Give 3-4 collocations, each for a different context (e.g. formal writing, speaking, academic topics, negative situations).')}
+function detail(x){
+  var h='<div class="w">'+esc(x.word)+(x.ipa?' <span class="d">'+esc(x.ipa)+'</span>':'')+(x.pos?' <span class="badge">'+esc(x.pos)+'</span>':'')+' <button class="g" data-s="'+esc(x.word)+'" aria-label="Play pronunciation">🔊</button></div><div class="d">'+esc(x.def)+'</div>'+(x.ex?'<div class="d"><i>'+esc(x.ex)+'</i></div>':'');
+  if(x.syn&&x.syn.length)h+='<div class="d" style="margin-top:6px"><b>Synonyms:</b> '+x.syn.map(esc).join(', ')+'</div>';
+  if(x.col&&x.col.length)h+='<div class="d" style="margin-top:6px"><b>Collocations:</b></div><ul style="margin:2px 0 0;padding-left:18px">'+x.col.map(function(c){return '<li class="d"><b>'+esc(c.phrase)+'</b> — '+esc(c.use||'')+(c.use_th?' <span>('+esc(c.use_th)+')</span>':'')+'</li>'}).join('')+'</ul>';
+  return h;
+}
+async function addWord(){
+  var w=$('nw').value.trim(),d=$('nd').value.trim(),m=$('am');
+  if(!w)return;
+  if(words.some(function(x){return x.word.toLowerCase()===w.toLowerCase()})){m.textContent='Already in your list.';return}
+  var info={};
+  if(!d&&!sample){m.textContent='Please type a definition (AI is unavailable here).';return}
+  if(sample){
+    $('addb').disabled=true;m.textContent='Asking AI for details…';
+    try{info=await getInfo(w)}catch(e){info={};if(!d){m.textContent='AI failed. Please type a definition.';$('addb').disabled=false;return}}
+  }
+  words.unshift({word:w,def:d||info.definition||'',ex:info.example||'',ipa:info.ipa||'',pos:info.pos||'',syn:info.synonyms||[],col:info.collocations||[],uses:0,added:Date.now()});
+  save();vAdd();$('am').textContent='Added "'+w+'" ✓';
+}
+
+/* LIST */
+function vList(byUse){
+  var arr=words.slice();
+  if(byUse)arr.sort(function(a,b){return b.uses-a.uses||a.word.localeCompare(b.word)});
+  var h='';
+  if(byUse)h+='<p class="msg">Usage = times a word appeared in quizzes, articles, or was tapped “+1 used”.</p>';
+  if(!arr.length)h+='<p class="msg">No words yet. Add some first.</p>';
+  arr.forEach(function(x){
+    var i=words.indexOf(x);
+    h+='<div class="card"><div class="row"><div>'+detail(x)+
+    '</div><span class="badge">'+x.uses+'×</span></div><div style="margin-top:8px;display:flex;gap:6px">'+(sample&&!(x.col&&x.col.length)?'<button class="g" data-e="'+i+'">✨ Fill details</button>':'')+'<button class="g" data-u="'+i+'">+1 used</button><button class="g" data-x="'+i+'">Delete</button></div></div>';
+  });
+  $('view').innerHTML=h;
+  $('view').querySelectorAll('[data-e]').forEach(function(b){b.onclick=async function(){var w=words[+b.dataset.e];b.disabled=true;b.textContent='…';try{var r=await getInfo(w.word);w.ipa=r.ipa||'';w.pos=r.pos||'';w.syn=r.synonyms||[];w.col=r.collocations||[];if(!w.ex)w.ex=r.example||'';save();render()}catch(e){b.textContent='Failed, retry';b.disabled=false}}});
+  $('view').querySelectorAll('[data-u]').forEach(function(b){b.onclick=function(){words[+b.dataset.u].uses++;save();render()}});
+  $('view').querySelectorAll('[data-x]').forEach(function(b){b.onclick=function(){var w=words[+b.dataset.x];if(confirm('Delete "'+w.word+'"?')){words.splice(+b.dataset.x,1);save();render()}}});
+}
+
+/* QUIZ */
+var quizState=null;
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function vQuiz(){
+  if(words.length<4){$('view').innerHTML='<p class="msg">Add at least 4 words to start the quiz ('+words.length+' so far).</p>';return}
+  var q=words[Math.floor(Math.random()*words.length)];
+  var wrong=shuffle(words.filter(function(x){return x!==q&&x.def!==q.def})).slice(0,3);
+  if(wrong.length<3){$('view').innerHTML='<p class="msg">Need 4 words with different definitions.</p>';return}
+  var opts=shuffle(wrong.concat([q]));
+  var sc=quizState?quizState.sc:0,n=quizState?quizState.n:0;
+  quizState={q:q,sc:sc,n:n,done:false};
+  $('view').innerHTML='<p class="msg">Score: '+sc+' / '+n+'</p><div class="card"><div class="d">What does this mean?</div><div class="w" style="font-size:1.6rem">'+esc(q.word)+' <button class="g" data-s="'+esc(q.word)+'" aria-label="Play pronunciation">🔊</button></div></div>'+
+  opts.map(function(o,i){return '<button class="opt" data-i="'+i+'">'+esc(o.def)+'</button>'}).join('')+'<div id="nx"></div>';
+  $('view').querySelectorAll('.opt').forEach(function(b){b.onclick=function(){
+    if(quizState.done)return;quizState.done=true;quizState.n++;
+    var pick=opts[+b.dataset.i],ok=pick===q;if(ok)quizState.sc++;
+    q.uses++;save();
+    $('view').querySelectorAll('.opt').forEach(function(x){var o=opts[+x.dataset.i];if(o===q)x.classList.add('ok');else if(x===b)x.classList.add('no')});
+    $('nx').innerHTML='<p class="msg">'+(ok?'✅ Correct!':'❌ Not quite.')+'</p><button class="p" id="nb">Next →</button>';
+    $('nb').onclick=vQuiz;
+  }});
+}
+
+/* READING */
+function vRead(){
+  if(!sample){$('view').innerHTML='<p class="msg">AI articles need to be opened while signed in to claude.ai.</p>';return}
+  if(words.length<3){$('view').innerHTML='<p class="msg">Add at least 3 words to generate an article.</p>';return}
+  $('view').innerHTML='<div class="card"><p class="msg">Writes a ~180-word IELTS-style passage using several of your words (least-used first).</p><button class="p" id="gb">Generate article</button></div><div id="art"></div>';
+  $('gb').onclick=genArticle;
+}
+async function genArticle(){
+  if(busy)return;busy=true;$('gb').disabled=true;
+  var pick=words.slice().sort(function(a,b){return a.uses-b.uses||Math.random()-.5}).slice(0,6);
+  $('art').innerHTML='<p class="msg">Writing…</p>';
+  try{
+    var r=await sample('Write a ~180-word IELTS Academic Reading style passage (a title, then 2-3 paragraphs) on an interesting topic. Naturally use ALL of these words/phrases exactly as written (you may only inflect verbs lightly): '+pick.map(function(p){return p.word}).join(', ')+'. Plain text only, first line is the title, no markdown.');
+    var lines=r.text.trim().split(/\n+/);var title=lines.shift().replace(/^#+\s*/,'');
+    var html='<div class="card"><h2 style="margin-top:0">'+esc(title)+'</h2>'+lines.map(function(l){
+      var s=esc(l);pick.forEach(function(p){var re=new RegExp('\\b('+esc(p.word).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\w*)','gi');s=s.replace(re,'<mark>$1</mark>')});return '<p>'+s+'</p>'}).join('')+'</div>'+
+      '<p class="msg">Highlighted: '+pick.map(function(p){return esc(p.word)}).join(', ')+'</p>';
+    $('art').innerHTML=html;
+    pick.forEach(function(p){p.uses++});save();
+  }catch(e){$('art').innerHTML='<p class="msg">Could not generate: '+esc(e&&e.message||'error')+'</p>'}
+  busy=false;$('gb').disabled=false;
+}
+
+/* INIT */
+words=loadLocal();render();
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-s]');if(b)speak(b.dataset.s)});
+if('speechSynthesis' in window)speechSynthesis.getVoices();
+(async function(){
+  try{
+    if(!window.claude||!claude.use)return;
+    sample=await claude.use('sample');
+    var user=await claude.use('user');db=await claude.use('db');
+    if(db&&user&&user.id){
+      var id=await user.id();
+      docRef=db.collection('data/users/'+id).doc('vocab');
+      var snap=await docRef.get();
+      if(snap.exists&&snap.data().words){
+        var remote=snap.data().words,seen={};
+        remote.forEach(function(w){seen[w.word.toLowerCase()]=1});
+        words=remote.concat(words.filter(function(w){return !seen[w.word.toLowerCase()]}));
+      }
+      cloud=true;save();
+    }
+    render();
+  }catch(e){}
+})();
+})();
+</script>
+</body>
+</html>
