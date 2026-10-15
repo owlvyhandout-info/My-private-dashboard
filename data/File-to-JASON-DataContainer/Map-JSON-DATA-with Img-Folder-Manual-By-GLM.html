@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Owlvy FlexMapper — คู่มือฉบับสมบูรณ์ v1.0 By GLM 15-10-2569</title>
+<style>
+*{box-sizing:border-box;font-family:'Segoe UI',Tahoma,'Leelawadee UI',sans-serif}
+body{background:#eef2f7;margin:0;color:#1f2937;line-height:1.65}
+header{background:linear-gradient(135deg,#1e3a5f 0%,#0d9488 100%);color:#fff;padding:26px 18px 22px}
+.hwrap{max-width:1000px;margin:0 auto}
+header h1{margin:0;font-size:1.5rem}
+header p{margin:6px 0 0;opacity:.92;font-size:.9rem}
+.badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:3px 12px;font-size:.75rem;margin-right:6px;margin-top:10px}
+nav{position:sticky;top:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);z-index:50;overflow-x:auto;white-space:nowrap}
+.navwrap{max-width:1000px;margin:0 auto;padding:8px 12px}
+.tabbtn{border:0;background:transparent;border-radius:8px;padding:8px 14px;font-size:.88rem;font-weight:600;color:#475569;cursor:pointer;margin-right:4px}
+.tabbtn:hover{background:#f1f5f9}
+.tabbtn.active{background:#1e3a5f;color:#fff}
+main{max-width:1000px;margin:0 auto;padding:20px 14px 60px}
+section{display:none}
+#tab-overview{display:block}
+.card{background:#fff;border-radius:14px;padding:20px 22px;margin-bottom:16px;box-shadow:0 1px 5px rgba(15,23,42,.07)}
+h2{margin:0 0 4px;font-size:1.15rem;color:#1e3a5f}
+.sub2{color:#64748b;font-size:.85rem;margin:0 0 14px}
+h3{font-size:.98rem;color:#0f172a;margin:18px 0 8px}
+.tip{border-radius:10px;padding:10px 14px;font-size:.85rem;margin:10px 0;border-left:4px solid}
+.tip.info{background:#eff6ff;border-color:#3b82f6;color:#1e40af}
+.tip.warn{background:#fffbeb;border-color:#f59e0b;color:#92400e}
+.tip.danger{background:#fef2f2;border-color:#ef4444;color:#991b1b}
+.tip.ok{background:#f0fdf4;border-color:#22c55e;color:#166534}
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin:8px 0}
+th{background:#f1f5f9;text-align:left;padding:8px 10px;border:1px solid #e2e8f0}
+td{padding:8px 10px;border:1px solid #e2e8f0;vertical-align:top}
+.progress-wrap{background:#f1f5f9;border-radius:10px;padding:12px 16px;margin-bottom:14px}
+.progress-track{background:#e2e8f0;border-radius:8px;height:10px;overflow:hidden}
+.progress-fill{background:linear-gradient(90deg,#0d9488,#22c55e);height:100%;width:0%;transition:width .4s}
+.progress-label{font-size:.85rem;font-weight:600;color:#334155;margin-bottom:6px}
+.step{display:flex;gap:14px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:16px 18px;margin-bottom:12px;align-items:flex-start;transition:.3s}
+.step.done{background:#f0fdf4;border-color:#86efac}
+.stepnum{flex:0 0 40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#1e3a5f,#0d9488);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.step.done .stepnum{background:#22c55e}
+.stepbody{flex:1}
+.stepbody b{display:block;margin-bottom:4px;font-size:.95rem}
+.stepbody ul{margin:6px 0 0;padding-left:20px;font-size:.87rem;color:#334155}
+.stepbody ul li{margin:3px 0}
+.stepck{transform:scale(1.5);margin-top:8px;accent-color:#16a34a;cursor:pointer}
+.flow{display:flex;flex-direction:column;gap:0;margin:10px 0}
+.flowstep{display:flex;gap:12px;align-items:flex-start}
+.fnum{flex:0 0 32px;height:32px;border-radius:50%;background:#1e3a5f;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.fline{width:2px;flex:0 0 2px;background:#cbd5e1;min-height:20px;margin-left:15px}
+.fbody{padding-bottom:14px}
+.fbody b{font-size:.92rem}
+.fbody p{margin:2px 0 0;font-size:.85rem;color:#475569}
+.filelabel{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin:18px 0 6px}
+.fname{font-weight:700;font-size:.95rem;color:#0f172a;background:#e2e8f0;border-radius:8px;padding:4px 12px}
+.btn{border:0;border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:.83rem}
+.btn.copy{background:#16a34a;color:#fff}
+.btn.exp{background:#334155;color:#fff}
+.btn.flashed{background:#0d9488!important}
+.codebox{width:100%;background:#0f172a;color:#e2e8f0;border:0;border-radius:10px;padding:14px;font-family:Consolas,'Courier New',monospace;font-size:.74rem;line-height:1.5;resize:vertical;min-height:320px;max-height:420px;overflow:auto;white-space:pre;tab-size:2}
+.codebox.big{max-height:none;min-height:600px}
+.ladder{list-style:none;padding:0;margin:8px 0}
+.ladder li{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;margin-bottom:6px;font-size:.88rem}
+.ladder li b{flex:0 0 auto}
+.t1{background:#f0fdf4;border:1px solid #bbf7d0}.t2{background:#eff6ff;border:1px solid #bfdbfe}
+.t3{background:#fff7ed;border:1px solid #fed7aa}.t4{background:#f8fafc;border:1px solid #e2e8f0}
+.lno{flex:0 0 26px;height:26px;border-radius:50%;background:#1e3a5f;color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+details{background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:10px;overflow:hidden}
+summary{padding:13px 16px;font-weight:600;font-size:.92rem;cursor:pointer;color:#1e3a5f;background:#f8fafc}
+summary:hover{background:#f1f5f9}
+details .dinner{padding:6px 18px 14px;font-size:.88rem;color:#334155}
+.qbadge{padding:2px 10px;border-radius:10px;font-size:.73rem;font-weight:700;white-space:nowrap}
+.qg{background:#dcfce7;color:#166534}.qb{background:#dbeafe;color:#1e40af}
+.qo{background:#ffedd5;color:#9a3412}.qr{background:#fee2e2;color:#991b1b}
+.minitable{font-size:.8rem}
+.check-inline{color:#16a34a;font-weight:700}
+.resetbtn{background:#fee2e2;color:#991b1b;border:0;border-radius:8px;padding:6px 12px;font-size:.78rem;cursor:pointer;font-weight:600}
+footer{text-align:center;color:#94a3b8;font-size:.78rem;padding:20px}
+@media(max-width:600px){.step{flex-wrap:wrap}.codebox{font-size:.65rem}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <h1>🦉 Owlvy FlexMapper — คู่มือฉบับสมบูรณ์</h1>
+    <p>ระบบจับคู่รูปภาพกับข้อสอบ JSON อัตโนมัติ + รายงานตรวจสอบบนหน้าเว็บ</p>
+    <span class="badge">GAS แบบ Standalone</span><span class="badge">Deploy: Web App</span><span class="badge">เวอร์ชัน 1.0 (โค้ดตรงตามที่ทดสอบแล้ว)</span>
+  </div>
+</header>
+
+<nav><div class="navwrap">
+  <button class="tabbtn active" onclick="showTab('overview',this)">📖 ภาพรวม</button>
+  <button class="tabbtn" onclick="showTab('first',this)">🚀 ติดตั้งครั้งแรก</button>
+  <button class="tabbtn" onclick="showTab('daily',this)">🔁 ใช้งานประจำ</button>
+  <button class="tabbtn" onclick="showTab('code',this)">💻 โค้ดทั้งหมด</button>
+  <button class="tabbtn" onclick="showTab('sample',this)">🧪 ข้อมูลตัวอย่าง</button>
+  <button class="tabbtn" onclick="showTab('report',this)">📊 อ่านผลรายงาน</button>
+  <button class="tabbtn" onclick="showTab('faq',this)">🛠 แก้ปัญหา</button>
+</div></nav>
+
+<main>
+
+<!-- ================= TAB: OVERVIEW ================= -->
+<section id="tab-overview">
+  <div class="card">
+    <h2>ระบบนี้ทำอะไร?</h2>
+    <p class="sub2">ปัญหาเดิม: สร้างข้อสอบ JSON เสร็จ ต้องหารูปมาจับคู่ทีละข้อด้วยมือ — FlexMapper ทำแทนอัตโนมัติ พร้อมตรวจจับความผิดพลาดให้</p>
+    <ul>
+      <li>📥 วาง <b>ลิงก์โฟลเดอร์รูป</b> + <b>JSON ข้อสอบ</b> ในหน้าเว็บ</li>
+      <li>🔍 กด <b>Preview</b> → ดูแผนการจับคู่ + คำเตือนทุกจุดเสี่ยง <b>ก่อน</b>แก้ข้อมูลจริง</li>
+      <li>🚀 กด <b>ประมวลผลจริง</b> → ระบบเติมลิงก์รูปลง JSON ข้อที่เจอ ส่วนข้อที่ไม่เจอคง <code>""</code> ไว้ + รายงานสาเหตุท้ายโพสต์</li>
+      <li>📋 คัดลอก JSON ผลลัพธ์ไปใช้ต่อในระบบ</li>
+    </ul>
+
+    <h3>ลำดับการจับคู่ (Matching Ladder) — ทำงานจากบนลงล่าง ใช้ชั้นแรกที่สำเร็จ</h3>
+    <ul class="ladder">
+      <li class="t1"><span class="lno">1</span><b>id2 ตรงชื่อไฟล์</b> เช่น id2 = tophit-adm-material-0001 ↔ ไฟล์ tophit-adm-material-0001.jpg <span class="qbadge qg">แม่นที่สุด</span></li>
+      <li class="t2"><span class="lno">2</span><b>รหัส [[...]]</b> ใน title เช่น "...กราฟ [[ipst_p3_2558_0017]]" ↔ ไฟล์ ipst_p3_2558_0017.png</li>
+      <li class="t3"><span class="lno">3</span><b>เลขท้ายไฟล์ = id</b> เช่น ข้อ 9 ↔ ไฟล์ 9.jpg / 09.jpg / ข้อ 9.jpg (มีระบบกันจับผิดข้ามซีรีส์)</li>
+      <li class="t4"><span class="lno">4</span><b>URL เดิม</b> ที่มีอยู่แล้วใน q.image (fallback สุดท้าย)</li>
+    </ul>
+
+    <h3>GAS มีหลายแบบ — อันนี้คือแบบไหน? (จุดที่งงไปนิด)</h3>
+    <table>
+      <tr><th>มิติ</th><th>ทางเลือก</th><th>ที่ระบบนี้ใช้</th></tr>
+      <tr><td><b>ประเภทโปรเจกต์</b></td><td>Standalone (แยกอิสระ) / Bound (ผูกกับ Sheet, Doc, Form)</td><td>✔️ <b>Standalone</b> — สร้างจาก script.google.com โดยตรง ไม่ผูกกับอะไร</td></tr>
+      <tr><td><b>ประเภทการ Deploy</b></td><td>Web App / API Executable / Library / Add-on / Chat App</td><td>✔️ <b>Web App</b> — ได้ URL หน้าเว็บ (/exec) เปิดใช้งานได้เลย</td></tr>
+    </table>
+    <div class="tip danger">⚠️ <b>จุดพลาดยอดฮิต:</b> กดปุ่ม ▶ เรียกใช้ (Run) ในหน้าตัวแก้โค้ด = "ทดสอบว่าโค้ดไม่ Error" เท่านั้น <b>ไม่มีหน้าเว็บเด้งขึ้นมา</b> — ต้อง Deploy เป็น Web App แล้วเปิดผ่าน URL /exec เท่านั้น</div>
+
+    <h3>โครงสร้างรวม</h3>
+    <table class="minitable">
+      <tr><th>ส่วน</th><th>รายละเอียด</th></tr>
+      <tr><td>โปรเจกต์ GAS</td><td>มี 2 ไฟล์: <b>Code.gs</b> (เซิร์ฟเวอร์) + <b>Index.html</b> (หน้าเว็บ)</td></tr>
+      <tr><td>Google Drive</td><td>โฟลเดอร์รูปภาพ (แชร์ "ผู้ที่มีลิงก์–ผู้ชม") — แยกโฟลเดอร์ต่อซีรีส์ หรือรวมกันก็ได้</td></tr>
+      <tr><td>ข้อมูลนำเข้า</td><td>JSON ข้อสอบ (มี id2 กำกับทุกข้อ = แม่นสุด)</td></tr>
+      <tr><td>ผลลัพธ์</td><td>JSON ที่เติม image/imageUrl แล้ว + Report สรุปผลบนหน้าเว็บ</td></tr>
+    </table>
+
+    <div class="tip ok">✅ <b>TL;DR — ใช้งานประจำจริง ๆ มีแค่ 4 จังหวะ:</b> เตรียมรูป+JSON → เปิด URL /exec → วางของ กด Preview แก้ตาม Report → กดประมวลผลจริง คัดลอกผลลัพธ์</div>
+  </div>
+</section>
+
+<!-- ================= TAB: FIRST TIME ================= -->
+<section id="tab-first">
+  <div class="card">
+    <h2>🚀 ติดตั้งครั้งแรก — ทำตาม 9 ขั้น</h2>
+    <p class="sub2">ติ๊กเช็คบ็อกซ์ทุกครั้งที่ทำขั้นเสร็จ — ระบบจำสถานะไว้ให้ (เก็บในเบราว์เซอร์เครื่องนี้) ปิดเปิดใหม่ก็ไม่หาย</p>
+    <div class="progress-wrap">
+      <div class="progress-label" id="cktext">ความคืบหน้าการติดตั้ง: 0/9 ขั้น</div>
+      <div class="progress-track"><div class="progress-fill" id="ckbar"></div></div>
+      <button class="resetbtn" style="margin-top:10px" onclick="resetCk()">ล้างสถานะทั้งหมด</button>
+    </div>
+
+    <div class="step"><div class="stepnum">1</div><div class="stepbody">
+      <b>เตรียมโฟลเดอร์รูปภาพใน Google Drive</b>
+      <ul>
+        <li>สร้างโฟลเดอร์สำหรับรูปของซีรีส์ (แนะนำ <b>แยกโฟลเดอร์ต่อซีรีส์</b> — จับคู่ง่ายที่สุด; รวมหลายซีรีส์ก็ได้ ระบบกรองด้วย prefix ของ id2 ให้)</li>
+        <li>ตั้งชื่อไฟล์รูปตรงกับ <b>id2</b> ของแต่ละข้อ เช่น <code>tophit-adm-material-0001.jpg</code> … <code>-0015.jpg</code> (นามสกุล/ตัวพิมพ์ใหญ่เล็กไม่มีผล)</li>
+        <li>ถ้าโฟลเดอร์มีซีรีส์เดียว ใช้ชื่อเลขล้วนก็ได้ <code>1.jpg</code> … <code>15.jpg</code> (ระบบจะ mark เตือนให้ตรวจ)</li>
+        <li>⚠️ <b>คลิกขวาที่โฟลเดอร์ → แชร์ → การเข้าถึงทั่วไป: "ผู้ที่มีลิงก์ในไดรฟ์" บทบาท "ผู้ชม"</b> — ไม่งั้นรูปจะไม่แสดงในหน้าเว็บ</li>
+        <li>คัดลอกลิงก์โฟลเดอร์ไว้ (รูปแบบ https://drive.google.com/drive/folders/...)</li>
+      </ul>
+    </div><input type="checkbox" class="stepck" id="ck1" onchange="updCk()"></div>
+
+    <div class="step"><div class="stepnum">2</div><div class="stepbody">
+      <b>สร้างโปรเจกต์ GAS แบบ Standalone</b>
+      <ul>
+        <li>เปิด <a href="https://script.google.com" target="_blank">script.google.com</a> → กด <b>+ โปรเจกต์ใหม่</b></li>
+        <li>ตั้งชื่อ เช่น <code>Owlvy FlexMapper</code> (ชื่ออะไรก็ได้)</li>
+        <li>นี่คือโปรเจกต์ <b>แยก</b> ไม่เกี่ยวกับระบบเดิมทั้งหมด — ทำพังก็ลบทิ้งได้ไม่กระทบอย่างอื่น</li>
+      </ul>
+    </div><input type="checkbox" class="stepck" id="ck2" onchange="updCk()"></div>
+
+    <div class="step"><div class="stepnum">3</div><div class="stepbody">
+      <b>วางโค้ด Code.gs</b>
+      <ul>
+        <li>ในไฟล์ <code>Code.gs</code> ที่เปิดมาให้เอง → <b>ลบโค้ดตัวอย่างทั้งหมด</b></li>
+        <li>ไปแท็บ <b>💻 โค้ดทั้งหมด</b> ในคู่มือนี้ → กดปุ่ม <b>คัดลอก Code.gs</b> → วางลง</li>
+      </ul>
+    </div><input type="checkbox" class="stepck" id="ck3" onchange="updCk()"></div>
+
+    <div class="step"><div class="stepnum">4</div><div class="stepbody">
+      <b>สร้างไฟล์ Index.html</b>
+      <ul>
+        <li>กด <b>+ (เพิ่มไฟล์)</b> มุมซ้าย → เลือก <b>HTML</b></li>
+        <li>พิมพ์ชื่อว่า <code>Index</code> — <b>ตัวพิมพ์เล็กทั้งหมด ห้ามใส่ .html ต่อท้าย ห้ามตัวใหญ่</b> (โค้ด doGet อ้างชื่อไฟล์นี้เป๊ะ ๆ)</li>
+        <li>ลบเนื้อหาตัวอย่างทั้งหมด → กด <b>คัดลอก Index.html</b> จากคู่มือ → วาง</li>
+      </ul>
+    </div><input type="checkbox" class="stepck" id="ck4" onchange="updCk()"></div>
+
+    <div class="step"><div class="stepnum">5</div><div class="stepbody">
+      <b>บันทึก + ทดสอบรัน (ไม่บังคับ แต่แนะนำ)</b>
+      <ul>
+        <li>กด <b>Ctrl+S</b> บันทึกทุกไฟล์</li>
+        <li>เลือกฟังก์ชัน <code>doGet</code> ในแถบด้านบน → กด <b>▶ เรียกใช้</b></li>
+        <li>✅ ผลที่ถูกต้อง: Log ขึ้น "เรียกใช้เสร็จสิ้น" ไม่มี Error สีแดง</li>
+        <li>💡 จะไม่มีหน้าจอโผล่ — เพราะ Run แค่ทดสอบโค้ด (ดูแท็บภาพรวม)</li>
+      </ul>
+    </div><input type="checkbox" class="stepck" id="ck5" onchange="updCk()"></div>
+
+    <div class="step"><div class="stepnum">6</div><div class="stepbody">
+      <b>Deploy เป็น Web App</b>
+      <ul>
+        <li>มุมขวาบน: <b>ดีพลอย (Deploy)</b> → <b>การตั้งค่าการดีพลอยใหม่</b></li>
+        <li>กดไอคอน ⚙️ รูปเฟือง → เลือก <b>เว็บแอป (Web app)</b> ← ห้ามเลือกอย่างอื่น</li>
+        <li>ดำเนินการในฐานะ: <b>ฉัน</b> | ผู้ที่มีสิทธิ์เข้าถึง: <b>เฉพาะฉัน</b> (หรือตามที่ทีมใช้)</li>
+        <li>กด <b>ดีพลอย</b></li>
+      </ul>
+    </div><input type="checkbox" class="stepck" id="ck6" onchange="updCk()"></div>
+
+    <div class="step"><div class="stepnum">7</div><div class="stepbody">
+      <b>ให้สิทธิ์เข้าถึง Drive (ครั้งแรกครั้งเดียว)</b>
+      <ul>
+        <li>กด <b>ตรวจสอบสิทธิ์</b> → เลือกบัญชี Google</li>
+        <li>หน้า "Google ยังไม่ได้ยืนยันแอปนี้" → กด <b>ขั้นสูง</b> (ลิงก์เล็ก ๆ มุมซ้ายล่าง)</li>
+        <li>กด <b>ไปที่ Owlvy FlexMapper (ไม่ปลอดภัย)</b> → <b>อนุญาต</b></li>
+      </ul>
+      <div class="tip info" style="margin:8px 0 0">💡 ข้อความ "ไม่ปลอดภัย" เป็นคำเตือนมาตรฐานของ Google สำหรับสคริปต์ที่เขียนเองในบัญชีตัวเอง — โค้ดชุดนี้แค่อ่านรายชื่อไฟล์ในโฟลเดอร์ที่ระบุ</div>
+    </div><input type="checkbox" class="stepck" id="ck7" onchange="updCk()"></div>
+
+    <div class="step"><div class="stepnum">8</div><div class="stepbody">
+      <b>เปิดหน้าเว็บแอป</b>
+      <ul>
+        <li>หลัง Deploy สำเร็จ จะมีหน้าต่างแสดง <b>URL ที่ลงท้าย /exec</b> → คัดลอก</li>
+        <li>เปิดในแท็บใหม่ → ต้องเห็นหน้า <b>🦉 Owlvy FlexMapper</b> พร้อมช่องกรอก</li>
+        <li>📌 บุ๊กมาร์ก URL นี้เก็บไว้ — ใช้ URL เดิมตลอด (ยกเว้น Deploy ใหม่แบบสร้าง deployment ใหม่ทั้งชุด จะได้ URL ใหม่)</li>
+      </ul>
+    </div><input type="checkbox" class="stepck" id="ck8" onchange="updCk()"></div>
+
+    <div class="step"><div class="stepnum">9</div><div class="stepbody">
+      <b>ทดสอบระบบครบวงจร</b>
+      <ul>
+        <li>ใช้เครื่องมือ <b>ทดสอบลิงก์รูปเดี่ยว</b> ท้ายหน้าเว็บ: วางลิงก์ Drive ของรูป 1 ไฟล์ → รูปต้องแสดง (ยืนยันว่าสิทธิ์โฟลเดอร์ถูกต้อง)</li>
+        <li>วางลิงก์โฟลเดอร์ + <b>JSON ตัวอย่าง 3 ข้อ</b> (แท็บ 🧪 ข้อมูลตัวอย่าง) → กด <b>🔍 Preview</b></li>
+        <li>ตรวจว่าตารางแผน + Report แสดงถูกต้อง → เสร็จสิ้น พร้อมใช้งานจริง 🎉</li>
+      </ul>
+    </div><input type="checkbox" class="stepck" id="ck9" onchange="updCk()"></div>
+  </div>
+</section>
+
+<!-- ================= TAB: DAILY ================= -->
+<section id="tab-daily">
+  <div class="card">
+    <h2>🔁 การใช้งานหลังจากนั้น (ทบทวนได้เร็ว)</h2>
+    <p class="sub2">ติดตั้งเสร็จแล้ว — ทุกซีรีส์ถัดไปใช้แค่ลำดับนี้ ไม่ต้องแตะโค้ดอีกเลย</p>
+
+    <h3>เตรียมของก่อนเริ่ม (นอกระบบ)</h3>
+    <table>
+      <tr><th>รายการ</th><th>เงื่อนไข</th></tr>
+      <tr><td>🖼️ รูปภาพ</td><td>อัปโหลดในโฟลเดอร์ Drive ตั้งชื่อตรง id2 ทุกข้อที่มีรูป (ข้อไหนไม่มีรูปก็ได้ ระบบคง <code>""</code> + รายงานท้าย)</td></tr>
+      <tr><td>📋 JSON</td><td>จากเครื่องมือสร้างข้อสอบ / AI — ต้องมี id, id2, title, options, answer, hint ฯลฯ ตามโครงสร้างในแท็บข้อมูลตัวอย่าง</td></tr>
+    </table>
+
+    <h3>ลำดับการทำงานในหน้าเว็บ</h3>
+    <div class="flow">
+      <div class="flowstep"><div class="fnum">1</div><div class="fbody"><b>เปิด URL /exec</b><p>(บุ๊กมาร์กที่เก็บไว้ตอนติดตั้ง)</p></div></div><div class="fline"></div>
+      <div class="flowstep"><div class="fnum">2</div><div class="fbody"><b>วางลิงก์โฟลเดอร์รูป + วาง JSON</b><p>ช่องแรก = URL โฟลเดอร์ Drive, ช่องใหญ่ = JSON ทั้งก้อน</p></div></div><div class="fline"></div>
+      <div class="flowstep"><div class="fnum">3</div><div class="fbody"><b>กด 🔍 Preview (Dry-run)</b><p>ดูตารางแผนการจับคู่ + คำเตือนอัตโนมัติ 7 รายการ — ยังไม่แก้ข้อมูลใด ๆ</p></div></div><div class="fline"></div>
+      <div class="flowstep"><div class="fnum">4</div><div class="fbody"><b>แก้ไขตาม Report แล้ว Preview ซ้ำ</b><p>จุดแก้บ่อย: ชื่อไฟล์พิมพ์ผิด (ดูกลุ่ม "ไฟล์ที่ไม่ถูกใช้") / JSON ขาด id2 / เลขชนหลายไฟล์ → ทำซ้ำจน "ไม่พบรูป = 0"</p></div></div><div class="fline"></div>
+      <div class="flowstep"><div class="fnum">5</div><div class="fbody"><b>กด 🚀 ประมวลผลจริง</b><p>ระบบเติม image + imageUrl ลง JSON ข้อที่จับคู่สำเร็จ</p></div></div><div class="fline"></div>
+      <div class="flowstep"><div class="fnum">6</div><div class="fbody"><b>📋 คัดลอก JSON ผลลัพธ์ → นำไปใช้ต่อ</b><p>ปุ่มคัดลอกอยู่หัวกล่อง JSON ผลลัพธ์</p></div></div>
+    </div>
+
+    <h3>เช็คชื่อไฟล์รูป — รองรับ / ควรเลี่ยง</h3>
+    <table class="minitable">
+      <tr><th>✅ รองรับ</th><th>⚠️ ควรเลี่ยง</th></tr>
+      <tr><td><code>tophit-adm-material-0001.jpg</code> (ตรง id2 เป๊ะ — ดีสุด)<br><code>TOPHIT_ADM_MATERIAL_0001.PNG</code> (ตัวใหญ่/ขีดล่างก็จับได้)<br><code>1.jpg</code>, <code>01.jpg</code>, <code>q1.jpg</code>, <code>ข้อ 12.jpg</code> (เลขล้วน เฉพาะโฟลเดอร์ซีรีส์เดียว)</td><td>ไฟล์ซ้ำแบบ <code>1 (2).jpg</code> (เลขท้ายจริงคือ 2 → จับผิด/ขัดแย้ง)<br>เติมคำท้ายเลข เช่น <code>-0008-final-v2.jpg</code> (เลขท้ายจริงคือ 2)<br>ชื่อเดียวกันคนละนามสกุล (<code>1.jpg</code> + <code>1.png</code>)</td></tr>
+    </table>
+
+    <div class="tip warn">🔄 <b>ถ้าวันหนึ่งต้องแก้โค้ด:</b> แก้ในตัวแก้โค้ด → Save → <b>Deploy → จัดการการดีพลอย → ✏️ ดินสอ → Version: เวอร์ชันใหม่ → ดีพลอย</b> (URL /exec คงเดิม ไม่ต้องบุ๊กมาร์กใหม่) — หรือช่วงทดสอบใช้ URL /dev จาก Test deployments จะเห็นโค้ดล่าสุดทันที</div>
+    <div class="tip ok">✅ <b>สิ่งที่ไม่ต้องทำซ้ำ:</b> สร้างโปรเจกต์ / สร้างไฟล์ / ให้สิทธิ์ครั้งแรก / Deploy ครั้งแรก — ทำครั้งเดียวตลอดอายุระบบ</div>
+  </div>
+</section>
+
+<!-- ================= TAB: CODE ================= -->
+<section id="tab-code">
+  <div class="card">
+    <h2>💻 โค้ดทั้งหมด (ตรงตามเวอร์ชันที่ทดสอบแล้ว v1.0)</h2>
+    <p class="sub2">กดปุ่มคัดลอก → วางในไฟล์ที่ถูกต้องของโปรเจกต์ GAS — โค้ดในกล่องนี้คือฉบับจริงที่ Deploy ใช้งานได้แล้ว</p>
+
+    <div class="filelabel">
+      <span class="fname">📄 ไฟล์ที่ 1: Code.gs (เซิร์ฟเวอร์)</span>
+      <span>
+        <button class="btn exp" onclick="toggleBig('taGs',this)">➕ ขยายเต็มจอ</button>
+        <button class="btn copy" onclick="copyCode('taGs',this)">📋 คัดลอก Code.gs</button>
+      </span>
+    </div>
+<textarea id="taGs" class="codebox" spellcheck="false" readonly>/** ============================================================
+ * Owlvy FlexMapper — Standalone v1.0
+ * โปรเจกต์แยกจากระบบเดิม 100% (ไม่แก้ไฟล์เดิมแม้แต่บรรทัดเดียว)
+ * ไฟล์ที่ต้องมี: 1) Code.gs (ไฟล์นี้)  2) Index.html (ชื่อไฟล์ต้องเป๊ะ)
+ * ลำดับการจับคู่: id2 → [[...]] → เลขท้ายไฟล์ (= id) → URL เดิม
+ * ============================================================ */
+
+var APP_VERSION_ = "FlexMapper-v1.0";
+
+function doGet() {
+  return HtmlService.createHtmlOutputFromFile('Index')
+      .setTitle('Owlvy FlexMapper — จับคู่รูปภาพอัจฉริยะ')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+// ============================================================
+// [A] ตัวช่วยพื้นฐาน Drive
+// ============================================================
+function extractFolderId(input) {
+  if (!input) return "";
+  var cleanId = input.trim();
+  if (cleanId.indexOf("folders/") !== -1) {
+    cleanId = cleanId.split("folders/")[1].split("?")[0].split("/")[0];
+  }
+  return cleanId;
+}
+
+function extractFileId_(input) {
+  if (!input) return "";
+  var cleanId = input.trim();
+  if (cleanId.indexOf("/file/d/") !== -1) {
+    cleanId = cleanId.split("/file/d/")[1].split("/")[0].split("?")[0];
+  } else if (cleanId.indexOf("id=") !== -1) {
+    cleanId = cleanId.split("id=")[1].split("&")[0];
+  }
+  return cleanId;
+}
+
+function convertDriveLinkToDirectLink(input) {
+  try {
+    var fileId = extractFileId_(input);
+    if (!fileId) return { status: "error", message: "ไม่พบ File ID ที่ถูกต้อง" };
+    var file;
+    try { file = DriveApp.getFileById(fileId); }
+    catch (e) { return { status: "error", message: "เข้าถึงไฟล์ไม่ได้ ตรวจว่าลิงก์ถูกต้องและมีสิทธิ์ (" + e.toString() + ")" }; }
+    var directLink = "https://lh3.googleusercontent.com/d/" + fileId;
+    return { status: "success", fileId: fileId, fileName: file.getName(), directLink: directLink };
+  } catch (error) {
+    return { status: "error", message: "เกิดข้อผิดพลาด: " + error.toString() };
+  }
+}
+
+// ============================================================
+// [B] JSON Cleaner — อัปเกรดจุดที่เคยเตือน: คำพูดโค้งในข้อความ
+//     จะถูก escape เป็น \u201C/\u201D แทนการแปลงดิบ ๆ ที่ทำ JSON พัง
+// ============================================================
+function smartCurlyQuotes_(str) {
+  var out = '', inString = false, esc = false;
+  for (var i = 0; i < str.length; i++) {
+    var ch = str.charAt(i);
+    if (esc) { out += ch; esc = false; continue; }
+    if (ch === '\\') { out += ch; esc = true; continue; }
+    if (ch === '"') { inString = !inString; out += ch; continue; }
+    if (ch === '\u201C' || ch === '\u201D') {
+      if (!inString) { inString = true; out += '"'; }
+      else {
+        var k = i + 1;
+        while (k < str.length && /\s/.test(str.charAt(k))) k++;
+        var next = k < str.length ? str.charAt(k) : '';
+        if (next === ',' || next === '}' || next === ']' || next === ':') { inString = false; out += '"'; }
+        else { out += (ch === '\u201C') ? '\\u201C' : '\\u201D'; }
+      }
+      continue;
+    }
+    out += ch;
+  }
+  return out;
+}
+
+function fixRawNewlinesInStrings_(str) {
+  var result = '', inString = false, escapeNext = false;
+  for (var i = 0; i < str.length; i++) {
+    var ch = str.charAt(i);
+    if (escapeNext) { result += ch; escapeNext = false; continue; }
+    if (ch === '\\') { result += ch; escapeNext = true; continue; }
+    if (ch === '"') { inString = !inString; result += ch; continue; }
+    if (inString && (ch === '\n' || ch === '\r')) {
+      result += (ch === '\n') ? '\\n' : '\\r';
+      continue;
+    }
+    result += ch;
+  }
+  return result;
+}
+
+function cleanAndParseJson_(jsonStringInput) {
+  if (!jsonStringInput || String(jsonStringInput).trim() === "") {
+    throw new Error("ไม่มีข้อมูล JSON ให้ประมวลผล กรุณาวางข้อมูลก่อนเริ่ม");
+  }
+  var raw = String(jsonStringInput).trim();
+
+  var firstBracket = raw.search(/[\[{]/);
+  var lastBracket = Math.max(raw.lastIndexOf(']'), raw.lastIndexOf('}'));
+  var cleanJson;
+  if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
+    cleanJson = raw.substring(firstBracket, lastBracket + 1);
+  } else {
+    cleanJson = raw.replace(/^```json\s*/i, '').replace(/```$/, '').trim();
+  }
+
+  cleanJson = smartCurlyQuotes_(cleanJson);
+  cleanJson = fixRawNewlinesInStrings_(cleanJson);
+  cleanJson = cleanJson.replace(/,(\s*[\]}])/g, '$1');
+  cleanJson = cleanJson.replace(/\\\\|\\["\\\/bfnrtu]|\\/g, function (match) {
+    return match.length === 2 ? match : '\\\\';
+  });
+
+  try {
+    return JSON.parse(cleanJson);
+  } catch (e) {
+    var contextMsg = "", snippet = "";
+    var m = e.message.match(/position (\d+)/);
+    if (m) {
+      var pos = parseInt(m[1], 10);
+      snippet = cleanJson.substring(Math.max(0, pos - 60), Math.min(cleanJson.length, pos + 60));
+      contextMsg = "\n\nบริเวณที่มีปัญหา:\n..." + snippet + "...";
+    }
+    throw new Error("รูปแบบ JSON ไม่ถูกต้อง: " + e.message + contextMsg);
+  }
+}
+
+// ============================================================
+// [C] Flexible Image Index & Matcher (ตรรกะหลัก)
+// ============================================================
+function stripExtension_(fileName) {
+  var dot = fileName.lastIndexOf(".");
+  return (dot > 0) ? fileName.substring(0, dot) : fileName;
+}
+
+function normalizeImgName_(name) {
+  var s = String(name == null ? "" : name).toLowerCase().trim();
+  s = s.replace(/[\s_]+/g, "-").replace(/-+/g, "-").replace(/^-+|-+$/g, "");
+  return s;
+}
+
+function extractNumberTokens_(base) {
+  var m = String(base).match(/\d+/g);
+  return m ? m : [];
+}
+
+function extractRefCodes_(text) {
+  var out = [];
+  if (!text) return out;
+  var re = /\[\s*\[\s*([^\]]+?)\s*\]\s*\]/g, m, s = String(text);
+  while ((m = re.exec(s)) !== null) {
+    var code = normalizeImgName_(m[1]);
+    if (code) out.push(code);
+  }
+  return out;
+}
+
+function namesOf_(arr) {
+  var out = [];
+  for (var i = 0; i < arr.length; i++) out.push(arr[i].fileName);
+  return out.join(", ");
+}
+
+function buildFlexibleImageIndex_(folderId) {
+  var cleanFolderId = extractFolderId(folderId);
+  if (!cleanFolderId) throw new Error("ไม่พบ Folder ID ที่ถูกต้อง");
+  var folder;
+  try { folder = DriveApp.getFolderById(cleanFolderId); }
+  catch (e) { throw new Error("เข้าถึงโฟลเดอร์ไม่ได้ ตรวจ URL/สิทธิ์ (" + e.toString() + ")"); }
+
+  var files = folder.getFiles(), images = [], nameIndex = {}, collisions = [];
+  while (files.hasNext()) {
+    var f = files.next();
+    if (String(f.getMimeType()).indexOf("image/") === -1) continue;
+    var fileName = f.getName();
+    var norm = normalizeImgName_(stripExtension_(fileName));
+    var entry = {
+      fileName: fileName, norm: norm,
+      url: "https://lh3.googleusercontent.com/d/" + f.getId(),
+      numbers: extractNumberTokens_(stripExtension_(fileName))
+    };
+    images.push(entry);
+    if (nameIndex[norm]) collisions.push(norm);
+    else nameIndex[norm] = entry.url;
+  }
+  return { images: images, nameIndex: nameIndex, collisions: collisions };
+}
+
+function matchImageForQuestion_(q, index, idx) {
+  var qId = (q.id !== undefined && q.id !== null && String(q.id).trim() !== "") ? String(q.id) : String(index + 1);
+  var idNum = parseInt(qId, 10);
+  var id2 = q.id2 ? normalizeImgName_(q.id2) : "";
+  var prefix = id2 ? id2.replace(/-?\d+$/, "") : "";
+  var trail = [];
+
+  // TIER 1: id2 ตรงชื่อไฟล์ (หลัง normalize)
+  if (id2) {
+    if (idx.nameIndex[id2]) return { url: idx.nameIndex[id2], tier: "id2-exact", file: id2 };
+    trail.push('id2 "' + id2 + '" ไม่ตรงชื่อไฟล์ใดในโฟลเดอร์');
+  } else {
+    trail.push("ไม่มี id2 ใน JSON");
+  }
+
+  // TIER 2: รหัส [[...]] ใน title (สำรองลง content)
+  var refCodes = extractRefCodes_(q.title);
+  if (refCodes.length === 0 && q.content) refCodes = extractRefCodes_(q.content);
+  for (var i = 0; i < refCodes.length; i++) {
+    var rc = refCodes[i];
+    if (idx.nameIndex[rc]) return { url: idx.nameIndex[rc], tier: "refCode", file: rc };
+    for (var k = 0; k < idx.images.length; k++) {
+      if (idx.images[k].norm.indexOf(rc) === 0)
+        return { url: idx.images[k].url, tier: "refCode-prefix", file: idx.images[k].norm };
+    }
+  }
+  if (refCodes.length > 0) trail.push("รหัส [[...]] (" + refCodes.join(", ") + ") ไม่ตรงไฟล์ใด");
+
+  // TIER 3: เลขท้ายไฟล์ = id  (พร้อมระบบกันจับผิดข้ามซีรีส์)
+  if (!isNaN(idNum)) {
+    var plain = [];
+    for (var j = 0; j < idx.images.length; j++) {
+      var nums = idx.images[j].numbers;
+      if (nums.length && parseInt(nums[nums.length - 1], 10) === idNum) plain.push(idx.images[j]);
+    }
+    if (plain.length > 0 && prefix) {
+      var anyPrefixFile = false;
+      for (var p = 0; p < idx.images.length; p++) {
+        if (idx.images[p].norm.indexOf(prefix) === 0) { anyPrefixFile = true; break; }
+      }
+      var narrowed = [];
+      for (var n = 0; n < plain.length; n++) {
+        if (plain[n].norm.indexOf(prefix) === 0) narrowed.push(plain[n]);
+      }
+      if (narrowed.length === 1)
+        return { url: narrowed[0].url, tier: "numeric-id2prefix", file: narrowed[0].norm };
+      if (narrowed.length > 1) {
+        trail.push("เลข " + idNum + " ตรงหลายไฟล์ในซีรีส์เดียวกัน: " + namesOf_(narrowed));
+        return { url: "", tier: "ambiguous", file: "", trail: trail };
+      }
+      if (anyPrefixFile) {
+        trail.push('ไฟล์เลข ' + idNum + ' มีอยู่แต่ไม่ขึ้นต้นด้วย "' + prefix + '" (น่าจะเป็นซีรีส์อื่น) จึงไม่จับคู่ให้');
+        return { url: "", tier: "none", file: "", trail: trail };
+      }
+      // โฟลเดอร์ไม่มีไฟล์ซีรีส์นี้เลย → ยอมรับการตั้งชื่อเลขล้วน (แต่ mark เตือน)
+    }
+    if (plain.length === 1) return { url: plain[0].url, tier: "numeric", file: plain[0].norm };
+    if (plain.length > 1) {
+      trail.push("เลข " + idNum + " ตรงหลายไฟล์ ระบบไม่กล้าจับคู่เอง: " + namesOf_(plain));
+      return { url: "", tier: "ambiguous", file: "", trail: trail };
+    }
+  }
+
+  // TIER 4: URL เดิมใน JSON
+  if (q.image && String(q.image).indexOf("http") === 0)
+    return { url: String(q.image), tier: "existing-image", file: "(URL เดิมใน JSON)" };
+
+  trail.push("ไม่พบไฟล์ที่เลขท้าย = " + idNum);
+  return { url: "", tier: "none", file: "", trail: trail };
+}
+
+// ============================================================
+// [D] Core Engine (dryRun = true คือ Preview ไม่แก้ข้อมูล)
+// ============================================================
+function runFlexibleMappingCore_(folderId, jsonString, dryRun) {
+  try {
+    if (!jsonString || String(jsonString).trim() === "")
+      return { status: "error", message: "กรุณาวางข้อมูล JSON ก่อนเริ่มประมวลผล" };
+
+    var idx = buildFlexibleImageIndex_(folderId);
+    var quizData = cleanAndParseJson_(jsonString);
+    var questions = Array.isArray(quizData) ? quizData : (quizData.questions || quizData.data || []);
+    if (!Array.isArray(questions) || questions.length === 0)
+      return { status: "error", message: "โครงสร้าง JSON ไม่ถูกต้อง หรือไม่พบรายการคำถาม" };
+
+    var rows = [], usedByFile = {}, mappedCount = 0;
+    questions.forEach(function (q, index) {
+      var res = matchImageForQuestion_(q, index, idx);
+      var row = {
+        id: (q.id !== undefined && q.id !== null) ? q.id : (index + 1),
+        id2: q.id2 ? q.id2 : "(ไม่มี)",
+        tier: res.tier, matchedFile: res.file || "", url: res.url || "",
+        reason: (res.trail && res.trail.length) ? res.trail.join(" | ") : ""
+      };
+      rows.push(row);
+      if (res.url) {
+        mappedCount++;
+        if (!dryRun) { q.image = res.url; q.imageUrl = res.url; }
+        if (res.file) {
+          if (!usedByFile[res.file]) usedByFile[res.file] = [];
+          usedByFile[res.file].push(row.id);
+        }
+      } else if (!dryRun) {
+        q.image = "";   // ← ตามสเปก: จับคู่ไม่เจอ คง "" ไว้ + รายงานท้าย
+      }
+    });
+
+    // ---------- คำเตือนอัตโนมัติ ----------
+    var warnings = [];
+    var noId2 = rows.filter(function (r) { return r.id2 === "(ไม่มี)"; }).map(function (r) { return r.id; });
+    if (noId2.length) warnings.push("⚠️ ข้อที่ไม่มี id2: " + noId2.join(", "));
+    if (idx.collisions.length) warnings.push("⚠️ ชื่อไฟล์ (หลัง normalize) ซ้ำกัน: " + idx.collisions.join(", "));
+    var noNum = idx.images.filter(function (im) { return im.numbers.length === 0; }).map(function (im) { return im.fileName; });
+    if (noNum.length) warnings.push("ℹ️ ไฟล์ไม่มีตัวเลขในชื่อ (ต้องพึ่ง id2 หรือ [[...]]): " + noNum.join(", "));
+    var amb = rows.filter(function (r) { return r.tier === "ambiguous"; });
+    if (amb.length) warnings.push("⚠️ เลขตรงหลายไฟล์ ระบบไม่จับคู่เอง: id " + amb.map(function (r) { return r.id; }).join(", "));
+    var weak = rows.filter(function (r) { return r.tier === "numeric" || r.tier === "numeric-id2prefix" || r.tier === "existing-image"; });
+    if (weak.length) warnings.push("ℹ️ ข้อที่จับด้วยวิธีรอง ควรตรวจซ้ำ: id " + weak.map(function (r) { return r.id; }).join(", "));
+    var usedKeys = {};
+    for (var key in usedByFile) usedKeys[key] = true;
+    var unused = [];
+    for (var u = 0; u < idx.images.length; u++) {
+      if (!usedKeys[idx.images[u].norm]) unused.push(idx.images[u].fileName);
+    }
+    if (unused.length) warnings.push("📁 ไฟล์ที่ไม่ถูกใช้ (" + unused.length + " ไฟล์ — ตรวจชื่อพิมพ์ผิด): " + unused.join(", "));
+    var dupAssign = [];
+    for (var dKey in usedByFile) {
+      if (usedByFile[dKey].length > 1) dupAssign.push(dKey + " → ข้อ " + usedByFile[dKey].join(", "));
+    }
+    if (dupAssign.length) warnings.push("⚠️ ไฟล์เดียวถูกใช้หลายข้อ: " + dupAssign.join(" ; "));
+
+    var unmatchedRows = rows.filter(function (r) { return !r.url; });
+    var report = {
+      mode: dryRun ? "PREVIEW (ไม่แก้ไขข้อมูล)" : "FINAL (เติมลิงก์รูปลง JSON แล้ว)",
+      totalQuestions: questions.length, totalImages: idx.images.length,
+      matchedCount: mappedCount, unmatchedCount: unmatchedRows.length,
+      unmatched: unmatchedRows.map(function (r) { return { id: r.id, id2: r.id2, reason: r.reason }; }),
+      warnings: warnings
+    };
+
+    Logger.log("🎯 [" + APP_VERSION_ + "] REPORT >>>\n" + JSON.stringify(report, null, 2));
+
+    if (dryRun) return { status: "preview", report: report, plan: rows };
+
+    return {
+      status: "success",
+      resultJson: JSON.stringify(quizData, null, 2),
+      questionsData: questions,
+      mappedCount: mappedCount, totalDriveImages: idx.images.length,
+      report: report
+    };
+  } catch (error) {
+    return { status: "error", message: "เกิดข้อผิดพลาดฝั่งเซิร์ฟเวอร์: " + error.toString() };
+  }
+}
+
+// ============================================================
+// [E] จุดเรียกจากหน้าเว็บ
+// ============================================================
+function processQuizAndImagesFlexible(folderId, jsonString) {
+  return runFlexibleMappingCore_(folderId, jsonString, false);
+}
+function previewImageMapping(folderId, jsonString) {
+  return runFlexibleMappingCore_(folderId, jsonString, true);
+}</textarea>
+
+    <div class="filelabel">
+      <span class="fname">📄 ไฟล์ที่ 2: Index.html (หน้าเว็บ — สร้างไฟล์ HTML ชื่อ "Index" ตัวพิมพ์เล็กทั้งหมด)</span>
+      <span>
+        <button class="btn exp" onclick="toggleBig('taHtml',this)">➕ ขยายเต็มจอ</button>
+        <button class="btn copy" onclick="copyCode('taHtml',this)">📋 คัดลอก Index.html</button>
+      </span>
+    </div>
+<textarea id="taHtml" class="codebox" spellcheck="false" readonly><!DOCTYPE html>
+<html lang="th">
+<head>
+<base target="_top">
+<meta charset="UTF-8">
+<title>Owlvy FlexMapper</title>
+<style>
+*{box-sizing:border-box;font-family:'Segoe UI',Tahoma,sans-serif}
+body{background:#f0f4f8;margin:0;padding:16px;color:#1f2937}
+.wrap{max-width:960px;margin:0 auto}
+h1{font-size:1.4rem;margin:8px 0 2px}
+.ver{font-size:.7rem;background:#1e3a5f;color:#fff;padding:2px 8px;border-radius:10px;vertical-align:middle}
+.sub{color:#64748b;font-size:.85rem;margin-bottom:14px}
+.card{background:#fff;border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+label{display:block;font-weight:600;font-size:.85rem;margin:10px 0 4px}
+input[type=text],textarea{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:8px;font-size:.9rem}
+textarea{font-family:Consolas,monospace;font-size:.8rem;resize:vertical}
+.btns{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:8px;padding:10px 16px;font-weight:600;cursor:pointer;font-size:.9rem}
+.btn.final{background:#16a34a;color:#fff}
+.btn.preview{background:#2563eb;color:#fff}
+.btn.ghost{background:#e2e8f0;color:#334155}
+.status{display:none;border-radius:8px;padding:10px;margin-top:12px;font-size:.9rem;white-space:pre-wrap}
+.status.ok{display:block;background:#dcfce7;color:#166534}
+.status.err{display:block;background:#fee2e2;color:#991b1b}
+.status.info{display:block;background:#dbeafe;color:#1e40af}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.c{background:#f8fafc;border-radius:10px;padding:10px;text-align:center;border:1px solid #e2e8f0}
+.c.ok{background:#f0fdf4;border-color:#bbf7d0}.c.bad{background:#fef2f2;border-color:#fecaca}
+.cv{font-size:1.5rem;font-weight:700}.cl{font-size:.75rem;color:#64748b}
+h3{margin:14px 0 8px;font-size:1rem}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#f1f5f9;text-align:left;padding:8px;border:1px solid #e2e8f0}
+td{padding:8px;border:1px solid #e2e8f0;vertical-align:top}
+td.why{color:#991b1b}
+.badge{padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:600;white-space:nowrap}
+.badge.g{background:#dcfce7;color:#166534}.badge.b{background:#dbeafe;color:#1e40af}
+.badge.o{background:#ffedd5;color:#9a3412}.badge.r{background:#fee2e2;color:#991b1b}
+.mono{font-family:Consolas,monospace;font-size:.78rem;word-break:break-all}
+.wide{width:100%;margin-top:4px}
+.thumb{width:60px;height:60px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0}
+#warnBox{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;margin-bottom:12px}
+#warnBox ul{margin:6px 0 0;padding-left:20px;font-size:.85rem}
+#unmatchBox,#planBox,#jsonBox{background:#fff;border-radius:10px;padding:12px 16px;margin-bottom:12px;border:1px solid #e2e8f0}
+pre{background:#0f172a;color:#e2e8f0;padding:12px;border-radius:8px;overflow:auto;max-height:400px;font-size:.75rem}
+.mini{border:0;background:#2563eb;color:#fff;border-radius:6px;padding:4px 10px;font-size:.75rem;cursor:pointer}
+.errtxt{color:#991b1b}
+.note{font-size:.75rem;color:#92400e;margin-top:6px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🦉 Owlvy FlexMapper <span class="ver">v1.0</span></h1>
+  <p class="sub">ลำดับการจับคู่: ① id2 ตรงชื่อไฟล์ → ② รหัส [[...]] → ③ เลขท้ายไฟล์ = id (กันข้ามซีรีส์) → ④ URL เดิม</p>
+
+  <div class="card">
+    <label>📁 โฟลเดอร์รูปภาพ (URL หรือ Folder ID)</label>
+    <input type="text" id="folderId" placeholder="https://drive.google.com/drive/folders/...">
+    <label>📋 ข้อมูล JSON (วางทั้งก้อน)</label>
+    <textarea id="jsonInput" rows="12" placeholder='[ { "id": 1, "id2": "tophit-...", ... }, ... ]'></textarea>
+    <div class="btns">
+      <button class="btn preview" onclick="runPreview()">🔍 Preview (Dry-run)</button>
+      <button class="btn final" onclick="runFinal()">🚀 ประมวลผลจริง</button>
+      <button class="btn ghost" onclick="clearAll()">🧹 ล้างผลลัพธ์</button>
+    </div>
+    <div id="status" class="status"></div>
+  </div>
+
+  <div id="summaryBox" class="hidden"></div>
+  <div id="warnBox" class="hidden"></div>
+  <div id="unmatchBox" class="hidden"></div>
+  <div id="planBox" class="hidden"></div>
+  <div id="jsonBox" class="hidden"></div>
+
+  <div class="card">
+    <h3>🧪 เครื่องมือทดสอบลิงก์รูปเดี่ยว</h3>
+    <input type="text" id="singleLink" placeholder="วางลิงก์ Drive ของรูป 1 ไฟล์ เช่น https://drive.google.com/file/d/...">
+    <div class="btns"><button class="btn preview" onclick="testLink()">แปลง &amp; ทดสอบแสดงรูป</button></div>
+    <div id="testResult" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<script>
+var lastResultJson = "";
+
+function esc(s){var d=document.createElement('div');d.textContent=(s===null||s===undefined)?'':String(s);return d.innerHTML;}
+
+function setStatus(msg,cls){var st=document.getElementById('status');st.className='status '+(cls||'info');st.innerHTML=msg;st.style.display=msg?'block':'none';}
+
+function hideResults(){['summaryBox','warnBox','unmatchBox','planBox','jsonBox'].forEach(function(id){var el=document.getElementById(id);el.classList.add('hidden');el.innerHTML='';});}
+
+function tierInfo(t){
+  switch(t){
+    case 'id2-exact':return['ระดับ 1 • ตรง id2','g'];
+    case 'refCode':return['ระดับ 2 • รหัส [[..]]','b'];
+    case 'refCode-prefix':return['ระดับ 2 • รหัสขึ้นต้น','b'];
+    case 'numeric-id2prefix':return['ระดับ 3 • เลขท้าย+ซีรีส์','o'];
+    case 'numeric':return['ระดับ 3 • เลขท้าย (ควรตรวจ)','o'];
+    case 'existing-image':return['ระดับ 4 • URL เดิม','o'];
+    case 'ambiguous':return['⚠️ ขัดแย้ง','r'];
+    default:return['❌ ไม่พบ','r'];
+  }
+}
+
+function card(icon,label,val,cls){return '<div class="c '+cls+'"><div class="ci">'+icon+'</div><div class="cv">'+val+'</div><div class="cl">'+label+'</div></div>';}
+
+function renderSummary(r){
+  var h='<div class="grid">';
+  h+=card('📄','คำถามทั้งหมด',r.totalQuestions,'');
+  h+=card('🖼️','รูปในโฟลเดอร์',r.totalImages,'');
+  h+=card('✅','จับคู่สำเร็จ',r.matchedCount,'ok');
+  h+=card('❌','ไม่พบรูป',r.unmatchedCount,r.unmatchedCount?'bad':'ok');
+  h+='</div>';
+  var box=document.getElementById('summaryBox');
+  box.innerHTML='<h3>📊 สรุปผล — '+esc(r.mode)+'</h3>'+h;
+  box.classList.remove('hidden');
+}
+
+function renderWarnings(ws){
+  if(!ws||!ws.length)return;
+  var h='<h3>⚠️ คำเตือนอัตโนมัติ ('+ws.length+')</h3><ul>';
+  ws.forEach(function(w){h+='<li>'+esc(w)+'</li>';});
+  h+='</ul>';
+  var box=document.getElementById('warnBox');
+  box.innerHTML=h;box.classList.remove('hidden');
+}
+
+function renderUnmatched(list){
+  if(!list||!list.length)return;
+  var h='<h3>❌ ข้อที่จับคู่ไม่สำเร็จ ('+list.length+') — รูปใน JSON จะถูกคงเป็น ""</h3><table><tr><th>id</th><th>id2</th><th>เหตุผล</th></tr>';
+  list.forEach(function(u){h+='<tr><td>'+esc(u.id)+'</td><td class="mono">'+esc(u.id2)+'</td><td class="why">'+esc(u.reason)+'</td></tr>';});
+  h+='</table>';
+  var box=document.getElementById('unmatchBox');
+  box.innerHTML=h;box.classList.remove('hidden');
+}
+
+function renderPlan(rows){
+  if(!rows||!rows.length)return;
+  var h='<h3>🗺️ แผนการจับคู่ทีละข้อ</h3><table><tr><th>id</th><th>id2</th><th>วิธีจับ</th><th>ไฟล์ที่จับได้</th><th>รูป</th></tr>';
+  rows.forEach(function(r){
+    var ti=tierInfo(r.tier);
+    var thumb='—';
+    if(r.url){thumb='<img class="thumb" src="'+esc(r.url)+(r.url.indexOf('googleusercontent')!==-1?'=s80':'')+'">';}
+    h+='<tr><td>'+esc(r.id)+'</td><td class="mono">'+esc(r.id2)+'</td>'
+      +'<td><span class="badge '+ti[1]+'">'+ti[0]+'</span></td>'
+      +'<td class="mono">'+esc(r.matchedFile||'—')+'</td>'
+      +'<td>'+thumb+'</td></tr>';
+  });
+  h+='</table>';
+  var box=document.getElementById('planBox');
+  box.innerHTML=h;box.classList.remove('hidden');
+}
+
+function renderJson(jsonStr){
+  lastResultJson=jsonStr||"";
+  var box=document.getElementById('jsonBox');
+  box.innerHTML='<h3>📄 JSON ผลลัพธ์ <button class="mini" onclick="copyJson()">📋 คัดลอกทั้งหมด</button></h3><pre>'+esc(lastResultJson)+'</pre>';
+  box.classList.remove('hidden');
+}
+
+function copyJson(){
+  var ta=document.createElement('textarea');
+  ta.value=lastResultJson;document.body.appendChild(ta);
+  ta.select();try{document.execCommand('copy');setStatus('📋 คัดลอก JSON เรียบร้อย','ok');}
+  catch(e){setStatus('คัดลอกอัตโนมัติไม่สำเร็จ กรุณาเลือกข้อความและก็อปเอง','err');}
+  document.body.removeChild(ta);
+}
+
+function getInputs(){
+  var f=document.getElementById('folderId').value.trim();
+  var j=document.getElementById('jsonInput').value;
+  if(!f){setStatus('❌ กรุณากรอก URL หรือ ID ของโฟลเดอร์รูปภาพ','err');return null;}
+  if(!j.trim()){setStatus('❌ กรุณาวางข้อมูล JSON','err');return null;}
+  return {f:f,j:j};
+}
+
+function runPreview(){
+  var inp=getInputs();if(!inp)return;
+  hideResults();setStatus('⏳ กำลังสแกนโฟลเดอร์และวางแผนจับคู่ (ไม่แก้ข้อมูล)...','info');
+  google.script.run.withSuccessHandler(onPreview).withFailureHandler(onFail).previewImageMapping(inp.f,inp.j);
+}
+
+function runFinal(){
+  var inp=getInputs();if(!inp)return;
+  hideResults();setStatus('⏳ กำลังประมวลผลและเติมลิงก์รูปลง JSON...','info');
+  google.script.run.withSuccessHandler(onFinal).withFailureHandler(onFail).processQuizAndImagesFlexible(inp.f,inp.j);
+}
+
+function onPreview(res){
+  if(res.status==='error'){onFail({message:res.message});return;}
+  renderSummary(res.report);renderWarnings(res.report.warnings);
+  renderUnmatched(res.report.unmatched);renderPlan(res.plan);
+  setStatus('✅ Preview เสร็จสิ้น — ยังไม่มีการแก้ไขข้อมูลใด ๆ','ok');
+}
+
+function onFinal(res){
+  if(res.status==='error'){onFail({message:res.message});return;}
+  renderSummary(res.report);renderWarnings(res.report.warnings);
+  renderUnmatched(res.report.unmatched);renderPlan(res.plan);
+  renderJson(res.resultJson);
+  setStatus('🚀 ประมวลผลเสร็จ — จับคู่สำเร็จ '+res.report.matchedCount+'/'+res.report.totalQuestions+' ข้อ','ok');
+}
+
+function onFail(err){
+  var m=(err&&err.message)?err.message:String(err);
+  setStatus('❌ '+esc(m).replace(/\n/g,'<br>'),'err');
+}
+
+function testLink(){
+  var v=document.getElementById('singleLink').value.trim();
+  var out=document.getElementById('testResult');
+  if(!v){out.innerHTML='<span class="errtxt">กรุณาวางลิงก์ก่อน</span>';return;}
+  out.innerHTML='⏳ กำลังตรวจสอบ...';
+  google.script.run.withSuccessHandler(function(r){
+    if(r.status==='error'){out.innerHTML='<span class="errtxt">❌ '+esc(r.message)+'</span>';return;}
+    out.innerHTML='✅ <b>'+esc(r.fileName)+'</b><br>Direct Link: <input class="mono wide" readonly value="'+esc(r.directLink)+'">'
+      +'<br><img src="'+esc(r.directLink)+'=s200" style="margin-top:8px;border-radius:8px">'
+      +'<div class="note">ถ้ารูปไม่แสดง = ไฟล์ยังไม่ได้แชร์ "ผู้ที่มีลิงก์ (Viewer)"</div>';
+  }).withFailureHandler(function(e){out.innerHTML='<span class="errtxt">❌ '+esc(e.message)+'</span>';})
+    .convertDriveLinkToDirectLink(v);
+}
+
+function clearAll(){
+  hideResults();setStatus('','');
+  document.getElementById('testResult').innerHTML='';
+}
+</script>
+</body>
+</html></textarea>
+    <div class="tip info">💡 โค้ด Index.html ด้านบนเป็น "ต้นฉบับอ้างอิง" — เมื่อกดคัดลอกแล้ววางใน GAS จะได้โค้ดครบถ้วนถูกต้องทุกบรรทัดเหมือนเวอร์ชันที่ Deploy ใช้งานอยู่</div>
+  </div>
+</section>
+
+<!-- ================= TAB: SAMPLE ================= -->
+<section id="tab-sample">
+  <div class="card">
+    <h2>🧪 ข้อมูลตัวอย่าง 3 ข้อ (สำหรับทดสอบ Preview)</h2>
+    <p class="sub2">ตัดมาจากชุดเต็ม tophit-adm-material-0001–0015 (วิชาวิทยาศาสตร์ ป.6 → ม.1 หัวข้อวัสดุและการเลือกวัสดุ) — ครอบคลุม 3 รูปแบบ: สถานการณ์ / กราฟ / ตาราง</p>
+
+    <h3>โครงสร้างฟิลด์</h3>
+    <table class="minitable">
+      <tr><th>ฟิลด์</th><th>ความหมาย / ข้อบังคับ</th></tr>
+      <tr><td><code>id</code></td><td>เลขข้อ (1, 2, 3…) — ใช้จับคู่ระดับ 3 (เลขท้ายไฟล์)</td></tr>
+      <tr><td><code>id2</code></td><td>รหัสประจำข้อ เช่น tophit-adm-material-0001 — <b>ใช้จับคู่ระดับ 1 (แม่นสุด) ควรมีทุกข้อ</b></td></tr>
+      <tr><td><code>domain, content, tag_content, tag_skill</code></td><td>จำแนกเนื้อหา/ทักษะ</td></tr>
+      <tr><td><code>tag_misconception</code></td><td>ความเข้าใจผิดที่พบบ่อยของข้อนี้</td></tr>
+      <tr><td><code>title</code></td><td>คำถามเต็ม — อาจฝังรหัส <code>[[...]]</code> สำหรับจับคู่ระดับ 2</td></tr>
+      <tr><td><code>image</code></td><td>ใส่ <code>""</code> ไว้เสมอ — ให้ระบบเติม URL เอง</td></tr>
+      <tr><td><code>options</code>, <code>answer</code></td><td>ตัวเลือก 4 ข้อ (รูปแบบ "1. ①…"), คำตอบเป็น array เลขข้อ</td></tr>
+      <tr><td><code>hint</code>, <code>explanation_correct</code>, <code>explanation_incorrect</code></td><td>คำใบ้ / เฉลยอธิบาย (ใช้ \n ขึ้นบรรทัด)</td></tr>
+    </table>
+
+    <div class="filelabel">
+      <span class="fname">📄 ข้อมูลตัวอย่าง: sample-3q.json</span>
+      <button class="btn copy" onclick="copyCode('taJson',this)">📋 คัดลอก JSON ตัวอย่าง</button>
+    </div>
+<textarea id="taJson" class="codebox" spellcheck="false" readonly>[
+  {
+    "id": 1,
+    "id2": "tophit-adm-material-0001",
+    "domain": "CHEM",
+    "content": "วัสดุและการเลือกวัสดุ",
+    "tag_content": "adm_material",
+    "tag_skill": "L2",
+    "tag_misconception": "คิดว่าโลหะร้อนกว่า/เย็นกว่าวัสดุอื่นเสมอเพราะอุณหภูมิสูงกว่า ทั้งที่จริงความรู้สึกต่างกันเพราะโลหะนำความร้อนได้ดีกว่า / คิดว่าพลาสติกไม่เกี่ยวกับความร้อน ทั้งที่จริงทำหน้าที่เป็นฉนวนความร้อน",
+    "title": "น้องปอสังเกตแม่หุงข้าว เห็นว่าตัวหม้อทำจากอะลูมิเนียม แต่หูจับหม้อหุ้มด้วยพลาสติกหนาพิเศษ ข้อใดอธิบายเหตุผลการเลือกวัสดุแต่ละส่วนได้ถูกต้อง",
+    "image": "",
+    "options": [
+      "1. ①ตัวหม้อเป็นอะลูมิเนียมเพราะนำความร้อนได้ไม่ดี น้ำจึงเดือดไม่เร็วเกินไป",
+      "2. ②ตัวหม้อเป็นอะลูมิเนียมเพราะนำความร้อนได้ดี ถ่ายเทความร้อนสู่อาหารได้เร็ว และหูจับหุ้มพลาสติกเพราะนำความร้อนได้ไม่ดี จับได้โดยไม่ร้อนมือ",
+      "3. ③หูจับหุ้มพลาสติกเพราะนำความร้อนได้ดี ทำให้มืออุ่นสบายเวลาจับ",
+      "4. ④ตัวหม้อและหูจับควรทำจากวัสดุชนิดเดียวกันเพื่อความแข็งแรง"
+    ],
+    "answer": [2],
+    "hint": "เดินตามเส้นทางของความร้อน จากไฟผ่านตัวหม้อเข้าสู่อาหาร ต้องใช้ตัวนำความร้อน ส่วนหูจับที่มือจับต้องเป็นฉนวนความร้อน แล้วตรวจแต่ละตัวเลือกว่ากล่าวถึงสมบัติกลับกันหรือไม่",
+    "explanation_correct": "เฉลยแต่ละตัวเลือกและคำอธิบาย\n1. ตัวหม้ออะลูมิเนียมนำความร้อนไม่ดี\nเฉลย: ไม่ถูกต้อง — อะลูมิเนียมนำความร้อนได้ดี จึงถ่ายเทความร้อนสู่อาหารเร็ว\n\n2. ตัวหม้อนำความร้อนดี หูจับพลาสติกนำความร้อนไม่ดี\nเฉลย: ถูกต้อง — ตรงหน้าที่การใช้งานจริง โลหะหุงเร็ว พลาสติกเป็นฉนวนกันมือไหม้\n\n3. หูจับพลาสติกเพราะนำความร้อนดี\nเฉลย: ไม่ถูกต้อง — ถ้านำความร้อนดีมือจะถูกไหม้\n\n4. ทั้งสองส่วนควรใช้วัสดุเดียวกัน\nเฉลย: ไม่ถูกต้อง — หน้าที่ต่างกัน วัสดุต้องต่างกัน",
+    "explanation_incorrect": ""
+  },
+  {
+    "id": 4,
+    "id2": "tophit-adm-material-0004",
+    "domain": "CHEM",
+    "content": "วัสดุและการเลือกวัสดุ",
+    "tag_content": "adm_material",
+    "tag_skill": "L2",
+    "tag_misconception": "อ่านกราฟแท่งผิดเพราะไม่เทียบสเกลแกนตั้ง / เข้าใจว่าการดูดซึมน้ำได้มากหรือน้อยไม่เกี่ยวกับการเลือกใช้งานจริง",
+    "title": "ครูให้นักเรียนตัดวัสดุ 4 ชนิดขนาดเท่ากัน จุ่มในน้ำ 5 นาที แล้วชั่งน้ำหนักน้ำที่วัสดุดูดซึมได้ ผลการทดลองแสดงเป็นกราฟแท่ง [[tophit-adm-material-0004-chart]] จากกราฟ ข้อสรุปข้อใดถูกต้อง",
+    "image": "",
+    "options": [
+      "1. ①พลาสติกดูดซึมน้ำได้มากที่สุด",
+      "2. ②กระดาษทิชชูดูดซึมน้ำได้มากที่สุด จึงเหมาะนำไปผลิตสิ่งของที่ใช้ซับน้ำ เช่น ทิชชูเช็ดมือ",
+      "3. ③ผ้าไนลอนดูดซึมน้ำได้ดีกว่าผ้าฝ้าย จึงควรใช้ทำผ้าเช็ดตัว",
+      "4. ④วัสดุทั้ง 4 ชนิดดูดซึมน้ำได้ใกล้เคียงกัน"
+    ],
+    "answer": [2],
+    "hint": "อ่านค่าจากความสูงของแท่งเทียบกับสเกลแกนตั้งก่อน หาแท่งสูงสุดและต่ำสุดให้แม่น แล้วเชื่อมโยงว่าการดูดซึมน้ำได้มากเหมาะกับงานชนิดใด เช่น งานซับน้ำ",
+    "explanation_correct": "เฉลยแต่ละตัวเลือกและคำอธิบาย\n1. พลาสติกดูดซึมมากที่สุด\nเฉลย: ไม่ถูกต้อง — แท่งพลาสติกสูง 0 กรัม คือดูดซึมน้อยที่สุด\n\n2. ทิชชูดูดซึมมากที่สุด เหมาะผลิตสิ่งของซับน้ำ\nเฉลย: ถูกต้อง — แท่งสูงสุด 18 กรัม ตรงกับผลิตภัณฑ์ซับน้ำ\n\n3. ไนลอนดีกว่าฝ้าย ควรทำผ้าเช็ดตัว\nเฉลย: ไม่ถูกต้อง — ไนลอน 2 กรัม น้อยกว่าฝ้าย 12 กรัม\n\n4. ทั้ง 4 ชนิดใกล้เคียงกัน\nเฉลย: ไม่ถูกต้อง — ค่าต่างกัน 0 ถึง 18 กรัม",
+    "explanation_incorrect": ""
+  },
+  {
+    "id": 9,
+    "id2": "tophit-adm-material-0009",
+    "domain": "CHEM",
+    "content": "วัสดุและการเลือกวัสดุ",
+    "tag_content": "adm_material",
+    "tag_skill": "L3",
+    "tag_misconception": "จับคู่วัสดุโดยดูสมบัติเด่นเพียงข้อเดียว ไม่ตรวจครบทุกเงื่อนไขที่โจทย์กำหนดไว้ในตาราง",
+    "title": "โรงงานต้องการผลิตหมวกกันน็อก 3 ส่วน โดยกำหนดสมบัติวัสดุที่ต้องการไว้ คือ โครงหมวกต้องแข็งและไม่ดูดซึมน้ำ แผ่นรองด้านในต้องดูดซึมเหงื่อได้ดีและไม่แข็ง สายรัดคางต้องยืดหยุ่นได้ จากตารางสมบัติวัสดุ A ถึง D [[tophit-adm-material-0009-table]] ควรเลือกวัสดุชุดใดจึงตรงกับสมบัติที่ต้องการทุกส่วน",
+    "image": "",
+    "options": [
+      "1. ①โครงหมวกใช้วัสดุ C แผ่นรองใช้วัสดุ D สายรัดคางใช้วัสดุ B",
+      "2. ②โครงหมวกใช้วัสดุ A แผ่นรองใช้วัสดุ D สายรัดคางใช้วัสดุ B",
+      "3. ③โครงหมวกใช้วัสดุ C แผ่นรองใช้วัสดุ A สายรัดคางใช้วัสดุ B",
+      "4. ④โครงหมวกใช้วัสดุ C แผ่นรองใช้วัสดุ D สายรัดคางใช้วัสดุ D"
+    ],
+    "answer": [1],
+    "hint": "ไล่ทีละส่วนของหมวก แล้วตรวจคอลัมน์ของวัสดุแต่ละตัวในตารางให้ครบทุกเงื่อนไข เช่น โครงหมวกต้องแข็งและไม่ดูดซึมน้ำพร้อมกัน ไม่ใช่ตรงเงื่อนไขใดเงื่อนไขหนึ่ง",
+    "explanation_correct": "เฉลยแต่ละตัวเลือกและคำอธิบาย\n1. โครง C แผ่นรอง D สายรัด B\nเฉลย: ถูกต้อง — C แข็ง+ไม่ดูดซึม / D ไม่แข็ง+ดูดซึมดี / B ยืดหยุ่นได้ ครบทุกเงื่อนไข\n\n2. โครง A\nเฉลย: ไม่ถูกต้อง — A ดูดซึมน้ำได้ดี ขัดกับโครงหมวก\n\n3. แผ่นรอง A\nเฉลย: ไม่ถูกต้อง — A แข็ง ขัดกับแผ่นรองที่ต้องไม่แข็ง\n\n4. สายรัด D\nเฉลย: ไม่ถูกต้อง — D ไม่ยืดหยุ่น ขัดกับสายรัดคาง",
+    "explanation_incorrect": ""
+  }
+]</textarea>
+
+    <div class="tip warn">📌 <b>สังเกตตัวอย่างข้อ 4 และ 9:</b> มีรหัส <code>[[tophit-adm-material-0004-chart]]</code> ฝังใน title = สาธิตการจับคู่ระดับ 2 — ถ้าจะใช้ ให้ตั้งชื่อไฟล์รูปกราฟ/ตารางตรงกับรหัสใน [[...]] นั้น ถ้าไม่ใช้ระบบก็ข้ามไประดับถัดไปอัตโนมัติ</div>
+    <div class="tip info">🧪 <b>ลองเล่นเพื่อเรียนรู้:</b> ตั้งชื่อไฟล์รูป 3 ไฟล์แบบต่างกัน เช่น <code>tophit-adm-material-0001.jpg</code>, <code>TOPHIT_ADM_MATERIAL_0004_CHART.png</code>, <code>9.jpg</code> → Preview แล้วดูว่าตัวเลือกแต่ละข้อจับได้ด้วยระดับ (badge) ต่างกันอย่างไร</div>
+  </div>
+</section>
+
+<!-- ================= TAB: REPORT ================= -->
+<section id="tab-report">
+  <div class="card">
+    <h2>📊 อ่านผลรายงานให้เป็น</h2>
+    <p class="sub2">Report แสดงบนหน้าเว็บทันทีหลัง Preview / ประมวลผลจริง (บันทึกใน Executions log ด้วยเครื่องหมาย 🎯)</p>
+
+    <h3>แถบสรุป 4 ช่อง</h3>
+    <table class="minitable">
+      <tr><th>ช่อง</th><th>ความหมาย</th><th>เป้าหมาย</th></tr>
+      <tr><td>📄 คำถามทั้งหมด</td><td>จำนวนข้อใน JSON</td><td>ตรงกับที่ตั้งใจสร้าง</td></tr>
+      <tr><td>🖼️ รูปในโฟลเดอร์</td><td>จำนวนไฟล์รูปที่สแกนเจอ</td><td>ควร ≥ จำนวนข้อที่ต้องการรูป</td></tr>
+      <tr><td>✅ จับคู่สำเร็จ</td><td>ข้อที่ได้ URL รูป</td><td>มากที่สุด</td></tr>
+      <tr><td>❌ ไม่พบรูป</td><td>ข้อที่คง <code>""</code> ไว้</td><td><b>0</b> ก่อนกดประมวลผลจริง</td></tr>
+    </table>
+
+    <h3>ตารางแผน — คอลัมน์ "วิธีจับ" (Badge สี)</h3>
+    <table class="minitable">
+      <tr><th>Badge</th><th>ระดับ</th><th>ความน่าเชื่อถือ</th></tr>
+      <tr><td><span class="qbadge qg">ระดับ 1 • ตรง id2</span></td><td>ชื่อไฟล์ตรง id2 เป๊ะ</td><td>แม่นที่สุด ใช้ได้ทันที</td></tr>
+      <tr><td><span class="qbadge qb">ระดับ 2 • รหัส [[..]]</span></td><td>จากรหัสที่ฝังใน title</td><td>น่าเชื่อถือ</td></tr>
+      <tr><td><span class="qbadge qo">ระดับ 3 • เลขท้าย+ซีรีส์</span></td><td>เลขท้ายไฟล์ตรง id + ขึ้นต้นด้วย prefix ซีรีส์</td><td>ดี แต่สแกนตา 1 รอบ</td></tr>
+      <tr><td><span class="qbadge qo">ระดับ 3 • เลขท้าย (ควรตรวจ)</span></td><td>เลขตรงแต่ไม่มี prefix ช่วยยืนยัน</td><td>ควรตรวจรูปใน thumbnail ว่าตรงข้อ</td></tr>
+      <tr><td><span class="qbadge qr">⚠️ ขัดแย้ง</span></td><td>เลขตรงหลายไฟล์ ระบบไม่กล้าเดา</td><td>ต้องแก้ชื่อไฟล์ให้ไม่ซ้ำ</td></tr>
+      <tr><td><span class="qbadge qr">❌ ไม่พบ</span></td><td>ไม่เจอไฟล์เลย</td><td>ดูคอลัมน์ "เหตุผล" + คำเตือน</td></tr>
+    </table>
+
+    <h3>คำเตือนอัตโนมัติ 7 รายการ</h3>
+    <table class="minitable">
+      <tr><th>ข้อความ</th><th>แปลว่าอะไร / วิธีแก้</th></tr>
+      <tr><td>⚠️ ข้อที่ไม่มี id2: …</td><td>JSON ข้อนั้นขาดฟิลด์ id2 → เติมให้ครบเพื่อความแม่น</td></tr>
+      <tr><td>⚠️ ชื่อไฟล์ (หลัง normalize) ซ้ำกัน: …</td><td>มี 2 ไฟล์ชื่อเดียวกันคนละนามสกุล/ตัวพิมพ์ → เปลี่ยนชื่อให้ไม่ซ้ำ</td></tr>
+      <tr><td>ℹ️ ไฟล์ไม่มีตัวเลขในชื่อ: …</td><td>ไฟล์นั้นจับคู่ได้เฉพาะระดับ 1–2 → ถ้าตั้งใจใช้ id2 ก็ไม่เป็นไร</td></tr>
+      <tr><td>⚠️ เลขตรงหลายไฟล์ ระบบไม่จับคู่เอง: id …</td><td>มีไฟล์หลายไฟล์ลงท้ายเลขเดียวกัน → เปลี่ยนชื่อให้เลขท้าย unique</td></tr>
+      <tr><td>ℹ️ ข้อที่จับด้วยวิธีรอง ควรตรวจซ้ำ: id …</td><td>จับด้วยระดับ 3–4 → เช็ค thumbnail ว่ารูปตรงกับเนื้อหาข้อ</td></tr>
+      <tr><td>📁 ไฟล์ที่ไม่ถูกใช้ (N ไฟล์ — ตรวจชื่อพิมพ์ผิด): …</td><td>รูปที่อยู่ในโฟลเดอร์แต่ไม่มีข้อใดจับ → ส่วนใหญ่คือ <b>ชื่อพิมพ์ผิด</b> (เช่น OO08 แทน 0008) — คู่กับ "ข้อไม่พบรูป" จะชี้จุดพังทันที</td></tr>
+      <tr><td>⚠️ ไฟล์เดียวถูกใช้หลายข้อ: …</td><td>มีข้อ 2 ข้อขึ้นไปได้รูปเดียวกัน → ตรวจว่าตั้งใจหรือชื่อไฟล์ซ้ำ</td></tr>
+    </table>
+
+    <h3>ตัวอย่าง Report (เคสจับ typo ได้)</h3>
+    <div class="tip warn" style="font-family:Consolas,monospace;font-size:.75rem;white-space:pre-wrap">matchedCount: 14 / 15
+unmatched: [ { id: 8, reason: 'id2 "tophit-adm-material-0008" ไม่ตรงชื่อไฟล์ใด... | ไฟล์เลข 8 มีอยู่แต่ไม่ขึ้นต้นด้วย "tophit-adm-material" (น่าจะเป็นซีรีส์อื่น)' } ]
+warnings: [ "📁 ไฟล์ที่ไม่ถูกใช้ (1 ไฟล์ — ตรวจชื่อพิมพ์ผิด): tophit-adm-material-OO08.jpg" ]
+
+→ อ่านคู่กัน: ข้อ 8 ไม่เจอรูป + มีไฟล์แปลก 1 ไฟล์ = ไฟล์ข้อ 8 พิมพ์ OO แทน 00 → แก้ชื่อไฟล์ → Preview ซ้ำจนเสร็จ</div>
+  </div>
+</section>
+
+<!-- ================= TAB: FAQ ================= -->
+<section id="tab-faq">
+  <div class="card">
+    <h2>🛠 แก้ปัญหาที่พบบ่อย</h2>
+    <p class="sub2">คลิกหัวข้อเพื่อดูวิธีแก้</p>
+
+    <details><summary>▶ กด "เรียกใช้" ในตัวแก้โค้ดแล้วไม่มีหน้าจอให้กรอกอะไรเลย</summary>
+      <div class="dinner">เป็นพฤติกรรมปกติ — ปุ่ม Run แค่ทดสอบโค้ดฝั่งเซิร์ฟเวอร์ ไม่เปิดหน้าเว็บ<br>✅ ทางแก้: <b>Deploy → Web app → เปิด URL /exec</b> (ดูแท็บ 🚀 ติดตั้งครั้งแรก ขั้น 6–8) — ถ้า Log ไม่มี Error สีแดง แปลว่าโค้ดพร้อมใช้แล้ว</div>
+    </details>
+
+    <details><summary>🖼️ รูปไม่แสดงในหน้าเว็บ / thumbnail เป็นรูปแตก</summary>
+      <div class="dinner">ไฟล์หรือโฟลเดอร์รูป<b>ยังไม่ได้แชร์สาธารณะ</b><br>✅ ทางแก้: คลิกขวาโฟลเดอร์รูป → แชร์ → การเข้าถึงทั่วไป → <b>"ผู้ที่มีลิงก์ในไดรฟ์" บทบาท "ผู้ชม"</b><br>ทดสอบซ้ำด้วยเครื่องมือ "ทดสอบลิงก์รูปเดี่ยว" ท้ายหน้าเว็บ — รูปต้องขึ้น</div>
+    </details>
+
+    <details><summary>❌ Error "รูปแบบ JSON ไม่ถูกต้อง" ตอนวาง JSON</summary>
+      <div class="dinner">สาเหตุที่พบบ่อย: ใช้เครื่องหมายคำพูดเดี่ยว ' ' แทน " " / มี comma เกินก่อนวงเล็บปิด / JSON ถูกตัดกลางคัน (คัดลอกไม่ครบ) / มีข้อความแปลกปลอมนอก [ ]<br>✅ ทางแก้: ตัวระบบมี Cleaner ช่วยแก้หลายกรณีอัตโนมัติแล้ว (newline ดิบ, trailing comma, คำพูดโค้ง) — ถ้ายัง Error ให้อ่านตำแหน่งที่ชี้ในข้อความ Error แล้วแก้จุดนั้น หรือสั่ง AI สร้างใหม่ทั้งก้อน</div>
+    </details>
+
+    <details><summary>❌ จับคู่ไม่ครบ (ไม่พบรูป &gt; 0)</summary>
+      <div class="dinner">อ่าน 2 กลุ่มคู่กันเสมอ:<br>1) ตาราง "ข้อที่จับคู่ไม่สำเร็จ" → ดูเหตุผลของแต่ละข้อ<br>2) คำเตือน "📁 ไฟล์ที่ไม่ถูกใช้" → ชื่อไฟล์เหล่านี้คือตัวที่ตั้งใจให้จับแต่พิมพ์ผิด<br>✅ แก้ชื่อไฟล์ใน Drive → Preview ซ้ำจน ❌ = 0 แล้วจึงกดประมวลผลจริง</div>
+    </details>
+
+    <details><summary>⚠️ แจ้ง "เลขตรงหลายไฟล์" หรือ "ไฟล์เดียวถูกใช้หลายข้อ"</summary>
+      <div class="dinner">ชื่อไฟล์ในโฟลเดอร์มีเลขท้ายซ้ำกันหลายไฟล์ (เช่น 1.jpg กับ ข้อ-1.jpg) หรือ id หลายข้อชี้ไฟล์เดียวกัน<br>✅ ทางแก้: ตั้งชื่อไฟล์ให้เลขท้าย unique ต่อ 1 รูป และยึดหลัก 1 ข้อ = 1 รูป — วิธีที่ดีที่สุดคือตั้งชื่อตาม id2 ทุกไฟล์</div>
+    </details>
+
+    <details><summary>🔄 แก้โค้ดแล้วหน้าเว็บไม่เปลี่ยน</summary>
+      <div class="dinner">หน้าเว็บ Web App ไม่อัปเดตตามโค้ดอัตโนมัติ<br>✅ ทางแก้: Deploy → <b>จัดการการดีพลอย (Manage deployments)</b> → ✏️ ดินสอ → Version: <b>เวอร์ชันใหม่</b> → ดีพลอย (URL เดิมใช้ต่อได้)<br>ช่วงทดสอบเร็ว ๆ: ใช้ URL /dev จาก Test deployments (ต้องล็อกอินบัญชีเจ้าของ)</div>
+    </details>
+
+    <details><summary>📤 ข้อไหนไม่มีรูป ระบบทำอะไรกับข้อนั้น?</summary>
+      <div class="dinner">ตามสเปกที่กำหนด: ข้อที่จับคู่ไม่เจอ ระบบจะ<b>คง <code>"image": ""</code> ไว้</b> (ไม่ลบฟิลด์ทิ้ง) และรายงาน id + id2 + เหตุผลไว้ในกลุ่ม unmatched ท้าย Report — ข้อสอบส่วนที่เหลือยังใช้ได้ปกติ</div>
+    </details>
+
+    <details><summary>🗂️ หลายซีรีส์ในโฟลเดอร์เดียว จะจับผิดข้ามซีรีส์ไหม?</summary>
+      <div class="dinner">ระบบออกแบบให้รองรับแล้ว: ถ้า JSON มี id2 ครบ ระดับ 1 จะจับตรงชื่อไฟล์ ไม่มีทางพลาด ส่วนระดับ 3 (เลขท้าย) มีการกรองด้วย prefix ของ id2 — ถ้าพบไฟล์เลขตรงแต่เป็นคนละซีรีส์ ระบบจะ<b>ปฏิเสธการจับและรายงานเหตุผล</b> แทนการเดา<br>✅ แนะนำ: ตรวจคำเตือนทุกครั้งเมื่อใช้โฟลเดอร์รวม หรือแยกโฟลเดอร์ต่อซีรีส์เพื่อความชัวร์สูงสุด</div>
+    </details>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  🦉 Owlvy FlexMapper — คู่มือฉบับสมบูรณ์ v1.0 • ไฟล์นี้ใช้ได้แม้ไม่มีอินเทอร์เน็ต (ยกเว้นลิงก์ภายนอก) • เก็บไว้ทบทวน/ส่งต่อทีมได้
+</footer>
+
+<script>
+var TABS=['overview','first','daily','code','sample','report','faq'];
+function showTab(t,btn){
+  TABS.forEach(function(x){document.getElementById('tab-'+x).style.display=(x===t)?'block':'none';});
+  var bs=document.querySelectorAll('.tabbtn');
+  for(var i=0;i<bs.length;i++)bs[i].classList.remove('active');
+  if(btn)btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+var CKKEY='owlvyFlexmapCk';
+var CKIDS=['ck1','ck2','ck3','ck4','ck5','ck6','ck7','ck8','ck9'];
+function updCk(){
+  var done=0;
+  CKIDS.forEach(function(id){
+    var el=document.getElementById(id);
+    if(el.checked)done++;
+    var cardEl=el.closest('.step');
+    if(cardEl)cardEl.classList.toggle('done',el.checked);
+  });
+  document.getElementById('ckbar').style.width=(done/CKIDS.length*100)+'%';
+  document.getElementById('cktext').textContent='ความคืบหน้าการติดตั้ง: '+done+'/'+CKIDS.length+' ขั้น'+(done===CKIDS.length?' — 🎉 ครบทุกขั้น พร้อมใช้งาน!':'');
+  var o={};CKIDS.forEach(function(id){o[id]=document.getElementById(id).checked;});
+  try{localStorage.setItem(CKKEY,JSON.stringify(o));}catch(e){}
+}
+function resetCk(){
+  if(!confirm('ล้างสถานะการติดตั้งทั้งหมด เริ่มนับใหม่?'))return;
+  try{localStorage.removeItem(CKKEY);}catch(e){}
+  CKIDS.forEach(function(id){document.getElementById(id).checked=false;});
+  updCk();
+}
+(function(){
+  try{var s=localStorage.getItem(CKKEY);
+    if(s){var o=JSON.parse(s);CKIDS.forEach(function(id){if(o[id])document.getElementById(id).checked=true;});}
+  }catch(e){}
+  updCk();
+})();
+
+function copyCode(id,btn){
+  var ta=document.getElementById(id);
+  var val=ta.value;
+  var okFn=function(){flash(btn,'✅ คัดลอกแล้ว!');};
+  var fallback=function(){ta.focus();ta.select();try{document.execCommand('copy');okFn();}catch(e){flash(btn,'❌ ล้มเหลว — เลือกข้อความก็อปเอง');}};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(val).then(okFn,fallback);}else fallback();
+}
+function flash(btn,msg){
+  var old=btn.textContent;btn.textContent=msg;btn.classList.add('flashed');
+  setTimeout(function(){btn.textContent=old;btn.classList.remove('flashed');},1800);
+}
+function toggleBig(id,btn){
+  var ta=document.getElementById(id);
+  ta.classList.toggle('big');
+  btn.textContent=ta.classList.contains('big')?'➖ ย่อกลับ':'➕ ขยายเต็มจอ';
+}
+</script>
+</body>
+</html>
