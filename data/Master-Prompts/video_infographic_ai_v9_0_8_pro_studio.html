@@ -1,0 +1,3441 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Infographic AI V9.0.8 Pro Studio — สตูดิโอสร้างวิดีโออินโฟกราฟิกด้วย AI</title>
+
+  <!-- โหลดฟอนต์ภาษาไทย Prompt และ Sarabun จาก Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- โหลด Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            prompt: ['Prompt', 'sans-serif'],
+            sarabun: ['Sarabun', 'sans-serif'],
+          },
+          colors: {
+            studioBg: '#F4F7FA',
+            royalBlue: '#1D63ED',
+            royalBlueHover: '#1550C7',
+            emeraldBtn: '#059669',
+            emeraldBtnHover: '#047857',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      background-color: #F4F7FA;
+      font-family: 'Sarabun', sans-serif;
+      color: #1E293B;
+    }
+    h1, h2, h3, h4, .font-heading, button, label, select {
+      font-family: 'Prompt', sans-serif;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .step-panel {
+      animation: fadeSlideIn 0.25s ease-out;
+    }
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- ==================== 1. แถบส่วนหัว (TOP STUDIO HEADER) ==================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-2xs">
+    <div class="max-w-[1400px] mx-auto px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
+      <!-- ด้านซ้าย: โลโก้ + ชื่อแอป + ป้าย Pro Studio -->
+      <div class="flex items-center gap-3 min-w-0">
+        <button type="button" onclick="goToStep(1)" class="w-10 h-10 rounded-xl bg-[#1D63ED] text-white flex items-center justify-center shadow-sm shadow-blue-600/25 shrink-0 hover:bg-[#1550C7] transition cursor-pointer" title="กลับหน้าแรก">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 11v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8H4Z"/>
+            <path d="m4 11-.88-2.87a2 2 0 0 1 1.33-2.5l11.48-3.5a2 2 0 0 1 2.5 1.32l.87 2.87L4 11.01Z"/>
+            <path d="m6.6 4.99 3.38 4.2"/>
+            <path d="m11.86 3.38 3.38 4.2"/>
+          </svg>
+        </button>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-heading font-bold text-base sm:text-lg text-slate-900 tracking-tight truncate">Video Infographic AI</span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-blue-50 text-[#1D63ED] border border-blue-200/80">
+              V9.0.8 Pro Studio
+            </span>
+          </div>
+          <p class="text-[11px] sm:text-xs text-slate-500 truncate">
+            สตูดิโอสร้างวิดีโออินโฟกราฟิกด้วย AI •
+            <button type="button" onclick="openModal('changelogModal')" class="text-[#1D63ED] hover:underline font-medium cursor-pointer">
+              [ดูประวัติเวอร์ชัน ↗]
+            </button>
+          </p>
+        </div>
+      </div>
+
+      <!-- ด้านขวา: แถบปุ่มเครื่องมือครบชุด -->
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+        <button type="button" onclick="confirmNewProject()" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/80 transition cursor-pointer">
+          <span>📄</span><span class="hidden sm:inline">งานใหม่</span>
+        </button>
+
+        <button type="button" onclick="exportProjectJSON()" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/80 transition cursor-pointer">
+          <span>💾</span><span class="hidden sm:inline">บันทึกงาน</span>
+        </button>
+
+        <label class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/80 transition cursor-pointer">
+          <span>📂</span><span class="hidden sm:inline">เปิดงาน</span>
+          <input type="file" id="importJsonInput" accept=".json" class="hidden" onchange="importProjectJSON(event)">
+        </label>
+
+        <button type="button" onclick="openModal('guideModal')" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/80 transition cursor-pointer">
+          <span>❓</span><span class="hidden md:inline">คู่มือ</span>
+        </button>
+
+        <!-- เมนูด่วน -->
+        <div class="relative">
+          <button type="button" id="quickMenuBtn" onclick="toggleQuickMenu()" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-medium bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/80 transition cursor-pointer">
+            <span>☰</span><span class="hidden md:inline">เมนู</span>
+          </button>
+          <div id="quickMenuDropdown" class="hidden absolute right-0 mt-2 w-60 rounded-2xl bg-white border border-slate-200 shadow-xl py-2 z-50 text-xs">
+            <button type="button" onclick="loadDemoStoryPreset(); toggleQuickMenu();" class="w-full text-left px-4 py-2.5 hover:bg-blue-50 text-slate-700 hover:text-[#1D63ED] flex items-center gap-2 cursor-pointer">
+              <span>⚡</span><span>โหลดโปรเจกต์ตัวอย่างสำเร็จรูป (5 ฉาก)</span>
+            </button>
+            <button type="button" onclick="openModal('tutorialModal'); toggleQuickMenu();" class="w-full text-left px-4 py-2.5 hover:bg-blue-50 text-slate-700 hover:text-[#1D63ED] flex items-center gap-2 cursor-pointer">
+              <span>🎬</span><span>เปิดวิดีโอสอนการใช้งาน</span>
+            </button>
+            <button type="button" onclick="openModal('changelogModal'); toggleQuickMenu();" class="w-full text-left px-4 py-2.5 hover:bg-blue-50 text-slate-700 hover:text-[#1D63ED] flex items-center gap-2 cursor-pointer">
+              <span>📋</span><span>ประวัติเวอร์ชัน & การอัปเดต</span>
+            </button>
+            <div class="my-1 border-t border-slate-100"></div>
+            <button type="button" onclick="openModal('apiModal'); toggleQuickMenu();" class="w-full text-left px-4 py-2.5 hover:bg-blue-50 text-slate-700 hover:text-[#1D63ED] flex items-center gap-2 cursor-pointer">
+              <span>⚙️</span><span>ตั้งค่า Gemini API Key</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ปุ่มสถานะ API -->
+        <button type="button" onclick="openModal('apiModal')" id="headerApiBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-rose-50/90 hover:bg-rose-100/80 text-rose-800 border border-rose-200 transition cursor-pointer">
+          <span>⚙️ API</span>
+          <span class="text-slate-300">|</span>
+          <span id="headerApiStatusText">🔴 ยังไม่ใส่ API Key</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== แถบขั้นตอน 5 ขั้น (5-STEP PILL NAVIGATION BAR) ==================== -->
+    <div class="bg-white border-t border-slate-100 py-2.5 px-3 sm:px-6 border-b-2 border-b-[#1D63ED]/25">
+      <div class="max-w-5xl mx-auto overflow-x-auto no-scrollbar">
+        <nav aria-label="ขั้นตอนการทำงาน 5 ขั้นตอน" class="flex items-center justify-between min-w-[680px] bg-[#EAEFF5] p-1.5 rounded-full border border-slate-200/80 gap-1">
+          <button type="button" id="stepPill-1" onclick="goToStep(1)" class="step-pill flex-1 py-2 px-3.5 rounded-full text-xs sm:text-[13px] font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer bg-[#1D63ED] text-white shadow-sm">
+            <span>🎨</span><span>1. หัวข้อ & สไตล์</span>
+          </button>
+
+          <span class="text-slate-400 text-xs select-none">›</span>
+
+          <button type="button" id="stepPill-2" onclick="goToStep(2)" class="step-pill flex-1 py-2 px-3.5 rounded-full text-xs sm:text-[13px] font-medium transition-all flex items-center justify-center gap-1.5 cursor-pointer text-slate-600 hover:text-slate-900 hover:bg-white/60">
+            <span>📋</span><span>2. สตอรี่บอร์ด & Flow</span>
+          </button>
+
+          <span class="text-slate-400 text-xs select-none">›</span>
+
+          <button type="button" id="stepPill-3" onclick="goToStep(3)" class="step-pill flex-1 py-2 px-3.5 rounded-full text-xs sm:text-[13px] font-medium transition-all flex items-center justify-center gap-1.5 cursor-pointer text-slate-600 hover:text-slate-900 hover:bg-white/60">
+            <span>🎙️</span><span>3. เสียงพากย์</span>
+          </button>
+
+          <span class="text-slate-400 text-xs select-none">›</span>
+
+          <button type="button" id="stepPill-4" onclick="goToStep(4)" class="step-pill flex-1 py-2 px-3.5 rounded-full text-xs sm:text-[13px] font-medium transition-all flex items-center justify-center gap-1.5 cursor-pointer text-slate-600 hover:text-slate-900 hover:bg-white/60">
+            <span>🎬</span><span>4. พรีวิว & ส่งออก</span>
+          </button>
+
+          <span class="text-slate-400 text-xs select-none">›</span>
+
+          <button type="button" id="stepPill-5" onclick="goToStep(5)" class="step-pill flex-1 py-2 px-3.5 rounded-full text-xs sm:text-[13px] font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer bg-[#FEF3C7] text-[#92400E] border border-[#F59E0B]/50 hover:bg-amber-200/70">
+            <span>🛠️</span><span>5. แก้ไขเฉพาะจุด</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== พื้นที่เนื้อหาหลัก (MAIN WORKSPACE) ==================== -->
+  <main class="flex-1 w-full max-w-[1260px] mx-auto px-3 sm:px-6 py-6 sm:py-8">
+
+    <!-- ========================================================================
+         ขั้นตอนที่ 1: หัวข้อ & สไตล์ (STEP 1: TOPIC & 24 VISUAL STYLES)
+         ======================================================================== -->
+    <section id="step-1" class="step-panel space-y-7">
+
+      <!-- การ์ดแบนเนอร์สอนการใช้งานด้านบน -->
+      <div class="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-5 sm:p-7 text-center">
+        <div onclick="openModal('tutorialModal')" class="group relative max-w-xl mx-auto rounded-2xl overflow-hidden shadow-lg border border-slate-200 cursor-pointer select-none">
+          <div class="grid grid-cols-3 grid-rows-2 aspect-[16/10] bg-slate-900">
+            <!-- ช่อง 1 -->
+            <div class="relative overflow-hidden border-r border-b border-white/15 bg-gradient-to-br from-amber-100 to-orange-200 p-2 flex flex-col justify-between">
+              <div class="text-[9px] font-bold text-amber-900/80 text-left">อาหาร 5 หมู่</div>
+              <svg viewBox="0 0 80 50" class="w-full h-12 mx-auto">
+                <circle cx="40" cy="27" r="18" fill="#D97706" opacity="0.25"/>
+                <circle cx="40" cy="25" r="15" fill="#FDE68A" stroke="#B45309" stroke-width="2"/>
+                <circle cx="35" cy="22" r="4" fill="#EF4444"/>
+                <circle cx="45" cy="22" r="4" fill="#10B981"/>
+                <circle cx="40" cy="30" r="4.5" fill="#3B82F6"/>
+              </svg>
+              <div class="text-[9px] font-bold text-amber-950 bg-white/80 rounded px-1 truncate">อาหาร 5 หมู่บำรุงสมอง</div>
+            </div>
+            <!-- ช่อง 2 -->
+            <div class="relative overflow-hidden border-r border-b border-white/15 bg-gradient-to-br from-slate-800 to-blue-950 p-2 flex flex-col justify-between">
+              <div class="text-[9px] font-bold text-cyan-300 bg-cyan-950/80 rounded px-1 truncate">ระบบคลังสินค้าอัจฉริยะ</div>
+              <svg viewBox="0 0 80 50" class="w-full h-12 mx-auto">
+                <polygon points="40,8 65,20 40,32 15,20" fill="#38BDF8"/>
+                <polygon points="15,20 40,32 40,46 15,34" fill="#0284C7"/>
+                <polygon points="65,20 40,32 40,46 65,34" fill="#0369A1"/>
+              </svg>
+              <div class="text-[8px] text-cyan-200/80">3D Isometric AI</div>
+            </div>
+            <!-- ช่อง 3 -->
+            <div class="relative overflow-hidden border-b border-white/15 bg-gradient-to-br from-emerald-100 to-amber-100 p-2 flex flex-col justify-between">
+              <div class="text-[8px] text-emerald-800 font-semibold text-right">7 ขั้นตอน</div>
+              <svg viewBox="0 0 80 50" class="w-full h-12 mx-auto">
+                <polygon points="10,45 35,15 55,45" fill="#059669"/>
+                <polygon points="35,45 58,10 75,45" fill="#D97706"/>
+                <circle cx="22" cy="14" r="6" fill="#F59E0B"/>
+              </svg>
+              <div class="text-[9px] font-bold text-emerald-950 bg-white/80 rounded px-1 truncate">สร้างทีมสู่ความสำเร็จ</div>
+            </div>
+            <!-- ช่อง 4 -->
+            <div class="relative overflow-hidden border-r border-white/15 bg-gradient-to-br from-pink-100 to-sky-100 p-2 flex flex-col justify-between">
+              <div class="text-[9px] font-bold text-rose-600 bg-white/85 rounded px-1 truncate">อาหารต้องห้ามสำหรับแมว</div>
+              <svg viewBox="0 0 80 50" class="w-full h-12 mx-auto">
+                <rect x="20" y="10" width="40" height="32" rx="6" fill="#FFFFFF" stroke="#F43F5E" stroke-width="2"/>
+                <circle cx="33" cy="22" r="4" fill="#FDA4AF"/>
+                <circle cx="47" cy="22" r="4" fill="#93C5FD"/>
+                <line x1="28" y1="33" x2="52" y2="33" stroke="#F43F5E" stroke-width="2"/>
+              </svg>
+              <div class="text-[8px] text-slate-600">Premium Kawaii 3D</div>
+            </div>
+            <!-- ช่อง 5 -->
+            <div class="relative overflow-hidden border-r border-white/15 bg-gradient-to-br from-amber-900 to-stone-800 p-2 flex flex-col justify-between">
+              <div class="text-[9px] font-bold text-amber-200 bg-black/50 rounded px-1 truncate">โมเดลธุรกิจร้านกาแฟ</div>
+              <svg viewBox="0 0 80 50" class="w-full h-12 mx-auto">
+                <rect x="18" y="14" width="44" height="28" rx="4" fill="#D97706"/>
+                <rect x="24" y="20" width="14" height="14" rx="2" fill="#FEF3C7"/>
+                <rect x="44" y="20" width="12" height="22" rx="2" fill="#78350F"/>
+              </svg>
+              <div class="text-[8px] text-amber-300/80">Miniature Diorama</div>
+            </div>
+            <!-- ช่อง 6 -->
+            <div class="relative overflow-hidden bg-gradient-to-br from-orange-100 to-indigo-100 p-2 flex flex-col justify-between">
+              <div class="text-[9px] font-bold text-indigo-900 bg-white/85 rounded px-1 truncate">เปลี่ยนงานหนักเป็นทีมเวิร์ค</div>
+              <svg viewBox="0 0 80 50" class="w-full h-12 mx-auto">
+                <circle cx="28" cy="24" r="7" fill="#6366F1"/>
+                <circle cx="52" cy="24" r="7" fill="#F97316"/>
+                <path d="M28 31 Q40 20 52 31" stroke="#1D63ED" stroke-width="3" fill="none"/>
+              </svg>
+              <div class="text-[8px] text-indigo-800">Adaptive 3D Cartoon</div>
+            </div>
+          </div>
+
+          <!-- แถบป้ายมุมซ้ายบน -->
+          <div class="absolute top-3 left-3 bg-slate-900/85 text-white text-[11px] font-medium px-2.5 py-1 rounded-lg flex items-center gap-1.5 backdrop-blur-xs">
+            <span>🎬</span><span>Video Infographic AI</span>
+          </div>
+
+          <!-- เงาดำด้านล่าง + ข้อความสอนการใช้งาน -->
+          <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/50 to-transparent pt-10 pb-3.5 px-4 text-left">
+            <h3 class="text-white font-bold text-base sm:text-lg leading-tight">วิดีโอสอนการใช้งาน</h3>
+            <p class="text-slate-200 text-[11px] sm:text-xs mt-0.5">ทำวิดีโอ 1 เรื่องใน 5 ขั้น • หัวข้อ → สตอรี่บอร์ด → Google Flow → เสียงพากย์ → ส่งออก</p>
+          </div>
+
+          <!-- ปุ่ม Play วงกลมตรงกลาง -->
+          <div class="absolute inset-0 flex items-center justify-center bg-black/15 group-hover:bg-black/25 transition">
+            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/95 text-slate-900 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+              <svg class="w-6 h-6 ml-1 text-[#1D63ED]" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- ปุ่มเปิดคู่มือสีเขียว -->
+        <div class="mt-4">
+          <button type="button" onclick="openModal('guideModal')" class="inline-flex items-center justify-center gap-2 px-7 py-3 rounded-xl bg-[#059669] hover:bg-[#047857] text-white font-semibold text-sm shadow-md shadow-emerald-600/20 transition cursor-pointer">
+            <span>📖</span><span>คู่มือ (มีภาพทุกขั้น)</span>
+          </button>
+          <p class="text-xs text-slate-500 mt-2">
+            ดูวิดีโอสอนก่อนเริ่ม หรือเปิดคู่มือทีละขั้นระหว่างทำงาน • เปิดคู่มือได้ทุกเมื่อที่ปุ่ม <span class="font-semibold text-slate-700">❓ คู่มือ</span> มุมขวาบน
+          </p>
+        </div>
+      </div>
+
+      <!-- หัวข้อหลักส่วนกรอกข้อมูล -->
+      <div class="text-center space-y-1.5 pt-1">
+        <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">สร้างวิดีโออินโฟกราฟิกด้วย AI</h1>
+        <p class="text-xs sm:text-sm text-slate-500">กรอกหัวข้อหรือแนบไฟล์ต้นฉบับ แล้วเลือกสไตล์ภาพเพื่อสร้างสตอรี่บอร์ดพร้อมบทพากย์ทันที</p>
+      </div>
+
+      <!-- การ์ดฟอร์มกรอกข้อมูลโปรเจกต์ + เลือกสไตล์ 24 แบบ -->
+      <div class="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-5 sm:p-7 space-y-6">
+
+        <!-- 1. หัวข้อเรื่อง & ตัวอย่างสำเร็จรูป -->
+        <div class="space-y-2.5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <label for="projectTopic" class="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+              <span>💡</span><span>หัวข้อเรื่อง / คอนเทนต์หลัก <span class="text-rose-500">*</span></span>
+            </label>
+            <span class="text-xs text-slate-400">คลิกตัวอย่างด้านล่างเพื่อทดลองได้ทันที</span>
+          </div>
+
+          <input
+            type="text"
+            id="projectTopic"
+            value="รีวิวกระติกน้ำเก็บความเย็นสำหรับเดินป่า"
+            placeholder="เช่น รีวิวกระติกน้ำเก็บความเย็นสำหรับเดินป่า, 5 เคล็ดลับออมเงินฉบับมนุษย์เงินเดือน..."
+            class="w-full rounded-xl border border-slate-300 bg-slate-50/60 focus:bg-white px-4 py-3 text-sm sm:text-base text-slate-900 focus:outline-none focus:border-[#1D63ED] focus:ring-4 focus:ring-blue-500/10 transition"
+          >
+
+          <!-- ปุ่มชิปตัวอย่างหัวข้อ -->
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button type="button" onclick="applySampleTopic('รีวิวกระติกน้ำเก็บความเย็นสำหรับเดินป่า', 'คนชอบเดินป่า', 'น้องหมีกูรู', 'กระติกน้ำ CoolHike')" class="text-xs px-3 py-1.5 rounded-full bg-blue-50 hover:bg-blue-100 text-[#1D63ED] border border-blue-200/80 font-medium transition cursor-pointer">
+              🏕️ รีวิวกระติกน้ำเก็บความเย็นสำหรับเดินป่า
+            </button>
+            <button type="button" onclick="applySampleTopic('5 อาหารบำรุงสมองสำหรับวัยทำงาน', 'พนักงานออฟฟิศและคนทำงาน', 'เชฟใบเตย', '')" class="text-xs px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-[#1D63ED] border border-slate-200 transition cursor-pointer">
+              🧠 5 อาหารบำรุงสมองสำหรับวัยทำงาน
+            </button>
+            <button type="button" onclick="applySampleTopic('ระบบคลังสินค้าอัจฉริยะช่วยลดต้นทุนได้อย่างไร', 'เจ้าของธุรกิจและผู้ประกอบการ', 'วิศวกรต้นกล้า', 'SmartWMS AI')" class="text-xs px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-[#1D63ED] border border-slate-200 transition cursor-pointer">
+              🏭 ระบบคลังสินค้าอัจฉริยะช่วยลดต้นทุน
+            </button>
+            <button type="button" onclick="applySampleTopic('กฎ 80/20 บริหารเวลาให้สำเร็จไวขึ้น 2 เท่า', 'นักเรียน นักศึกษา และคนทั่วไป', '', '')" class="text-xs px-3 py-1.5 rounded-full bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-[#1D63ED] border border-slate-200 transition cursor-pointer">
+              ⏱️ กฎ 80/20 บริหารเวลาให้สำเร็จไว
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. การตั้งค่ารายละเอียดโปรเจกต์ (Grid 3 คอลัมน์) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-1">
+          <div>
+            <label for="targetAudience" class="block text-xs font-semibold text-slate-700 mb-1.5">🎯 กลุ่มคนดูเป้าหมาย</label>
+            <input type="text" id="targetAudience" value="คนชอบเดินป่า" placeholder="เช่น คนชอบเดินป่า, วัยทำงาน" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#1D63ED] focus:ring-2 focus:ring-blue-500/15">
+          </div>
+
+          <div>
+            <label for="sceneCount" class="block text-xs font-semibold text-slate-700 mb-1.5">🎞️ จำนวนฉากทั้งหมด</label>
+            <select id="sceneCount" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-800 bg-white focus:outline-none focus:border-[#1D63ED] focus:ring-2 focus:ring-blue-500/15">
+              <option value="3">3 ฉาก (วิดีโอสั้นกระชับ ~18 วิ)</option>
+              <option value="5" selected>5 ฉาก (มาตรฐานแนะนำ ~29 วิ)</option>
+              <option value="6">6 ฉาก (เล่าเรื่องละเอียด ~36 วิ)</option>
+              <option value="8">8 ฉาก (เจาะลึกครบถ้วน ~48 วิ)</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="aspectRatio" class="block text-xs font-semibold text-slate-700 mb-1.5">📐 สัดส่วนภาพวิดีโอ</label>
+            <select id="aspectRatio" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-800 bg-white focus:outline-none focus:border-[#1D63ED] focus:ring-2 focus:ring-blue-500/15">
+              <option value="16:9" selected>16:9 แนวนอน (YouTube / Facebook)</option>
+              <option value="9:16">9:16 แนวตั้ง (TikTok / Reels / Shorts)</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="creationMode" class="block text-xs font-semibold text-slate-700 mb-1.5">🎛️ โหมดสร้างสตอรี่บอร์ด</label>
+            <select id="creationMode" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-800 bg-white focus:outline-none focus:border-[#1D63ED] focus:ring-2 focus:ring-blue-500/15">
+              <option value="standard">โหมดมาตรฐาน (Standard • แยกฉากชัดเจน)</option>
+              <option value="advance" selected>โหมดแอดวานซ์ Advance (เน้นงานมีเทคนิค • เพิ่มคำสั่งเชื่อมฉาก)</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="characterName" class="block text-xs font-semibold text-slate-700 mb-1.5">👥 ชื่อตัวละครหลัก (ไม่บังคับ)</label>
+            <input type="text" id="characterName" value="น้องหมีกูรู" placeholder="เช่น น้องหมีกูรู, โค้ชภูมิ" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#1D63ED] focus:ring-2 focus:ring-blue-500/15">
+          </div>
+
+          <div>
+            <label for="productName" class="block text-xs font-semibold text-slate-700 mb-1.5">📦 ชื่อสินค้า / แบรนด์ (ไม่บังคับ)</label>
+            <input type="text" id="productName" value="กระติกน้ำ CoolHike" placeholder="เช่น กระติกน้ำ CoolHike" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#1D63ED] focus:ring-2 focus:ring-blue-500/15">
+          </div>
+        </div>
+
+        <!-- ช่องข้อมูลเสริม / บทต้นฉบับ -->
+        <details class="rounded-2xl bg-slate-50 border border-slate-200/80 p-3.5">
+          <summary class="text-xs font-semibold text-slate-700 cursor-pointer select-none flex items-center justify-between">
+            <span>📝 วางข้อมูลต้นฉบับ / คีย์เวิร์ดสำคัญที่ต้องการให้ AI ใส่ในบทพากย์ (ไม่บังคับ)</span>
+            <span class="text-[#1D63ED]">คลิกเพื่อเปิด/ปิด ▾</span>
+          </summary>
+          <div class="mt-3">
+            <textarea id="extraNotes" rows="3" placeholder="วางจุดเด่นสินค้า ข้อมูลสถิติ หรือประเด็นสำคัญที่อยากให้ AI นำไปเรียบเรียงเป็นสตอรี่บอร์ด..." class="w-full rounded-xl border border-slate-300 bg-white p-3 text-sm text-slate-800 focus:outline-none focus:border-[#1D63ED]"></textarea>
+          </div>
+        </details>
+
+        <!-- 3. ตารางเลือกสไตล์ภาพ 24 สไตล์ -->
+        <div class="space-y-3 pt-2 border-t border-slate-100">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <span>🎨</span><span>เลือกสไตล์ภาพวิดีโออินโฟกราฟิก (24 สไตล์)</span>
+              </h2>
+              <p class="text-xs text-slate-500">คลิกเลือกสไตล์ที่ต้องการ AI จะควบคุมลายเส้นและบรรยากาศให้ตรงกันทุกฉาก</p>
+            </div>
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-[#1D63ED] border border-blue-200 text-xs font-semibold">
+              <span>สไตล์ที่เลือก:</span>
+              <span id="selectedStyleLabel">09. 3D Soft Plush</span>
+            </div>
+          </div>
+
+          <div id="stylesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            <!-- การ์ด 24 สไตล์ถูกสร้างด้วย JavaScript -->
+          </div>
+        </div>
+
+        <!-- ปุ่มกดสร้างสตอรี่บอร์ดด้วย AI -->
+        <div class="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button type="button" id="generateStoryboardBtn" onclick="generateStoryboardWithAI()" class="w-full sm:w-auto min-w-[320px] inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#1D63ED] hover:bg-[#1550C7] text-white font-bold text-base shadow-lg shadow-blue-600/25 active:scale-[0.99] transition cursor-pointer">
+            <span id="genSbIcon">✨</span>
+            <span id="genSbText">สร้างสตอรี่บอร์ด & คำสั่ง Google Flow ด้วย AI</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         ขั้นตอนที่ 2: สตอรี่บอร์ด & คำสั่ง GOOGLE FLOW (STEP 2)
+         ======================================================================== -->
+    <section id="step-2" class="step-panel hidden space-y-6">
+      <div class="text-center space-y-1.5">
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">2. สตอรี่บอร์ด & คำสั่ง Google Flow</h2>
+        <p class="text-xs sm:text-sm text-slate-500 max-w-2xl mx-auto">
+          ตรวจเช็กเนื้อหาแต่ละฉาก (คุมเฉพาะสไตล์อินโฟกราฟิกแอนิเมชัน • ปล่อยโทนสีและมุมกล้องอิสระตามเนื้อหาจริง) แล้วคัดลอกคำสั่งไปวางใน Google Flow ได้เลย
+        </p>
+      </div>
+
+      <!-- แถบเครื่องมือด้านบนของขั้นที่ 2 -->
+      <div class="bg-white rounded-2xl border border-blue-200/90 shadow-2xs px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <span class="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-1.5">
+            <span>📦</span><span>ชุดคำสั่ง Google Flow:</span>
+          </span>
+          <button type="button" onclick="scrollToFlowPrompts()" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#1D63ED] hover:bg-[#1550C7] text-white text-xs font-semibold shadow-xs transition cursor-pointer">
+            <span>⚡</span><span id="setSummaryBadge">เซตเดียวครบทั้งเรื่อง (ฉากที่ 1–5)</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-500 hidden sm:inline">มุมมองสตอรี่บอร์ด:</span>
+          <button type="button" id="viewMode1ColBtn" onclick="setStoryboardViewMode('1col')" class="px-3 py-1.5 rounded-xl text-xs font-semibold border border-[#1D63ED] bg-blue-50 text-[#1D63ED] transition cursor-pointer">
+            📋 เต็มความกว้าง (1 แถว/ฉาก)
+          </button>
+          <button type="button" id="viewMode2ColBtn" onclick="setStoryboardViewMode('2col')" class="px-3 py-1.5 rounded-xl text-xs font-medium border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition cursor-pointer">
+            🗂️ 2 คอลัมน์ใหญ่
+          </button>
+        </div>
+      </div>
+
+      <!-- ส่วนที่ 1: สตอรี่บอร์ดรายฉาก -->
+      <div class="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-5 sm:p-6 space-y-4">
+        <div class="space-y-1.5">
+          <h3 id="sbSectionHeader" class="text-base sm:text-lg font-bold text-slate-900">
+            📋 ส่วนที่ 1: สตอรี่บอร์ดรายฉาก — เซตที่ 1 จาก 1 (ฉากที่ 1 ถึง 5 • รวมทั้งหมด 5 ฉาก)
+          </h3>
+          <div id="sbMetaSummary" class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-600">
+          </div>
+        </div>
+
+        <button type="button" onclick="toggleStoryboardCards()" class="w-full rounded-2xl border-2 border-dashed border-[#1D63ED]/60 bg-blue-50/40 hover:bg-blue-50/80 py-4 px-4 text-center transition cursor-pointer">
+          <div class="text-sm font-bold text-[#1D63ED] flex items-center justify-center gap-2">
+            <span>👁️</span>
+            <span id="toggleSbCardsTitle">กดเพื่อดูและแก้สตอรี่บอร์ด (5 ฉาก)</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5">ไม่ตรวจก็ได้ ข้ามไปคัดลอกคำสั่งด้านล่างได้เลย • คลิกเพื่อแสดงหรือซ่อนการ์ดแก้ไขรายฉาก</p>
+        </button>
+
+        <div id="storyboardCardsContainer" class="grid grid-cols-1 gap-4 pt-2">
+        </div>
+      </div>
+
+      <!-- ส่วนที่ 2: ไปสร้างใน Google Flow -->
+      <div id="googleFlowSection" class="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-5 sm:p-6 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h3 id="flowSectionHeader" class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span>🎬</span><span>ไปสร้างใน Google Flow — เซตที่ 1 (ฉากที่ 1–5)</span>
+          </h3>
+
+          <a href="https://labs.google/fx/tools/flow" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1D63ED] hover:bg-[#1550C7] text-white text-xs sm:text-sm font-semibold shadow-xs transition">
+            <span>🌐</span><span>เปิดเว็บ Google Flow ↗</span>
+          </a>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 text-xs text-slate-700 bg-slate-50 px-3.5 py-2.5 rounded-xl border border-slate-200/80">
+          <span id="flowCharProdInfo" class="font-medium">👥 ตัวละคร: น้องหมีกูรู • 📦 สินค้า: กระติกน้ำ CoolHike</span>
+          <button type="button" onclick="goToStep(1)" class="px-2.5 py-1 rounded-lg bg-white border border-slate-300 hover:border-[#1D63ED] text-slate-700 hover:text-[#1D63ED] font-medium transition cursor-pointer">
+            ✏️ แก้ที่ขั้น 1
+          </button>
+          <span class="text-slate-400">AI จัดให้แล้วว่าใคร/สินค้าไหนอยู่ฉากไหน • อยากเปลี่ยน ติ๊กในการ์ดฉากด้านบน</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <button type="button" id="flowModeFirstImgBtn" onclick="setFlowWorkflowMode('first-frame')" class="text-left p-4 rounded-2xl border-2 border-[#1D63ED] bg-blue-50/40 transition cursor-pointer">
+            <div class="font-bold text-sm text-slate-900 flex items-center gap-1.5">
+              <span class="text-[#1D63ED]">✓</span><span>📎 ทำภาพแรกก่อน (แนะนำ)</span>
+            </div>
+            <p class="text-xs text-slate-600 mt-1">ดูลายเส้นจากภาพแรกให้ถูกใจ แล้วทั้งเรื่องทำตามภาพนี้ (ได้ภาพนิ่ง + วิดีโอ + รอยต่อแม่นยำ)</p>
+          </button>
+
+          <button type="button" id="flowModeDirectBtn" onclick="setFlowWorkflowMode('direct-text')" class="text-left p-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 transition cursor-pointer">
+            <div class="font-bold text-sm text-slate-900 flex items-center gap-1.5">
+              <span>🎨</span><span>ไม่ทำภาพแรก</span>
+            </div>
+            <p class="text-xs text-slate-600 mt-1">สร้างทุกฉากด้วยข้อความคำสั่งอย่างเดียว (Text-to-Video) รวดเร็วในชุดเดียว</p>
+          </button>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h4 class="text-sm font-bold text-slate-800">📋 ชุดคำสั่งพร้อมวางใน Google Flow (Copy & Paste)</h4>
+              <p class="text-xs text-slate-500">คัดลอกชุดคำสั่งรวม หรือคัดลอกบทพากย์ทั้งหมดไปสร้างเสียงใน Google AI Studio ได้ทันที</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="copyFullVoiceScriptForAIStudio()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition cursor-pointer">
+                <span>📋</span><span>คัดลอกบทพากย์ทั้งหมด (สำหรับ Google AI Studio)</span>
+              </button>
+              <button type="button" onclick="copyMasterFlowPrompt()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1D63ED] hover:bg-[#1550C7] text-white text-xs font-semibold shadow-xs transition cursor-pointer">
+                <span>📋</span><span>คัดลอกชุดคำสั่งทั้งหมด</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="flowPromptList" class="space-y-3">
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-100">
+          <button type="button" onclick="goToStep(1)" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs sm:text-sm font-semibold transition cursor-pointer">
+            ← ย้อนกลับไปขั้นที่ 1
+          </button>
+          <button type="button" onclick="goToStep(3)" class="px-6 py-3 rounded-xl bg-[#1D63ED] hover:bg-[#1550C7] text-white text-xs sm:text-sm font-bold shadow-sm transition cursor-pointer">
+            ถัดไป: 3. เสียงพากย์ & ดนตรีประกอบ →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         ขั้นตอนที่ 3: เสียงพากย์จริง (.mp3/.wav) & ดนตรีประกอบ (STEP 3)
+         ======================================================================== -->
+    <section id="step-3" class="step-panel hidden space-y-6">
+      <div class="text-center space-y-1.5">
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">3. เสียงพากย์จริง (.mp3/.wav) & ดนตรีประกอบ</h2>
+        <p class="text-xs sm:text-sm text-slate-500">อัปโหลดไฟล์เสียงพากย์จาก Google AI Studio เพื่อซิงก์เวลาอัตโนมัติ และผสมเสียงลงในไฟล์วิดีโอจริง</p>
+      </div>
+
+      <!-- การ์ดหลัก: อัปโหลดไฟล์เสียงพากย์จริง -->
+      <div class="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-5 sm:p-7 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+              <span>🎙️</span><span>อัปโหลดไฟล์เสียงพากย์จริง (.mp3 / .wav) จาก Google AI Studio</span>
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">รองรับไฟล์ .mp3, .wav, .m4a, .ogg • ถอดรหัสความยาวจริงด้วย Web Audio API เพื่อมิกซ์ลงวิดีโอ 100%</p>
+          </div>
+          <span id="totalVoiceDurationBadge" class="text-xs sm:text-sm font-bold text-emerald-700 bg-emerald-50 px-3.5 py-1.5 rounded-full border border-emerald-200">
+            เวลารวมทั้งหมด: 29.0 วินาที (5 ฉาก)
+          </span>
+        </div>
+
+        <!-- แถบเลือกโหมดการอัปโหลดเสียงพากย์ -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <button type="button" id="audioModePerSceneBtn" onclick="setVoiceUploadMode('per-scene')" class="text-left p-4 rounded-2xl border-2 border-[#1D63ED] bg-blue-50/40 transition cursor-pointer">
+            <div class="font-bold text-sm text-slate-900 flex items-center gap-1.5">
+              <span class="text-[#1D63ED]">✓</span><span>🎯 อัปโหลดแยกรายฉาก (แนะนำ - ซิงก์แม่นยำ 100%)</span>
+            </div>
+            <p class="text-xs text-slate-600 mt-1">โยนไฟล์เสียงแต่ละฉาก (เช่น 01.mp3, 02.mp3) ระบบอ่านความยาวจริงและปรับเวลาภาพให้ตรงเป๊ะ</p>
+          </button>
+
+          <button type="button" id="audioModeSingleMasterBtn" onclick="setVoiceUploadMode('single-master')" class="text-left p-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 transition cursor-pointer">
+            <div class="font-bold text-sm text-slate-900 flex items-center gap-1.5">
+              <span>🎼</span><span>📦 อัปโหลดไฟล์เสียงรวมทั้งเรื่อง (1 ไฟล์ยาว)</span>
+            </div>
+            <p class="text-xs text-slate-600 mt-1">อัปโหลดไฟล์เสียงพูดยาวไฟล์เดียว แล้วแบ่งช่วงเวลาเข้าแต่ละฉากอัตโนมัติตามสัดส่วนบทพูด</p>
+          </button>
+        </div>
+
+        <!-- โหมด A: อัปโหลดแยกรายฉาก -->
+        <div id="voicePerSceneContainer" class="space-y-4">
+          <div
+            id="batchAudioDropzone"
+            ondragover="handleAudioDropzoneDragOver(event)"
+            ondragleave="handleAudioDropzoneDragLeave(event)"
+            ondrop="handleBatchAudioDrop(event)"
+            class="rounded-2xl border-2 border-dashed border-emerald-500/60 bg-emerald-50/40 hover:bg-emerald-50/80 p-5 text-center transition space-y-2.5"
+          >
+            <div class="text-2xl">🎧</div>
+            <div class="text-sm font-bold text-slate-900">โยนไฟล์เสียงพากย์หลายไฟล์พร้อมกันที่นี่ (หรือเลือกทีละฉากด้านล่าง)</div>
+            <p class="text-xs text-slate-600">ระบบจะเรียงตามชื่อไฟล์ (เช่น <code class="bg-white px-1 rounded">01.mp3</code>, <code class="bg-white px-1 rounded">02.wav</code>) เข้าฉากที่ 1, 2, 3... ให้อัตโนมัติ</p>
+            <div class="pt-1 flex flex-wrap items-center justify-center gap-2.5">
+              <label class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#059669] hover:bg-[#047857] text-white text-xs sm:text-sm font-bold shadow-sm cursor-pointer transition">
+                <span>📁</span><span>เลือกไฟล์เสียงหลายฉาก (.mp3 / .wav)</span>
+                <input type="file" accept="audio/*" multiple class="hidden" onchange="handleBatchAudioUpload(event)">
+              </label>
+              <button type="button" onclick="copyFullVoiceScriptForAIStudio()" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs font-semibold cursor-pointer transition">
+                <span>📋</span><span>คัดลอกบทพากย์ไปเจนเสียง</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="rounded-2xl bg-blue-50/80 border border-blue-200 p-3.5 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-3">
+              <button type="button" onclick="autoSyncAllScenesToAudio()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1D63ED] hover:bg-[#1550C7] text-white text-xs sm:text-sm font-bold shadow-xs transition cursor-pointer">
+                <span>⚡</span><span>ปรับเวลาทุกฉากให้ตรงกับความยาวไฟล์เสียงอัตโนมัติ</span>
+              </button>
+              <label class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 cursor-pointer select-none">
+                <input type="checkbox" id="autoSyncPaddingCheckbox" checked class="accent-[#1D63ED] w-4 h-4">
+                <span>เผื่อจังหวะหายใจท้ายฉาก +0.3 วิ</span>
+              </label>
+            </div>
+            <span id="uploadedAudioCountBadge" class="text-xs font-semibold text-slate-600">อัปโหลดแล้ว 0 / 5 ฉาก</span>
+          </div>
+
+          <div id="perSceneAudioCardsList" class="space-y-3">
+          </div>
+        </div>
+
+        <!-- โหมด B: อัปโหลดไฟล์เสียงรวมทั้งเรื่อง -->
+        <div id="voiceSingleMasterContainer" class="hidden space-y-4">
+          <div class="rounded-2xl border-2 border-dashed border-indigo-400/70 bg-indigo-50/40 p-6 text-center space-y-3">
+            <div class="text-3xl">🎼</div>
+            <h4 class="text-sm sm:text-base font-bold text-slate-900">อัปโหลดไฟล์เสียงพากย์รวมทั้งเรื่อง (.mp3 / .wav)</h4>
+            <p class="text-xs text-slate-600 max-w-lg mx-auto">นำไฟล์เสียงยาว 1 ไฟล์จาก Google AI Studio มาอัปโหลด แล้วกดปุ่มแบ่งเวลาเข้าแต่ละฉากอัตโนมัติ</p>
+            <label class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-sm cursor-pointer transition">
+              <span>📁</span><span>เลือกไฟล์เสียงรวมทั้งเรื่อง (.mp3 / .wav)</span>
+              <input type="file" accept="audio/*" class="hidden" onchange="handleMasterAudioUpload(event)">
+            </label>
+          </div>
+
+          <div id="masterAudioStatusBox" class="hidden rounded-2xl border border-indigo-200 bg-white p-4 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div class="space-y-0.5">
+                <div class="text-xs font-bold text-indigo-700">✅ ไฟล์เสียงรวมทั้งเรื่องพร้อมใช้งาน</div>
+                <div id="masterAudioFileInfo" class="text-sm font-bold text-slate-900">voiceover_full.mp3 • ความยาว 28.50 วินาที</div>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <button type="button" id="playMasterVoiceBtn" onclick="toggleMasterVoicePreview()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer">
+                  ▶️ ฟังเสียงรวม
+                </button>
+                <button type="button" onclick="autoDistributeMasterAudioTimings()" class="px-4 py-2 rounded-xl bg-[#1D63ED] hover:bg-[#1550C7] text-white text-xs font-bold cursor-pointer">
+                  ⚡ แบ่งเวลาฉากตามสัดส่วนบทพูดอัตโนมัติ
+                </button>
+                <button type="button" onclick="removeMasterAudio()" class="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold cursor-pointer">
+                  🗑️ ลบไฟล์
+                </button>
+              </div>
+            </div>
+
+            <div id="masterSplitPointsList" class="space-y-2 border-t border-slate-100 pt-3">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- การ์ด 2: ตัวมิกเซอร์เสียง & ดนตรีประกอบ BGM -->
+      <div class="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-5 sm:p-7 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span>🎛️</span><span>มิกเซอร์ปรับระดับเสียง & ดนตรีประกอบ (Audio Mixer & BGM)</span>
+          </h3>
+          <span class="text-xs text-slate-500">ใช้ค่าความดังนี้ทั้งตอนพรีวิวและตอน Export วิดีโอจริง</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="rounded-2xl bg-slate-50 border border-slate-200/80 p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <label for="voiceVolumeSlider" class="text-xs font-bold text-slate-800">🎙️ ระดับเสียงพากย์ (Voiceover Volume)</label>
+              <span id="voiceVolumeLabel" class="text-xs font-mono font-bold text-[#1D63ED] bg-blue-50 px-2 py-0.5 rounded-md">100%</span>
+            </div>
+            <input type="range" id="voiceVolumeSlider" min="0" max="150" value="100" oninput="updateVoiceVolume(this.value)" class="w-full accent-[#1D63ED] cursor-pointer">
+            <p class="text-[11px] text-slate-500">ปรับได้สูงสุด 150% หากไฟล์เสียงพากย์ต้นฉบับเบากว่าปกติ</p>
+          </div>
+
+          <div class="rounded-2xl bg-slate-50 border border-slate-200/80 p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <label for="bgmVolumeSlider" class="text-xs font-bold text-slate-800">🎵 ระดับเสียงดนตรีประกอบ (BGM Volume)</label>
+              <span id="bgmVolumeLabel" class="text-xs font-mono font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md">20%</span>
+            </div>
+            <input type="range" id="bgmVolumeSlider" min="0" max="100" value="20" oninput="updateBgmVolume(this.value)" class="w-full accent-indigo-600 cursor-pointer">
+            <p class="text-[11px] text-slate-500">แนะนำ 15%–25% เพื่อไม่ให้เสียงดนตรีกลบเสียงคนพูด</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+          <div class="md:col-span-6">
+            <label for="bgmStyleSelect" class="block text-xs font-bold text-slate-700 mb-1.5">เลือกแหล่งเสียงดนตรีประกอบ (BGM)</label>
+            <select id="bgmStyleSelect" onchange="handleBgmStyleChange(this.value)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-xs sm:text-sm text-slate-800 bg-white focus:outline-none focus:border-[#1D63ED]">
+              <option value="corporate" selected>🎹 Auto BGM: Corporate Bright & Tech (สดใส ทันสมัย)</option>
+              <option value="lofi">🌿 Auto BGM: Lo-Fi Chill & Cozy (ผ่อนคลาย ฟังสบาย)</option>
+              <option value="upbeat">🚀 Auto BGM: Upbeat Infographic Pop (กระฉับกระเฉง)</option>
+              <option value="calm">🧘 Auto BGM: Ambient Calm & Wisdom (สงบ อบอุ่น)</option>
+              <option value="custom">📁 อัปโหลดไฟล์เพลง BGM ของคุณเอง (.mp3 / .wav)</option>
+              <option value="none">🔇 ปิดดนตรีประกอบ (No BGM)</option>
+            </select>
+          </div>
+
+          <div class="md:col-span-3">
+            <label class="w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-800 border border-slate-300 text-xs font-semibold cursor-pointer transition">
+              <span>🎵</span><span id="customBgmBtnLabel" class="truncate">อัปโหลดเพลง BGM</span>
+              <input type="file" accept="audio/*" class="hidden" onchange="handleCustomBgmUpload(event)">
+            </label>
+          </div>
+
+          <div class="md:col-span-3">
+            <button type="button" id="bgmPreviewBtn" onclick="toggleBgmPreview()" class="w-full py-2.5 px-4 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-bold transition cursor-pointer">
+              ▶️ ทดลองฟัง BGM
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- การ์ด 3 (เครื่องมือเสริม): ทดสอบฟังจังหวะเสียงอ่านเบื้องต้น -->
+      <details class="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-5 sm:p-6">
+        <summary class="text-sm sm:text-base font-bold text-slate-800 cursor-pointer select-none flex items-center justify-between">
+          <span class="flex items-center gap-2"><span>🔊</span><span>ทดสอบฟังจังหวะเสียงอ่านเบื้องต้น (Browser Preview — สำหรับเช็กความยาวบทพูดก่อนเจนเสียงจริง)</span></span>
+          <span class="text-xs text-[#1D63ED] font-semibold">คลิกเปิด/ปิด ▾</span>
+        </summary>
+
+        <div class="mt-5 pt-4 border-t border-slate-100 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button type="button" id="voiceGenderMaleBtn" onclick="selectVoiceGender('male')" class="text-left p-3.5 rounded-2xl border-2 border-[#1D63ED] bg-blue-50/40 flex items-center gap-3.5 transition cursor-pointer">
+              <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center text-xl shrink-0">👨</div>
+              <div>
+                <div class="font-bold text-xs sm:text-sm text-slate-900">👨 เสียงผู้ชาย (Browser Preview)</div>
+                <p class="text-[11px] text-slate-500">ใช้ทดสอบจังหวะคำอ่านภาษาไทยในเบราว์เซอร์</p>
+              </div>
+            </button>
+
+            <button type="button" id="voiceGenderFemaleBtn" onclick="selectVoiceGender('female')" class="text-left p-3.5 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 flex items-center gap-3.5 transition cursor-pointer">
+              <div class="w-10 h-10 rounded-full bg-pink-500 text-white flex items-center justify-center text-xl shrink-0">👩</div>
+              <div>
+                <div class="font-bold text-xs sm:text-sm text-slate-900">👩 เสียงผู้หญิง (Browser Preview)</div>
+                <p class="text-[11px] text-slate-500">ใช้ทดสอบจังหวะคำอ่านโทนเสียงนุ่มนวล</p>
+              </div>
+            </button>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="playAllBrowserTTSPreview()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold cursor-pointer">
+                ▶️ ทดลองอ่านบทพากย์ทุกฉาก
+              </button>
+              <button type="button" onclick="stopAllAudio()" class="px-3.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold cursor-pointer">
+                ⏹️ หยุดเสียง
+              </button>
+            </div>
+            <span class="text-[11px] text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
+              💡 หมายเหตุ: เสียง Browser Preview ใช้สำหรับเช็กจังหวะเท่านั้น กรุณาอัปโหลดไฟล์ .mp3/.wav ด้านบนเพื่อรวมเสียงลงวิดีโอ
+            </span>
+          </div>
+        </div>
+      </details>
+
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+        <button type="button" onclick="goToStep(2)" class="px-5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 text-xs sm:text-sm font-semibold transition cursor-pointer">
+          ← ย้อนกลับไปขั้นที่ 2
+        </button>
+        <button type="button" onclick="goToStep(4)" class="px-6 py-3 rounded-xl bg-[#1D63ED] hover:bg-[#1550C7] text-white text-xs sm:text-sm font-bold shadow-sm transition cursor-pointer">
+          ถัดไป: 4. อัปโหลดวิดีโอ & พรีวิวส่งออก →
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         ขั้นตอนที่ 4: อัปโหลดไฟล์วิดีโอ & ตัดต่อพรีวิว (STEP 4)
+         ======================================================================== -->
+    <section id="step-4" class="step-panel hidden space-y-6">
+      <div class="text-center space-y-1.5">
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">4. อัปโหลดไฟล์วิดีโอ & ตัดต่อพรีวิว</h2>
+        <p class="text-xs sm:text-sm text-slate-500">โยนไฟล์วิดีโอจาก Google Flow ลงในกล่องสีน้ำเงิน แล้วกดปุ่มตัดต่อเพื่อดูพรีวิวและดาวน์โหลดได้เลย</p>
+      </div>
+
+      <!-- การ์ด 1: อัปโหลดไฟล์วิดีโอจาก Google Flow -->
+      <div class="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-5 sm:p-7 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span>📁</span><span>1. อัปโหลดไฟล์วิดีโอจาก Google Flow</span>
+          </h3>
+          <button type="button" onclick="generateSimulatedDemoClips()" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-semibold transition cursor-pointer">
+            <span>✨</span><span>สร้างคลิปตัวอย่างจำลอง (ทดสอบพรีวิวทันที)</span>
+          </button>
+        </div>
+
+        <div
+          id="videoDropzone"
+          ondragover="handleDropzoneDragOver(event)"
+          ondragleave="handleDropzoneDragLeave(event)"
+          ondrop="handleDropzoneDrop(event)"
+          class="rounded-2xl border-2 border-dashed border-[#1D63ED]/60 bg-[#EEF4FF]/70 hover:bg-[#EEF4FF] p-6 sm:p-8 text-center transition-all space-y-3"
+        >
+          <div class="text-4xl">📁</div>
+          <h4 class="text-base sm:text-lg font-bold text-slate-900">โยนไฟล์วิดีโอทั้งหมดลงในกล่องนี้ได้เลย</h4>
+          <p class="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
+            เลือกไฟล์คลิปทั้งหมดที่โหลดมาจาก Google Flow พร้อมกัน ระบบจะจัดเรียงเข้าแต่ละฉากให้อัตโนมัติ
+          </p>
+
+          <div class="flex flex-wrap items-center justify-center gap-2 text-xs text-slate-600 pt-1">
+            <span>🖼️ ช่วยจับคู่ให้แม่นขึ้น (ไม่บังคับ): ใส่ภาพนิ่ง IMG ที่ใช้สร้างคลิปด้วย</span>
+            <label class="px-3 py-1 rounded-lg bg-white hover:bg-slate-50 border border-slate-300 font-semibold text-slate-700 cursor-pointer shadow-2xs">
+              เลือกภาพนิ่ง
+              <input type="file" accept="image/*" multiple class="hidden" onchange="handleReferenceImagesUpload(event)">
+            </label>
+          </div>
+
+          <p class="text-[11px] sm:text-xs text-slate-500">
+            💡 จัดลำดับแม่นที่สุด: ตั้งชื่อไฟล์เป็น <code class="bg-white/80 px-1 rounded">01.mp4</code>, <code class="bg-white/80 px-1 rounded">02.mp4</code> ... และรอยต่อ <code class="bg-white/80 px-1 rounded">T01.mp4</code> (= ฉาก 1→2) หรือคงชื่อจาก Flow ที่ขึ้นต้นด้วย <code class="bg-white/80 px-1 rounded">SCENE_01 / TRANS_01_TO_02</code> ไว้
+          </p>
+
+          <div class="pt-2">
+            <label class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-[#1D63ED] hover:bg-[#1550C7] text-white font-bold text-sm shadow-md shadow-blue-600/20 cursor-pointer transition">
+              <span>📁</span><span>โยนไฟล์ทั้งหมดลงที่นี่ (เลือกไฟล์วิดีโอ)</span>
+              <input type="file" id="multiVideoInput" accept="video/*" multiple class="hidden" onchange="handleMultipleVideoUpload(event)">
+            </label>
+          </div>
+        </div>
+
+        <!-- ส่วนตรวจลำดับคลิป & สถานะเสียงพากย์ -->
+        <div class="space-y-3 pt-2">
+          <div class="space-y-1">
+            <h4 class="text-xs sm:text-sm font-bold text-slate-800">
+              📜 ตรวจลำดับคลิป & สถานะเสียงพากย์รายฉาก — <span class="font-normal text-slate-600">ตรวจสอบความพร้อมทั้งไฟล์วิดีโอและไฟล์เสียง .mp3/.wav ก่อนกด Export</span>
+            </h4>
+            <p class="text-xs text-slate-500">
+              หากคลิปวิดีโอสั้นกว่าเสียงพากย์ ระบบจะวนลูปภาพอย่างนุ่มนวลให้พอดีกับเสียงพูดอัตโนมัติ • กดปุ่ม <span class="inline-block px-1 bg-blue-600 text-white rounded text-[10px]">⬆️</span> <span class="inline-block px-1 bg-blue-600 text-white rounded text-[10px]">⬇️</span> เพื่อสลับลำดับฉาก
+            </p>
+          </div>
+
+          <div id="clipSequenceList" class="space-y-2.5">
+          </div>
+        </div>
+      </div>
+
+      <!-- การ์ด 2: เครื่องเล่นพรีวิวตัดต่อรวม & ส่งออกวิดีโอ -->
+      <div class="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-5 sm:p-7 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+              <span>🎬</span><span>2. พรีวิวตัดต่อรวม & ส่งออกวิดีโอพร้อมเสียงพากย์จริง</span>
+            </h3>
+            <p class="text-xs text-slate-500">รวมภาพวิดีโอ + พาดหัวอินโฟกราฟิก + ซับไตเติลภาษาไทย + เสียงพากย์ .mp3/.wav จริง + เพลงประกอบ BGM</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="goToStep(5)" class="px-3.5 py-2 rounded-xl bg-[#FEF3C7] hover:bg-amber-200/80 text-[#92400E] border border-[#F59E0B]/50 text-xs font-bold transition cursor-pointer">
+              🛠️ ไปขั้นที่ 5: แก้ไขเฉพาะจุด
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-slate-950 rounded-2xl p-3 sm:p-5 flex flex-col items-center justify-center">
+          <div id="previewCanvasWrapper" class="relative w-full max-w-3xl aspect-video bg-slate-900 rounded-xl overflow-hidden shadow-2xl border border-slate-800">
+            <canvas id="compositorCanvas" class="w-full h-full block"></canvas>
+            <div id="previewOverlayBadge" class="absolute top-3 left-3 bg-black/70 text-white text-xs px-2.5 py-1 rounded-lg backdrop-blur-xs">
+              พร้อมพรีวิว • ฉากที่ 1
+            </div>
+          </div>
+
+          <div class="w-full max-w-3xl mt-4 space-y-3">
+            <div class="flex items-center gap-3 text-xs text-slate-300 font-mono">
+              <span id="previewCurrentTime">00:00</span>
+              <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div id="previewProgressBar" class="h-full bg-[#1D63ED] w-0 transition-all duration-150"></div>
+              </div>
+              <span id="previewTotalTime">00:29</span>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <button type="button" id="playPreviewBtn" onclick="startMasterPreview(false)" class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#1D63ED] hover:bg-[#1550C7] text-white text-xs sm:text-sm font-bold shadow-sm transition cursor-pointer">
+                  <span>▶️</span><span>เล่นพรีวิวทั้งเรื่อง</span>
+                </button>
+                <button type="button" onclick="stopMasterPreview()" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-semibold transition cursor-pointer">
+                  <span>⏹️</span><span>หยุด</span>
+                </button>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <button type="button" id="exportWavBtn" onclick="exportMixedWavAudio()" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-sm transition cursor-pointer">
+                  <span>🎧</span><span id="exportWavBtnText">ดาวน์โหลดไฟล์เสียงพากย์มิกซ์รวม (.wav)</span>
+                </button>
+
+                <button type="button" id="exportVideoBtn" onclick="exportFinalWebmVideo()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#059669] hover:bg-[#047857] text-white text-xs sm:text-sm font-bold shadow-md transition cursor-pointer">
+                  <span>🎬</span><span id="exportVideoBtnText">Export วิดีโอพร้อมเสียงพากย์จริง</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         ขั้นตอนที่ 5: แก้ไขเฉพาะจุด (STEP 5: FINE-TUNE STUDIO)
+         ======================================================================== -->
+    <section id="step-5" class="step-panel hidden space-y-6">
+      <div class="text-center space-y-1.5">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FEF3C7] text-[#92400E] border border-[#F59E0B]/50 text-xs font-bold mb-1">
+          <span>🛠️</span><span>โหมดปรับแต่งละเอียดรายฉาก</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">5. แก้ไขเฉพาะจุด (Fine-Tune Studio)</h2>
+        <p class="text-xs sm:text-sm text-slate-500">ปรับจังหวะหน่วงเสียงพากย์ (Delay Offset) ความยาวฉาก เกลาบทพากย์ และตกแต่งซับไตเติลพร้อมพรีวิวสด</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200/90 shadow-xs p-5 sm:p-6 space-y-5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-2">เลือกฉากที่ต้องการปรับแต่ง:</label>
+            <div id="step5SceneTabs" class="flex flex-wrap gap-2">
+            </div>
+          </div>
+
+          <div>
+            <label for="step5HeadlineInput" class="block text-xs font-bold text-slate-700 mb-1.5">🏷️ ข้อความพาดหัวอินโฟกราฟิกบนจอ</label>
+            <input type="text" id="step5HeadlineInput" oninput="updateSelectedSceneField('onScreenText', this.value)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm font-semibold text-slate-900 focus:outline-none focus:border-[#1D63ED]">
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <label for="step5NarrationInput" class="text-xs font-bold text-slate-700">🎙️ บทพากย์ & ซับไตเติลของฉากนี้</label>
+              <div class="flex flex-wrap gap-1.5">
+                <button type="button" onclick="polishSingleSceneWithAI('shorter')" class="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-[#1D63ED] text-[11px] font-semibold transition cursor-pointer">
+                  ✨ กระชับให้สั้นลง
+                </button>
+                <button type="button" onclick="polishSingleSceneWithAI('exciting')" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 text-[11px] font-semibold transition cursor-pointer">
+                  🔥 เพิ่มพลังน่าตื่นเต้น
+                </button>
+                <button type="button" onclick="polishSingleSceneWithAI('clearer')" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[11px] font-semibold transition cursor-pointer">
+                  💡 อธิบายให้เห็นภาพขึ้น
+                </button>
+              </div>
+            </div>
+            <textarea id="step5NarrationInput" rows="3" oninput="updateSelectedSceneField('narration', this.value)" class="w-full rounded-xl border border-slate-300 p-3 text-sm text-slate-800 focus:outline-none focus:border-[#1D63ED]"></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 space-y-2">
+              <div class="flex items-center justify-between">
+                <label for="step5DurationSlider" class="text-xs font-bold text-slate-700">⏱️ ความยาวฉากนี้</label>
+                <span id="step5DurationLabel" class="text-xs font-bold text-[#1D63ED] bg-blue-50 px-2.5 py-0.5 rounded-full">6.0 วิ</span>
+              </div>
+              <input type="range" id="step5DurationSlider" min="2" max="25" step="0.1" value="6" oninput="updateSelectedSceneDuration(this.value)" class="w-full accent-[#1D63ED] cursor-pointer">
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 space-y-2">
+              <div class="flex items-center justify-between">
+                <label for="step5VoiceDelaySlider" class="text-xs font-bold text-slate-700">⏳ หน่วงเริ่มเสียงพากย์</label>
+                <span id="step5VoiceDelayLabel" class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">0.0 วิ</span>
+              </div>
+              <input type="range" id="step5VoiceDelaySlider" min="0" max="2.0" step="0.1" value="0" oninput="updateSelectedSceneVoiceDelay(this.value)" class="w-full accent-emerald-600 cursor-pointer">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+            <div>
+              <label for="subSizeSelect" class="block text-xs font-bold text-slate-700 mb-1">ขนาดตัวอักษร</label>
+              <select id="subSizeSelect" onchange="updateSubtitleConfig()" class="w-full rounded-xl border border-slate-300 px-2.5 py-2 text-xs bg-white">
+                <option value="sm">เล็ก (กะทัดรัด)</option>
+                <option value="md" selected>กลาง (มาตรฐาน)</option>
+                <option value="lg">ใหญ่ (ชัดบนมือถือ)</option>
+              </select>
+            </div>
+            <div>
+              <label for="subPosSelect" class="block text-xs font-bold text-slate-700 mb-1">ตำแหน่งซับ</label>
+              <select id="subPosSelect" onchange="updateSubtitleConfig()" class="w-full rounded-xl border border-slate-300 px-2.5 py-2 text-xs bg-white">
+                <option value="bottom" selected>ล่างสุด (มาตรฐาน)</option>
+                <option value="lower-mid">กึ่งกลางล่าง</option>
+                <option value="top">ด้านบน</option>
+              </select>
+            </div>
+            <div>
+              <label for="subTextColorSelect" class="block text-xs font-bold text-slate-700 mb-1">สีตัวอักษรซับ</label>
+              <select id="subTextColorSelect" onchange="updateSubtitleConfig()" class="w-full rounded-xl border border-slate-300 px-2.5 py-2 text-xs bg-white">
+                <option value="#FFFFFF" selected>⚪ สีขาว (มาตรฐาน)</option>
+                <option value="#FACC15">🟡 สีเหลืองเด่น</option>
+                <option value="#38BDF8">🔵 สีฟ้าสดใส</option>
+                <option value="#0F172A">⚫ สีดำเข้ม</option>
+              </select>
+            </div>
+            <div>
+              <label for="subOpacitySlider" class="block text-xs font-bold text-slate-700 mb-1">ความทึบกล่องซับ (<span id="subOpacityLabel">85%</span>)</label>
+              <input type="range" id="subOpacitySlider" min="0" max="100" value="85" oninput="updateSubtitleConfig()" class="w-full accent-[#1D63ED] mt-2 cursor-pointer">
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-white rounded-3xl border border-slate-200/90 shadow-xs p-5 sm:p-6 flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <span>👁️</span><span>ตัวอย่างการจัดวางซับไตเติลฉากนี้</span>
+            </h3>
+            <div class="rounded-2xl overflow-hidden border border-slate-300 bg-slate-900 aspect-video relative">
+              <canvas id="step5MiniCanvas" class="w-full h-full block"></canvas>
+            </div>
+            <p class="text-xs text-slate-500">
+              การปรับค่าซับไตเติลและจังหวะหน่วงเสียงจะมีผลทันทีทั้งตอนพรีวิวและตอนส่งออกไฟล์วิดีโอในขั้นที่ 4
+            </p>
+          </div>
+
+          <div class="pt-3 border-t border-slate-100 flex flex-col gap-2">
+            <button type="button" onclick="playSingleSceneVoiceOrTTS(state.step5SelectedScene)" class="w-full py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-bold transition cursor-pointer">
+              🔊 ทดลองฟังเสียงพากย์ฉากนี้
+            </button>
+            <button type="button" onclick="goToStep(4)" class="w-full py-3 rounded-xl bg-[#1D63ED] hover:bg-[#1550C7] text-white text-xs sm:text-sm font-bold shadow-sm transition cursor-pointer">
+              🎬 บันทึกและกลับไปพรีวิวส่งออก (ขั้นที่ 4)
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== ส่วนท้าย (FOOTER) ==================== -->
+  <footer class="border-t border-slate-200/80 bg-white py-4 mt-8">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+      <p><span class="font-semibold text-slate-700">Video Infographic AI Pro Studio</span> • สตูดิโอสร้างวิดีโออินโฟกราฟิก 5 ขั้นตอนด้วย Gemini AI</p>
+      <p>พร้อมใช้งานทันทีและรองรับการโฮสต์บน Cloudflare Workers / Cloudflare Pages</p>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       หน้าต่าง MODALS ทั้งหมด
+       ======================================================================== -->
+
+  <!-- 1. Modal ตั้งค่า Gemini API Key -->
+  <div id="apiModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-md w-full overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="font-bold text-slate-900 flex items-center gap-2">
+          <span>⚙️</span><span>ตั้งค่าการเชื่อมต่อ Gemini API</span>
+        </h3>
+        <button type="button" onclick="closeModal('apiModal')" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 space-y-4">
+        <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 leading-relaxed">
+          <div class="font-bold mb-1">✅ สถานะปัจจุบัน: พร้อมใช้งานทันที</div>
+          <p>หากใช้งานในสภาพแวดล้อมนี้ ระบบจะเชื่อมต่อให้อัตโนมัติโดยไม่ต้องใส่ Key แต่หากคุณนำไฟล์นี้ไปโฮสต์บน <strong>Cloudflare Workers / Pages</strong> ของคุณเอง สามารถใส่ Gemini API Key ด้านล่างเพื่อใช้งานได้ทันที</p>
+        </div>
+        <div>
+          <label for="apiKeyInputField" class="block text-xs font-bold text-slate-700 mb-1.5">Google AI Studio API Key (เก็บในเบราว์เซอร์ของคุณเท่านั้น)</label>
+          <input type="password" id="apiKeyInputField" placeholder="AIzaSy..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:outline-none focus:border-[#1D63ED]">
+        </div>
+      </div>
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-2">
+        <button type="button" onclick="clearCustomApiKey()" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-200/70 cursor-pointer">ล้างค่า Key</button>
+        <button type="button" onclick="saveCustomApiKey()" class="px-5 py-2 rounded-xl text-xs font-bold bg-[#1D63ED] hover:bg-[#1550C7] text-white cursor-pointer">บันทึกการตั้งค่า</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Modal คู่มือการใช้งานครบ 5 ขั้นตอน -->
+  <div id="guideModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-2xl w-full max-h-[88vh] flex flex-col overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between shrink-0">
+        <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
+          <span>📖</span><span>คู่มือสร้างวิดีโออินโฟกราฟิกใน 5 ขั้นตอน</span>
+        </h3>
+        <button type="button" onclick="closeModal('guideModal')" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 overflow-y-auto space-y-4 text-xs sm:text-sm text-slate-700 leading-relaxed">
+        <div class="p-4 rounded-2xl bg-blue-50/70 border border-blue-200">
+          <div class="font-bold text-[#1D63ED] mb-1">ขั้นที่ 1: หัวข้อ & เลือกสไตล์ภาพ (24 สไตล์)</div>
+          <p>พิมพ์หัวข้อเรื่องที่ต้องการ กำหนดกลุ่มคนดู จำนวนฉาก สัดส่วนภาพ (16:9 หรือ 9:16) และคลิกเลือกสไตล์ภาพจาก 24 สไตล์ จากนั้นกดปุ่มสร้างสตอรี่บอร์ดด้วย AI</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+          <div class="font-bold text-slate-900 mb-1">ขั้นที่ 2: ตรวจสตอรี่บอร์ด & คัดลอกคำสั่ง Google Flow</div>
+          <p>ตรวจสอบและแก้ไขบทพากย์หรือข้อความบนภาพได้ทุกฉาก เลือกโหมด "ทำภาพแรกก่อน" หรือ "ไม่ทำภาพแรก" แล้วกดคัดลอกชุดคำสั่งภาษาอังกฤษไปวางสร้างคลิปใน Google Flow หรือคัดลอกบทพากย์ไปเจนเสียงใน Google AI Studio</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200">
+          <div class="font-bold text-emerald-800 mb-1">ขั้นที่ 3: อัปโหลดเสียงพากย์จริง (.mp3/.wav) & ดนตรีประกอบ</div>
+          <p>นำไฟล์เสียงพากย์จาก Google AI Studio มาอัปโหลดแบบแยกรายฉากหรือรวมทั้งเรื่อง กดปุ่มซิงก์เวลาอัตโนมัติ และปรับระดับเสียงพากย์แยกกับดนตรีประกอบ BGM</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200">
+          <div class="font-bold text-indigo-900 mb-1">ขั้นที่ 4: อัปโหลดไฟล์วิดีโอ & ตัดต่อพรีวิวส่งออก</div>
+          <p>โยนไฟล์คลิปทั้งหมดลงกล่องสีน้ำเงิน ระบบจะจัดเรียงฉากอัตโนมัติ (หรือกดสร้างคลิปตัวอย่างจำลองเพื่อทดสอบทันที) จากนั้นกดพรีวิวและส่งออกเป็นไฟล์วิดีโอพร้อมเสียงพากย์จริง</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-amber-50/80 border border-amber-200">
+          <div class="font-bold text-amber-900 mb-1">ขั้นที่ 5: แก้ไขเฉพาะจุด (Fine-Tune)</div>
+          <p>ปรับจังหวะหน่วงเสียงพากย์ เกลาบทพากย์เฉพาะฉากด้วย AI ปรับความยาวเวลาแสดงผล และเลือกขนาด/ตำแหน่ง/สีกล่องซับไตเติลให้สวยงามสมบูรณ์แบบ</p>
+        </div>
+      </div>
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex justify-end shrink-0">
+        <button type="button" onclick="closeModal('guideModal')" class="px-5 py-2 rounded-xl bg-[#1D63ED] text-white text-xs font-bold cursor-pointer">เข้าใจแล้ว เริ่มใช้งานเลย</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Modal วิดีโอสอนการใช้งาน -->
+  <div id="tutorialModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-xl w-full overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="font-bold text-slate-900 flex items-center gap-2">
+          <span>🎬</span><span>วิดีโอแนะนำขั้นตอนการทำงาน (Interactive Tour)</span>
+        </h3>
+        <button type="button" onclick="closeModal('tutorialModal')" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 space-y-4">
+        <div class="rounded-2xl bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 p-6 text-white text-center space-y-3 shadow-inner">
+          <div class="inline-flex items-center px-3 py-1 rounded-full bg-white/10 text-xs font-semibold text-blue-200">
+            Workflow 5 ขั้นตอนระดับมืออาชีพ
+          </div>
+          <h4 class="text-lg sm:text-xl font-bold">จากไอเดีย 1 ประโยค → สู่วิดีโออินโฟกราฟิกพร้อมพากย์เสียง</h4>
+          <div class="grid grid-cols-5 gap-1.5 pt-2 text-[11px]">
+            <div class="bg-white/10 rounded-xl p-2"><div class="text-base mb-1">🎨</div>1. หัวข้อ</div>
+            <div class="bg-white/10 rounded-xl p-2"><div class="text-base mb-1">📋</div>2. Flow</div>
+            <div class="bg-white/10 rounded-xl p-2"><div class="text-base mb-1">🎙️</div>3. เสียงพากย์</div>
+            <div class="bg-white/10 rounded-xl p-2"><div class="text-base mb-1">🎬</div>4. ตัดต่อ</div>
+            <div class="bg-amber-400/20 border border-amber-300/30 rounded-xl p-2"><div class="text-base mb-1">🛠️</div>5. เกลางาน</div>
+          </div>
+        </div>
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          คุณสามารถทดลองระบบทั้งหมดได้ทันทีโดยคลิกปุ่ม <strong>"โหลดโปรเจกต์ตัวอย่าง & ทดลองเล่น"</strong> ด้านล่าง หรือพิมพ์หัวข้อของคุณเองในขั้นตอนที่ 1 ครับ
+        </p>
+      </div>
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-2">
+        <button type="button" onclick="closeModal('tutorialModal')" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-200/70 cursor-pointer">ปิดหน้าต่าง</button>
+        <button type="button" onclick="loadDemoStoryPreset(); closeModal('tutorialModal'); goToStep(2);" class="px-5 py-2 rounded-xl text-xs font-bold bg-[#059669] hover:bg-[#047857] text-white cursor-pointer">
+          ⚡ โหลดโปรเจกต์ตัวอย่าง & ดูผลลัพธ์เลย
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Modal ประวัติเวอร์ชัน -->
+  <div id="changelogModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-md w-full overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="font-bold text-slate-900">📋 ประวัติเวอร์ชัน — Pro Studio</h3>
+        <button type="button" onclick="closeModal('changelogModal')" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 space-y-3 text-xs text-slate-700">
+        <div class="p-3.5 rounded-2xl bg-blue-50 border border-blue-200">
+          <div class="font-bold text-[#1D63ED]">Pro Studio Edition (ปัจจุบัน)</div>
+          <ul class="list-disc pl-4 mt-1.5 space-y-1">
+            <li>รองรับการสร้างสตอรี่บอร์ดและคำสั่ง Google Flow ด้วย Gemini AI</li>
+            <li>ตารางเลือกสไตล์ภาพ 24 สไตล์พร้อมภาพประกอบตัวอย่าง</li>
+            <li>รองรับการอัปโหลดไฟล์เสียงพากย์จริง (.mp3 / .wav) ทั้งแบบแยกรายฉากและรวมทั้งเรื่อง พร้อมระบบ Auto-Sync</li>
+            <li>มิกเซอร์ปรับความดังเสียงพากย์แยกกับ BGM และเรนเดอร์ส่งออกไฟล์วิดีโอพร้อมเสียงพากย์จริง</li>
+          </ul>
+        </div>
+      </div>
+      <div class="px-6 py-3 bg-slate-50 border-t border-slate-100 flex justify-end">
+        <button type="button" onclick="closeModal('changelogModal')" class="px-4 py-2 rounded-xl bg-slate-800 text-white text-xs font-semibold cursor-pointer">ปิด</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Modal ยืนยันการเริ่มงานใหม่ -->
+  <div id="newProjectConfirmModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-sm w-full overflow-hidden p-6 space-y-4">
+      <h3 class="font-bold text-base text-slate-900">📄 ต้องการเริ่มงานใหม่ใช่ไหม?</h3>
+      <p class="text-xs text-slate-600 leading-relaxed">ข้อมูลสตอรี่บอร์ดและคลิปที่อัปโหลดในหน้าปัจจุบันจะถูกรีเซ็ต (แนะนำให้กด "บันทึกงาน" เป็นไฟล์ .json ก่อนหากต้องการเก็บไว้)</p>
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button type="button" onclick="closeModal('newProjectConfirmModal')" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer">ยกเลิก</button>
+        <button type="button" onclick="executeNewProject()" class="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white cursor-pointer">ยืนยันเริ่มงานใหม่</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- กล่องแจ้งเตือน Toast -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ========================================================================
+       สคริปต์ควบคุมการทำงานทั้งหมด (APPLICATION LOGIC)
+       ======================================================================== -->
+  <script>
+    // =========================================================================
+    // 1. ข้อมูลสไตล์ภาพทั้ง 24 สไตล์ (24 VISUAL STYLES DATA & SVG ILLUSTRATIONS)
+    // =========================================================================
+    const VISUAL_STYLES = [
+      { id: '01', name: '1. Clean Flat Vector', promptTag: 'Clean modern flat vector infographic illustration, crisp geometric shapes, vibrant balanced palette, minimal shadows, 2D editorial vector art' },
+      { id: '02', name: '2. Soft Layered Vector', promptTag: 'Soft layered vector art with subtle gradients, smooth depth, modern tech infographic style, clean composition' },
+      { id: '03', name: '3. Monoline 2.5D Vector', promptTag: 'Monoline 2.5D isometric vector illustration, consistent clean outlines, pastel tech colors, diagram aesthetic' },
+      { id: '04', name: '4. 3D Isometric', promptTag: '3D Isometric architectural & infographic diorama, clean studio lighting, vibrant colors, crisp edges, Octane render' },
+      { id: '05', name: '5. 3D Voxel Art', promptTag: '3D Voxel block art style, charming cubic miniature world, bright studio illumination, high detail voxel render' },
+      { id: '06', name: '6. 3D Claymorphism', promptTag: '3D Claymorphism style, soft matte clay textures, rounded friendly shapes, warm studio lighting, tactile handcrafted look' },
+      { id: '07', name: '7. Paper Cutout', promptTag: 'Layered 3D paper cutout craft art, delicate paper shadows, warm storytelling lighting, textured cardstock layers' },
+      { id: '08', name: '8. Premium Kawaii 3D', promptTag: 'Premium Kawaii 3D cute pastel illustration, glossy soft materials, adorable characters, clean studio backdrop' },
+      { id: '09', name: '9. 3D Soft Plush', promptTag: '3D Soft Plush felt and fabric texture style, cozy fuzzy surfaces, soft warm rim lighting, charming tactile 3D animation' },
+      { id: '10', name: '10. Cinematic 3D', promptTag: 'Cinematic 3D animated film style, dramatic volumetric lighting, shallow depth of field, Pixar-inspired expressive rendering' },
+      { id: '11', name: '11. Asian Executive 3D', promptTag: 'Modern Asian business executive 3D animation, sleek holographic data charts, professional corporate office lighting' },
+      { id: '12', name: '12. Adaptive 3D Cartoon', promptTag: 'Adaptive 3D cartoon character storytelling, expressive poses, warm friendly environment, smooth global illumination' },
+      { id: '13', name: '13. Miniature Diorama', promptTag: 'Tilt-shift miniature tabletop diorama, hyper-detailed tiny world, warm golden hour studio lighting, macro photography feel' },
+      { id: '14', name: '14. Chalkboard Art', promptTag: 'Hand-drawn white and pastel chalk illustration on dark slate blackboard, educational diagrams, sketchy arrows and icons' },
+      { id: '15', name: '15. Soft Watercolor', promptTag: 'Soft watercolor and ink editorial illustration, gentle color washes, organic paper texture, warm artistic storytelling' },
+      { id: '16', name: '16. Minimal Hand-Drawn', promptTag: 'Minimalist hand-drawn black ink sketch on clean off-white paper with selective accent highlights, clear visual thinking notes' },
+      { id: '17', name: '17. แนวธรรมะ / จิตรกรรมไทย', promptTag: 'Thai traditional painting inspired modern illustration, golden Kanok motifs, serene temple atmosphere, warm peaceful lighting' },
+      { id: '18', name: '18. Japanese Anime 2D', promptTag: 'High-quality modern Japanese 2D anime background and character art, Makoto Shinkai inspired sky lighting, clean cel shading' },
+      { id: '19', name: '19. Cute Chibi Sticker', promptTag: 'Cute Chibi 2D sticker art style, bold clean outlines, expressive big eyes, playful infographic icons and sparkles' },
+      { id: '20', name: '20. 3D Isometric เต็มจอ', promptTag: 'Full-frame dense 3D Isometric ecosystem world, rich miniature details filling the entire frame, vibrant daylight render' },
+      { id: '21', name: '21. ภาพสมจริง (Realistic)', promptTag: 'Photorealistic 4K commercial cinematography, natural daylight, authentic real-world textures, clean shallow depth of field' },
+      { id: '22', name: '22. Semi-Realistic Webtoon', promptTag: 'Modern Korean/Thai semi-realistic webtoon digital painting, clean lineart, soft dramatic shading, relatable characters' },
+      { id: '23', name: '23. 3D Animated Storybook', promptTag: 'Whimsical 3D animated storybook illustration, lush painterly textures, magical golden sunlight, heartwarming atmosphere' },
+      { id: '24', name: '24. Thai Folktale Cartoon', promptTag: 'Thai folktale 2D/3D stylized cartoon, traditional Thai wooden house and riverside scenery, warm nostalgic colors' }
+    ];
+
+    /**
+     * สร้างภาพประกอบ SVG ขนาดเล็กเฉพาะตัวสำหรับแต่ละสไตล์ทั้ง 24 แบบ
+     */
+    function getStyleThumbnailSVG(styleId) {
+      const palettes = [
+        ['#DBEAFE', '#1D63ED', '#38BDF8'], ['#E0E7FF', '#4F46E5', '#818CF8'], ['#F3E8FF', '#7E22CE', '#C084FC'],
+        ['#CFFAFE', '#0891B2', '#22D3EE'], ['#E0F2FE', '#0284C7', '#38BDF8'], ['#FFEDD5', '#EA580C', '#FB923C'],
+        ['#FEF3C7', '#D97706', '#FBBF24'], ['#FCE7F3', '#DB2777', '#F472B6'], ['#FEF9C3', '#CA8A04', '#FACC15'],
+        ['#1E293B', '#3B82F6', '#F59E0B'], ['#E2E8F0', '#0F172A', '#0EA5E9'], ['#FFE4E6', '#E11D48', '#FB7185'],
+        ['#F5EFE6', '#78350F', '#D97706'], ['#1E293B', '#F8FAFC', '#94A3B8'], ['#ECFDF5', '#059669', '#34D399'],
+        ['#FAFAFA', '#18181B', '#EF4444'], ['#FEF3C7', '#B45309', '#F59E0B'], ['#E0F2FE', '#2563EB', '#60A5FA'],
+        ['#FDF2F8', '#EC4899', '#A855F7'], ['#DCFCE7', '#15803D', '#4ADE80'], ['#E2E8F0', '#334155', '#64748B'],
+        ['#F1F5F9', '#475569', '#3B82F6'], ['#FEF3C7', '#15803D', '#EAB308'], ['#FFEDD5', '#9A3412', '#F59E0B']
+      ];
+      const idx = Math.max(0, parseInt(styleId, 10) - 1);
+      const [bg, primary, accent] = palettes[idx % palettes.length];
+
+      if (styleId === '14') {
+        return `<svg viewBox="0 0 120 76" class="w-full h-full">
+          <rect width="120" height="76" fill="#1E293B"/>
+          <rect x="6" y="6" width="108" height="64" rx="4" fill="none" stroke="#64748B" stroke-width="1.5" stroke-dasharray="3 2"/>
+          <circle cx="38" cy="38" r="14" fill="none" stroke="#F8FAFC" stroke-width="2"/>
+          <path d="M58 30 L96 30 M58 40 L88 40 M58 50 L80 50" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"/>
+          <path d="M33 38 L37 42 L45 33" stroke="#38BDF8" stroke-width="2.2" fill="none"/>
+        </svg>`;
+      }
+      if (styleId === '04' || styleId === '05' || styleId === '20') {
+        return `<svg viewBox="0 0 120 76" class="w-full h-full">
+          <rect width="120" height="76" fill="${bg}"/>
+          <polygon points="60,12 96,30 60,48 24,30" fill="${accent}"/>
+          <polygon points="24,30 60,48 60,68 24,50" fill="${primary}"/>
+          <polygon points="96,30 60,48 60,68 96,50" fill="#0F172A" opacity="0.75"/>
+          <polygon points="60,20 78,29 60,38 42,29" fill="#FFFFFF" opacity="0.85"/>
+        </svg>`;
+      }
+      if (styleId === '17' || styleId === '24') {
+        return `<svg viewBox="0 0 120 76" class="w-full h-full">
+          <rect width="120" height="76" fill="${bg}"/>
+          <circle cx="60" cy="36" r="22" fill="#FDE68A" stroke="${primary}" stroke-width="2"/>
+          <path d="M60 14 L67 30 L82 32 L68 40 L72 55 L60 46 L48 55 L52 40 L38 32 L53 30 Z" fill="${primary}"/>
+          <path d="M12 64 Q60 52 108 64" stroke="${accent}" stroke-width="4" fill="none"/>
+        </svg>`;
+      }
+      if (styleId === '06' || styleId === '08' || styleId === '09' || styleId === '19') {
+        return `<svg viewBox="0 0 120 76" class="w-full h-full">
+          <rect width="120" height="76" fill="${bg}"/>
+          <rect x="24" y="14" width="72" height="48" rx="18" fill="#FFFFFF" opacity="0.9"/>
+          <circle cx="48" cy="36" r="11" fill="${primary}"/>
+          <circle cx="72" cy="36" r="11" fill="${accent}"/>
+          <circle cx="45" cy="33" r="2.5" fill="#FFFFFF"/>
+          <circle cx="69" cy="33" r="2.5" fill="#FFFFFF"/>
+          <path d="M54 48 Q60 54 66 48" stroke="${primary}" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        </svg>`;
+      }
+      return `<svg viewBox="0 0 120 76" class="w-full h-full">
+        <rect width="120" height="76" fill="${bg}"/>
+        <circle cx="34" cy="38" r="18" fill="${primary}" opacity="0.9"/>
+        <rect x="60" y="20" width="42" height="10" rx="5" fill="${primary}"/>
+        <rect x="60" y="36" width="32" height="8" rx="4" fill="${accent}"/>
+        <rect x="60" y="49" width="38" height="8" rx="4" fill="${primary}" opacity="0.5"/>
+      </svg>`;
+    }
+
+    // =========================================================================
+    // 2. สถานะโปรเจกต์ส่วนกลาง (CENTRAL APPLICATION STATE)
+    // =========================================================================
+    const API_STORAGE_KEY = 'video_infographic_pro_gemini_key';
+    const defaultApiKey = "";
+
+    const state = {
+      currentStep: 1,
+      topic: 'รีวิวกระติกน้ำเก็บความเย็นสำหรับเดินป่า',
+      audience: 'คนชอบเดินป่า',
+      sceneCount: 5,
+      aspectRatio: '16:9',
+      creationMode: 'advance',
+      characterName: 'น้องหมีกูรู',
+      productName: 'กระติกน้ำ CoolHike',
+      extraNotes: '',
+      selectedStyleId: '09',
+      storyboardViewMode: '1col',
+      storyboardCardsExpanded: true,
+      flowWorkflowMode: 'first-frame',
+      voiceUploadMode: 'per-scene', // 'per-scene' | 'single-master'
+      voiceVolume: 1.0,             // 0.0 to 1.5
+      bgmStyle: 'corporate',
+      bgmVolume: 0.20,              // 0.0 to 1.0
+      customBgmBuffer: null,
+      customBgmFileName: '',
+      masterAudioBuffer: null,
+      masterAudioFileName: '',
+      masterAudioDurationSec: 0,
+      voiceGender: 'male',
+      step5SelectedScene: 0,
+      subtitleConfig: {
+        size: 'md',
+        position: 'bottom',
+        textColor: '#FFFFFF',
+        bgOpacity: 0.85
+      },
+      scenes: []
+    };
+
+    // ตัวแปรสำหรับการถอดรหัสเสียง เล่นเสียง BGM/Voice และ Canvas Compositor
+    let sharedDecodeCtx = null;
+    let activePlaybackCtx = null;
+    let activeScheduledNodes = [];
+    let bgmTimer = null;
+    let isBgmPreviewPlaying = false;
+    let isMasterVoicePreviewPlaying = false;
+    let previewAnimId = null;
+    let isMasterPreviewPlaying = false;
+    let uploadedRefImages = [];
+
+    function getDecodeAudioContext() {
+      if (!sharedDecodeCtx) {
+        sharedDecodeCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return sharedDecodeCtx;
+    }
+
+    async function decodeAudioFileToBuffer(file) {
+      const arrayBuffer = await file.arrayBuffer();
+      const ctx = getDecodeAudioContext();
+      return await ctx.decodeAudioData(arrayBuffer);
+    }
+
+    // =========================================================================
+    // 3. ข้อมูลตัวอย่างเริ่มต้น (DEFAULT STORYBOARD PRESET)
+    // =========================================================================
+    function createDefaultScenes(count = 5) {
+      const topic = state.topic || 'รีวิวกระติกน้ำเก็บความเย็นสำหรับเดินป่า';
+      const charName = state.characterName || 'ตัวละครหลัก';
+      const prodName = state.productName || 'สินค้าเด่น';
+      const styleObj = VISUAL_STYLES.find(s => s.id === state.selectedStyleId) || VISUAL_STYLES[8];
+
+      const templates = [
+        {
+          onScreenText: `1. ปัญหาใหญ่ของสายเดินป่า!`,
+          narration: `เดินป่ากลางแดดร้อนๆ แต่น้ำในขวดกลับอุ่นจนดื่มไม่ลงใช่ไหมครับ? วันนี้${charName}มีตัวช่วยเด็ดมาแนะนำ!`,
+          visualDescriptionThai: `${charName} ทำหน้าเหนื่อยเหงื่อตกกลางเส้นทางเดินป่า ถือขวดน้ำพลาสติกธรรมดาที่ร้อนจัด`,
+          imagePromptEn: `${styleObj.promptTag}, cute mascot character ${charName} hiking on a sunny mountain trail looking tired with a warm plastic water bottle, infographic callout badge, clean composition`,
+          videoPromptEn: `Smooth camera push-in on ${charName} wiping sweat on a sunny forest trail, gentle breeze moving leaves, expressive animated reaction, 4k`,
+          transitionPromptEn: `Seamless whip-pan transition from forest trail into a clean studio product spotlight of ${prodName}`,
+          hasCharacter: true,
+          hasProduct: false,
+          durationSec: 5.5
+        },
+        {
+          onScreenText: `2. รู้จักกับ ${prodName}`,
+          narration: `ขอแนะนำ ${prodName} กระติกน้ำสุญญากาศ 2 ชั้นที่ออกแบบมาเพื่อสายลุยโดยเฉพาะ น้ำหนักเบา พกพาสะดวกสุดๆ`,
+          visualDescriptionThai: `ภาพตัดผ่า 3 มิติแสดงโครงสร้างผนังสุญญากาศ 2 ชั้นของ ${prodName} พร้อมไอคอนน้ำหนักเบา`,
+          imagePromptEn: `${styleObj.promptTag}, cutaway 3D infographic diagram of insulated flask ${prodName} showing double-wall vacuum insulation layers and cold frost icons, bright clean background`,
+          videoPromptEn: `360-degree slow turntable rotation of ${prodName} with glowing blue cold-air particles circulating inside the vacuum layer, crisp infographic labels`,
+          transitionPromptEn: `Zoom-in through the icy cold mist of the flask directly into a 24-hour temperature gauge scene`,
+          hasCharacter: true,
+          hasProduct: true,
+          durationSec: 6.0
+        },
+        {
+          onScreenText: `3. เก็บความเย็นยาวนาน 24 ชม.`,
+          narration: `ทดสอบจริง! ใส่น้ำแข็งตั้งแต่เช้า ผ่านไป 24 ชั่วโมง น้ำแข็งยังอยู่ครบ เย็นชื่นใจเหมือนเพิ่งออกจากตู้เย็น`,
+          visualDescriptionThai: `กราฟิกนาฬิกาหมุนครบ 24 ชั่วโมง คู่กับเทอร์โมมิเตอร์สีฟ้าเย็นจัดและก้อนน้ำแข็งใสในกระติก`,
+          imagePromptEn: `${styleObj.promptTag}, infographic split-screen showing a 24-hour clock dial, freezing thermometer icon, and crystal ice cubes inside ${prodName}, vibrant educational layout`,
+          videoPromptEn: `Animated clock hands spinning 24 hours while ice cubes sparkle inside ${prodName}, cool blue frost aura pulsing gently`,
+          transitionPromptEn: `Smooth slide transition from the ice gauge to a rugged mountain rock durability test`,
+          hasCharacter: false,
+          hasProduct: true,
+          durationSec: 6.0
+        },
+        {
+          onScreenText: `4. แข็งแรง ทนทาน ไม่รั่วซึม`,
+          narration: `ตัวกระบอกผลิตจากสแตนเลสเกรดอาหาร 304 ตกไม่บุบ ฝาล็อกแน่นสนิท ใส่ในเป้สะพายหลังได้แบบไม่ต้องกลัวหก`,
+          visualDescriptionThai: `${charName} โชว์การคว่ำกระติกน้ำเหนือกระเป๋าเป้เดินป่า ไม่มีน้ำหยดแม้แต่หยดเดียว พร้อมป้าย 304 Stainless`,
+          imagePromptEn: `${styleObj.promptTag}, ${charName} holding ${prodName} upside down over a hiking backpack with zero leaks, 304 stainless steel shield badge, clear infographic callouts`,
+          videoPromptEn: `${charName} shakes ${prodName} upside down confidently with a thumbs-up, shiny metallic shield icon pops up with gentle bounce`,
+          transitionPromptEn: `Gentle dissolve transition to the mountain peak sunset celebration scene`,
+          hasCharacter: true,
+          hasProduct: true,
+          durationSec: 6.0
+        },
+        {
+          onScreenText: `5. พร้อมลุยทุกทริป! กดสั่งเลย`,
+          narration: `ทริปเดินป่าครั้งหน้า อย่าลืมพก ${prodName} ติดกระเป๋าไปด้วยนะครับ เย็นสดชื่นตลอดเส้นทางแน่นอน!`,
+          visualDescriptionThai: `${charName} ยืนบนยอดเขาชมวิวสวยๆ พร้อมยก ${prodName} ดื่มอย่างสดชื่น และป้ายสรุปจุดเด่น 3 ข้อ`,
+          imagePromptEn: `${styleObj.promptTag}, ${charName} standing happily at a scenic mountain summit holding ${prodName}, 3 summary checkmarks floating neatly, uplifting golden sunlight`,
+          videoPromptEn: `Heroic wide-to-medium shot of ${charName} raising ${prodName} at the mountain peak, warm sunbeams and floating summary badges`,
+          transitionPromptEn: `Clean fade-out end card with summary infographic badges`,
+          hasCharacter: true,
+          hasProduct: true,
+          durationSec: 5.5
+        }
+      ];
+
+      const result = [];
+      for (let i = 0; i < count; i++) {
+        const base = templates[i % templates.length];
+        result.push({
+          sceneNumber: i + 1,
+          onScreenText: i < templates.length ? base.onScreenText : `${i + 1}. ประเด็นสำคัญของ ${topic}`,
+          narration: i < templates.length ? base.narration : `ฉากที่ ${i + 1} เจาะลึกประเด็นสำคัญเกี่ยวกับ ${topic} เพื่อให้${state.audience}นำไปใช้ได้ทันที`,
+          visualDescriptionThai: base.visualDescriptionThai,
+          imagePromptEn: base.imagePromptEn,
+          videoPromptEn: base.videoPromptEn,
+          transitionPromptEn: base.transitionPromptEn,
+          hasCharacter: base.hasCharacter,
+          hasProduct: base.hasProduct,
+          durationSec: base.durationSec,
+          voiceDelaySec: 0.0,
+          masterStartSec: i * 5.8,
+          videoUrl: null,
+          videoFileName: '',
+          isDemoClip: false,
+          audioBuffer: null,
+          audioFileName: '',
+          audioDurationSec: 0,
+          needsReview: true
+        });
+      }
+      return result;
+    }
+
+    // =========================================================================
+    // 4. ระบบจัดการหน้าต่าง MODAL, TOAST และการนำทาง 5 ขั้นตอน
+    // =========================================================================
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const colors = type === 'error'
+        ? 'bg-rose-900 text-white border-rose-700'
+        : type === 'info'
+          ? 'bg-slate-900 text-white border-slate-700'
+          : 'bg-emerald-900 text-white border-emerald-700';
+
+      toast.className = `pointer-events-auto flex items-center gap-2 px-4 py-3 rounded-2xl border shadow-xl text-xs sm:text-sm font-medium transition-all duration-300 translate-y-2 opacity-0 ${colors}`;
+      toast.innerHTML = `<span>${type === 'error' ? '⚠️' : type === 'info' ? 'ℹ️' : '✅'}</span><span>${message}</span>`;
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => toast.classList.remove('translate-y-2', 'opacity-0'));
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
+    function openModal(id) {
+      if (id === 'apiModal') {
+        document.getElementById('apiKeyInputField').value = localStorage.getItem(API_STORAGE_KEY) || '';
+      }
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('hidden');
+        el.classList.add('flex');
+      }
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add('hidden');
+        el.classList.remove('flex');
+      }
+    }
+
+    function toggleQuickMenu() {
+      document.getElementById('quickMenuDropdown').classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', (e) => {
+      const btn = document.getElementById('quickMenuBtn');
+      const menu = document.getElementById('quickMenuDropdown');
+      if (btn && menu && !btn.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.add('hidden');
+      }
+    });
+
+    function goToStep(stepNum) {
+      syncStep1InputsToState();
+      if (state.scenes.length === 0) {
+        state.scenes = createDefaultScenes(state.sceneCount);
+      }
+
+      state.currentStep = stepNum;
+
+      for (let i = 1; i <= 5; i++) {
+        const panel = document.getElementById(`step-${i}`);
+        const pill = document.getElementById(`stepPill-${i}`);
+        if (panel) panel.classList.toggle('hidden', i !== stepNum);
+
+        if (pill) {
+          if (i === stepNum) {
+            if (i === 5) {
+              pill.className = 'step-pill flex-1 py-2 px-3.5 rounded-full text-xs sm:text-[13px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer bg-amber-500 text-white shadow-sm';
+            } else {
+              pill.className = 'step-pill flex-1 py-2 px-3.5 rounded-full text-xs sm:text-[13px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer bg-[#1D63ED] text-white shadow-sm';
+            }
+          } else {
+            if (i === 5) {
+              pill.className = 'step-pill flex-1 py-2 px-3.5 rounded-full text-xs sm:text-[13px] font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer bg-[#FEF3C7] text-[#92400E] border border-[#F59E0B]/50 hover:bg-amber-200/70';
+            } else {
+              pill.className = 'step-pill flex-1 py-2 px-3.5 rounded-full text-xs sm:text-[13px] font-medium transition-all flex items-center justify-center gap-1.5 cursor-pointer text-slate-600 hover:text-slate-900 hover:bg-white/60';
+            }
+          }
+        }
+      }
+
+      if (stepNum === 2) renderStep2();
+      if (stepNum === 3) renderStep3();
+      if (stepNum === 4) renderStep4();
+      if (stepNum === 5) renderStep5();
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // =========================================================================
+    // 5. การทำงานในขั้นตอนที่ 1: ตารางสไตล์ 24 แบบ & เรียก GEMINI API สร้างสตอรี่บอร์ด
+    // =========================================================================
+    function renderStylesGrid() {
+      const grid = document.getElementById('stylesGrid');
+      grid.innerHTML = '';
+
+      VISUAL_STYLES.forEach((style) => {
+        const isSelected = style.id === state.selectedStyleId;
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = isSelected
+          ? 'group relative rounded-2xl border-2 border-[#1D63ED] bg-blue-50/40 p-2 text-center shadow-sm ring-4 ring-blue-500/10 transition cursor-pointer flex flex-col'
+          : 'group relative rounded-2xl border border-slate-200 bg-white hover:border-blue-300 hover:shadow-xs p-2 text-center transition cursor-pointer flex flex-col';
+
+        card.innerHTML = `
+          <div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden border border-slate-100 bg-slate-50">
+            ${getStyleThumbnailSVG(style.id)}
+            ${isSelected ? '<span class="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-[#1D63ED] text-white text-[11px] flex items-center justify-center shadow">✓</span>' : ''}
+          </div>
+          <div class="mt-2 px-1 text-[11px] sm:text-xs font-semibold leading-snug ${isSelected ? 'text-[#1D63ED]' : 'text-slate-700'}">
+            ${style.name}
+          </div>
+        `;
+
+        card.addEventListener('click', () => {
+          state.selectedStyleId = style.id;
+          document.getElementById('selectedStyleLabel').textContent = style.name;
+          renderStylesGrid();
+        });
+
+        grid.appendChild(card);
+      });
+    }
+
+    function applySampleTopic(topic, audience, character, product) {
+      document.getElementById('projectTopic').value = topic;
+      document.getElementById('targetAudience').value = audience;
+      document.getElementById('characterName').value = character;
+      document.getElementById('productName').value = product;
+      syncStep1InputsToState();
+      showToast(`ใส่ข้อมูลตัวอย่าง "${topic}" เรียบร้อยแล้ว`);
+    }
+
+    function syncStep1InputsToState() {
+      state.topic = document.getElementById('projectTopic').value.trim() || 'วิดีโออินโฟกราฟิกให้ความรู้';
+      state.audience = document.getElementById('targetAudience').value.trim() || 'ผู้ชมทั่วไป';
+      state.sceneCount = parseInt(document.getElementById('sceneCount').value, 10) || 5;
+      state.aspectRatio = document.getElementById('aspectRatio').value;
+      state.creationMode = document.getElementById('creationMode').value;
+      state.characterName = document.getElementById('characterName').value.trim();
+      state.productName = document.getElementById('productName').value.trim();
+      state.extraNotes = document.getElementById('extraNotes').value.trim();
+    }
+
+    function getEffectiveApiKey() {
+      const saved = localStorage.getItem(API_STORAGE_KEY);
+      return (saved && saved.trim() !== '') ? saved.trim() : defaultApiKey;
+    }
+
+    function updateHeaderApiBadge() {
+      const btn = document.getElementById('headerApiBtn');
+      const txt = document.getElementById('headerApiStatusText');
+      if (!btn || !txt) return;
+      const hasKey = Boolean(getEffectiveApiKey());
+      if (hasKey) {
+        btn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-50/90 hover:bg-emerald-100/80 text-emerald-800 border border-emerald-200 transition cursor-pointer';
+        txt.textContent = '🟢 เชื่อมต่อ API แล้ว';
+      } else {
+        btn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-rose-50/90 hover:bg-rose-100/80 text-rose-800 border border-rose-200 transition cursor-pointer';
+        txt.textContent = '🔴 ยังไม่ใส่ API Key';
+      }
+    }
+
+    function saveCustomApiKey() {
+      const val = document.getElementById('apiKeyInputField').value.trim();
+      if (val) {
+        localStorage.setItem(API_STORAGE_KEY, val);
+        showToast('บันทึก Gemini API Key เรียบร้อยแล้ว');
+      } else {
+        localStorage.removeItem(API_STORAGE_KEY);
+        showToast('ล้างค่า API Key แล้ว');
+      }
+      updateHeaderApiBadge();
+      closeModal('apiModal');
+    }
+
+    function clearCustomApiKey() {
+      localStorage.removeItem(API_STORAGE_KEY);
+      document.getElementById('apiKeyInputField').value = '';
+      updateHeaderApiBadge();
+      showToast('ล้างค่า API Key เรียบร้อยแล้ว');
+      closeModal('apiModal');
+    }
+
+    /**
+     * เรียก Gemini API (gemini-3-flash-preview) พร้อมระบบ Exponential Backoff
+     */
+    async function callGeminiAPI(payload, model = 'gemini-3-flash-preview', maxRetries = 4) {
+      const key = getEffectiveApiKey();
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+      let delay = 1000;
+
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) {
+            if ((response.status === 429 || response.status >= 500) && attempt < maxRetries) {
+              await new Promise(r => setTimeout(r, delay));
+              delay *= 2;
+              continue;
+            }
+            throw new Error(`HTTP ${response.status}`);
+          }
+          return await response.json();
+        } catch (err) {
+          if (attempt === maxRetries) throw err;
+          await new Promise(r => setTimeout(r, delay));
+          delay *= 2;
+        }
+      }
+    }
+
+    /**
+     * สร้างสตอรี่บอร์ดและชุดคำสั่ง Google Flow ด้วย Gemini AI
+     */
+    async function generateStoryboardWithAI() {
+      syncStep1InputsToState();
+      const btn = document.getElementById('generateStoryboardBtn');
+      const icon = document.getElementById('genSbIcon');
+      const text = document.getElementById('genSbText');
+
+      btn.disabled = true;
+      icon.textContent = '⏳';
+      text.textContent = 'กำลังสร้างสตอรี่บอร์ด & คำสั่ง Google Flow...';
+
+      const styleObj = VISUAL_STYLES.find(s => s.id === state.selectedStyleId) || VISUAL_STYLES[8];
+      const prompt = `คุณคือผู้กำกับวิดีโออินโฟกราฟิกมืออาชีพ จงสร้างสตอรี่บอร์ดจำนวน ${state.sceneCount} ฉาก สำหรับหัวข้อ "${state.topic}"
+กลุ่มคนดูเป้าหมาย: ${state.audience}
+สัดส่วนภาพ: ${state.aspectRatio}
+สไตล์ภาพ: ${styleObj.name} (${styleObj.promptTag})
+ตัวละครหลัก: ${state.characterName || 'ไม่มี'}
+สินค้า/แบรนด์: ${state.productName || 'ไม่มี'}
+ข้อมูลเพิ่มเติม: ${state.extraNotes || 'ไม่มี'}
+
+ข้อกำหนด:
+1. "onScreenText": พาดหัวสั้นกระชับภาษาไทยสำหรับแสดงบนจอ (เช่น "1. ทำไมต้อง...")
+2. "narration": บทพากย์ภาษาไทยที่เป็นธรรมชาติ น่าฟัง ความยาวประมาณ 15-25 คำต่อฉาก
+3. "visualDescriptionThai": คำอธิบายองค์ประกอบภาพภาษาไทยของฉากนั้น
+4. "imagePromptEn": คำสั่งภาษาอังกฤษละเอียดสำหรับสร้างภาพนิ่งเฟรมแรก โดยขึ้นต้นด้วยสไตล์ "${styleObj.promptTag}"
+5. "videoPromptEn": คำสั่งภาษาอังกฤษอธิบายการเคลื่อนไหวของกล้องและวัตถุในฉากสำหรับ Google Flow
+6. "transitionPromptEn": คำสั่งภาษาอังกฤษสำหรับสร้างคลิปรอยต่อเชื่อมไปยังฉากถัดไป
+7. "hasCharacter": true/false ว่าฉากนี้มีตัวละครหลักหรือไม่
+8. "hasProduct": true/false ว่าฉากนี้แสดงสินค้าหรือไม่
+9. "durationSec": เวลาแสดงผลแนะนำ (ตัวเลข 5 ถึง 8 วินาที)`;
+
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: 'ARRAY',
+            items: {
+              type: 'OBJECT',
+              properties: {
+                onScreenText: { type: 'STRING' },
+                narration: { type: 'STRING' },
+                visualDescriptionThai: { type: 'STRING' },
+                imagePromptEn: { type: 'STRING' },
+                videoPromptEn: { type: 'STRING' },
+                transitionPromptEn: { type: 'STRING' },
+                hasCharacter: { type: 'BOOLEAN' },
+                hasProduct: { type: 'BOOLEAN' },
+                durationSec: { type: 'NUMBER' }
+              },
+              required: [
+                'onScreenText', 'narration', 'visualDescriptionThai',
+                'imagePromptEn', 'videoPromptEn', 'transitionPromptEn',
+                'hasCharacter', 'hasProduct', 'durationSec'
+              ]
+            }
+          }
+        }
+      };
+
+      try {
+        const result = await callGeminiAPI(payload, 'gemini-3-flash-preview');
+        const rawJson = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const parsedScenes = JSON.parse(rawJson);
+
+        if (Array.isArray(parsedScenes) && parsedScenes.length > 0) {
+          state.scenes = parsedScenes.map((sc, idx) => ({
+            sceneNumber: idx + 1,
+            onScreenText: sc.onScreenText || `ฉากที่ ${idx + 1}`,
+            narration: sc.narration || '',
+            visualDescriptionThai: sc.visualDescriptionThai || '',
+            imagePromptEn: sc.imagePromptEn || '',
+            videoPromptEn: sc.videoPromptEn || '',
+            transitionPromptEn: sc.transitionPromptEn || 'Smooth cross-dissolve transition',
+            hasCharacter: Boolean(sc.hasCharacter),
+            hasProduct: Boolean(sc.hasProduct),
+            durationSec: Math.min(12, Math.max(4, Number(sc.durationSec) || 6)),
+            voiceDelaySec: 0.0,
+            masterStartSec: idx * 5.8,
+            videoUrl: null,
+            videoFileName: '',
+            isDemoClip: false,
+            audioBuffer: null,
+            audioFileName: '',
+            audioDurationSec: 0,
+            needsReview: true
+          }));
+          showToast(`สร้างสตอรี่บอร์ด ${state.scenes.length} ฉากสำเร็จ! กำลังพาไปยังขั้นตอนที่ 2`);
+          goToStep(2);
+        } else {
+          throw new Error('โครงสร้างข้อมูลสตอรี่บอร์ดไม่สมบูรณ์');
+        }
+      } catch (err) {
+        state.scenes = createDefaultScenes(state.sceneCount);
+        showToast(`ใช้ชุดสตอรี่บอร์ดตัวอย่างสำเร็จรูป (${state.scenes.length} ฉาก) — ใส่ API Key มุมขวาบนเพื่อเจนหัวข้ออิสระ`, 'info');
+        goToStep(2);
+      } finally {
+        btn.disabled = false;
+        icon.textContent = '✨';
+        text.textContent = 'สร้างสตอรี่บอร์ด & คำสั่ง Google Flow ด้วย AI';
+      }
+    }
+
+    // =========================================================================
+    // 6. การทำงานในขั้นตอนที่ 2: สตอรี่บอร์ด & คำสั่ง GOOGLE FLOW
+    // =========================================================================
+    function renderStep2() {
+      const total = state.scenes.length;
+      const styleObj = VISUAL_STYLES.find(s => s.id === state.selectedStyleId) || VISUAL_STYLES[8];
+      const modeLabel = state.creationMode === 'advance'
+        ? 'โหมดแอดวานซ์ Advance (เน้นงานมีเทคนิค • เพิ่มเทคนิคเชื่อมฉาก)'
+        : 'โหมดมาตรฐาน (Standard)';
+
+      document.getElementById('setSummaryBadge').textContent = `เซตเดียวครบทั้งเรื่อง (ฉากที่ 1–${total})`;
+      document.getElementById('sbSectionHeader').textContent = `📋 ส่วนที่ 1: สตอรี่บอร์ดรายฉาก — เซตที่ 1 จาก 1 (ฉากที่ 1 ถึง ${total} • รวมทั้งหมด ${total} ฉาก)`;
+      document.getElementById('toggleSbCardsTitle').textContent = `กดเพื่อดูและแก้สตอรี่บอร์ด (${total} ฉาก)`;
+      document.getElementById('flowSectionHeader').textContent = `🎬 ไปสร้างใน Google Flow — เซตที่ 1 (ฉากที่ 1–${total})`;
+
+      document.getElementById('sbMetaSummary').innerHTML = `
+        <span>📌 หัวข้อ: <strong class="text-slate-900">${escapeHtml(state.topic)}</strong></span>
+        <span>|</span>
+        <span>🎯 กลุ่มคนดู: <strong class="text-[#1D63ED]">${escapeHtml(state.audience)}</strong></span>
+        <span>|</span>
+        <span>🎛️ ${modeLabel}</span>
+        <span>|</span>
+        <span>🎨 สไตล์: <strong class="text-indigo-700">${styleObj.name}</strong></span>
+      `;
+
+      const charText = state.characterName ? state.characterName : 'ไม่ระบุ';
+      const prodText = state.productName ? state.productName : 'ไม่ระบุ';
+      document.getElementById('flowCharProdInfo').innerHTML = `👥 ตัวละคร: <strong>${escapeHtml(charText)}</strong> • 📦 สินค้า: <strong>${escapeHtml(prodText)}</strong>`;
+
+      renderStoryboardCards();
+      renderGoogleFlowPrompts();
+    }
+
+    function setStoryboardViewMode(mode) {
+      state.storyboardViewMode = mode;
+      const btn1 = document.getElementById('viewMode1ColBtn');
+      const btn2 = document.getElementById('viewMode2ColBtn');
+
+      if (mode === '1col') {
+        btn1.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold border border-[#1D63ED] bg-blue-50 text-[#1D63ED] transition cursor-pointer';
+        btn2.className = 'px-3 py-1.5 rounded-xl text-xs font-medium border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition cursor-pointer';
+      } else {
+        btn2.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold border border-[#1D63ED] bg-blue-50 text-[#1D63ED] transition cursor-pointer';
+        btn1.className = 'px-3 py-1.5 rounded-xl text-xs font-medium border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition cursor-pointer';
+      }
+      renderStoryboardCards();
+    }
+
+    function toggleStoryboardCards() {
+      state.storyboardCardsExpanded = !state.storyboardCardsExpanded;
+      const container = document.getElementById('storyboardCardsContainer');
+      container.classList.toggle('hidden', !state.storyboardCardsExpanded);
+    }
+
+    function renderStoryboardCards() {
+      const container = document.getElementById('storyboardCardsContainer');
+      container.className = state.storyboardViewMode === '2col'
+        ? 'grid grid-cols-1 lg:grid-cols-2 gap-4 pt-2'
+        : 'grid grid-cols-1 gap-4 pt-2';
+
+      if (!state.storyboardCardsExpanded) {
+        container.classList.add('hidden');
+      }
+
+      container.innerHTML = '';
+      state.scenes.forEach((scene, index) => {
+        const card = document.createElement('div');
+        card.className = 'rounded-2xl border border-slate-200 bg-slate-50/50 p-4 space-y-3 hover:border-blue-300 transition';
+        card.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/80 pb-2.5">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-lg bg-[#1D63ED] text-white text-xs font-bold">ฉากที่ ${scene.sceneNumber}</span>
+              <span class="text-xs font-semibold text-slate-500">⏱️ ~${scene.durationSec} วินาที</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+              <label class="inline-flex items-center gap-1 cursor-pointer text-slate-700">
+                <input type="checkbox" ${scene.hasCharacter ? 'checked' : ''} onchange="state.scenes[${index}].hasCharacter = this.checked; renderGoogleFlowPrompts();" class="accent-[#1D63ED]">
+                <span>👥 ตัวละคร</span>
+              </label>
+              <label class="inline-flex items-center gap-1 cursor-pointer text-slate-700">
+                <input type="checkbox" ${scene.hasProduct ? 'checked' : ''} onchange="state.scenes[${index}].hasProduct = this.checked; renderGoogleFlowPrompts();" class="accent-[#1D63ED]">
+                <span>📦 สินค้า</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">🏷️ ข้อความอินโฟกราฟิกบนภาพ</label>
+              <input type="text" value="${escapeHtml(scene.onScreenText)}" oninput="state.scenes[${index}].onScreenText = this.value" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs sm:text-sm font-semibold text-slate-900">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">🎨 คำอธิบายภาพฉากนี้</label>
+              <input type="text" value="${escapeHtml(scene.visualDescriptionThai)}" oninput="state.scenes[${index}].visualDescriptionThai = this.value" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs sm:text-sm text-slate-700">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-slate-600 mb-1">🎙️ บทเสียงพากย์ (ภาษาไทย)</label>
+            <textarea rows="2" oninput="state.scenes[${index}].narration = this.value" class="w-full rounded-xl border border-slate-300 bg-white p-2.5 text-xs sm:text-sm text-slate-800">${escapeHtml(scene.narration)}</textarea>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function setFlowWorkflowMode(mode) {
+      state.flowWorkflowMode = mode;
+      const btnFirst = document.getElementById('flowModeFirstImgBtn');
+      const btnDirect = document.getElementById('flowModeDirectBtn');
+
+      if (mode === 'first-frame') {
+        btnFirst.className = 'text-left p-4 rounded-2xl border-2 border-[#1D63ED] bg-blue-50/40 transition cursor-pointer';
+        btnDirect.className = 'text-left p-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 transition cursor-pointer';
+      } else {
+        btnDirect.className = 'text-left p-4 rounded-2xl border-2 border-[#1D63ED] bg-blue-50/40 transition cursor-pointer';
+        btnFirst.className = 'text-left p-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 transition cursor-pointer';
+      }
+      renderGoogleFlowPrompts();
+    }
+
+    function buildSceneFlowPrompt(scene) {
+      const charTag = (scene.hasCharacter && state.characterName) ? `, featuring character "${state.characterName}"` : '';
+      const prodTag = (scene.hasProduct && state.productName) ? `, showcasing product "${state.productName}"` : '';
+      const ratioTag = ` --ar ${state.aspectRatio}`;
+
+      if (state.flowWorkflowMode === 'first-frame') {
+        return `[FIRST FRAME IMAGE]: ${scene.imagePromptEn}${charTag}${prodTag}${ratioTag}\n[VIDEO MOTION]: ${scene.videoPromptEn}`;
+      }
+      return `[TEXT-TO-VIDEO]: ${scene.imagePromptEn}${charTag}${prodTag}. Motion: ${scene.videoPromptEn}${ratioTag}`;
+    }
+
+    function renderGoogleFlowPrompts() {
+      const list = document.getElementById('flowPromptList');
+      list.innerHTML = '';
+
+      state.scenes.forEach((scene, idx) => {
+        const promptText = buildSceneFlowPrompt(scene);
+        const item = document.createElement('div');
+        item.className = 'bg-white rounded-xl border border-slate-200 p-3.5 space-y-2';
+        item.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-bold text-[#1D63ED]">SCENE_0${scene.sceneNumber} — ${escapeHtml(scene.onScreenText)}</span>
+            <button type="button" onclick="copyTextToClipboard(buildSceneFlowPrompt(state.scenes[${idx}]), 'คัดลอกคำสั่ง SCENE_0${scene.sceneNumber} แล้ว')" class="px-3 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-[#1D63ED] text-xs font-semibold transition cursor-pointer">
+              📋 คัดลอกฉากที่ ${scene.sceneNumber}
+            </button>
+          </div>
+          <pre class="text-xs text-slate-700 bg-slate-50 p-2.5 rounded-lg border border-slate-100 whitespace-pre-wrap font-mono leading-relaxed">${escapeHtml(promptText)}</pre>
+        `;
+        list.appendChild(item);
+
+        if (state.creationMode === 'advance' && idx < state.scenes.length - 1) {
+          const transCode = `TRANS_0${scene.sceneNumber}_TO_0${scene.sceneNumber + 1}`;
+          const transPrompt = `[${transCode}]: ${scene.transitionPromptEn} --ar ${state.aspectRatio}`;
+          const transBox = document.createElement('div');
+          transBox.className = 'bg-amber-50/60 rounded-xl border border-amber-200/80 p-3 flex flex-wrap items-center justify-between gap-2';
+          transBox.innerHTML = `
+            <div class="min-w-0 flex-1">
+              <span class="text-[11px] font-bold text-amber-800">🔗 รอยต่อเชื่อมฉาก (${transCode}):</span>
+              <p class="text-xs text-slate-700 font-mono truncate mt-0.5">${escapeHtml(transPrompt)}</p>
+            </div>
+            <button type="button" onclick="copyTextToClipboard(${JSON.stringify(transPrompt)}, 'คัดลอกคำสั่งรอยต่อ ${transCode} แล้ว')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-semibold shrink-0 cursor-pointer">
+              📋 คัดลอกรอยต่อ
+            </button>
+          `;
+          list.appendChild(transBox);
+        }
+      });
+    }
+
+    function copyMasterFlowPrompt() {
+      const styleObj = VISUAL_STYLES.find(s => s.id === state.selectedStyleId) || VISUAL_STYLES[8];
+      let fullText = `=== GOOGLE FLOW MASTER PROMPT PACK ===\nTopic: ${state.topic}\nStyle: ${styleObj.name} (${styleObj.promptTag})\nAspect Ratio: ${state.aspectRatio}\n\n`;
+
+      state.scenes.forEach((sc, i) => {
+        fullText += `--- SCENE_0${sc.sceneNumber} (${sc.onScreenText}) ---\n${buildSceneFlowPrompt(sc)}\n\n`;
+        if (state.creationMode === 'advance' && i < state.scenes.length - 1) {
+          fullText += `--- TRANS_0${sc.sceneNumber}_TO_0${sc.sceneNumber + 1} ---\n${sc.transitionPromptEn} --ar ${state.aspectRatio}\n\n`;
+        }
+      });
+
+      copyTextToClipboard(fullText, 'คัดลอกชุดคำสั่ง Google Flow ทั้งหมดลงคลิปบอร์ดแล้ว!');
+    }
+
+    function scrollToFlowPrompts() {
+      document.getElementById('googleFlowSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function copyFullVoiceScriptForAIStudio() {
+      const header = `=== บทพากย์สำหรับสร้างเสียงใน Google AI Studio (${state.topic}) ===\nแนะนำ: สร้างเสียงแยกทีละฉากแล้วตั้งชื่อไฟล์ 01.mp3, 02.mp3, 03.mp3 ... เพื่ออัปโหลดเข้าขั้นที่ 3\n\n`;
+      const body = state.scenes
+        .map(s => `[ฉากที่ ${s.sceneNumber} — ${s.onScreenText}]\n${s.narration}`)
+        .join('\n\n');
+      copyTextToClipboard(header + body, 'คัดลอกบทพากย์ทั้งหมดพร้อมนำไปวางใน Google AI Studio แล้ว!');
+    }
+
+    // =========================================================================
+    // 7. การทำงานในขั้นตอนที่ 3: อัปโหลดไฟล์เสียงจริง (.MP3/.WAV) & AUTO-SYNC
+    // =========================================================================
+    function renderStep3() {
+      updateTotalDurationBadge();
+      setVoiceUploadMode(state.voiceUploadMode, false);
+      renderPerSceneAudioCards();
+      renderMasterAudioPanel();
+    }
+
+    function updateTotalDurationBadge() {
+      const totalSec = state.scenes.reduce((acc, s) => acc + (Number(s.durationSec) || 0), 0);
+      const badge = document.getElementById('totalVoiceDurationBadge');
+      if (badge) {
+        badge.textContent = `เวลารวมทั้งหมด: ${totalSec.toFixed(1)} วินาที (${state.scenes.length} ฉาก)`;
+      }
+    }
+
+    function setVoiceUploadMode(mode, notify = true) {
+      state.voiceUploadMode = mode;
+      const btnPer = document.getElementById('audioModePerSceneBtn');
+      const btnSingle = document.getElementById('audioModeSingleMasterBtn');
+      const boxPer = document.getElementById('voicePerSceneContainer');
+      const boxSingle = document.getElementById('voiceSingleMasterContainer');
+
+      if (mode === 'per-scene') {
+        btnPer.className = 'text-left p-4 rounded-2xl border-2 border-[#1D63ED] bg-blue-50/40 transition cursor-pointer';
+        btnSingle.className = 'text-left p-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 transition cursor-pointer';
+        boxPer.classList.remove('hidden');
+        boxSingle.classList.add('hidden');
+      } else {
+        btnSingle.className = 'text-left p-4 rounded-2xl border-2 border-[#1D63ED] bg-blue-50/40 transition cursor-pointer';
+        btnPer.className = 'text-left p-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 transition cursor-pointer';
+        boxSingle.classList.remove('hidden');
+        boxPer.classList.add('hidden');
+      }
+      if (notify) {
+        showToast(mode === 'per-scene' ? 'เลือกโหมดอัปโหลดเสียงแยกรายฉาก' : 'เลือกโหมดอัปโหลดเสียงรวมทั้งเรื่อง');
+      }
+    }
+
+    function handleAudioDropzoneDragOver(e) {
+      e.preventDefault();
+      document.getElementById('batchAudioDropzone').classList.add('ring-4', 'ring-emerald-500/30', 'bg-emerald-100/70');
+    }
+
+    function handleAudioDropzoneDragLeave(e) {
+      e.preventDefault();
+      document.getElementById('batchAudioDropzone').classList.remove('ring-4', 'ring-emerald-500/30', 'bg-emerald-100/70');
+    }
+
+    async function handleBatchAudioDrop(e) {
+      e.preventDefault();
+      handleAudioDropzoneDragLeave(e);
+      if (e.dataTransfer?.files?.length) {
+        await assignAudioFilesToScenes(Array.from(e.dataTransfer.files));
+      }
+    }
+
+    async function handleBatchAudioUpload(e) {
+      if (e.target?.files?.length) {
+        await assignAudioFilesToScenes(Array.from(e.target.files));
+        e.target.value = '';
+      }
+    }
+
+    async function assignAudioFilesToScenes(files) {
+      const audioFiles = files
+        .filter(f => f.type.startsWith('audio/') || /\.(mp3|wav|m4a|ogg|aac)$/i.test(f.name))
+        .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+
+      if (audioFiles.length === 0) {
+        showToast('ไม่พบไฟล์เสียง (.mp3 / .wav) ในรายการที่เลือก', 'error');
+        return;
+      }
+
+      let loadedCount = 0;
+      for (let idx = 0; idx < audioFiles.length; idx++) {
+        const file = audioFiles[idx];
+        const match = file.name.match(/(?:scene[_\-\s]*|^)(\d+)/i);
+        let targetIdx = match ? parseInt(match[1], 10) - 1 : idx;
+        if (targetIdx < 0 || targetIdx >= state.scenes.length) targetIdx = idx;
+
+        if (state.scenes[targetIdx]) {
+          try {
+            const buffer = await decodeAudioFileToBuffer(file);
+            state.scenes[targetIdx].audioBuffer = buffer;
+            state.scenes[targetIdx].audioFileName = file.name;
+            state.scenes[targetIdx].audioDurationSec = buffer.duration;
+            loadedCount++;
+          } catch (err) {
+            showToast(`ไม่สามารถอ่านไฟล์เสียง "${file.name}" ได้`, 'error');
+          }
+        }
+      }
+
+      renderPerSceneAudioCards();
+      if (loadedCount > 0) {
+        showToast(`อัปโหลดและถอดรหัสไฟล์เสียงสำเร็จ ${loadedCount} ฉาก! กดปุ่ม "⚡ ปรับเวลาทุกฉาก..." เพื่อซิงก์เวลาทันที`);
+      }
+    }
+
+    async function handleSingleSceneAudioUpload(index, event) {
+      const file = event.target?.files?.[0];
+      if (!file) return;
+      try {
+        const buffer = await decodeAudioFileToBuffer(file);
+        state.scenes[index].audioBuffer = buffer;
+        state.scenes[index].audioFileName = file.name;
+        state.scenes[index].audioDurationSec = buffer.duration;
+        renderPerSceneAudioCards();
+        if (state.currentStep === 4) renderClipSequenceList();
+        showToast(`อัปโหลดเสียงฉากที่ ${index + 1} (${buffer.duration.toFixed(2)} วิ) สำเร็จ!`);
+      } catch (err) {
+        showToast(`อ่านไฟล์เสียงไม่สำเร็จ: ${err.message}`, 'error');
+      } finally {
+        event.target.value = '';
+      }
+    }
+
+    function removeSceneAudio(index) {
+      stopAllAudio();
+      state.scenes[index].audioBuffer = null;
+      state.scenes[index].audioFileName = '';
+      state.scenes[index].audioDurationSec = 0;
+      renderPerSceneAudioCards();
+      if (state.currentStep === 4) renderClipSequenceList();
+      showToast(`ลบไฟล์เสียงของฉากที่ ${index + 1} แล้ว`, 'info');
+    }
+
+    function autoSyncAllScenesToAudio() {
+      const addPadding = document.getElementById('autoSyncPaddingCheckbox')?.checked ?? true;
+      const paddingSec = addPadding ? 0.3 : 0.0;
+      let syncedCount = 0;
+
+      state.scenes.forEach((sc) => {
+        if (sc.audioBuffer && sc.audioDurationSec > 0) {
+          const delay = Number(sc.voiceDelaySec) || 0;
+          sc.durationSec = Number((sc.audioDurationSec + delay + paddingSec).toFixed(2));
+          syncedCount++;
+        }
+      });
+
+      if (syncedCount === 0) {
+        showToast('กรุณาอัปโหลดไฟล์เสียง .mp3 หรือ .wav อย่างน้อย 1 ฉากก่อนกดซิงก์ครับ', 'error');
+        return;
+      }
+
+      renderPerSceneAudioCards();
+      updateTotalDurationBadge();
+      showToast(`ซิงก์เวลา ${syncedCount} ฉากให้ตรงกับไฟล์เสียงจริงเรียบร้อยแล้ว!`);
+    }
+
+    function renderPerSceneAudioCards() {
+      const container = document.getElementById('perSceneAudioCardsList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      let uploadedCount = 0;
+      state.scenes.forEach((sc, idx) => {
+        const hasAudio = Boolean(sc.audioBuffer);
+        if (hasAudio) uploadedCount++;
+
+        const card = document.createElement('div');
+        card.className = hasAudio
+          ? 'rounded-2xl border border-emerald-200 bg-emerald-50/25 p-4 flex flex-wrap items-center justify-between gap-3'
+          : 'rounded-2xl border border-slate-200 bg-white p-4 flex flex-wrap items-center justify-between gap-3';
+
+        card.innerHTML = `
+          <div class="min-w-0 flex-1 space-y-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-lg bg-[#1D63ED] text-white text-xs font-bold">ฉากที่ ${sc.sceneNumber}</span>
+              <span class="font-bold text-xs sm:text-sm text-slate-900">${escapeHtml(sc.onScreenText)}</span>
+              <span class="text-xs font-semibold text-slate-500">⏱️ เวลาฉาก: <strong>${sc.durationSec.toFixed(2)} วิ</strong></span>
+            </div>
+            <p class="text-xs text-slate-600 line-clamp-2">"${escapeHtml(sc.narration)}"</p>
+            <div class="pt-0.5">
+              ${
+                hasAudio
+                  ? `<span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-lg">
+                      ✅ ไฟล์เสียง: ${escapeHtml(sc.audioFileName)} (${sc.audioDurationSec.toFixed(2)} วินาที)
+                    </span>`
+                  : `<span class="inline-flex items-center gap-1.5 text-xs font-medium text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200/80">
+                      ⚠️ ยังไม่มีไฟล์เสียง (.mp3 / .wav)
+                    </span>`
+              }
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 shrink-0">
+            ${
+              hasAudio
+                ? `
+                  <button type="button" onclick="playUploadedSceneAudio(${idx})" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer">
+                    ▶️ ฟังเสียง
+                  </button>
+                  <button type="button" onclick="stopAllAudio()" class="px-2.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold cursor-pointer" title="หยุดเสียง">
+                    ⏹️
+                  </button>
+                  <button type="button" onclick="removeSceneAudio(${idx})" class="px-2.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold cursor-pointer" title="ลบไฟล์เสียง">
+                    🗑️
+                  </button>
+                `
+                : `
+                  <button type="button" onclick="speakBrowserTTS(${idx})" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer" title="ทดสอบฟังเสียงอ่านในเบราว์เซอร์">
+                    🔊 ฟังตัวอย่าง
+                  </button>
+                `
+            }
+            <label class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1D63ED] hover:bg-[#1550C7] text-white text-xs font-bold cursor-pointer shadow-2xs transition">
+              <span>📁</span><span>${hasAudio ? 'เปลี่ยนไฟล์เสียง' : 'อัปโหลดเสียง (.mp3/.wav)'}</span>
+              <input type="file" accept="audio/*" class="hidden" onchange="handleSingleSceneAudioUpload(${idx}, event)">
+            </label>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      const countBadge = document.getElementById('uploadedAudioCountBadge');
+      if (countBadge) {
+        countBadge.textContent = `อัปโหลดแล้ว ${uploadedCount} / ${state.scenes.length} ฉาก`;
+      }
+    }
+
+    function playUploadedSceneAudio(index) {
+      const sc = state.scenes[index];
+      if (!sc || !sc.audioBuffer) return;
+      stopAllAudio();
+
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      activePlaybackCtx = ctx;
+      const src = ctx.createBufferSource();
+      const gain = ctx.createGain();
+      src.buffer = sc.audioBuffer;
+      gain.gain.value = state.voiceVolume;
+      src.connect(gain);
+      gain.connect(ctx.destination);
+      src.start(0);
+      activeScheduledNodes.push(src);
+    }
+
+    async function handleMasterAudioUpload(event) {
+      const file = event.target?.files?.[0];
+      if (!file) return;
+      try {
+        const buffer = await decodeAudioFileToBuffer(file);
+        state.masterAudioBuffer = buffer;
+        state.masterAudioFileName = file.name;
+        state.masterAudioDurationSec = buffer.duration;
+        autoDistributeMasterAudioTimings(false);
+        renderMasterAudioPanel();
+        showToast(`อัปโหลดไฟล์เสียงรวม "${file.name}" (${buffer.duration.toFixed(2)} วิ) และแบ่งเวลาฉากอัตโนมัติแล้ว!`);
+      } catch (err) {
+        showToast(`ไม่สามารถถอดรหัสไฟล์เสียงรวมได้: ${err.message}`, 'error');
+      } finally {
+        event.target.value = '';
+      }
+    }
+
+    function autoDistributeMasterAudioTimings(notify = true) {
+      if (!state.masterAudioBuffer) return;
+      const totalDur = state.masterAudioDurationSec;
+      const weights = state.scenes.map(s => Math.max(10, (s.narration || '').length));
+      const totalWeight = weights.reduce((a, b) => a + b, 0);
+
+      let cursor = 0;
+      state.scenes.forEach((sc, idx) => {
+        const share = (weights[idx] / totalWeight) * totalDur;
+        sc.masterStartSec = Number(cursor.toFixed(2));
+        sc.durationSec = Number(Math.max(2.0, share).toFixed(2));
+        cursor += share;
+      });
+
+      renderMasterAudioPanel();
+      updateTotalDurationBadge();
+      if (notify) showToast('แบ่งเวลาทุกฉากตามสัดส่วนความยาวบทพากย์เรียบร้อยแล้ว!');
+    }
+
+    function renderMasterAudioPanel() {
+      const box = document.getElementById('masterAudioStatusBox');
+      const list = document.getElementById('masterSplitPointsList');
+      if (!box || !list) return;
+
+      if (!state.masterAudioBuffer) {
+        box.classList.add('hidden');
+        return;
+      }
+
+      box.classList.remove('hidden');
+      document.getElementById('masterAudioFileInfo').textContent = `${state.masterAudioFileName} • ความยาวรวม ${state.masterAudioDurationSec.toFixed(2)} วินาที`;
+
+      list.innerHTML = '';
+      state.scenes.forEach((sc, idx) => {
+        const row = document.createElement('div');
+        row.className = 'flex flex-wrap items-center justify-between gap-2 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200/80 text-xs';
+        row.innerHTML = `
+          <div class="font-bold text-slate-800">ฉากที่ ${sc.sceneNumber}: <span class="font-normal text-slate-600">${escapeHtml(sc.onScreenText)}</span></div>
+          <div class="flex items-center gap-2">
+            <label class="flex items-center gap-1 text-slate-600">
+              <span>เริ่มวินาทีที่:</span>
+              <input type="number" step="0.1" min="0" value="${sc.masterStartSec}" onchange="state.scenes[${idx}].masterStartSec = Math.max(0, parseFloat(this.value)||0)" class="w-16 rounded-lg border border-slate-300 bg-white px-2 py-1 font-mono text-xs">
+            </label>
+            <label class="flex items-center gap-1 text-slate-600">
+              <span>ความยาวฉาก (วิ):</span>
+              <input type="number" step="0.1" min="1" value="${sc.durationSec}" onchange="state.scenes[${idx}].durationSec = Math.max(1, parseFloat(this.value)||3); updateTotalDurationBadge();" class="w-16 rounded-lg border border-slate-300 bg-white px-2 py-1 font-mono text-xs">
+            </label>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function toggleMasterVoicePreview() {
+      if (isMasterVoicePreviewPlaying) {
+        stopAllAudio();
+        return;
+      }
+      if (!state.masterAudioBuffer) return;
+      stopAllAudio();
+      isMasterVoicePreviewPlaying = true;
+      const btn = document.getElementById('playMasterVoiceBtn');
+      if (btn) btn.textContent = '⏹️ หยุดเสียงรวม';
+
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      activePlaybackCtx = ctx;
+      const src = ctx.createBufferSource();
+      const gain = ctx.createGain();
+      src.buffer = state.masterAudioBuffer;
+      gain.gain.value = state.voiceVolume;
+      src.connect(gain);
+      gain.connect(ctx.destination);
+      src.onended = () => {
+        isMasterVoicePreviewPlaying = false;
+        if (btn) btn.textContent = '▶️ ฟังเสียงรวม';
+      };
+      src.start(0);
+      activeScheduledNodes.push(src);
+    }
+
+    function removeMasterAudio() {
+      stopAllAudio();
+      state.masterAudioBuffer = null;
+      state.masterAudioFileName = '';
+      state.masterAudioDurationSec = 0;
+      renderMasterAudioPanel();
+      showToast('ลบไฟล์เสียงรวมทั้งเรื่องแล้ว', 'info');
+    }
+
+    function updateVoiceVolume(val) {
+      state.voiceVolume = parseFloat(val) / 100;
+      document.getElementById('voiceVolumeLabel').textContent = `${val}%`;
+    }
+
+    function handleBgmStyleChange(val) {
+      state.bgmStyle = val;
+      if (val === 'custom' && !state.customBgmBuffer) {
+        showToast('กรุณากดปุ่ม "อัปโหลดเพลง BGM" ด้านขวาเพื่อเลือกไฟล์ .mp3/.wav ครับ', 'info');
+      }
+      updateBgmPreviewIfPlaying();
+    }
+
+    async function handleCustomBgmUpload(event) {
+      const file = event.target?.files?.[0];
+      if (!file) return;
+      try {
+        const buffer = await decodeAudioFileToBuffer(file);
+        state.customBgmBuffer = buffer;
+        state.customBgmFileName = file.name;
+        state.bgmStyle = 'custom';
+        document.getElementById('bgmStyleSelect').value = 'custom';
+        document.getElementById('customBgmBtnLabel').textContent = file.name;
+        showToast(`อัปโหลดเพลง BGM "${file.name}" เรียบร้อยแล้ว!`);
+      } catch (err) {
+        showToast(`ไม่สามารถอ่านไฟล์เพลง BGM ได้: ${err.message}`, 'error');
+      } finally {
+        event.target.value = '';
+      }
+    }
+
+    function selectVoiceGender(gender) {
+      state.voiceGender = gender;
+      const maleBtn = document.getElementById('voiceGenderMaleBtn');
+      const femaleBtn = document.getElementById('voiceGenderFemaleBtn');
+      if (gender === 'male') {
+        maleBtn.className = 'text-left p-3.5 rounded-2xl border-2 border-[#1D63ED] bg-blue-50/40 flex items-center gap-3.5 transition cursor-pointer';
+        femaleBtn.className = 'text-left p-3.5 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 flex items-center gap-3.5 transition cursor-pointer';
+      } else {
+        femaleBtn.className = 'text-left p-3.5 rounded-2xl border-2 border-[#1D63ED] bg-blue-50/40 flex items-center gap-3.5 transition cursor-pointer';
+        maleBtn.className = 'text-left p-3.5 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 flex items-center gap-3.5 transition cursor-pointer';
+      }
+    }
+
+    function speakBrowserTTS(index, onEndedCallback = null) {
+      const scene = state.scenes[index];
+      if (!scene) return;
+      if (!('speechSynthesis' in window)) {
+        if (onEndedCallback) setTimeout(onEndedCallback, scene.durationSec * 1000);
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(scene.narration);
+      utterance.lang = 'th-TH';
+      utterance.pitch = state.voiceGender === 'female' ? 1.18 : 0.92;
+      const voices = window.speechSynthesis.getVoices();
+      const thaiVoices = voices.filter(v => v.lang.toLowerCase().includes('th'));
+      if (thaiVoices.length > 0) utterance.voice = thaiVoices[0];
+      if (onEndedCallback) {
+        utterance.onend = onEndedCallback;
+        utterance.onerror = onEndedCallback;
+      }
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function playSingleSceneVoiceOrTTS(index) {
+      const sc = state.scenes[index];
+      if (!sc) return;
+      if (sc.audioBuffer) {
+        playUploadedSceneAudio(index);
+      } else {
+        speakBrowserTTS(index);
+      }
+    }
+
+    function playAllBrowserTTSPreview() {
+      let idx = 0;
+      function next() {
+        if (idx >= state.scenes.length) return;
+        speakBrowserTTS(idx, () => {
+          idx++;
+          setTimeout(next, 300);
+        });
+      }
+      next();
+    }
+
+    function stopAllAudio() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      activeScheduledNodes.forEach(node => {
+        try { node.stop(); } catch (_) {}
+      });
+      activeScheduledNodes = [];
+      if (activePlaybackCtx) {
+        try { activePlaybackCtx.close(); } catch (_) {}
+        activePlaybackCtx = null;
+      }
+      isMasterVoicePreviewPlaying = false;
+      const mBtn = document.getElementById('playMasterVoiceBtn');
+      if (mBtn) mBtn.textContent = '▶️ ฟังเสียงรวม';
+      stopBgmLoop();
+      stopMasterPreview();
+    }
+
+    // =========================================================================
+    // 8. ระบบสังเคราะห์ดนตรีประกอบ BGM ด้วย WEB AUDIO API
+    // =========================================================================
+    function startBgmLoop() {
+      stopBgmLoop();
+      const style = document.getElementById('bgmStyleSelect')?.value || state.bgmStyle;
+      state.bgmStyle = style;
+      if (style === 'none') return;
+
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      activePlaybackCtx = ctx;
+
+      if (style === 'custom' && state.customBgmBuffer) {
+        const src = ctx.createBufferSource();
+        const gain = ctx.createGain();
+        src.buffer = state.customBgmBuffer;
+        src.loop = true;
+        gain.gain.value = state.bgmVolume * 0.75;
+        src.connect(gain);
+        gain.connect(ctx.destination);
+        src.start(0);
+        activeScheduledNodes.push(src);
+        return;
+      }
+
+      const scales = {
+        corporate: [261.63, 329.63, 392.00, 493.88, 523.25],
+        lofi:      [220.00, 261.63, 329.63, 392.00, 440.00],
+        upbeat:    [293.66, 369.99, 440.00, 587.33, 659.25],
+        calm:      [196.00, 246.94, 293.66, 392.00, 440.00]
+      };
+      const notes = scales[style] || scales.corporate;
+      let step = 0;
+
+      const playStep = () => {
+        if (!activePlaybackCtx) return;
+        const vol = state.bgmVolume * 0.16;
+        if (vol <= 0.001) return;
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = style === 'lofi' || style === 'calm' ? 'sine' : 'triangle';
+        osc.frequency.setValueAtTime(notes[step % notes.length], ctx.currentTime);
+
+        gain.gain.setValueAtTime(0.001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(vol, ctx.currentTime + 0.06);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.55);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.6);
+        step++;
+      };
+
+      playStep();
+      const tempoMs = style === 'upbeat' ? 420 : style === 'calm' ? 750 : 550;
+      bgmTimer = setInterval(playStep, tempoMs);
+    }
+
+    function stopBgmLoop() {
+      if (bgmTimer) {
+        clearInterval(bgmTimer);
+        bgmTimer = null;
+      }
+      isBgmPreviewPlaying = false;
+      const btn = document.getElementById('bgmPreviewBtn');
+      if (btn) btn.textContent = '▶️ ทดลองฟัง BGM';
+    }
+
+    function toggleBgmPreview() {
+      if (isBgmPreviewPlaying) {
+        stopAllAudio();
+      } else {
+        const style = document.getElementById('bgmStyleSelect').value;
+        if (style === 'none') {
+          showToast('คุณเลือก "ปิดดนตรีประกอบ" อยู่ครับ', 'info');
+          return;
+        }
+        startBgmLoop();
+        isBgmPreviewPlaying = true;
+        document.getElementById('bgmPreviewBtn').textContent = '⏹️ หยุดฟัง BGM';
+      }
+    }
+
+    function updateBgmPreviewIfPlaying() {
+      if (isBgmPreviewPlaying) {
+        startBgmLoop();
+        isBgmPreviewPlaying = true;
+        document.getElementById('bgmPreviewBtn').textContent = '⏹️ หยุดฟัง BGM';
+      }
+    }
+
+    function updateBgmVolume(val) {
+      state.bgmVolume = parseFloat(val) / 100;
+      document.getElementById('bgmVolumeLabel').textContent = `${val}%`;
+    }
+
+    // =========================================================================
+    // 9. การทำงานในขั้นตอนที่ 4: อัปโหลดวิดีโอ & เช็กลิสต์เสียง+ภาพ
+    // =========================================================================
+    function renderStep4() {
+      renderClipSequenceList();
+      updatePreviewTimerDisplay(0);
+      drawStaticScenePreview(0);
+    }
+
+    function handleDropzoneDragOver(e) {
+      e.preventDefault();
+      document.getElementById('videoDropzone').classList.add('ring-4', 'ring-blue-500/30', 'bg-blue-100/80');
+    }
+
+    function handleDropzoneDragLeave(e) {
+      e.preventDefault();
+      document.getElementById('videoDropzone').classList.remove('ring-4', 'ring-blue-500/30', 'bg-blue-100/80');
+    }
+
+    function handleDropzoneDrop(e) {
+      e.preventDefault();
+      handleDropzoneDragLeave(e);
+      if (e.dataTransfer?.files?.length) {
+        assignVideoFilesToScenes(Array.from(e.dataTransfer.files));
+      }
+    }
+
+    function handleMultipleVideoUpload(e) {
+      if (e.target?.files?.length) {
+        assignVideoFilesToScenes(Array.from(e.target.files));
+      }
+    }
+
+    function handleReferenceImagesUpload(e) {
+      if (e.target?.files?.length) {
+        uploadedRefImages = Array.from(e.target.files);
+        showToast(`เพิ่มภาพนิ่งอ้างอิง ${uploadedRefImages.length} ภาพเพื่อช่วยจับคู่แล้ว`);
+      }
+    }
+
+    function assignVideoFilesToScenes(files) {
+      const videoFiles = files
+        .filter(f => f.type.startsWith('video/') || /\.(mp4|webm|mov)$/i.test(f.name))
+        .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+
+      if (videoFiles.length === 0) {
+        showToast('ไม่พบไฟล์วิดีโอ (.mp4 / .webm / .mov) ในรายการที่เลือก', 'error');
+        return;
+      }
+
+      videoFiles.forEach((file, idx) => {
+        const match = file.name.match(/(?:scene[_\-\s]*|^)(\d+)/i);
+        let targetIdx = match ? parseInt(match[1], 10) - 1 : idx;
+        if (targetIdx < 0 || targetIdx >= state.scenes.length) {
+          targetIdx = idx;
+        }
+        if (state.scenes[targetIdx]) {
+          state.scenes[targetIdx].videoUrl = URL.createObjectURL(file);
+          state.scenes[targetIdx].videoFileName = file.name;
+          state.scenes[targetIdx].isDemoClip = false;
+          state.scenes[targetIdx].needsReview = !Boolean(match);
+        }
+      });
+
+      renderClipSequenceList();
+      drawStaticScenePreview(0);
+      showToast(`จัดเรียงไฟล์วิดีโอ ${videoFiles.length} คลิปเข้าฉากเรียบร้อยแล้ว!`);
+    }
+
+    function assignSingleSceneVideo(index, event) {
+      const file = event.target?.files?.[0];
+      if (!file) return;
+      state.scenes[index].videoUrl = URL.createObjectURL(file);
+      state.scenes[index].videoFileName = file.name;
+      state.scenes[index].isDemoClip = false;
+      state.scenes[index].needsReview = false;
+      renderClipSequenceList();
+      drawStaticScenePreview(index);
+      showToast(`ใส่คลิป "${file.name}" ให้ฉากที่ ${index + 1} แล้ว`);
+    }
+
+    function generateSimulatedDemoClips() {
+      state.scenes.forEach((sc, idx) => {
+        sc.isDemoClip = true;
+        sc.videoUrl = null;
+        sc.videoFileName = `DEMO_FLOW_SCENE_0${idx + 1}.mp4`;
+        sc.needsReview = false;
+      });
+      renderClipSequenceList();
+      drawStaticScenePreview(0);
+      showToast('สร้างคลิปแอนิเมชันตัวอย่างจำลองครบทุกฉากแล้ว! กดปุ่ม "เล่นพรีวิวทั้งเรื่อง" ได้เลย');
+    }
+
+    function moveSceneRow(index, direction) {
+      const targetIdx = index + direction;
+      if (targetIdx < 0 || targetIdx >= state.scenes.length) return;
+      const temp = state.scenes[index];
+      state.scenes[index] = state.scenes[targetIdx];
+      state.scenes[targetIdx] = temp;
+
+      state.scenes.forEach((s, i) => { s.sceneNumber = i + 1; });
+      renderClipSequenceList();
+    }
+
+    function renderClipSequenceList() {
+      const container = document.getElementById('clipSequenceList');
+      container.innerHTML = '';
+
+      state.scenes.forEach((sc, idx) => {
+        const hasClip = Boolean(sc.videoUrl || sc.isDemoClip);
+        const hasRealAudio = Boolean(sc.audioBuffer || (state.voiceUploadMode === 'single-master' && state.masterAudioBuffer));
+        const rowBg = (hasClip && hasRealAudio)
+          ? 'bg-white border-slate-200'
+          : 'bg-[#FFFBEB] border-amber-300';
+
+        const audioBadgeHtml = sc.audioBuffer
+          ? `<span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">✅ มีเสียงพากย์ ${sc.audioDurationSec.toFixed(1)} วิ</span>`
+          : (state.voiceUploadMode === 'single-master' && state.masterAudioBuffer)
+            ? `<span class="text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200">✅ ใช้ไฟล์เสียงรวม</span>`
+            : `<span class="text-[11px] font-bold text-amber-800 bg-amber-100/80 px-2 py-0.5 rounded-md border border-amber-300">⚠️ ยังไม่มีไฟล์เสียง</span>`;
+
+        const row = document.createElement('div');
+        row.className = `rounded-2xl border p-3.5 flex flex-wrap items-center justify-between gap-3 transition ${rowBg}`;
+        row.innerHTML = `
+          <div class="flex items-center gap-3.5 min-w-0 flex-1">
+            <div class="w-24 sm:w-28 h-16 rounded-xl bg-slate-900 text-slate-300 flex items-center justify-center text-[11px] font-semibold shrink-0 overflow-hidden border border-slate-700 relative">
+              ${
+                sc.isDemoClip
+                  ? `<div class="w-full h-full">${getStyleThumbnailSVG(state.selectedStyleId)}</div><span class="absolute bottom-1 right-1 bg-blue-600 text-white text-[9px] px-1 rounded">DEMO</span>`
+                  : sc.videoUrl
+                    ? `<video src="${sc.videoUrl}" class="w-full h-full object-cover" muted></video>`
+                    : `<span>ไม่มีคลิป</span>`
+              }
+            </div>
+
+            <div class="min-w-0 flex-1 space-y-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full bg-blue-100 text-[#1D63ED] text-xs font-bold">
+                  ฉากที่ ${sc.sceneNumber} • เล่น ${sc.durationSec.toFixed(1)} วิ
+                </span>
+                <span class="font-bold text-xs sm:text-sm text-slate-900 truncate">${escapeHtml(sc.onScreenText)}</span>
+                ${audioBadgeHtml}
+              </div>
+              <p class="text-xs text-slate-500 truncate">บทพากย์: ${escapeHtml(sc.narration)}</p>
+              <div class="text-[11px] font-semibold ${hasClip ? 'text-emerald-700' : 'text-amber-700'}">
+                ${hasClip ? `🎬 วิดีโอ: ${escapeHtml(sc.videoFileName)}` : '⏳ ยังไม่ได้ใส่คลิปวิดีโอ'}
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-1.5 shrink-0">
+            <button type="button" onclick="moveSceneRow(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} class="w-8 h-8 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-30 text-white text-xs flex items-center justify-center cursor-pointer" title="เลื่อนขึ้น">⬆️</button>
+            <button type="button" onclick="moveSceneRow(${idx}, 1)" ${idx === state.scenes.length - 1 ? 'disabled' : ''} class="w-8 h-8 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-30 text-white text-xs flex items-center justify-center cursor-pointer" title="เลื่อนลง">⬇️</button>
+
+            <label class="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-2xs cursor-pointer transition" title="อัปโหลดไฟล์เสียง .mp3/.wav ของฉากนี้">
+              <span>🎙️</span><span>ใส่เสียง (.mp3/.wav)</span>
+              <input type="file" accept="audio/*" class="hidden" onchange="handleSingleSceneAudioUpload(${idx}, event)">
+            </label>
+
+            <label class="inline-flex items-center gap-1 px-3 py-2 rounded-xl bg-[#1D63ED] hover:bg-[#1550C7] text-white text-xs font-bold shadow-2xs cursor-pointer transition">
+              <span>📁</span><span>เลือกคลิปช่องนี้</span>
+              <input type="file" accept="video/*" class="hidden" onchange="assignSingleSceneVideo(${idx}, event)">
+            </label>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    // =========================================================================
+    // 10. เครื่องเล่น HTML5 CANVAS COMPOSITOR & WEB AUDIO MIXER EXPORTER
+    // =========================================================================
+    function getCanvasDimensions() {
+      return state.aspectRatio === '9:16'
+        ? { width: 540, height: 960 }
+        : { width: 960, height: 540 };
+    }
+
+    function drawStaticScenePreview(sceneIdx, targetCanvasId = 'compositorCanvas', progressInScene = 0.3) {
+      const canvas = document.getElementById(targetCanvasId);
+      if (!canvas) return;
+      const dims = getCanvasDimensions();
+      canvas.width = dims.width;
+      canvas.height = dims.height;
+
+      const ctx = canvas.getContext('2d');
+      const scene = state.scenes[sceneIdx] || state.scenes[0];
+      if (!scene) return;
+
+      renderCompositorFrame(ctx, canvas.width, canvas.height, scene, sceneIdx, progressInScene, null);
+    }
+
+    function renderCompositorFrame(ctx, w, h, scene, sceneIdx, progress, videoEl) {
+      ctx.clearRect(0, 0, w, h);
+
+      if (videoEl && videoEl.readyState >= 2) {
+        ctx.drawImage(videoEl, 0, 0, w, h);
+      } else {
+        const bgColors = [
+          ['#0F172A', '#1D4ED8'],
+          ['#064E3B', '#059669'],
+          ['#312E81', '#4F46E5'],
+          ['#78350F', '#D97706'],
+          ['#1E1B4B', '#2563EB']
+        ];
+        const [c1, c2] = bgColors[sceneIdx % bgColors.length];
+        const grad = ctx.createLinearGradient(0, 0, w, h);
+        grad.addColorStop(0, c1);
+        grad.addColorStop(1, c2);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+
+        const pulse = Math.sin(progress * Math.PI) * 18;
+        ctx.fillStyle = 'rgba(255,255,255,0.08)';
+        ctx.beginPath();
+        ctx.arc(w * 0.25 + pulse, h * 0.4, Math.min(w, h) * 0.24, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(w * 0.78 - pulse, h * 0.55, Math.min(w, h) * 0.18, 0, Math.PI * 2);
+        ctx.fill();
+
+        const cardW = w * 0.68;
+        const cardH = h * 0.36;
+        const cardX = (w - cardW) / 2;
+        const cardY = h * 0.28 - pulse * 0.2;
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.14)';
+        roundRectCanvas(ctx, cardX, cardY, cardW, cardH, 20);
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        const styleObj = VISUAL_STYLES.find(s => s.id === state.selectedStyleId) || VISUAL_STYLES[8];
+        ctx.fillStyle = '#93C5FD';
+        ctx.font = `600 ${Math.round(w * 0.018)}px Prompt, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText(`สไตล์: ${styleObj.name}`, w / 2, cardY + cardH * 0.32);
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = `700 ${Math.round(w * 0.028)}px Prompt, sans-serif`;
+        ctx.fillText(scene.onScreenText, w / 2, cardY + cardH * 0.66);
+      }
+
+      const badgePadX = 16;
+      const badgeY = 22;
+      ctx.fillStyle = 'rgba(29, 99, 237, 0.92)';
+      roundRectCanvas(ctx, 20, badgeY, Math.min(w - 40, 340), 36, 12);
+      ctx.fill();
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = `700 ${Math.round(w * 0.017)}px Prompt, sans-serif`;
+      ctx.textAlign = 'left';
+      ctx.fillText(`ฉากที่ ${scene.sceneNumber}/${state.scenes.length} • ${scene.onScreenText}`, 20 + badgePadX, badgeY + 23);
+
+      drawSubtitleOnCanvas(ctx, w, h, scene.narration);
+    }
+
+    function drawSubtitleOnCanvas(ctx, w, h, text) {
+      if (!text) return;
+      const cfg = state.subtitleConfig;
+      const fontSize = cfg.size === 'sm' ? Math.round(w * 0.02) : cfg.size === 'lg' ? Math.round(w * 0.03) : Math.round(w * 0.025);
+      ctx.font = `600 ${fontSize}px Sarabun, sans-serif`;
+      ctx.textAlign = 'center';
+
+      const maxLineW = w * 0.84;
+      const words = text.split(' ');
+      const lines = [];
+      let currentLine = '';
+
+      words.forEach(word => {
+        const test = currentLine ? `${currentLine} ${word}` : word;
+        if (ctx.measureText(test).width > maxLineW && currentLine) {
+          lines.push(currentLine);
+          currentLine = word;
+        } else {
+          currentLine = test;
+        }
+      });
+      if (currentLine) lines.push(currentLine);
+
+      const lineHeight = fontSize * 1.38;
+      const boxH = lines.length * lineHeight + 20;
+      const boxW = Math.min(w * 0.9, Math.max(...lines.map(l => ctx.measureText(l).width)) + 44);
+      const boxX = (w - boxW) / 2;
+
+      let boxY = h - boxH - 26;
+      if (cfg.position === 'lower-mid') boxY = h * 0.68;
+      if (cfg.position === 'top') boxY = 74;
+
+      const opacity = cfg.bgOpacity !== undefined ? cfg.bgOpacity : 0.85;
+      if (opacity > 0.01) {
+        ctx.fillStyle = `rgba(15, 23, 42, ${opacity})`;
+        roundRectCanvas(ctx, boxX, boxY, boxW, boxH, 14);
+        ctx.fill();
+      }
+
+      if (opacity <= 0.25) {
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.9)';
+        ctx.lineWidth = 4;
+        lines.forEach((l, i) => ctx.strokeText(l, w / 2, boxY + 14 + fontSize + i * lineHeight));
+      }
+
+      ctx.fillStyle = cfg.textColor || '#FFFFFF';
+      lines.forEach((l, i) => {
+        ctx.fillText(l, w / 2, boxY + 14 + fontSize + i * lineHeight);
+      });
+    }
+
+    function roundRectCanvas(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    function updatePreviewTimerDisplay(elapsedSec) {
+      const totalSec = state.scenes.reduce((acc, s) => acc + (Number(s.durationSec) || 0), 0);
+      const fmt = (sec) => {
+        const m = Math.floor(sec / 60).toString().padStart(2, '0');
+        const s = Math.floor(sec % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+      };
+      document.getElementById('previewCurrentTime').textContent = fmt(elapsedSec);
+      document.getElementById('previewTotalTime').textContent = fmt(totalSec);
+      const pct = totalSec > 0 ? Math.min(100, (elapsedSec / totalSec) * 100) : 0;
+      document.getElementById('previewProgressBar').style.width = `${pct}%`;
+    }
+
+    function scheduleMasterAudioGraph(audioCtx, targetNode, startTimeOffset = 0) {
+      const scheduledSources = [];
+      const totalDuration = state.scenes.reduce((acc, s) => acc + (Number(s.durationSec) || 0), 0);
+
+      const voiceGain = audioCtx.createGain();
+      voiceGain.gain.value = state.voiceVolume;
+      voiceGain.connect(targetNode);
+
+      if (state.voiceUploadMode === 'single-master' && state.masterAudioBuffer) {
+        const src = audioCtx.createBufferSource();
+        src.buffer = state.masterAudioBuffer;
+        src.connect(voiceGain);
+        const initialDelay = Number(state.scenes[0]?.voiceDelaySec) || 0;
+        src.start(startTimeOffset + initialDelay);
+        scheduledSources.push(src);
+      } else {
+        let sceneStartAccum = 0;
+        state.scenes.forEach((sc) => {
+          if (sc.audioBuffer) {
+            const src = audioCtx.createBufferSource();
+            src.buffer = sc.audioBuffer;
+            src.connect(voiceGain);
+            const delay = Number(sc.voiceDelaySec) || 0;
+            src.start(startTimeOffset + sceneStartAccum + delay);
+            scheduledSources.push(src);
+          }
+          sceneStartAccum += (Number(sc.durationSec) || 0);
+        });
+      }
+
+      if (state.bgmStyle !== 'none' && state.bgmVolume > 0.001) {
+        const bgmGain = audioCtx.createGain();
+        bgmGain.gain.value = state.bgmVolume * 0.75;
+        bgmGain.connect(targetNode);
+
+        if (state.bgmStyle === 'custom' && state.customBgmBuffer) {
+          const bgmSrc = audioCtx.createBufferSource();
+          bgmSrc.buffer = state.customBgmBuffer;
+          bgmSrc.loop = true;
+          bgmSrc.connect(bgmGain);
+          bgmSrc.start(startTimeOffset);
+          bgmSrc.stop(startTimeOffset + totalDuration);
+          scheduledSources.push(bgmSrc);
+        } else {
+          const scales = {
+            corporate: [261.63, 329.63, 392.00, 493.88, 523.25],
+            lofi:      [220.00, 261.63, 329.63, 392.00, 440.00],
+            upbeat:    [293.66, 369.99, 440.00, 587.33, 659.25],
+            calm:      [196.00, 246.94, 293.66, 392.00, 440.00]
+          };
+          const notes = scales[state.bgmStyle] || scales.corporate;
+          const stepSec = state.bgmStyle === 'upbeat' ? 0.42 : state.bgmStyle === 'calm' ? 0.75 : 0.55;
+          const totalSteps = Math.ceil(totalDuration / stepSec);
+
+          for (let s = 0; s < totalSteps; s++) {
+            const noteTime = startTimeOffset + s * stepSec;
+            const osc = audioCtx.createOscillator();
+            const noteGain = audioCtx.createGain();
+            osc.type = (state.bgmStyle === 'lofi' || state.bgmStyle === 'calm') ? 'sine' : 'triangle';
+            osc.frequency.setValueAtTime(notes[s % notes.length], noteTime);
+
+            const peak = state.bgmVolume * 0.16;
+            noteGain.gain.setValueAtTime(0.0001, noteTime);
+            noteGain.gain.exponentialRampToValueAtTime(Math.max(0.0002, peak), noteTime + 0.05);
+            noteGain.gain.exponentialRampToValueAtTime(0.0001, noteTime + stepSec * 0.92);
+
+            osc.connect(noteGain);
+            noteGain.connect(targetNode);
+            osc.start(noteTime);
+            osc.stop(noteTime + stepSec * 0.95);
+            scheduledSources.push(osc);
+          }
+        }
+      }
+
+      return scheduledSources;
+    }
+
+    async function startMasterPreview(isRecordingExport = false, onExportFinish = null, exportAudioContext = null, exportMediaDest = null) {
+      stopMasterPreview();
+      isMasterPreviewPlaying = true;
+
+      const canvas = document.getElementById('compositorCanvas');
+      const dims = getCanvasDimensions();
+      canvas.width = dims.width;
+      canvas.height = dims.height;
+      const ctx = canvas.getContext('2d');
+
+      const videoElements = await Promise.all(state.scenes.map(sc => {
+        if (!sc.videoUrl) return Promise.resolve(null);
+        return new Promise(resolve => {
+          const v = document.createElement('video');
+          v.src = sc.videoUrl;
+          v.muted = true;
+          v.loop = true;
+          v.playsInline = true;
+          v.onloadeddata = () => resolve(v);
+          v.onerror = () => resolve(null);
+        });
+      }));
+
+      const audioCtx = exportAudioContext || new (window.AudioContext || window.webkitAudioContext)();
+      if (!exportAudioContext) activePlaybackCtx = audioCtx;
+      const targetAudioNode = exportMediaDest || audioCtx.destination;
+
+      const hasAnyUploadedVoice = Boolean(
+        (state.voiceUploadMode === 'single-master' && state.masterAudioBuffer) ||
+        state.scenes.some(s => Boolean(s.audioBuffer))
+      );
+
+      const scheduledNodes = scheduleMasterAudioGraph(audioCtx, targetAudioNode, audioCtx.currentTime + 0.05);
+      if (!exportAudioContext) activeScheduledNodes.push(...scheduledNodes);
+
+      const totalDuration = state.scenes.reduce((acc, s) => acc + (Number(s.durationSec) || 0), 0);
+      const startTime = performance.now();
+      let lastEnteredScene = -1;
+
+      const tick = (now) => {
+        if (!isMasterPreviewPlaying) return;
+        const elapsed = (now - startTime) / 1000;
+
+        if (elapsed >= totalDuration) {
+          stopMasterPreview();
+          updatePreviewTimerDisplay(totalDuration);
+          if (isRecordingExport && onExportFinish) onExportFinish();
+          else showToast('เล่นพรีวิววิดีโอครบทั้งเรื่องแล้ว!');
+          return;
+        }
+
+        let accum = 0;
+        let currentIdx = 0;
+        let sceneProgress = 0;
+        for (let i = 0; i < state.scenes.length; i++) {
+          const dur = Number(state.scenes[i].durationSec) || 0;
+          if (elapsed < accum + dur) {
+            currentIdx = i;
+            sceneProgress = dur > 0 ? (elapsed - accum) / dur : 0;
+            break;
+          }
+          accum += dur;
+        }
+
+        if (currentIdx !== lastEnteredScene) {
+          lastEnteredScene = currentIdx;
+          document.getElementById('previewOverlayBadge').textContent = `กำลังเล่น • ฉากที่ ${currentIdx + 1}/${state.scenes.length}`;
+
+          if (!isRecordingExport && !hasAnyUploadedVoice) {
+            speakBrowserTTS(currentIdx);
+          }
+
+          videoElements.forEach((v, idx) => {
+            if (!v) return;
+            if (idx === currentIdx) {
+              v.currentTime = 0;
+              v.play().catch(() => {});
+            } else {
+              v.pause();
+            }
+          });
+        }
+
+        renderCompositorFrame(ctx, canvas.width, canvas.height, state.scenes[currentIdx], currentIdx, sceneProgress, videoElements[currentIdx]);
+        updatePreviewTimerDisplay(elapsed);
+        previewAnimId = requestAnimationFrame(tick);
+      };
+
+      previewAnimId = requestAnimationFrame(tick);
+    }
+
+    function stopMasterPreview() {
+      isMasterPreviewPlaying = false;
+      if (previewAnimId) {
+        cancelAnimationFrame(previewAnimId);
+        previewAnimId = null;
+      }
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      activeScheduledNodes.forEach(node => {
+        try { node.stop(); } catch (_) {}
+      });
+      activeScheduledNodes = [];
+      if (activePlaybackCtx) {
+        try { activePlaybackCtx.close(); } catch (_) {}
+        activePlaybackCtx = null;
+      }
+    }
+
+    function exportFinalWebmVideo() {
+      const canvas = document.getElementById('compositorCanvas');
+      if (!canvas.captureStream || typeof MediaRecorder === 'undefined') {
+        showToast('เบราว์เซอร์นี้ไม่รองรับการบันทึกไฟล์วิดีโอโดยตรง', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('exportVideoBtn');
+      const btnText = document.getElementById('exportVideoBtnText');
+      btn.disabled = true;
+      btnText.textContent = 'กำลังเรนเดอร์ภาพ + เสียงพากย์จริง...';
+      showToast('กำลังบันทึกวิดีโอพร้อมมิกซ์เสียงพากย์และเพลงประกอบ กรุณารอจนครบความยาวคลิป...', 'info');
+
+      const exportAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const mediaStreamDest = exportAudioCtx.createMediaStreamDestination();
+
+      const videoStream = canvas.captureStream(30);
+      const combinedTracks = [
+        ...videoStream.getVideoTracks(),
+        ...mediaStreamDest.stream.getAudioTracks()
+      ];
+      const combinedStream = new MediaStream(combinedTracks);
+
+      const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')
+        ? 'video/webm;codecs=vp9,opus'
+        : MediaRecorder.isTypeSupported('video/webm')
+          ? 'video/webm'
+          : '';
+
+      const recorder = mimeType ? new MediaRecorder(combinedStream, { mimeType }) : new MediaRecorder(combinedStream);
+      const chunks = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) chunks.push(e.data);
+      };
+
+      recorder.onstop = () => {
+        try { exportAudioCtx.close(); } catch (_) {}
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Video_Infographic_ProStudio_${Date.now()}.webm`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        btn.disabled = false;
+        btnText.textContent = 'Export วิดีโอพร้อมเสียงพากย์จริง';
+        showToast('ส่งออกไฟล์วิดีโอพร้อมเสียงพากย์จริงสำเร็จแล้ว!');
+      };
+
+      recorder.start();
+      startMasterPreview(true, () => {
+        if (recorder.state !== 'inactive') recorder.stop();
+      }, exportAudioCtx, mediaStreamDest);
+    }
+
+    async function exportMixedWavAudio() {
+      const totalDuration = state.scenes.reduce((acc, s) => acc + (Number(s.durationSec) || 0), 0);
+      if (totalDuration <= 0) return;
+
+      const btn = document.getElementById('exportWavBtn');
+      const btnText = document.getElementById('exportWavBtnText');
+      btn.disabled = true;
+      btnText.textContent = 'กำลังมิกซ์ไฟล์ .wav...';
+
+      try {
+        const sampleRate = 44100;
+        const offlineCtx = new OfflineAudioContext(2, Math.ceil(totalDuration * sampleRate), sampleRate);
+        scheduleMasterAudioGraph(offlineCtx, offlineCtx.destination, 0);
+
+        const renderedBuffer = await offlineCtx.startRendering();
+        const wavBlob = encodeAudioBufferToWav(renderedBuffer);
+        const url = URL.createObjectURL(wavBlob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Mixed_Voiceover_BGM_${Date.now()}.wav`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast('ดาวน์โหลดไฟล์เสียงพากย์มิกซ์รวม (.wav) สำเร็จแล้ว!');
+      } catch (err) {
+        showToast(`เกิดข้อผิดพลาดในการสร้างไฟล์ .wav: ${err.message}`, 'error');
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = 'ดาวน์โหลดไฟล์เสียงพากย์มิกซ์รวม (.wav)';
+      }
+    }
+
+    function encodeAudioBufferToWav(buffer) {
+      const numChannels = buffer.numberOfChannels;
+      const sampleRate = buffer.sampleRate;
+      const format = 1;
+      const bitDepth = 16;
+      const bytesPerSample = bitDepth / 8;
+      const blockAlign = numChannels * bytesPerSample;
+      const numSamples = buffer.length;
+      const dataSize = numSamples * blockAlign;
+      const arrayBuffer = new ArrayBuffer(44 + dataSize);
+      const view = new DataView(arrayBuffer);
+
+      const writeString = (offset, str) => {
+        for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+      };
+
+      writeString(0, 'RIFF');
+      view.setUint32(4, 36 + dataSize, true);
+      writeString(8, 'WAVE');
+      writeString(12, 'fmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, format, true);
+      view.setUint16(22, numChannels, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * blockAlign, true);
+      view.setUint16(32, blockAlign, true);
+      view.setUint16(34, bitDepth, true);
+      writeString(36, 'data');
+      view.setUint32(40, dataSize, true);
+
+      const channels = [];
+      for (let c = 0; c < numChannels; c++) channels.push(buffer.getChannelData(c));
+
+      let offset = 44;
+      for (let i = 0; i < numSamples; i++) {
+        for (let c = 0; c < numChannels; c++) {
+          const sample = Math.max(-1, Math.min(1, channels[c][i]));
+          view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+          offset += 2;
+        }
+      }
+      return new Blob([arrayBuffer], { type: 'audio/wav' });
+    }
+
+    // =========================================================================
+    // 11. การทำงานในขั้นตอนที่ 5: แก้ไขเฉพาะจุด (FINE-TUNE STUDIO)
+    // =========================================================================
+    function renderStep5() {
+      const tabs = document.getElementById('step5SceneTabs');
+      tabs.innerHTML = '';
+
+      if (state.step5SelectedScene >= state.scenes.length) {
+        state.step5SelectedScene = 0;
+      }
+
+      state.scenes.forEach((sc, idx) => {
+        const active = idx === state.step5SelectedScene;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = active
+          ? 'px-4 py-2 rounded-xl bg-[#1D63ED] text-white text-xs font-bold shadow-xs cursor-pointer'
+          : 'px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold cursor-pointer';
+        btn.textContent = `ฉากที่ ${sc.sceneNumber}`;
+        btn.onclick = () => {
+          state.step5SelectedScene = idx;
+          renderStep5();
+        };
+        tabs.appendChild(btn);
+      });
+
+      const currentSc = state.scenes[state.step5SelectedScene];
+      if (currentSc) {
+        document.getElementById('step5HeadlineInput').value = currentSc.onScreenText;
+        document.getElementById('step5NarrationInput').value = currentSc.narration;
+        document.getElementById('step5DurationSlider').value = currentSc.durationSec;
+        document.getElementById('step5DurationLabel').textContent = `${Number(currentSc.durationSec).toFixed(1)} วิ`;
+
+        const delayVal = Number(currentSc.voiceDelaySec) || 0;
+        document.getElementById('step5VoiceDelaySlider').value = delayVal;
+        document.getElementById('step5VoiceDelayLabel').textContent = `${delayVal.toFixed(1)} วิ`;
+
+        drawStaticScenePreview(state.step5SelectedScene, 'step5MiniCanvas', 0.45);
+      }
+    }
+
+    function updateSelectedSceneField(field, value) {
+      const sc = state.scenes[state.step5SelectedScene];
+      if (!sc) return;
+      sc[field] = value;
+      drawStaticScenePreview(state.step5SelectedScene, 'step5MiniCanvas', 0.45);
+    }
+
+    function updateSelectedSceneDuration(val) {
+      const num = parseFloat(val);
+      const sc = state.scenes[state.step5SelectedScene];
+      if (!sc) return;
+      sc.durationSec = num;
+      document.getElementById('step5DurationLabel').textContent = `${num.toFixed(1)} วิ`;
+    }
+
+    function updateSelectedSceneVoiceDelay(val) {
+      const num = parseFloat(val);
+      const sc = state.scenes[state.step5SelectedScene];
+      if (!sc) return;
+      sc.voiceDelaySec = num;
+      document.getElementById('step5VoiceDelayLabel').textContent = `${num.toFixed(1)} วิ`;
+    }
+
+    function updateSubtitleConfig() {
+      state.subtitleConfig.size = document.getElementById('subSizeSelect').value;
+      state.subtitleConfig.position = document.getElementById('subPosSelect').value;
+      state.subtitleConfig.textColor = document.getElementById('subTextColorSelect').value;
+      const opVal = parseInt(document.getElementById('subOpacitySlider').value, 10);
+      state.subtitleConfig.bgOpacity = opVal / 100;
+      document.getElementById('subOpacityLabel').textContent = `${opVal}%`;
+      drawStaticScenePreview(state.step5SelectedScene, 'step5MiniCanvas', 0.45);
+    }
+
+    async function polishSingleSceneWithAI(mode) {
+      const sc = state.scenes[state.step5SelectedScene];
+      if (!sc) return;
+
+      const instructionMap = {
+        shorter: 'ปรับให้กระชับ สั้นลง อ่านง่าย ภายใน 12-16 คำ โดยยังคงใจความสำคัญครบถ้วน',
+        exciting: 'ปรับน้ำเสียงให้น่าตื่นเต้น ชวนติดตาม ดึงดูดความสนใจผู้ชมมากขึ้น',
+        clearer: 'เรียบเรียงให้อธิบายเห็นภาพชัดเจน เข้าใจง่าย เหมาะกับวิดีโออินโฟกราฟิก'
+      };
+
+      showToast('AI กำลังเกลาบทพากย์ฉากนี้...', 'info');
+      try {
+        const prompt = `${instructionMap[mode] || instructionMap.clearer}\n\nข้อความต้นฉบับ: "${sc.narration}"\n\nตอบกลับมาเฉพาะบทพากย์ภาษาไทยที่ปรับปรุงแล้วเท่านั้น ไม่ต้องมีคำอธิบายเพิ่มเติม`;
+        const payload = { contents: [{ parts: [{ text: prompt }] }] };
+        const res = await callGeminiAPI(payload, 'gemini-3-flash-preview');
+        const newText = res?.candidates?.[0]?.content?.parts?.[0]?.text?.trim().replace(/^["']|["']$/g, '');
+        if (newText) {
+          sc.narration = newText;
+          document.getElementById('step5NarrationInput').value = newText;
+          drawStaticScenePreview(state.step5SelectedScene, 'step5MiniCanvas', 0.45);
+          showToast('ปรับเกลาบทพากย์เรียบร้อยแล้ว!');
+        }
+      } catch (err) {
+        showToast('ไม่สามารถเชื่อมต่อ AI ได้ กรุณาตรวจสอบ API Key มุมขวาบน', 'error');
+      }
+    }
+
+    // =========================================================================
+    // 12. ระบบจัดการไฟล์โปรเจกต์ (SAVE / OPEN JSON, NEW PROJECT, CLIPBOARD)
+    // =========================================================================
+    function confirmNewProject() {
+      openModal('newProjectConfirmModal');
+    }
+
+    function executeNewProject() {
+      stopAllAudio();
+      state.topic = '';
+      state.audience = 'ผู้ชมทั่วไป';
+      state.sceneCount = 5;
+      state.characterName = '';
+      state.productName = '';
+      state.extraNotes = '';
+      state.masterAudioBuffer = null;
+      state.masterAudioFileName = '';
+      state.masterAudioDurationSec = 0;
+
+      document.getElementById('projectTopic').value = '';
+      document.getElementById('targetAudience').value = '';
+      document.getElementById('characterName').value = '';
+      document.getElementById('productName').value = '';
+      document.getElementById('extraNotes').value = '';
+
+      state.scenes = createDefaultScenes(5);
+      closeModal('newProjectConfirmModal');
+      goToStep(1);
+      showToast('เริ่มงานใหม่เรียบร้อยแล้ว');
+    }
+
+    function loadDemoStoryPreset() {
+      applySampleTopic('รีวิวกระติกน้ำเก็บความเย็นสำหรับเดินป่า', 'คนชอบเดินป่า', 'น้องหมีกูรู', 'กระติกน้ำ CoolHike');
+      state.selectedStyleId = '09';
+      document.getElementById('selectedStyleLabel').textContent = '09. 3D Soft Plush';
+      renderStylesGrid();
+      state.scenes = createDefaultScenes(5);
+      generateSimulatedDemoClips();
+      showToast('โหลดโปรเจกต์ตัวอย่างสำเร็จรูปพร้อมคลิปจำลอง 5 ฉากแล้ว!');
+    }
+
+    function exportProjectJSON() {
+      syncStep1InputsToState();
+      const serializableData = {
+        version: 'V9.0.8-Pro-Studio',
+        savedAt: new Date().toISOString(),
+        topic: state.topic,
+        audience: state.audience,
+        sceneCount: state.sceneCount,
+        aspectRatio: state.aspectRatio,
+        creationMode: state.creationMode,
+        characterName: state.characterName,
+        productName: state.productName,
+        extraNotes: state.extraNotes,
+        selectedStyleId: state.selectedStyleId,
+        bgmStyle: state.bgmStyle,
+        bgmVolume: state.bgmVolume,
+        voiceVolume: state.voiceVolume,
+        subtitleConfig: state.subtitleConfig,
+        scenes: state.scenes.map(sc => ({
+          sceneNumber: sc.sceneNumber,
+          onScreenText: sc.onScreenText,
+          narration: sc.narration,
+          visualDescriptionThai: sc.visualDescriptionThai,
+          imagePromptEn: sc.imagePromptEn,
+          videoPromptEn: sc.videoPromptEn,
+          transitionPromptEn: sc.transitionPromptEn,
+          hasCharacter: sc.hasCharacter,
+          hasProduct: sc.hasProduct,
+          durationSec: sc.durationSec,
+          voiceDelaySec: sc.voiceDelaySec
+        }))
+      };
+
+      const blob = new Blob([JSON.stringify(serializableData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `VideoInfographic_Project_${Date.now()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast('บันทึกไฟล์งาน (.json) ลงเครื่องเรียบร้อยแล้ว');
+    }
+
+    function importProjectJSON(event) {
+      const file = event.target?.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          state.topic = data.topic || state.topic;
+          state.audience = data.audience || state.audience;
+          state.sceneCount = data.sceneCount || (data.scenes ? data.scenes.length : 5);
+          state.aspectRatio = data.aspectRatio || '16:9';
+          state.creationMode = data.creationMode || 'advance';
+          state.characterName = data.characterName || '';
+          state.productName = data.productName || '';
+          state.extraNotes = data.extraNotes || '';
+          state.selectedStyleId = data.selectedStyleId || '09';
+          if (data.subtitleConfig) state.subtitleConfig = data.subtitleConfig;
+
+          document.getElementById('projectTopic').value = state.topic;
+          document.getElementById('targetAudience').value = state.audience;
+          document.getElementById('sceneCount').value = String(state.sceneCount);
+          document.getElementById('aspectRatio').value = state.aspectRatio;
+          document.getElementById('creationMode').value = state.creationMode;
+          document.getElementById('characterName').value = state.characterName;
+          document.getElementById('productName').value = state.productName;
+          document.getElementById('extraNotes').value = state.extraNotes;
+
+          const styleObj = VISUAL_STYLES.find(s => s.id === state.selectedStyleId) || VISUAL_STYLES[8];
+          document.getElementById('selectedStyleLabel').textContent = styleObj.name;
+          renderStylesGrid();
+
+          if (Array.isArray(data.scenes) && data.scenes.length > 0) {
+            state.scenes = data.scenes.map((sc, idx) => ({
+              sceneNumber: idx + 1,
+              onScreenText: sc.onScreenText || `ฉากที่ ${idx + 1}`,
+              narration: sc.narration || '',
+              visualDescriptionThai: sc.visualDescriptionThai || '',
+              imagePromptEn: sc.imagePromptEn || '',
+              videoPromptEn: sc.videoPromptEn || '',
+              transitionPromptEn: sc.transitionPromptEn || '',
+              hasCharacter: Boolean(sc.hasCharacter),
+              hasProduct: Boolean(sc.hasProduct),
+              durationSec: Number(sc.durationSec) || 6,
+              voiceDelaySec: Number(sc.voiceDelaySec) || 0,
+              masterStartSec: idx * 5.8,
+              videoUrl: null,
+              videoFileName: '',
+              isDemoClip: false,
+              audioBuffer: null,
+              audioFileName: '',
+              audioDurationSec: 0,
+              needsReview: true
+            }));
+          }
+
+          goToStep(2);
+          showToast(`เปิดไฟล์งาน "${file.name}" เรียบร้อยแล้ว!`);
+        } catch (err) {
+          showToast('ไฟล์ .json ไม่ถูกต้องหรือเสียหาย', 'error');
+        } finally {
+          event.target.value = '';
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function copyTextToClipboard(text, successMsg = 'คัดลอกข้อความลงคลิปบอร์ดแล้ว') {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast(successMsg);
+      } catch (err) {
+        showToast('ไม่สามารถคัดลอกอัตโนมัติได้ กรุณากด Ctrl+C', 'error');
+      } finally {
+        document.body.removeChild(textarea);
+      }
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateHeaderApiBadge();
+      renderStylesGrid();
+      state.scenes = createDefaultScenes(5);
+    });
+  </script>
+</body>
+</html>
